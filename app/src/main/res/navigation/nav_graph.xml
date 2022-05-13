@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.android.libreapps.ui.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_to_warning"
+            app:destination="@id/warningAppFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/warningAppFragment"
+        android:name="com.android.libreapps.ui.WarningFragment"
+        android:label="fragment_report_app"
+        tools:layout="@layout/fragment_warning">
+        <action
+            android:id="@+id/action_to_evaluate"
+            app:destination="@id/evaluateAppFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/evaluateAppFragment"
+        android:name="com.android.libreapps.ui.EvaluateAppFragment"
+        android:label="fragment_evaluate_app"
+        tools:layout="@layout/fragment_evaluate_app" >
+        <action
+            android:id="@+id/action_evaluation_done"
+            app:destination="@id/mainFragment" />
+    </fragment>
+</navigation>

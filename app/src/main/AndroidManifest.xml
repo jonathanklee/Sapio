@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.android.libreapps">
 
-   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-   <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
 
     <application
         android:allowBackup="true"
@@ -22,17 +24,15 @@
             </intent-filter>
         </activity>
 
-
-      <meta-data
-          android:name="com.parse.SERVER_URL"
-          android:value="@string/back4app_server_url" />
-     <meta-data
-          android:name="com.parse.APPLICATION_ID"
-          android:value="@string/back4app_app_id" />
-     <meta-data
-          android:name="com.parse.CLIENT_KEY"
-          android:value="@string/back4app_client_key" />
-
+        <meta-data
+            android:name="com.parse.SERVER_URL"
+            android:value="@string/back4app_server_url" />
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="@string/back4app_app_id" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="@string/back4app_client_key" />
     </application>
 
 </manifest>

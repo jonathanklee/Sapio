@@ -22,7 +22,7 @@ class AppViewModel : ViewModel() {
     private suspend fun queryDatabase() {
         withContext(Dispatchers.IO) {
             val query = ParseQuery.getQuery<ParseObject>("LibreApps")
-            query.orderByDescending("createdAt")
+            query.orderByDescending("updatedAt")
             data.postValue(query.find())
         }
     }
