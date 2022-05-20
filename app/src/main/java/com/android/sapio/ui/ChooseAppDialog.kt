@@ -1,4 +1,4 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.libreapps.databinding.DialogChooseAppBinding
+import com.android.sapio.databinding.DialogChooseAppBinding
 
 class ChooseAppDialog(private val mListener: Listener) : DialogFragment() {
 

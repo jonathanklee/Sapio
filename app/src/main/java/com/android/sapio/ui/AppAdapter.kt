@@ -1,10 +1,10 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.libreapps.databinding.AppCardBinding
+import com.android.sapio.databinding.AppCardBinding
 import com.bumptech.glide.Glide
 import com.parse.ParseObject
 import java.text.SimpleDateFormat

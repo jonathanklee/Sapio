@@ -1,7 +1,6 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,8 @@ import android.widget.RadioButton
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.android.libreapps.R
-import com.android.libreapps.databinding.FragmentEvaluateAppBinding
+import com.android.sapio.R
+import com.android.sapio.databinding.FragmentEvaluateAppBinding
 import com.parse.ParseFile
 import com.parse.ParseObject
 import java.io.ByteArrayOutputStream

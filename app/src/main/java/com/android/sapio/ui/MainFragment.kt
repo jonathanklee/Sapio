@@ -1,4 +1,4 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.libreapps.R
-import com.android.libreapps.databinding.FragmentMainBinding
+import com.android.sapio.R
+import com.android.sapio.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 

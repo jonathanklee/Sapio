@@ -1,4 +1,4 @@
-package com.android.libreapps
+package com.android.sapio
 
 import junit.framework.Assert.assertEquals
 import org.junit.Test

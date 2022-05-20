@@ -1,10 +1,10 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.libreapps.databinding.ChooseAppCardBinding
+import com.android.sapio.databinding.ChooseAppCardBinding
 
 class ChooseAppAdapter(
     private var mApps: List<ChooseAppDialog.ChooseApp>,

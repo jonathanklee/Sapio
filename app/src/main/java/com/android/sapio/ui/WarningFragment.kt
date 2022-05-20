@@ -1,4 +1,4 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.android.libreapps.R
-import com.android.libreapps.databinding.FragmentWarningBinding
+import com.android.sapio.R
+import com.android.sapio.databinding.FragmentWarningBinding
 
 class WarningFragment : Fragment() {
 

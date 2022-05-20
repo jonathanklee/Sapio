@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.android.libreapps.ui.MainFragment"
+        android:name="com.android.sapio.ui.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/warningAppFragment"
-        android:name="com.android.libreapps.ui.WarningFragment"
+        android:name="com.android.sapio.ui.WarningFragment"
         android:label="fragment_report_app"
         tools:layout="@layout/fragment_warning">
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/evaluateAppFragment"
-        android:name="com.android.libreapps.ui.EvaluateAppFragment"
+        android:name="com.android.sapio.ui.EvaluateAppFragment"
         android:label="fragment_evaluate_app"
         tools:layout="@layout/fragment_evaluate_app" >
         <action

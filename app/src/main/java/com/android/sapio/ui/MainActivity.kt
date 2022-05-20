@@ -1,9 +1,9 @@
-package com.android.libreapps.ui
+package com.android.sapio.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.android.libreapps.R
-import com.android.libreapps.databinding.ActivityMainBinding
+import com.android.sapio.R
+import com.android.sapio.databinding.ActivityMainBinding
 import com.parse.Parse
 
 class MainActivity : AppCompatActivity() {
