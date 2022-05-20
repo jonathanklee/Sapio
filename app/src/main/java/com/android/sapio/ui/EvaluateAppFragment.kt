@@ -1,4 +1,5 @@
 package com.android.sapio.ui
+
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentEvaluateAppBinding
+import com.android.sapio.model.App
 import com.parse.ParseFile
 import com.parse.ParseObject
 import java.io.ByteArrayOutputStream
@@ -17,7 +19,7 @@ import java.io.ByteArrayOutputStream
 class EvaluateAppFragment : Fragment() {
 
     private lateinit var mBinding: FragmentEvaluateAppBinding
-    private lateinit var mApp: ChooseAppDialog.ChooseApp
+    private lateinit var mApp: App
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +42,7 @@ class EvaluateAppFragment : Fragment() {
         return mBinding.root
     }
 
-    private fun evaluateApp(app: ChooseAppDialog.ChooseApp, view: View) {
+    private fun evaluateApp(app: App, view: View) {
         val bitmap = app.icon.toBitmap()
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
