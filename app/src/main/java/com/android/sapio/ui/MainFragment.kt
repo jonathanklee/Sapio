@@ -1,6 +1,7 @@
 package com.android.sapio.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentMainBinding
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.safetynet.SafetyNet
 
 class MainFragment : Fragment() {
 

@@ -16,10 +16,11 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="report_app_desc">You are about to evaluate an Android application regarding its usage on bare Android Open Source Project (AOSP) or on AOSP + microG.\n\nPlease make sure you are not running any official Google Play Services on the devices you tested the Android application.</string>
+    <string name="report_app_desc">You are about to evaluate an Android application regarding its usage on bare Android Open Source Project (AOSP).\n\nIf you are running microG on your operating system, please make sure that you tested the application with SafetyNet being disabled in microG settings.\n\nIf the Proceed button is disabled, it is probably because your phone is a Google Certified phone or that SafetyNet is still activated in your microG settings.</string>
 
     <string name="proceed">Proceed</string>
     <string name="choose_app">Select app</string>
     <string name="select_application_text">Select the application you want to evaluate :</string>
     <string name="note_application_text">Note the application :</string>
+    <string name="safety_net_result"></string>
 </resources>

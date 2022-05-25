@@ -14,9 +14,12 @@ import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentEvaluateAppBinding
 import com.android.sapio.model.App
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseQuery
+import com.scottyab.rootbeer.RootBeer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -40,6 +43,7 @@ class EvaluateAppFragment : Fragment() {
             }
             chooseApp.show(parentFragmentManager, "")
         }
+
 
         mBinding.validateButton.setOnClickListener { onValidateClicked() }
         return mBinding.root
@@ -115,5 +119,4 @@ class EvaluateAppFragment : Fragment() {
             else -> 0
         }
     }
-
 }

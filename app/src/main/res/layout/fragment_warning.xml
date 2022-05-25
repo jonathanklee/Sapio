@@ -10,9 +10,9 @@
 
     <Button
         android:id="@+id/proceedButton"
-        android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:text="@string/proceed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +22,7 @@
         android:id="@+id/reportAppDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:text="@string/report_app_desc"
         app:layout_constraintBottom_toTopOf="@+id/proceedButton"
         app:layout_constraintEnd_toEndOf="parent"
