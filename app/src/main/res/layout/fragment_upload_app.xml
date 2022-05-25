@@ -29,29 +29,40 @@
         android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        app:layout_constraintBottom_toBottomOf="@+id/chooseAppButton"
-        app:layout_constraintStart_toEndOf="@+id/chooseAppButton"
-        app:layout_constraintTop_toTopOf="@+id/chooseAppButton" />
+        android:layout_margin="20dp"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/chooseAppButton"
+        app:layout_constraintStart_toStartOf="@+id/chooseAppButton"
+        app:layout_constraintTop_toBottomOf="@+id/chooseAppButton" />
 
     <TextView
         android:id="@+id/noteApplication"
-        android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
         android:text="@string/note_application_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chooseAppButton" />
+        app:layout_constraintTop_toBottomOf="@+id/appName" />
 
     <Button
         android:id="@+id/validateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="20dp"
         android:text="Validate"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RadioGroup

@@ -28,8 +28,6 @@ class MainFragment : Fragment() {
         mBinding = FragmentMainBinding.inflate(layoutInflater)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        initFabButton()
-
         mViewModel.data.observe(viewLifecycleOwner) { list ->
             mAppAdapter = AppAdapter(requireContext(), list)
             mBinding.recyclerView.adapter = mAppAdapter
@@ -43,12 +41,5 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         mViewModel.loadApps()
-    }
-
-    private fun initFabButton() {
-        val fab = mBinding.floatingActionButton
-        fab.setOnClickListener {
-            findNavController().navigate(R.id.action_to_warning)
-        }
     }
 }

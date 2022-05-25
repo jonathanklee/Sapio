@@ -3,17 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainFragment">
-
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.android.sapio.ui.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main">
-        <action
-            android:id="@+id/action_to_warning"
-            app:destination="@id/warningAppFragment" />
-    </fragment>
+    app:startDestination="@id/warningAppFragment">
 
     <fragment
         android:id="@+id/warningAppFragment"
@@ -27,11 +17,10 @@
 
     <fragment
         android:id="@+id/evaluateAppFragment"
-        android:name="com.android.sapio.ui.EvaluateAppFragment"
+        android:name="com.android.sapio.ui.UploadAppFragment"
         android:label="fragment_evaluate_app"
-        tools:layout="@layout/fragment_evaluate_app" >
-        <action
-            android:id="@+id/action_evaluation_done"
-            app:destination="@id/mainFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_upload_app" />
+    <action
+        android:id="@+id/action_to_warning"
+        app:destination="@id/warningAppFragment" />
 </navigation>

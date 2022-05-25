@@ -11,27 +11,27 @@
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp">
 
             <ImageView
                 android:id="@+id/appIcon"
                 android:layout_width="60dp"
                 android:layout_height="46dp"
-                android:layout_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/appName"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="App name"
+                android:layout_marginStart="20dp"
+                android:text="Application name"
                 app:layout_constraintBottom_toBottomOf="@+id/appIcon"
                 app:layout_constraintStart_toEndOf="@+id/appIcon"
                 app:layout_constraintTop_toTopOf="@+id/appIcon" />

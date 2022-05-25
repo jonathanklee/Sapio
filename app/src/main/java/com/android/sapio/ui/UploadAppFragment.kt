@@ -12,22 +12,19 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
-import com.android.sapio.databinding.FragmentEvaluateAppBinding
+import com.android.sapio.databinding.FragmentUploadAppBinding
 import com.android.sapio.model.App
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseQuery
-import com.scottyab.rootbeer.RootBeer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
-class EvaluateAppFragment : Fragment() {
+class UploadAppFragment : Fragment() {
 
-    private lateinit var mBinding: FragmentEvaluateAppBinding
+    private lateinit var mBinding: FragmentUploadAppBinding
     private lateinit var mApp: App
 
     override fun onCreateView(
@@ -35,7 +32,7 @@ class EvaluateAppFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentEvaluateAppBinding.inflate(layoutInflater)
+        mBinding = FragmentUploadAppBinding.inflate(layoutInflater)
         mBinding.chooseAppButton.setOnClickListener {
             val chooseApp = ChooseAppDialog() { app ->
                 mBinding.appName.text = app.name
@@ -46,6 +43,7 @@ class EvaluateAppFragment : Fragment() {
 
 
         mBinding.validateButton.setOnClickListener { onValidateClicked() }
+        mBinding.backButton.setOnClickListener { findNavController().navigate(R.id.action_to_warning) }
         return mBinding.root
     }
 
@@ -62,7 +60,6 @@ class EvaluateAppFragment : Fragment() {
             }
 
             evaluateApp(mApp, requireView())
-            findNavController().navigate(R.id.action_evaluation_done)
         }
     }
 
