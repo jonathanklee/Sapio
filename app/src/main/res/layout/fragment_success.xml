@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="\uD83C\uDF89 \uD83E\uDD73"
-        android:textSize="20sp"
+        android:textSize="40sp"
         app:layout_constraintBottom_toTopOf="@+id/appEvaluatedText"
         app:layout_constraintEnd_toEndOf="@+id/appEvaluatedText"
         app:layout_constraintStart_toStartOf="@+id/appEvaluatedText" />
