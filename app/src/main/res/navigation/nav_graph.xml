@@ -19,8 +19,20 @@
         android:id="@+id/evaluateAppFragment"
         android:name="com.android.sapio.ui.UploadAppFragment"
         android:label="fragment_evaluate_app"
-        tools:layout="@layout/fragment_upload_app" />
+        tools:layout="@layout/fragment_upload_app" >
+        <action
+            android:id="@+id/action_to_thankyou"
+            app:destination="@id/successFragment" />
+    </fragment>
     <action
         android:id="@+id/action_to_warning"
         app:destination="@id/warningAppFragment" />
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.android.sapio.ui.SuccessFragment"
+        android:label="successFragment" >
+        <action
+            android:id="@+id/action_to_restart"
+            app:destination="@id/warningAppFragment" />
+    </fragment>
 </navigation>

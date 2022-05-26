@@ -1,8 +1,10 @@
 package com.android.sapio.ui
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +36,7 @@ class UploadAppFragment : Fragment() {
     ): View {
         mBinding = FragmentUploadAppBinding.inflate(layoutInflater)
         mBinding.chooseAppButton.setOnClickListener {
-            val chooseApp = ChooseAppDialog() { app ->
+            val chooseApp = ChooseAppDialog { app ->
                 mBinding.appName.text = app.name
                 mApp = app
             }
@@ -60,6 +62,7 @@ class UploadAppFragment : Fragment() {
             }
 
             evaluateApp(mApp, requireView())
+            findNavController().navigate(R.id.action_to_thankyou)
         }
     }
 
@@ -80,6 +83,8 @@ class UploadAppFragment : Fragment() {
         val rate = getRateFromId(mBinding.note.checkedRadioButtonId, view)
         parseApp.put("rating", rate)
 
+        parseApp.put("microg", isMicroGInstalled())
+
         if (existingEvaluation == null) {
             parseApp.saveInBackground()
         } else if (existingEvaluation.getInt("rating") != rate) {
@@ -87,14 +92,28 @@ class UploadAppFragment : Fragment() {
         }
     }
 
+    private fun isMicroGInstalled() : Int {
+       val apps = requireContext().packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        for (app in apps) {
+            if (app.packageName == "com.google.android.gms") {
+                return 1
+            }
+        }
+
+        return 2
+    }
+
     private suspend fun fetchExistingEvaluation(app: App) : ParseObject? {
         return withContext(Dispatchers.IO) {
             val query = ParseQuery.getQuery<ParseObject>("LibreApps")
-            query.whereContains("package", app.packageName)
+            query.whereEqualTo("package", app.packageName)
+            query.whereEqualTo("microg", isMicroGInstalled())
             val answers = query.find()
             if (answers.size == 1) {
+                Log.i("jklee", "found")
                 return@withContext answers[0]
             } else {
+                Log.i("jklee", "not found")
                 return@withContext null
             }
         }
@@ -110,9 +129,9 @@ class UploadAppFragment : Fragment() {
     private fun getRateFromId(id: Int, view: View) : Int {
         val radioButton: RadioButton = view.findViewById(id)
         return when(radioButton.text) {
-            "Works properly" -> 1
-            "Works partially" -> 2
-            "Does not work at all" -> 3
+            getString(R.string.works_properly) -> 1
+            getString(R.string.works_partially) -> 2
+            getString(R.string.dont_work) -> 3
             else -> 0
         }
     }

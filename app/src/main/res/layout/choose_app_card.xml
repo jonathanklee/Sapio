@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/appIcon"
-                android:layout_width="60dp"
-                android:layout_height="46dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />

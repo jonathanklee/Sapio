@@ -1,9 +1,11 @@
 package com.android.sapio.ui
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.sapio.R
 import com.android.sapio.databinding.AppCardBinding
 import com.bumptech.glide.Glide
 import com.parse.ParseObject
@@ -36,6 +38,19 @@ class AppAdapter(
         element.updatedDate.text = "Updated at ${dateFormat.format(app.updatedAt)}"
 
         element.emoji.text = getTextFromRate(app.getInt("rating"))
+
+        val microG = app.getInt("microg")
+        if (microG == 1) {
+            element.microG.text = mContext.getString(R.string.microg_label)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                element.microG.setBackgroundColor(mContext.getColor(R.color.teal_200))
+            }
+        } else {
+            element.microG.text = mContext.getString(R.string.bare_aosp_label)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                element.microG.setBackgroundColor(mContext.getColor(R.color.purple_200))
+            }
+        }
 
         val image = app.getParseFile("icon")
         Glide.with(mContext).load(image?.url).into(holder.binding.imageIcon)
