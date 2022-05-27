@@ -35,7 +35,7 @@ class WarningFragment : Fragment() {
 
     private fun checkSafetyNet() {
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(requireContext()) == ConnectionResult.SUCCESS) {
-            val nonce = System.currentTimeMillis().toString() + "jklee"
+            val nonce = System.currentTimeMillis().toString() + "Sapio"
             SafetyNet.getClient(requireContext()).attest(nonce.toByteArray(), "AIzaSyAGXF8P1HbejJ2zthzsi2jd6nv6U86wA4g")
                 .addOnSuccessListener {
                     val jws = JWSObject.parse(it.jwsResult)

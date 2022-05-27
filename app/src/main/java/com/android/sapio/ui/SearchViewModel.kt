@@ -9,20 +9,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AppViewModel : ViewModel() {
+class SearchViewModel : ViewModel() {
 
     var data = MutableLiveData<List<ParseObject>>()
 
-    fun loadApps() {
+    fun searchApp(pattern: String) {
         viewModelScope.launch {
-            queryDatabase()
+            queryDatabase(pattern)
         }
     }
 
-    private suspend fun queryDatabase() {
+    private suspend fun queryDatabase(pattern: String) {
         withContext(Dispatchers.IO) {
             val query = ParseQuery.getQuery<ParseObject>("LibreApps")
-            query.orderByDescending("updatedAt")
+            query.whereMatches("name", pattern, "i")
             data.postValue(query.find())
         }
     }

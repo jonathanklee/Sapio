@@ -15,10 +15,10 @@ class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> MainFragment()
+            0 -> FeedFragment()
             1 -> SearchFragment()
             2 -> EvaluateFragment()
-            else -> MainFragment()
+            else -> FeedFragment()
         }
     }
 }

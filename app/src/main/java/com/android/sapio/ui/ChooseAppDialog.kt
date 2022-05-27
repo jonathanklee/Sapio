@@ -58,7 +58,7 @@ class ChooseAppDialog(private val mListener: Listener) : DialogFragment() {
             results.add(buildApp(app))
         }
 
-        return results
+        return results.sortedBy { app -> app.name.lowercase() }
     }
 
     private fun buildApp(info: ApplicationInfo): App {

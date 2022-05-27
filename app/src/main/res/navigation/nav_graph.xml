@@ -17,9 +17,9 @@
 
     <fragment
         android:id="@+id/evaluateAppFragment"
-        android:name="com.android.sapio.ui.UploadAppFragment"
+        android:name="com.android.sapio.ui.SendEvaluationFragment"
         android:label="fragment_evaluate_app"
-        tools:layout="@layout/fragment_upload_app" >
+        tools:layout="@layout/fragment_send_evaluation" >
         <action
             android:id="@+id/action_to_thankyou"
             app:destination="@id/successFragment" />
