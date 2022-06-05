@@ -1,22 +1,22 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.android.sapio.databinding.FragmentEvaluateBinding
+import com.android.sapio.databinding.FragmentEvaluationBinding
 
-class EvaluateFragment : Fragment() {
+class EvaluationFragment : Fragment() {
 
-    private lateinit var mBinding: FragmentEvaluateBinding
+    private lateinit var mBinding: FragmentEvaluationBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentEvaluateBinding.inflate(layoutInflater)
+        mBinding = FragmentEvaluationBinding.inflate(layoutInflater)
         return mBinding.root
     }
 }

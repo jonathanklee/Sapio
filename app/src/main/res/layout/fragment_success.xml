@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.FeedFragment">
+    tools:context=".view.ui.FeedFragment">
 
     <androidx.emoji2.widget.EmojiTextView
         android:id="@+id/emoji"
@@ -31,10 +31,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/evaludateAgainButton"
+        android:id="@+id/evaludateAnotherAppButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Evaluate again"
+        android:text="@string/evaluate_another_app"
         android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

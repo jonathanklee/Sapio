@@ -1,4 +1,4 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,8 +20,8 @@ class SuccessFragment : Fragment() {
     ): View? {
         mBinding = FragmentSuccessBinding.inflate(layoutInflater)
         mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
-        mBinding.evaludateAgainButton.setOnClickListener {
-            findNavController().navigate(R.id.action_to_restart)
+        mBinding.evaludateAnotherAppButton.setOnClickListener {
+            findNavController().navigate(R.id.action_successFragment_to_warningFragment)
         }
 
         return mBinding.root

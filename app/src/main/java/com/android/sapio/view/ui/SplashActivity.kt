@@ -1,9 +1,8 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.android.sapio.databinding.ActivitySplashBinding

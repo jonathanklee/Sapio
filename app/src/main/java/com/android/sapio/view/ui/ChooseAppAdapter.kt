@@ -1,20 +1,20 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.sapio.databinding.ChooseAppCardBinding
-import com.android.sapio.model.App
+import com.android.sapio.model.Application
 
 class ChooseAppAdapter(
-    private var mApps: List<App>,
+    private var mApps: List<Application>,
     private val mListener: Listener
 ) : RecyclerView.Adapter<ChooseAppAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ChooseAppCardBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
-        private var mApp: App? = null
+        private var mApp: Application? = null
 
         init {
             itemView.setOnClickListener(this)
@@ -26,7 +26,7 @@ class ChooseAppAdapter(
             }
         }
 
-        fun bind(app: App) {
+        fun bind(app: Application) {
             mApp = app
         }
     }
@@ -52,6 +52,6 @@ class ChooseAppAdapter(
     }
 
     fun interface Listener {
-        fun onAppClicked(app: App)
+        fun onAppClicked(app: Application)
     }
 }

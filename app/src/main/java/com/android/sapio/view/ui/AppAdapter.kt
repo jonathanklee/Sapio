@@ -1,4 +1,4 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.content.Context
 import android.os.Build

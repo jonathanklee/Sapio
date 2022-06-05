@@ -1,4 +1,4 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,19 +13,23 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
-import com.android.sapio.databinding.FragmentSendEvaluationBinding
-import com.android.sapio.model.App
+import com.android.sapio.databinding.FragmentEvaluateBinding
+import com.android.sapio.model.Application
+import com.android.sapio.model.PhoneApplicationRepository
 import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseQuery
 import com.scottyab.rootbeer.RootBeer
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class SendEvaluationFragment : Fragment() {
+@AndroidEntryPoint
+class EvaluateFragment : Fragment() {
 
     companion object {
         const val HAS_MICRO_G = 1;
@@ -33,8 +37,9 @@ class SendEvaluationFragment : Fragment() {
         const val MICRO_G_APP_LABEL = "microG Services Core"
     }
 
-    private lateinit var mBinding: FragmentSendEvaluationBinding
-    private lateinit var mApp: App
+    @Inject lateinit var mPhoneApplicationRepository: PhoneApplicationRepository
+    private lateinit var mBinding: FragmentEvaluateBinding
+    private lateinit var mPackageName: String
     private var mIsMicroGInstalled by Delegates.notNull<Int>()
 
     override fun onCreateView(
@@ -42,14 +47,7 @@ class SendEvaluationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentSendEvaluationBinding.inflate(layoutInflater)
-        mBinding.chooseAppButton.setOnClickListener {
-            val chooseApp = ChooseAppDialog { app ->
-                mBinding.appName.text = app.name
-                mApp = app
-            }
-            chooseApp.show(parentFragmentManager, "")
-        }
+        mBinding = FragmentEvaluateBinding.inflate(layoutInflater)
 
         mIsMicroGInstalled = isMicroGInstalled()
 
@@ -59,29 +57,28 @@ class SendEvaluationFragment : Fragment() {
             mBinding.emoji.visibility = View.INVISIBLE
         }
 
+        mPackageName = arguments?.getString("package")!!
+
         mBinding.validateButton.setOnClickListener { onValidateClicked() }
-        mBinding.backButton.setOnClickListener { findNavController().navigate(R.id.action_to_warning) }
+        mBinding.backButton.setOnClickListener { findNavController().navigate(R.id.action_evaluateFragment_to_chooseAppFragment) }
         return mBinding.root
     }
 
     private fun onValidateClicked() {
         runBlocking {
-            if (mBinding.appName.text.isEmpty()) {
-                Toast.makeText(context, "Please select an app.", Toast.LENGTH_SHORT).show()
-                return@runBlocking
-            }
 
             if (mBinding.note.checkedRadioButtonId == -1) {
                 Toast.makeText(context, "Please select an evaluation.", Toast.LENGTH_SHORT).show()
                 return@runBlocking
             }
 
-            evaluateApp(mApp, requireView())
-            findNavController().navigate(R.id.action_to_thankyou)
+            val app = mPhoneApplicationRepository.getApplicationFromPackageName(requireContext(), mPackageName)
+            evaluateApp(app!!, requireView())
+            findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
         }
     }
 
-    private suspend fun evaluateApp(app: App, view: View) {
+    private suspend fun evaluateApp(app: Application, view: View) {
         val parseApp = ParseObject("LibreApps")
         val existingEvaluation = fetchExistingEvaluation(app)
         if (existingEvaluation != null) {
@@ -121,7 +118,7 @@ class SendEvaluationFragment : Fragment() {
         return NO_MICRO_G
     }
 
-    private suspend fun fetchExistingEvaluation(app: App) : ParseObject? {
+    private suspend fun fetchExistingEvaluation(app: Application) : ParseObject? {
         return withContext(Dispatchers.IO) {
             val query = ParseQuery.getQuery<ParseObject>("LibreApps")
             query.whereEqualTo("package", app.packageName)

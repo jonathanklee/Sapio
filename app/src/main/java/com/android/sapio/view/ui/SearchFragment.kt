@@ -1,8 +1,7 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.sapio.databinding.FragmentSearchBinding
+import com.android.sapio.view.viewmodel.SearchViewModel
 
 class SearchFragment : Fragment() {
 

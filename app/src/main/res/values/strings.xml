@@ -30,4 +30,5 @@
     <string name="dont_work">It does not work at all or crashes.</string>
     <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio aims to provide an estimation of how Google dependent an Android application is, informing the community on how it behaves on bare Android Open Source Project (AOSP), coupled or not with microG.\n\nEvaluations in Sapio are given by the community to the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
+    <string name="evaluate_another_app">Evaluate another app</string>
 </resources>

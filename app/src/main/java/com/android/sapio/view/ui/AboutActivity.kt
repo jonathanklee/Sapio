@@ -1,4 +1,4 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.os.Bundle
 import android.util.Log

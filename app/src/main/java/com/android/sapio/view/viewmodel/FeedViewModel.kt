@@ -1,4 +1,4 @@
-package com.android.sapio.ui
+package com.android.sapio.view.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

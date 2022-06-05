@@ -1,8 +1,7 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -11,7 +10,9 @@ import com.android.sapio.R
 import com.android.sapio.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.parse.Parse
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding

@@ -1,4 +1,4 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -17,7 +17,7 @@ class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         return when (position) {
             0 -> FeedFragment()
             1 -> SearchFragment()
-            2 -> EvaluateFragment()
+            2 -> EvaluationFragment()
             else -> FeedFragment()
         }
     }

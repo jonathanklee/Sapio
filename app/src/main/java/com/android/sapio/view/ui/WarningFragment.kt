@@ -1,5 +1,6 @@
-package com.android.sapio.ui
+package com.android.sapio.view.ui
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentWarningBinding
+import com.android.sapio.model.PhoneApplicationRepository
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.safetynet.SafetyNet
 import com.nimbusds.jose.JWSObject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 class WarningFragment : Fragment() {
 
@@ -25,10 +29,11 @@ class WarningFragment : Fragment() {
 
         mBinding.proceedButton.isEnabled = false
         mBinding.proceedButton.setOnClickListener {
-            findNavController().navigate(R.id.action_to_evaluate)
+            findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
         checkSafetyNet()
+
 
         return mBinding.root
     }
