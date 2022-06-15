@@ -51,7 +51,7 @@ class EvaluateFragment : Fragment() {
 
         mIsMicroGInstalled = isMicroGInstalled()
 
-        mBinding.rootBeerWarning.text = "\u26A0\uFE0F"
+        mBinding.emoji.text = "\u26A0\uFE0F"
         if (!isRooted()) {
             mBinding.rootBeerWarning.visibility = View.INVISIBLE
             mBinding.emoji.visibility = View.INVISIBLE
