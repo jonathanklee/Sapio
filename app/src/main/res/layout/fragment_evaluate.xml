@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,9 +12,43 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/note_application_text"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/note"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/configurationDetected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/configuration_detected"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/note" />
+
+    <TextView
+        android:id="@+id/microgConfiguration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="microG configuration"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/configurationDetected"
+        app:layout_constraintStart_toStartOf="@+id/configurationDetected"
+        app:layout_constraintTop_toBottomOf="@+id/configurationDetected" />
+
+    <TextView
+        android:id="@+id/rootConfiguration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="root configuration"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/configurationDetected"
+        app:layout_constraintStart_toEndOf="@+id/configurationDetected"
+        app:layout_constraintTop_toBottomOf="@+id/configurationDetected" />
 
     <Button
         android:id="@+id/validateButton"
@@ -67,26 +102,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orangeRadioButton" />
     </RadioGroup>
-
-    <androidx.emoji2.widget.EmojiTextView
-        android:id="@+id/emoji"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="\u26A0\uFE0F"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/note" />
-
-    <TextView
-        android:id="@+id/rootBeerWarning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Your device seems to be considered rooted by some applications. Maybe that's why the application does not work properly on your device."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emoji" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

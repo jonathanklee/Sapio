@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentEvaluateBinding
 import com.android.sapio.model.Application
+import com.android.sapio.model.Label
 import com.android.sapio.model.PhoneApplicationRepository
 import com.parse.ParseFile
 import com.parse.ParseObject
@@ -32,8 +33,6 @@ import kotlin.properties.Delegates
 class EvaluateFragment : Fragment() {
 
     companion object {
-        const val HAS_MICRO_G = 1;
-        const val NO_MICRO_G = 2;
         const val MICRO_G_APP_LABEL = "microG Services Core"
     }
 
@@ -41,6 +40,7 @@ class EvaluateFragment : Fragment() {
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
     private var mIsMicroGInstalled by Delegates.notNull<Int>()
+    private var mIsRooted by Delegates.notNull<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,12 +50,15 @@ class EvaluateFragment : Fragment() {
         mBinding = FragmentEvaluateBinding.inflate(layoutInflater)
 
         mIsMicroGInstalled = isMicroGInstalled()
+        mIsRooted = isRooted()
 
-        mBinding.emoji.text = "\u26A0\uFE0F"
-        if (!isRooted()) {
-            mBinding.rootBeerWarning.visibility = View.INVISIBLE
-            mBinding.emoji.visibility = View.INVISIBLE
-        }
+        val microgLabel = Label.create(requireContext(), mIsMicroGInstalled)
+        mBinding.microgConfiguration.text = microgLabel?.text
+        mBinding.microgConfiguration.setBackgroundColor(microgLabel?.color!!)
+
+        val isRootedLabel = Label.create(requireContext(), mIsRooted)
+        mBinding.rootConfiguration.text = isRootedLabel?.text
+        mBinding.rootConfiguration.setBackgroundColor(isRootedLabel?.color!!)
 
         mPackageName = arguments?.getString("package")!!
 
@@ -96,6 +99,7 @@ class EvaluateFragment : Fragment() {
         parseApp.put("rating", rate)
 
         parseApp.put("microg", mIsMicroGInstalled)
+        parseApp.put("rooted", mIsRooted)
 
         if (existingEvaluation == null) {
             parseApp.saveInBackground()
@@ -111,11 +115,11 @@ class EvaluateFragment : Fragment() {
             if (app.packageName == "com.google.android.gms" &&
                 packageManager.getApplicationLabel(app).toString() == MICRO_G_APP_LABEL
             ) {
-                return HAS_MICRO_G
+                return Label.MICROG
             }
         }
 
-        return NO_MICRO_G
+        return Label.BARE_AOSP
     }
 
     private suspend fun fetchExistingEvaluation(app: Application) : ParseObject? {
@@ -123,6 +127,7 @@ class EvaluateFragment : Fragment() {
             val query = ParseQuery.getQuery<ParseObject>("LibreApps")
             query.whereEqualTo("package", app.packageName)
             query.whereEqualTo("microg", mIsMicroGInstalled)
+            query.whereEqualTo("rooted", mIsRooted)
             val answers = query.find()
             if (answers.size == 1) {
                 return@withContext answers[0]
@@ -149,5 +154,11 @@ class EvaluateFragment : Fragment() {
         }
     }
 
-    private fun isRooted() = RootBeer(context).isRooted
+    private fun isRooted(): Int {
+        return if (RootBeer(context).isRooted) {
+            Label.ROOTED
+        } else {
+            Label.USER
+        }
+    }
 }

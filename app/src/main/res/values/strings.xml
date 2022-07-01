@@ -20,8 +20,8 @@
 
     <string name="proceed">Proceed</string>
     <string name="choose_app">Select app</string>
-    <string name="select_application_text">Select the application you want to evaluate :</string>
-    <string name="note_application_text">Evaluate the application :</string>
+    <string name="select_application_text">Select the application you want to evaluate</string>
+    <string name="note_application_text">Evaluate the application</string>
     <string name="safety_net_result"></string>
     <string name="microg_label">\ microG\ </string>
     <string name="bare_aosp_label">\ bareAOSP\ </string>
@@ -33,4 +33,5 @@
     <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio aims to provide an estimation of how Google dependent an Android application is, informing the community on how it behaves on bare Android Open Source Project (AOSP), coupled or not with microG.\n\nEvaluations in Sapio are given by the community to the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluate another app</string>
+    <string name="configuration_detected">Configuration detected</string>
 </resources>

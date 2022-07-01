@@ -14,7 +14,7 @@ data class Label(val text: String, val color: Int) {
         const val ROOTED = 4
 
         @RequiresApi(Build.VERSION_CODES.M)
-        fun create(context: Context, label: Int): Label? {
+        fun create(context: Context, label: Int): Label {
             return when (label) {
                 MICROG -> Label(
                     context.getString(R.string.microg_label), context.getColor(R.color.teal_200)
@@ -26,9 +26,9 @@ data class Label(val text: String, val color: Int) {
                     context.getString(R.string.user_label), context.getColor(R.color.purple_200)
                 )
                 ROOTED -> Label(
-                    context.getString(R.string.rooted_label), context.getColor(R.color.purple_700)
+                    context.getString(R.string.rooted_label), context.getColor(R.color.purple_500)
                 )
-                else -> null
+                else -> Label(" Empty label ", context.getColor(R.color.black))
             }
         }
     }

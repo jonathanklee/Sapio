@@ -40,13 +40,16 @@ class AppAdapter(
 
         element.emoji.text = Rating.create(app.getInt("rating"))?.text
 
-        var microgLabel: Label? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            microgLabel = Label.create(mContext, app.getInt("microg"))
-        }
+            val microgLabel = Label.create(mContext, app.getInt("microg"))
+            val rootLabel = Label.create(mContext, app.getInt("rooted"))
 
-        element.microG.text = microgLabel?.text
-        element.microG.setBackgroundColor(microgLabel?.color!!)
+            element.microG.text = microgLabel.text
+            element.microG.setBackgroundColor(microgLabel.color)
+
+            element.rooted.text = rootLabel.text
+            element.rooted.setBackgroundColor(rootLabel.color)
+        }
 
         val image = app.getParseFile("icon")
         Glide.with(mContext).load(image?.url).into(holder.binding.imageIcon)
