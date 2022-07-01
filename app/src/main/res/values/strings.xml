@@ -25,6 +25,8 @@
     <string name="safety_net_result"></string>
     <string name="microg_label">\ microG\ </string>
     <string name="bare_aosp_label">\ bareAOSP\ </string>
+    <string name="user_label">\ user\ </string>
+    <string name="rooted_label">\ rooted\ </string>
     <string name="works_perfectly">It works perfectly. All features are usable as intended.</string>
     <string name="works_partially">It works partially. Some features do not work.</string>
     <string name="dont_work">It does not work at all or crashes.</string>

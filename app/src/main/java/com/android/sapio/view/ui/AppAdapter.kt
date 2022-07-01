@@ -5,8 +5,9 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.android.sapio.R
 import com.android.sapio.databinding.AppCardBinding
+import com.android.sapio.model.Label
+import com.android.sapio.model.Rating
 import com.bumptech.glide.Glide
 import com.parse.ParseObject
 import java.text.SimpleDateFormat
@@ -37,32 +38,18 @@ class AppAdapter(
         val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
         element.updatedDate.text = "Updated at ${dateFormat.format(app.updatedAt)}"
 
-        element.emoji.text = getTextFromRate(app.getInt("rating"))
+        element.emoji.text = Rating.create(app.getInt("rating"))?.text
 
-        val microG = app.getInt("microg")
-        if (microG == 1) {
-            element.microG.text = mContext.getString(R.string.microg_label)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                element.microG.setBackgroundColor(mContext.getColor(R.color.teal_200))
-            }
-        } else {
-            element.microG.text = mContext.getString(R.string.bare_aosp_label)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                element.microG.setBackgroundColor(mContext.getColor(R.color.purple_200))
-            }
+        var microgLabel: Label? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            microgLabel = Label.create(mContext, app.getInt("microg"))
         }
+
+        element.microG.text = microgLabel?.text
+        element.microG.setBackgroundColor(microgLabel?.color!!)
 
         val image = app.getParseFile("icon")
         Glide.with(mContext).load(image?.url).into(holder.binding.imageIcon)
-    }
-
-    private fun getTextFromRate(rate: Int): String {
-        return when (rate) {
-            1 -> "\uD83D\uDFE2 \uD83E\uDD47"
-            2 -> "\uD83D\uDFE0 \uD83D\uDE10"
-            3 -> "\uD83D\uDD34 \uD83D\uDC4E"
-            else -> ""
-        }
     }
 
     override fun getItemCount(): Int {
