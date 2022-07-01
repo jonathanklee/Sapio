@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
+import androidx.annotation.VisibleForTesting
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,8 +49,8 @@ class PhoneApplicationRepository @Inject constructor() {
         )
     }
 
-    private fun isSystemApp(info: ApplicationInfo): Boolean {
+    @VisibleForTesting
+    fun isSystemApp(info: ApplicationInfo): Boolean {
         return info.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
-
 }

@@ -85,7 +85,7 @@ class EvaluateFragment : Fragment() {
             parseApp.objectId = existingEvaluation.objectId
         }
 
-        val parseFile = ParseFile("icon.png", fromDrawableToByArray(app.icon))
+        val parseFile = ParseFile("icon.png", app.icon?.let { fromDrawableToByArray(it) })
         parseFile.saveInBackground()
 
         parseApp.put("name", app.name)
