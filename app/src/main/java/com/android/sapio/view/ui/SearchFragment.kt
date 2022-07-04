@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.sapio.databinding.FragmentSearchBinding
 import com.android.sapio.view.viewmodel.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private lateinit var mBinding: FragmentSearchBinding
     private lateinit var mAppAdapter: AppAdapter
-    private val mViewModel = SearchViewModel()
+    private val mViewModel by viewModels<SearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

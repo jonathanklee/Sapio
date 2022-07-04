@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.sapio.databinding.FragmentMainBinding
 import com.android.sapio.view.viewmodel.FeedViewModel
@@ -15,7 +16,7 @@ class FeedFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMainBinding
     private lateinit var mAppAdapter: AppAdapter
-    private val mViewModel = FeedViewModel()
+    private val mViewModel by viewModels<FeedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
