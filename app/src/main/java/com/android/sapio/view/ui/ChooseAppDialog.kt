@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.sapio.databinding.DialogChooseAppBinding
 import com.android.sapio.model.Application
+import com.android.sapio.model.InstalledApplication
 import com.android.sapio.model.PhoneApplicationRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class ChooseAppDialog(private val mListener: Listener) : DialogFragment() {
     @Inject lateinit var mPhoneApplicationRepository: PhoneApplicationRepository
 
     fun interface Listener {
-        fun onAppSelected(app: Application)
+        fun onAppSelected(app: InstalledApplication)
     }
 
     override fun onCreateView(
@@ -38,7 +39,7 @@ class ChooseAppDialog(private val mListener: Listener) : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val list: List<Application> = mPhoneApplicationRepository.getAppList(requireContext())
+        val list: List<InstalledApplication> = mPhoneApplicationRepository.getAppList(requireContext())
         val recyclerView = mBinding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         recyclerView.adapter = ChooseAppAdapter(list) { app ->

@@ -3,6 +3,8 @@ package com.android.sapio.view.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.sapio.model.Application
+import com.android.sapio.model.ApplicationsRepository
 import com.parse.ParseObject
 import com.parse.ParseQuery
 import kotlinx.coroutines.Dispatchers
@@ -11,19 +13,14 @@ import kotlinx.coroutines.withContext
 
 class FeedViewModel : ViewModel() {
 
-    var data = MutableLiveData<List<ParseObject>>()
+    private val applicationRepository = ApplicationsRepository()
 
-    fun loadApps() {
+    var applications = MutableLiveData<List<Application>>()
+
+    fun listApplications() {
         viewModelScope.launch {
-            queryDatabase()
-        }
-    }
-
-    private suspend fun queryDatabase() {
-        withContext(Dispatchers.IO) {
-            val query = ParseQuery.getQuery<ParseObject>("LibreApps")
-            query.orderByDescending("updatedAt")
-            data.postValue(query.find())
+            applicationRepository.refreshApplications()
+            applications.postValue(applicationRepository.applications)
         }
     }
 }

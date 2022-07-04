@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentChooseAppBinding
 import com.android.sapio.model.Application
+import com.android.sapio.model.InstalledApplication
 import com.android.sapio.model.PhoneApplicationRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
@@ -21,7 +22,7 @@ import javax.inject.Inject
 class ChooseAppFragment : Fragment() {
 
     private lateinit var mBinding: FragmentChooseAppBinding
-    private var mApp: Application? = null
+    private var mApp: InstalledApplication? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

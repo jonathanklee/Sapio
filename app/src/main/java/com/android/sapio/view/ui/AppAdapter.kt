@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.sapio.databinding.AppCardBinding
+import com.android.sapio.model.Application
 import com.android.sapio.model.Label
 import com.android.sapio.model.Rating
 import com.bumptech.glide.Glide
@@ -15,7 +16,7 @@ import java.util.*
 
 class AppAdapter(
     private val mContext: Context,
-    private var mApps: List<ParseObject>
+    private var mApps: List<Application>
 ) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
     companion object {
@@ -32,17 +33,17 @@ class AppAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val app = mApps[position]
         val element = holder.binding
-        element.appName.text = app.getString("name")
-        element.packageName.text = app.getString("package")
+        element.appName.text = app.name
+        element.packageName.text = app.packageName
 
         val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
         element.updatedDate.text = "Updated at ${dateFormat.format(app.updatedAt)}"
 
-        element.emoji.text = Rating.create(app.getInt("rating"))?.text
+        element.emoji.text = Rating.create(app.rating)?.text
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val microgLabel = Label.create(mContext, app.getInt("microg"))
-            val rootLabel = Label.create(mContext, app.getInt("rooted"))
+            val microgLabel = Label.create(mContext, app.microg)
+            val rootLabel = Label.create(mContext, app.rooted)
 
             element.microG.text = microgLabel.text
             element.microG.setBackgroundColor(microgLabel.color)
@@ -51,8 +52,7 @@ class AppAdapter(
             element.rooted.setBackgroundColor(rootLabel.color)
         }
 
-        val image = app.getParseFile("icon")
-        Glide.with(mContext).load(image?.url).into(holder.binding.imageIcon)
+        Glide.with(mContext).load(app.iconUrl).into(holder.binding.imageIcon)
     }
 
     override fun getItemCount(): Int {

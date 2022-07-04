@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class PhoneApplicationRepository @Inject constructor() {
 
-    fun getAppList(context: Context): List<Application> {
+    fun getAppList(context: Context): List<InstalledApplication> {
         val mainIntent = Intent(Intent.ACTION_MAIN)
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)
         val apps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
@@ -21,7 +20,7 @@ class PhoneApplicationRepository @Inject constructor() {
             apps.removeIf { x -> isSystemApp(x) }
         }
 
-        val results: MutableList<Application> = arrayListOf()
+        val results: MutableList<InstalledApplication> = arrayListOf()
         for (app in apps) {
             results.add(buildApp(context, app))
         }
@@ -29,7 +28,7 @@ class PhoneApplicationRepository @Inject constructor() {
         return results.sortedBy { app -> app.name.lowercase() }
     }
 
-    fun getApplicationFromPackageName(context: Context, packageName: String): Application? {
+    fun getApplicationFromPackageName(context: Context, packageName: String): InstalledApplication? {
         val appList = getAppList(context)
         for (app in appList) {
             if (app.packageName == packageName) {
@@ -40,9 +39,9 @@ class PhoneApplicationRepository @Inject constructor() {
         return null
     }
 
-    private fun buildApp(context: Context, info: ApplicationInfo): Application {
+    private fun buildApp(context: Context, info: ApplicationInfo): InstalledApplication {
         val packageManager = context.packageManager
-        return Application(
+        return InstalledApplication(
             packageManager.getApplicationLabel(info).toString(),
             info.packageName,
             info.loadIcon(packageManager)

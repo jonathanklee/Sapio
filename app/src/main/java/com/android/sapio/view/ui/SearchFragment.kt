@@ -26,7 +26,7 @@ class SearchFragment : Fragment() {
         mBinding = FragmentSearchBinding.inflate(layoutInflater)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        mViewModel.data.observe(viewLifecycleOwner) { list ->
+        mViewModel.foundApplications.observe(viewLifecycleOwner) { list ->
             mAppAdapter = AppAdapter(requireContext(), list)
             mBinding.recyclerView.adapter = mAppAdapter
         }
@@ -34,9 +34,9 @@ class SearchFragment : Fragment() {
         mBinding.editTextSearch.addTextChangedListener { editable ->
             val text =  editable?.trim().toString()
             if (text.isNotEmpty()) {
-                mViewModel.searchApp(text)
+                mViewModel.searchApplication(text)
             } else {
-                mViewModel.searchApp("pprrss")
+                mViewModel.searchApplication("pprrss")
             }
         }
 

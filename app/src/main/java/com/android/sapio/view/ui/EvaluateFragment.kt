@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentEvaluateBinding
-import com.android.sapio.model.Application
+import com.android.sapio.model.InstalledApplication
 import com.android.sapio.model.Label
 import com.android.sapio.model.PhoneApplicationRepository
 import com.parse.ParseFile
@@ -81,7 +81,7 @@ class EvaluateFragment : Fragment() {
         }
     }
 
-    private suspend fun evaluateApp(app: Application, view: View) {
+    private suspend fun evaluateApp(app: InstalledApplication, view: View) {
         val parseApp = ParseObject("LibreApps")
         val existingEvaluation = fetchExistingEvaluation(app)
         if (existingEvaluation != null) {
@@ -122,7 +122,7 @@ class EvaluateFragment : Fragment() {
         return Label.BARE_AOSP
     }
 
-    private suspend fun fetchExistingEvaluation(app: Application) : ParseObject? {
+    private suspend fun fetchExistingEvaluation(app: InstalledApplication) : ParseObject? {
         return withContext(Dispatchers.IO) {
             val query = ParseQuery.getQuery<ParseObject>("LibreApps")
             query.whereEqualTo("package", app.packageName)
