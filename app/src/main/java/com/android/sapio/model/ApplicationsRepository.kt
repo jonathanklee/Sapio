@@ -4,8 +4,11 @@ import com.parse.ParseObject
 import com.parse.ParseQuery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ApplicationsRepository {
+@Singleton
+class ApplicationsRepository @Inject constructor() {
 
     private lateinit var _applications: List<Application>
     var applications: List<Application>

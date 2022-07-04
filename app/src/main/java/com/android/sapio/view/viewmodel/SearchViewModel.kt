@@ -10,9 +10,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor() : ViewModel() {
+class SearchViewModel @Inject constructor(): ViewModel() {
 
-    private val applicationRepository = ApplicationsRepository()
+    @Inject
+    lateinit var applicationRepository: ApplicationsRepository
 
     val foundApplications = MutableLiveData<List<Application>>()
 
