@@ -16,7 +16,7 @@ import com.android.sapio.R
 import com.android.sapio.databinding.FragmentEvaluateBinding
 import com.android.sapio.model.InstalledApplication
 import com.android.sapio.model.Label
-import com.android.sapio.model.PhoneApplicationRepository
+import com.android.sapio.model.InstalledApplicationsRepository
 import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseQuery
@@ -36,7 +36,7 @@ class EvaluateFragment : Fragment() {
         const val MICRO_G_APP_LABEL = "microG Services Core"
     }
 
-    @Inject lateinit var mPhoneApplicationRepository: PhoneApplicationRepository
+    @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
     private var mIsMicroGInstalled by Delegates.notNull<Int>()
@@ -75,7 +75,7 @@ class EvaluateFragment : Fragment() {
                 return@runBlocking
             }
 
-            val app = mPhoneApplicationRepository.getApplicationFromPackageName(requireContext(), mPackageName)
+            val app = mInstalledApplicationsRepository.getApplicationFromPackageName(requireContext(), mPackageName)
             evaluateApp(app!!, requireView())
             findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
         }

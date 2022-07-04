@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import com.android.sapio.model.PhoneApplicationRepository
+import com.android.sapio.model.InstalledApplicationsRepository
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert
 import org.junit.Before
@@ -26,9 +26,9 @@ import org.robolectric.annotation.Config.NONE
 
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = NONE, sdk = [Build.VERSION_CODES.N])
-class PhoneApplicationRepositoryTest {
+class InstalledApplicationsRepositoryTest {
 
-    private lateinit var repository: PhoneApplicationRepository
+    private lateinit var repository: InstalledApplicationsRepository
 
     @Mock
     private lateinit var mockedPackageManager: PackageManager
@@ -46,7 +46,7 @@ class PhoneApplicationRepositoryTest {
 
         MockitoAnnotations.openMocks(this)
 
-        repository = PhoneApplicationRepository()
+        repository = InstalledApplicationsRepository()
 
         fakeRegularApplicationInfo = ApplicationInfo().apply {
             packageName = "fake.package.name.one"

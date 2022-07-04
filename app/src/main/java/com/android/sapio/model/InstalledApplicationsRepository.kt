@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PhoneApplicationRepository @Inject constructor() {
+class InstalledApplicationsRepository @Inject constructor() {
 
     fun getAppList(context: Context): List<InstalledApplication> {
         val mainIntent = Intent(Intent.ACTION_MAIN)

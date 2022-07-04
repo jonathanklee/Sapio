@@ -1,7 +1,6 @@
 package com.android.sapio.view.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.sapio.R
 import com.android.sapio.databinding.FragmentChooseAppBinding
-import com.android.sapio.model.Application
 import com.android.sapio.model.InstalledApplication
-import com.android.sapio.model.PhoneApplicationRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseAppFragment : Fragment() {
