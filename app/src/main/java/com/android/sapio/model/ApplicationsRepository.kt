@@ -1,5 +1,6 @@
 package com.android.sapio.model
 
+import androidx.annotation.VisibleForTesting
 import com.parse.ParseObject
 import com.parse.ParseQuery
 import kotlinx.coroutines.Dispatchers
@@ -10,34 +11,26 @@ import javax.inject.Singleton
 @Singleton
 class ApplicationsRepository @Inject constructor() {
 
-    private lateinit var _applications: List<Application>
-    var applications: List<Application>
-        get() = _applications
-        set(value) {
-            _applications = value
-        }
+    @VisibleForTesting
+    var query: ParseQuery<ParseObject> = ParseQuery.getQuery("LibreApps")
 
-    private lateinit var _foundApplications: List<Application>
-    var foundApplications: List<Application>
-        get() = _foundApplications
-        set(value) {
-            _foundApplications = value
-        }
+    private lateinit var applications: List<Application>
+    private lateinit var foundApplications: List<Application>
 
-    suspend fun refreshApplications() {
+    suspend fun refreshApplications(): List<Application> {
         withContext(Dispatchers.IO) {
-            val query = ParseQuery.getQuery<ParseObject>("LibreApps")
             query.orderByDescending("updatedAt")
             applications = createApplicationList(query.find())
         }
+        return applications
     }
 
-    suspend fun searchApplications(pattern: String) {
+    suspend fun searchApplications(pattern: String): List<Application> {
         withContext(Dispatchers.IO) {
-            val query = ParseQuery.getQuery<ParseObject>("LibreApps")
             query.whereMatches("name", pattern, "i")
             foundApplications = createApplicationList(query.find())
         }
+        return foundApplications
     }
 
     private fun createApplicationList(parseObjectList: List<ParseObject>): List<Application> {

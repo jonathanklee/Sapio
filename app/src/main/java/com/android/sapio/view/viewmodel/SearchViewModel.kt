@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(): ViewModel() {
+class SearchViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var applicationRepository: ApplicationsRepository
@@ -19,8 +19,8 @@ class SearchViewModel @Inject constructor(): ViewModel() {
 
     fun searchApplication(pattern: String) {
         viewModelScope.launch {
-            applicationRepository.searchApplications(pattern)
-            foundApplications.postValue(applicationRepository.foundApplications)
+            val result = applicationRepository.searchApplications(pattern)
+            foundApplications.postValue(result)
         }
     }
 }

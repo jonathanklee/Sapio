@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FeedViewModel @Inject constructor(): ViewModel() {
+class FeedViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var applicationRepository: ApplicationsRepository
@@ -19,8 +19,8 @@ class FeedViewModel @Inject constructor(): ViewModel() {
 
     fun listApplications() {
         viewModelScope.launch {
-            applicationRepository.refreshApplications()
-            applications.postValue(applicationRepository.applications)
+            val result = applicationRepository.refreshApplications()
+            applications.postValue(result)
         }
     }
 }
