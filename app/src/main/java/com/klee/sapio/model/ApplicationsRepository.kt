@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class ApplicationsRepository @Inject constructor() {
 
     @VisibleForTesting
