@@ -2,6 +2,8 @@ package com.klee.sapio.view.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -27,8 +29,9 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout = mBinding.tabLayout
         val viewPager = mBinding.viewPager
+        viewPager.isUserInputEnabled = false
         viewPager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        TabLayoutMediator(tabLayout, viewPager, true, false) { tab, position ->
             tab.text = when(position) {
                 0 -> "Feed"
                 1 -> "Search"

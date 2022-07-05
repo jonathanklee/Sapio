@@ -45,17 +45,4 @@ class SearchFragment : Fragment() {
 
         return mBinding.root
     }
-
-    override fun onResume() {
-        super.onResume()
-        mBinding.editTextSearch.requestFocus()
-        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(mBinding.editTextSearch, InputMethodManager.SHOW_IMPLICIT)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(mBinding.editTextSearch.windowToken, 0)
-    }
 }
