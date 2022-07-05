@@ -19,7 +19,7 @@ class FeedViewModel @Inject constructor() : ViewModel() {
 
     fun listApplications() {
         viewModelScope.launch {
-            val result = applicationRepository.refreshApplications()
+            val result = applicationRepository.getFeedApplications()
             applications.postValue(result)
         }
     }

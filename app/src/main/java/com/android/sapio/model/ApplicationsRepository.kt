@@ -14,15 +14,15 @@ class ApplicationsRepository @Inject constructor() {
     @VisibleForTesting
     var query: ParseQuery<ParseObject> = ParseQuery.getQuery("LibreApps")
 
-    private lateinit var applications: List<Application>
+    private lateinit var feedApplications: List<Application>
     private lateinit var foundApplications: List<Application>
 
-    suspend fun refreshApplications(): List<Application> {
+    suspend fun getFeedApplications(): List<Application> {
         withContext(Dispatchers.IO) {
             query.orderByDescending("updatedAt")
-            applications = createApplicationList(query.find())
+            feedApplications = createApplicationList(query.find())
         }
-        return applications
+        return feedApplications
     }
 
     suspend fun searchApplications(pattern: String): List<Application> {

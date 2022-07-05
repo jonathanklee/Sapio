@@ -82,20 +82,20 @@ class ApplicationsRepositoryTest {
     private fun getCurrentDate(): Date = Calendar.getInstance().time
 
     @Test
-    fun `refresh applications and check the number of application received`() = runTest {
-        val result = repository.refreshApplications()
+    fun `get feed applications and check the number of application received`() = runTest {
+        val result = repository.getFeedApplications()
         assertEquals("Check list size", fakeList.size, result.size)
     }
 
     @Test
-    fun `refresh applications and check the first element name`() = runTest {
-        val result = repository.refreshApplications()
+    fun `get feed applications and check the first element name`() = runTest {
+        val result = repository.getFeedApplications()
         assertEquals("Check first application name", "ApplicationOne", result[0].name)
     }
 
     @Test
-    fun `refresh applications and check the third element name`() = runTest {
-        val result = repository.refreshApplications()
+    fun `geet feed applications and check the third element name`() = runTest {
+        val result = repository.getFeedApplications()
         assertEquals("Check first application name", "ApplicationThree", result[2].name)
     }
 
