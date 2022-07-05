@@ -11,7 +11,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.android.sapio"
+        applicationId "com.klee.sapio"
         minSdk 21
         targetSdk 32
         versionCode 1
