@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/select_application_text"
-        android:textStyle="bold"
+        android:textStyle="bold|italic"
         app:layout_constraintBottom_toTopOf="@+id/chooseAppButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
