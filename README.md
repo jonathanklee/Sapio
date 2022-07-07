@@ -23,3 +23,9 @@ cd Sapio
 ```
 adb install ./app/build/outputs/apk/debug/app-debug.apk
 ```
+
+# Credits
+
+<a href="https://www.flaticon.com/free-icons/brain" title="brain icons">Brain icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/search" title="search icons">Search icons created by Smashicons - Flaticon</a>
