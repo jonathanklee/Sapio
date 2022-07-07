@@ -6,6 +6,7 @@ Sapio aims to provide an estimation of how Google-dependent an Android applicati
 
 Evaluations in Sapio are given by the community to the community.
 
+<p>&nbsp&nbsp</p>
 <p align="center"><img src="https://github.com/jonathanklee/Sapio/blob/main/screenshot.png" width="200"/>
 
 # Build
