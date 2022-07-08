@@ -1,0 +1,5 @@
+Sapio est l'anagramme d'API Open Source.
+
+Sapio a pour but de fournir une estimation de la dépendance d'une application Android aux briques logicielles propriétaires de Google en informant la communauté sur son fonctionnement sur une image AOSP, avec ou sans microG.
+
+Les évaluations de Sapio sont fournies à la communauté par la communauté.

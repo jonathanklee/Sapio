@@ -1,0 +1,1 @@
+Compatibilité avec les API Android Open Source.
