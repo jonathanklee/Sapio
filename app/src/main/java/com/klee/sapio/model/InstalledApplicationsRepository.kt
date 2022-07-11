@@ -22,7 +22,7 @@ class InstalledApplicationsRepository @Inject constructor() {
 
         val results: MutableList<InstalledApplication> = arrayListOf()
         for (app in apps) {
-            results.add(buildApp(context, app))
+            results.add(createInstalledApplication(context, app))
         }
 
         return results.sortedBy { app -> app.name.lowercase() }
@@ -39,7 +39,7 @@ class InstalledApplicationsRepository @Inject constructor() {
         return null
     }
 
-    private fun buildApp(context: Context, info: ApplicationInfo): InstalledApplication {
+    private fun createInstalledApplication(context: Context, info: ApplicationInfo): InstalledApplication {
         val packageManager = context.packageManager
         return InstalledApplication(
             packageManager.getApplicationLabel(info).toString(),
