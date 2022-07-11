@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import javax.inject.Inject
@@ -44,8 +45,16 @@ class InstalledApplicationsRepository @Inject constructor() {
         return InstalledApplication(
             packageManager.getApplicationLabel(info).toString(),
             info.packageName,
-            info.loadIcon(packageManager)
+            fetchIcon(packageManager, info)
         )
+    }
+
+    private fun fetchIcon(packageManager: PackageManager, info: ApplicationInfo): Drawable {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            info.loadUnbadgedIcon(packageManager)
+        } else {
+            info.loadIcon(packageManager)
+        }
     }
 
     @VisibleForTesting
