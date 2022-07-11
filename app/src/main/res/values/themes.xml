@@ -11,7 +11,9 @@
         <item name="colorOnSecondary">@color/purple_500</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/purple_500</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Remove capitalized text in button -->
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="Theme.Sapio.NoActionBar">
