@@ -24,6 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/choose_app"
+        android:textColor="@color/purple_200"
+        style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="Next"
+        android:textColor="@color/purple_200"
+        style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -56,6 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="Back"
+        android:textColor="@color/purple_200"
+        style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
