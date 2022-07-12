@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi
 import com.klee.sapio.R
 import java.util.Date
 
-data class Application(
+data class RemoteApplication(
     val name: String,
     val packageName: String,
     val iconUrl: String?,
@@ -18,7 +18,7 @@ data class Application(
 )
 
 data class InstalledApplication(
-    val name:String,
+    val name: String,
     val packageName: String,
     val icon: Drawable?
 )

@@ -1,7 +1,7 @@
 package com.klee.sapio
 
 import android.os.Build
-import com.klee.sapio.model.ApplicationsRepository
+import com.klee.sapio.model.RemoteApplicationsRepository
 import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseQuery
@@ -23,9 +23,9 @@ import java.util.*
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.N])
-class ApplicationsRepositoryTest {
+class RemoteApplicationsRepositoryTest {
 
-    private val repository = ApplicationsRepository()
+    private val repository = RemoteApplicationsRepository()
 
     @Mock
     val mockedQuery = ParseQuery<ParseObject>("LibreApps")
