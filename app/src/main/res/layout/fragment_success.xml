@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="@string/evaluate_another_app"
         android:layout_margin="20dp"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/teal_200"
         style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
