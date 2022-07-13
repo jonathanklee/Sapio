@@ -9,10 +9,16 @@ import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentWarningBinding
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.safetynet.SafetyNet
 import com.nimbusds.jose.JWSObject
 
 class WarningFragment : Fragment() {
+
+    companion object {
+        const val ERROR_SAFETYNET_DISABLED = 13
+        const val ERROR_SAFETYNET_PERMISSION_DENIED = 7
+    }
 
     private lateinit var mBinding: FragmentWarningBinding
 
@@ -45,8 +51,14 @@ class WarningFragment : Fragment() {
                     val basicIntegrity = json["basicIntegrity"].toString().toBoolean()
                     mBinding.proceedButton.isEnabled = !(ctsProfileMatch && basicIntegrity)
                 }
-                .addOnFailureListener {
-                    mBinding.proceedButton.isEnabled = true
+                .addOnFailureListener { exception ->
+                    if (exception is ApiException) {
+                        when (exception.statusCode) {
+                            ERROR_SAFETYNET_PERMISSION_DENIED -> mBinding.proceedButton.isEnabled = false
+                            ERROR_SAFETYNET_DISABLED -> mBinding.proceedButton.isEnabled = true
+                            else -> mBinding.proceedButton.isEnabled = false
+                        }
+                    }
                 }
         } else {
             mBinding.proceedButton.isEnabled = true
