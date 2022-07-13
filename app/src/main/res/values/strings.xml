@@ -21,7 +21,7 @@
     <string name="proceed">Proceed</string>
     <string name="choose_app">Select app</string>
     <string name="select_application_text">Select the application you want to evaluate</string>
-    <string name="note_application_text">Evaluate the application</string>
+    <string name="note_application_text">You can now evaluate the application</string>
     <string name="safety_net_result"></string>
     <string name="microg_label">\ microG\ </string>
     <string name="bare_aosp_label">\ bareAOSP\ </string>
