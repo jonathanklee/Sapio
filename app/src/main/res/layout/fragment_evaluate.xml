@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/noteApplication"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
@@ -19,6 +20,7 @@
 
     <TextView
         android:id="@+id/configurationDetected"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"

@@ -19,8 +19,8 @@
     <string name="warning_desc">You are about to evaluate an Android application regarding its behavior on a bare Android Open Source Project (AOSP) device. Your device must not have the official Google Play Services installed.\n\nIf the device is running microG, please make sure that the application was tested with SafetyNet disabled in microG settings.\n\nSapio will detect automatically if microG is installed on your device.\n\nIf the Proceed button is disabled, it is probably because your phone is a Google Certified phone or that SafetyNet is still activated in your microG settings.</string>
 
     <string name="proceed">Proceed</string>
-    <string name="choose_app">Select app</string>
-    <string name="select_application_text">Select the application you want to evaluate</string>
+    <string name="choose_app">Select</string>
+    <string name="select_application_text">Select the application to evaluate</string>
     <string name="note_application_text">You can now evaluate the application</string>
     <string name="safety_net_result"></string>
     <string name="microg_label">\ microG\ </string>
