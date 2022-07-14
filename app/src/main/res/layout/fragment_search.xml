@@ -55,7 +55,7 @@
 
     <TextView
         android:id="@+id/searchLabel"
-        android:textStyle="bold|italic"
+        android:textStyle="bold"
         android:textSize="18sp"
         android:layout_margin="20dp"
         android:layout_width="wrap_content"
