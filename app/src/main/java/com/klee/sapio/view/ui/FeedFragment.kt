@@ -31,8 +31,6 @@ class FeedFragment : Fragment() {
             mBinding.recyclerView.adapter = mAppAdapter
         }
 
-        mViewModel.listApplications()
-
         return mBinding.root
     }
 

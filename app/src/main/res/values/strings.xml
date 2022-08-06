@@ -34,4 +34,5 @@
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluate another app</string>
     <string name="configuration_detected">Configuration detected</string>
+    <string name="look_for_an_application">Look for an application</string>
 </resources>

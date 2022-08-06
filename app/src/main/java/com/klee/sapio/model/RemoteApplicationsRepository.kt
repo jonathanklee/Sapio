@@ -1,10 +1,14 @@
 package com.klee.sapio.model
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.parse.ParseObject
 import com.parse.ParseQuery
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 class RemoteApplicationsRepository @Inject constructor() {
@@ -12,13 +16,19 @@ class RemoteApplicationsRepository @Inject constructor() {
     @VisibleForTesting
     var query: ParseQuery<ParseObject> = ParseQuery.getQuery("LibreApps")
 
+
     private lateinit var feedApplications: List<RemoteApplication>
     private lateinit var foundApplications: List<RemoteApplication>
+    private val retrofitService = ApplicationService()
+
+    suspend fun getApplicationsFromStrapi(): List<RemoteApplication> {
+        return retrofitService.getRemoteApplications()
+    }
 
     suspend fun getFeedApplications(): List<RemoteApplication> {
         withContext(Dispatchers.IO) {
             query.orderByDescending("updatedAt")
-            feedApplications = createApplicationList(query.find())
+            //feedApplications = createApplicationList(query.find())
         }
         return feedApplications
     }
@@ -26,12 +36,12 @@ class RemoteApplicationsRepository @Inject constructor() {
     suspend fun searchApplications(pattern: String): List<RemoteApplication> {
         withContext(Dispatchers.IO) {
             query.whereMatches("name", pattern, "i")
-            foundApplications = createApplicationList(query.find())
+            //foundApplications = createApplicationList(query.find())
         }
         return foundApplications
     }
 
-    private fun createApplicationList(parseObjectList: List<ParseObject>): List<RemoteApplication> {
+    /*private fun createApplicationList(parseObjectList: List<ParseObject>): List<RemoteApplication> {
         val resultList = mutableListOf<RemoteApplication>()
         for (element in parseObjectList) {
             val remoteApplication = RemoteApplication(
@@ -48,5 +58,5 @@ class RemoteApplicationsRepository @Inject constructor() {
         }
 
         return resultList
-    }
+    }*/
 }

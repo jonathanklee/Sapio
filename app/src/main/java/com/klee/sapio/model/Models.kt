@@ -4,17 +4,42 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.klee.sapio.R
 import java.util.Date
 
+data class StrapiAnswer(
+    @JsonProperty("data") val data: ArrayList<StrapiElement>,
+    @JsonProperty("meta") val meta: StrapiMeta
+)
+
+data class StrapiMeta(
+    @JsonProperty("pagination") val pagination: StrapiPagination
+)
+
+data class StrapiPagination(
+    @JsonProperty("page") val page:Int,
+    @JsonProperty("pageSize") val pageSize:Int,
+    @JsonProperty("pageCount") val pageCount:Int,
+    @JsonProperty("total") val total:Int
+)
+
+data class StrapiElement(
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("attributes") val attributes: RemoteApplication
+)
+
 data class RemoteApplication(
-    val name: String,
-    val packageName: String,
-    val iconUrl: String?,
-    val rating: Int,
-    val microg: Int,
-    val rooted: Int,
-    val updatedAt: Date
+    @JsonProperty("name") val name: String,
+    @JsonProperty("packageName") val packageName: String,
+    @JsonProperty("icon") val iconUrl: Drawable?,
+    @JsonProperty("rating") val rating: Int,
+    @JsonProperty("microg") val microg: Int,
+    @JsonProperty("rooted") val rooted: Int,
+    @JsonProperty("updatedAt") val updatedAt: Date,
+    @JsonProperty("createdAt") val createdAt: Date,
+    @JsonProperty("publishedAt") val publishedAt: Date
 )
 
 data class InstalledApplication(
