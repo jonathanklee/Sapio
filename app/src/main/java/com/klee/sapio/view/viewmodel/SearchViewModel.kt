@@ -19,7 +19,7 @@ class SearchViewModel @Inject constructor() : ViewModel() {
 
     fun searchApplication(pattern: String) {
         viewModelScope.launch {
-            val result = applicationRepository.searchApplications(pattern)
+            val result = applicationRepository.searchApplicationsFromStrapi(pattern)
             foundApplications.postValue(result)
         }
     }

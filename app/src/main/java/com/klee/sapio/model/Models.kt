@@ -33,7 +33,7 @@ data class StrapiElement(
 
 data class RemoteApplication(
     @JsonProperty("name") val name: String,
-    @JsonProperty("packageName") val packageName: String?,
+    @JsonProperty("packageName") val packageName: String,
     @JsonProperty("icon") var icon: Icon,
     @JsonProperty("rating") val rating: Int,
     @JsonProperty("microg") val microg: Int,

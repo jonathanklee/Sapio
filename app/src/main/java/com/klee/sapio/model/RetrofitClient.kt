@@ -43,13 +43,9 @@ class ApplicationService {
     private val retrofit = RetrofitClient.getClient()
     private val applicationsApi = retrofit.create(RemoteApplicationsApi::class.java)
 
-    suspend fun getRemoteApplications(): List<RemoteApplication> {
+    suspend fun getAllApplications(): List<RemoteApplication> {
         val list = ArrayList<RemoteApplication>()
-        var strapiAnswer: StrapiAnswer
-
-        withContext(Dispatchers.IO) {
-            strapiAnswer = applicationsApi.getApplicationsAsync().await()
-        }
+        val strapiAnswer = fetchApplications()
 
         strapiAnswer.data.map {
             list.add(it.attributes)
@@ -57,4 +53,30 @@ class ApplicationService {
 
         return list
     }
+
+    suspend fun searchApplication(pattern: String): List<RemoteApplication> {
+        val list = ArrayList<RemoteApplication>()
+
+        val strapiAnswer = fetchApplications()
+
+        strapiAnswer.data.map {
+            val app = it.attributes
+            if (app.name.contains(pattern, true) || app.packageName.contains(pattern, true)) {
+               list.add(app)
+            }
+        }
+
+        return list
+    }
+
+    private suspend fun fetchApplications(): StrapiAnswer {
+        var strapiAnswer: StrapiAnswer
+
+        withContext(Dispatchers.IO) {
+            strapiAnswer = applicationsApi.getApplicationsAsync().await()
+        }
+
+        return strapiAnswer
+    }
+
 }

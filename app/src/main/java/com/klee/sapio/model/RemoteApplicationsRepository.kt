@@ -17,7 +17,11 @@ class RemoteApplicationsRepository @Inject constructor() {
     private val retrofitService = ApplicationService()
 
     suspend fun getApplicationsFromStrapi(): List<RemoteApplication> {
-        return retrofitService.getRemoteApplications()
+        return retrofitService.getAllApplications()
+    }
+
+    suspend fun searchApplicationsFromStrapi(pattern: String): List<RemoteApplication> {
+        return retrofitService.searchApplication(pattern)
     }
 
     suspend fun getFeedApplications(): List<RemoteApplication> {
