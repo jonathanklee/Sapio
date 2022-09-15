@@ -1,15 +1,16 @@
 package com.klee.sapio.model
 
-import android.util.Log
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
@@ -17,7 +18,7 @@ import retrofit2.http.GET
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://192.168.1.42:1337/api/"
+    const val BASE_URL = "http://192.168.1.42:1337"
 
     val okHttpClient = OkHttpClient()
         .newBuilder()
@@ -26,16 +27,15 @@ object RetrofitClient {
 
     fun getClient(): Retrofit = Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl(BASE_URL)
+        .baseUrl("${BASE_URL}/api/")
         .addConverterFactory(JacksonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 }
 
 interface RemoteApplicationsApi {
-   @GET("applications")
+   @GET("applications?populate=*")
    fun getApplicationsAsync(): Deferred<StrapiAnswer>
-
 }
 
 class ApplicationService {
@@ -46,7 +46,7 @@ class ApplicationService {
     suspend fun getRemoteApplications(): List<RemoteApplication> {
         val list = ArrayList<RemoteApplication>()
         var strapiAnswer: StrapiAnswer
-        
+
         withContext(Dispatchers.IO) {
             strapiAnswer = applicationsApi.getApplicationsAsync().await()
         }

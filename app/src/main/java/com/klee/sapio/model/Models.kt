@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.klee.sapio.R
+import kotlinx.coroutines.Deferred
 import java.util.Date
 
 data class StrapiAnswer(
@@ -32,8 +33,8 @@ data class StrapiElement(
 
 data class RemoteApplication(
     @JsonProperty("name") val name: String,
-    @JsonProperty("packageName") val packageName: String,
-    @JsonProperty("icon") val iconUrl: Drawable?,
+    @JsonProperty("packageName") val packageName: String?,
+    @JsonProperty("icon") var icon: Icon,
     @JsonProperty("rating") val rating: Int,
     @JsonProperty("microg") val microg: Int,
     @JsonProperty("rooted") val rooted: Int,
@@ -41,6 +42,51 @@ data class RemoteApplication(
     @JsonProperty("createdAt") val createdAt: Date,
     @JsonProperty("publishedAt") val publishedAt: Date
 )
+
+data class Icon(
+    @JsonProperty("data") val data: StrapiImageElement
+)
+
+data class StrapiImageElement(
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("attributes") val attributes: RemoteImage
+)
+
+data class RemoteImage(
+    @JsonProperty("name") val name: String,
+    @JsonProperty("alternativeText") val alternativeText: String,
+    @JsonProperty("caption") val caption: String,
+    @JsonProperty("width") val width: Int,
+    @JsonProperty("height") val height: Int,
+    @JsonProperty("formats") val formats: RemoteImageFormats,
+    @JsonProperty("hash") val hash: String,
+    @JsonProperty("ext") val ext: String,
+    @JsonProperty("mime") val mime: String,
+    @JsonProperty("size") val size: Int,
+    @JsonProperty("url") val url: String,
+    @JsonProperty("previewUrl") val previewUrl: String?,
+    @JsonProperty("provider") val provider: String?,
+    @JsonProperty("provider_metadata") val provider_metadata: String?,
+    @JsonProperty("createdAt") val createdAt: Date,
+    @JsonProperty("updatedAt") val updatedAt: Date
+)
+
+data class RemoteImageFormats(
+    @JsonProperty("thumbnail") val thumbnail: ImageThumbnail
+)
+
+data class ImageThumbnail(
+    @JsonProperty("name") val name: String,
+    @JsonProperty("hash") val hash: String,
+    @JsonProperty("ext") val ext: String,
+    @JsonProperty("mime") val mime: String,
+    @JsonProperty("path") val path: String?,
+    @JsonProperty("width") val width: Int,
+    @JsonProperty("height") val height: Int,
+    @JsonProperty("size") val size: Int,
+    @JsonProperty("url") val url: String
+)
+
 
 data class InstalledApplication(
     val name: String,
