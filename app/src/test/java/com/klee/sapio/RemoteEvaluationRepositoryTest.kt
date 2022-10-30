@@ -1,7 +1,7 @@
 package com.klee.sapio
 
 import android.os.Build
-import com.klee.sapio.model.RemoteApplicationsRepository
+import com.klee.sapio.model.RemoteEvaluationRepository
 import com.parse.ParseFile
 import com.parse.ParseObject
 import com.parse.ParseQuery
@@ -18,14 +18,15 @@ import org.mockito.Mockito.times
 import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.*
+import java.util.Date
+import java.util.Calendar
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.N])
-class RemoteApplicationsRepositoryTest {
+class RemoteEvaluationRepositoryTest {
 
-    private val repository = RemoteApplicationsRepository()
+    private val repository = RemoteEvaluationRepository()
 
     @Mock
     val mockedQuery = ParseQuery<ParseObject>("LibreApps")
@@ -61,7 +62,8 @@ class RemoteApplicationsRepositoryTest {
             mockedParseObjectOne,
             mockedParseObjectTwo,
             mockedParseObjectThree,
-            mockedParseObjectFour)
+            mockedParseObjectFour
+        )
 
         Mockito.`when`(mockedQuery.find()).thenReturn(fakeList)
 

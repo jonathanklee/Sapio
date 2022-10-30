@@ -29,7 +29,10 @@ class InstalledApplicationsRepository @Inject constructor() {
         return results.sortedBy { app -> app.name.lowercase() }
     }
 
-    fun getApplicationFromPackageName(context: Context, packageName: String): InstalledApplication? {
+    fun getApplicationFromPackageName(
+        context: Context,
+        packageName: String
+    ): InstalledApplication? {
         val appList = getAppList(context)
         for (app in appList) {
             if (app.packageName == packageName) {
@@ -40,7 +43,10 @@ class InstalledApplicationsRepository @Inject constructor() {
         return null
     }
 
-    private fun createInstalledApplication(context: Context, info: ApplicationInfo): InstalledApplication {
+    private fun createInstalledApplication(
+        context: Context,
+        info: ApplicationInfo
+    ): InstalledApplication {
         val packageManager = context.packageManager
         return InstalledApplication(
             packageManager.getApplicationLabel(info).toString(),

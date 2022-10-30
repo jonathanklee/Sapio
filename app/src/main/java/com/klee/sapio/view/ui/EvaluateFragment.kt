@@ -1,7 +1,6 @@
 package com.klee.sapio.view.ui
 
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
@@ -17,15 +15,17 @@ import com.klee.sapio.databinding.FragmentEvaluateBinding
 import com.klee.sapio.model.InstalledApplication
 import com.klee.sapio.model.Label
 import com.klee.sapio.model.InstalledApplicationsRepository
-import com.parse.ParseFile
-import com.parse.ParseObject
-import com.parse.ParseQuery
+import com.klee.sapio.model.RemoteEvaluation
+import com.klee.sapio.model.RemoteEvaluationRepository
+import com.klee.sapio.model.UploadEvaluation
+import com.klee.sapio.model.UploadIconAnswer
+import com.klee.sapio.model.UploadEvaluationData
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
+import retrofit2.Response
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -33,10 +33,12 @@ import kotlin.properties.Delegates
 class EvaluateFragment : Fragment() {
 
     companion object {
+        const val NOT_CHECKED = -1
         const val MICRO_G_APP_LABEL = "microG Services Core"
     }
 
     @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
+    @Inject lateinit var mApplicationRepository: RemoteEvaluationRepository
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
     private var mIsMicroGInstalled by Delegates.notNull<Int>()
@@ -53,62 +55,74 @@ class EvaluateFragment : Fragment() {
         mIsRooted = isRooted()
 
         val microgLabel = Label.create(requireContext(), mIsMicroGInstalled)
-        mBinding.microgConfiguration.text = microgLabel?.text
-        mBinding.microgConfiguration.setBackgroundColor(microgLabel?.color!!)
+        mBinding.microgConfiguration.text = microgLabel.text
+        mBinding.microgConfiguration.setBackgroundColor(microgLabel.color)
 
         val isRootedLabel = Label.create(requireContext(), mIsRooted)
-        mBinding.rootConfiguration.text = isRootedLabel?.text
-        mBinding.rootConfiguration.setBackgroundColor(isRootedLabel?.color!!)
+        mBinding.rootConfiguration.text = isRootedLabel.text
+        mBinding.rootConfiguration.setBackgroundColor(isRootedLabel.color)
 
         mPackageName = arguments?.getString("package")!!
 
-        mBinding.validateButton.setOnClickListener { onValidateClicked() }
-        mBinding.backButton.setOnClickListener { findNavController().navigate(R.id.action_evaluateFragment_to_chooseAppFragment) }
+        mBinding.validateButton.setOnClickListener {
+            onValidateClicked()
+        }
+
+        mBinding.backButton.setOnClickListener {
+            findNavController().navigate(R.id.action_evaluateFragment_to_chooseAppFragment)
+        }
+
         return mBinding.root
     }
 
     private fun onValidateClicked() {
         runBlocking {
 
-            if (mBinding.note.checkedRadioButtonId == -1) {
+            if (mBinding.note.checkedRadioButtonId == NOT_CHECKED) {
                 Toast.makeText(context, "Please select an evaluation.", Toast.LENGTH_SHORT).show()
                 return@runBlocking
             }
 
-            val app = mInstalledApplicationsRepository.getApplicationFromPackageName(requireContext(), mPackageName)
-            evaluateApp(app!!, requireView())
-            findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
+            val app = mInstalledApplicationsRepository.getApplicationFromPackageName(
+                requireContext(),
+                mPackageName
+            ) ?: return@runBlocking
+
+            val uploadAnswer = uploadIcon(app.icon).body()
+            uploadAnswer?.let {
+                evaluateApp(app, uploadAnswer[0], requireView())
+                findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
+            }
         }
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, view: View) {
-        val parseApp = ParseObject("LibreApps")
-        val existingEvaluation = fetchExistingEvaluation(app)
-        if (existingEvaluation != null) {
-            parseApp.objectId = existingEvaluation.objectId
-        }
+    private suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>> {
+        return mApplicationRepository.uploadIcon(icon)
+    }
 
-        val parseFile = ParseFile("icon.png", app.icon?.let { fromDrawableToByArray(it) })
-        parseFile.saveInBackground()
+    private suspend fun evaluateApp(app: InstalledApplication, icon: UploadIconAnswer, view: View) {
+        val remoteApplication = UploadEvaluationData(
+            app.name,
+            app.packageName,
+            icon.id,
+            getRateFromId(mBinding.note.checkedRadioButtonId, view),
+            isMicroGInstalled(),
+            isRooted()
+        )
 
-        parseApp.put("name", app.name)
-        parseApp.put("package", app.packageName)
-        parseApp.put("icon", parseFile)
+        val uploadApplication = UploadEvaluation(remoteApplication)
 
-        val rate = getRateFromId(mBinding.note.checkedRadioButtonId, view)
-        parseApp.put("rating", rate)
-
-        parseApp.put("microg", mIsMicroGInstalled)
-        parseApp.put("rooted", mIsRooted)
-
-        if (existingEvaluation == null) {
-            parseApp.saveInBackground()
-        } else if (existingEvaluation.getInt("rating") != rate) {
-            parseApp.saveInBackground()
+        if (isEvaluationExisting(remoteApplication)) {
+            mApplicationRepository.updateApplication(
+                uploadApplication,
+                getExistingEvaluationId(remoteApplication)
+            )
+        } else {
+            mApplicationRepository.addApplication(uploadApplication)
         }
     }
 
-    private fun isMicroGInstalled() : Int {
+    private fun isMicroGInstalled(): Int {
         val packageManager = requireContext().packageManager
         val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
         for (app in apps) {
@@ -122,31 +136,38 @@ class EvaluateFragment : Fragment() {
         return Label.BARE_AOSP
     }
 
-    private suspend fun fetchExistingEvaluation(app: InstalledApplication) : ParseObject? {
+    private suspend fun isEvaluationExisting(data: UploadEvaluationData): Boolean {
         return withContext(Dispatchers.IO) {
-            val query = ParseQuery.getQuery<ParseObject>("LibreApps")
-            query.whereEqualTo("package", app.packageName)
-            query.whereEqualTo("microg", mIsMicroGInstalled)
-            query.whereEqualTo("rooted", mIsRooted)
-            val answers = query.find()
-            if (answers.size == 1) {
-                return@withContext answers[0]
-            } else {
-                return@withContext null
+            val apps = mApplicationRepository.getApplicationsFromStrapi()
+            for (existingApp in apps) {
+                if (hasSameEvaluation(data, existingApp)) {
+                    return@withContext true
+                }
             }
+            return@withContext false
         }
     }
 
-    private fun fromDrawableToByArray(drawable: Drawable) : ByteArray {
-        val bitmap = drawable.toBitmap()
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
+    private suspend fun getExistingEvaluationId(data: UploadEvaluationData): Int {
+        return withContext(Dispatchers.IO) {
+            val apps = mApplicationRepository.getApplicationRawData()
+            for (existingApp in apps) {
+                if (hasSameEvaluation(data, existingApp.attributes)) {
+                    return@withContext existingApp.id
+                }
+            }
+            return@withContext -1
+        }
     }
 
-    private fun getRateFromId(id: Int, view: View) : Int {
+    private fun hasSameEvaluation(one: UploadEvaluationData, two: RemoteEvaluation): Boolean {
+        return one.packageName == two.packageName && one.name == two.name &&
+            one.microg == two.microg && one.rooted == two.rooted
+    }
+
+    private fun getRateFromId(id: Int, view: View): Int {
         val radioButton: RadioButton = view.findViewById(id)
-        return when(radioButton.text) {
+        return when (radioButton.text) {
             getString(R.string.works_perfectly) -> 1
             getString(R.string.works_partially) -> 2
             getString(R.string.dont_work) -> 3

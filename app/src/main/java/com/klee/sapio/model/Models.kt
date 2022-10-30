@@ -4,10 +4,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.klee.sapio.R
-import kotlinx.coroutines.Deferred
 import java.util.Date
 
 data class StrapiAnswer(
@@ -16,35 +14,14 @@ data class StrapiAnswer(
 )
 
 data class StrapiMeta(
-    @JsonProperty("pagination") val pagination: StrapiPagination
+    @JsonProperty("pagination") val pagination: StrapiPagination?
 )
 
 data class StrapiPagination(
-    @JsonProperty("page") val page:Int,
-    @JsonProperty("pageSize") val pageSize:Int,
-    @JsonProperty("pageCount") val pageCount:Int,
-    @JsonProperty("total") val total:Int
-)
-
-data class StrapiElement(
-    @JsonProperty("id") val id: Int,
-    @JsonProperty("attributes") val attributes: RemoteApplication
-)
-
-data class RemoteApplication(
-    @JsonProperty("name") val name: String,
-    @JsonProperty("packageName") val packageName: String,
-    @JsonProperty("icon") var icon: Icon,
-    @JsonProperty("rating") val rating: Int,
-    @JsonProperty("microg") val microg: Int,
-    @JsonProperty("rooted") val rooted: Int,
-    @JsonProperty("updatedAt") val updatedAt: Date,
-    @JsonProperty("createdAt") val createdAt: Date,
-    @JsonProperty("publishedAt") val publishedAt: Date
-)
-
-data class Icon(
-    @JsonProperty("data") val data: StrapiImageElement
+    @JsonProperty("page") val page: Int,
+    @JsonProperty("pageSize") val pageSize: Int,
+    @JsonProperty("pageCount") val pageCount: Int,
+    @JsonProperty("total") val total: Int
 )
 
 data class StrapiImageElement(
@@ -52,13 +29,34 @@ data class StrapiImageElement(
     @JsonProperty("attributes") val attributes: RemoteImage
 )
 
+data class StrapiElement(
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("attributes") val attributes: RemoteEvaluation
+)
+
+data class RemoteEvaluation(
+    @JsonProperty("name") val name: String,
+    @JsonProperty("packageName") val packageName: String,
+    @JsonProperty("icon") var icon: Icon?,
+    @JsonProperty("rating") val rating: Int,
+    @JsonProperty("microg") val microg: Int,
+    @JsonProperty("rooted") val rooted: Int,
+    @JsonProperty("updatedAt") val updatedAt: Date?,
+    @JsonProperty("createdAt") val createdAt: Date?,
+    @JsonProperty("publishedAt") val publishedAt: Date?
+)
+
+data class Icon(
+    @JsonProperty("data") val data: StrapiImageElement?
+)
+
 data class RemoteImage(
     @JsonProperty("name") val name: String,
-    @JsonProperty("alternativeText") val alternativeText: String,
-    @JsonProperty("caption") val caption: String,
+    @JsonProperty("alternativeText") val alternativeText: String?,
+    @JsonProperty("caption") val caption: String?,
     @JsonProperty("width") val width: Int,
     @JsonProperty("height") val height: Int,
-    @JsonProperty("formats") val formats: RemoteImageFormats,
+    @JsonProperty("formats") val formats: RemoteImageFormats?,
     @JsonProperty("hash") val hash: String,
     @JsonProperty("ext") val ext: String,
     @JsonProperty("mime") val mime: String,
@@ -87,11 +85,48 @@ data class ImageThumbnail(
     @JsonProperty("url") val url: String
 )
 
+data class UploadEvaluationData(
+    @JsonProperty("name") val name: String,
+    @JsonProperty("packageName") val packageName: String,
+    @JsonProperty("icon") var icon: Int?,
+    @JsonProperty("rating") val rating: Int,
+    @JsonProperty("microg") val microg: Int,
+    @JsonProperty("rooted") val rooted: Int
+)
+
+data class UploadEvaluation(
+    @JsonProperty("data") val data: UploadEvaluationData
+)
+
+data class UploadAnswer(
+    @JsonProperty("data") val data: StrapiElement,
+    @JsonProperty("meta") val meta: StrapiMeta?
+)
+
+data class UploadIconAnswer(
+    @JsonProperty("id") val id: Int,
+    @JsonProperty("name") val name: String,
+    @JsonProperty("alternativeText") val alternativeText: String?,
+    @JsonProperty("caption") val caption: String?,
+    @JsonProperty("width") val width: Int,
+    @JsonProperty("height") val height: Int,
+    @JsonProperty("formats") val formats: RemoteImageFormats?,
+    @JsonProperty("hash") val hash: String,
+    @JsonProperty("ext") val ext: String,
+    @JsonProperty("mime") val mime: String,
+    @JsonProperty("size") val size: Int,
+    @JsonProperty("url") val url: String,
+    @JsonProperty("previewUrl") val previewUrl: String?,
+    @JsonProperty("provider") val provider: String?,
+    @JsonProperty("provider_metadata") val provider_metadata: String?,
+    @JsonProperty("createdAt") val createdAt: Date,
+    @JsonProperty("updatedAt") val updatedAt: Date
+)
 
 data class InstalledApplication(
     val name: String,
     val packageName: String,
-    val icon: Drawable?
+    val icon: Drawable,
 )
 
 data class Label(val text: String, val color: Int) {

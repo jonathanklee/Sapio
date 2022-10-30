@@ -2,24 +2,21 @@ package com.klee.sapio.view.ui
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.AppCardBinding
-import com.klee.sapio.model.RemoteApplication
+import com.klee.sapio.model.RemoteEvaluation
 import com.klee.sapio.model.Label
 import com.klee.sapio.model.Rating
 import com.bumptech.glide.Glide
 import com.klee.sapio.model.RetrofitClient
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class AppAdapter(
     private val mContext: Context,
-    private var mApps: List<RemoteApplication>
+    private var mApps: List<RemoteEvaluation>
 ) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
     companion object {
@@ -55,7 +52,7 @@ class AppAdapter(
             element.rooted.setBackgroundColor(rootLabel.color)
         }
 
-        val url = RetrofitClient.BASE_URL + app.icon.data.attributes.url
+        val url = RetrofitClient.BASE_URL + app.icon?.data?.attributes?.url
         Glide.with(mContext).load(url).into(holder.binding.imageIcon)
     }
 
