@@ -16,18 +16,18 @@ class RemoteEvaluationRepository @Inject constructor() {
 
     private lateinit var feedEvaluations: List<RemoteEvaluation>
     private lateinit var foundEvaluations: List<RemoteEvaluation>
-    private val retrofitService = ApplicationService()
+    private val retrofitService = EvaluationService()
 
     suspend fun getApplicationsFromStrapi(): List<RemoteEvaluation> {
-        return retrofitService.getAllApplications()
+        return retrofitService.getAllEvaluations()
     }
 
     suspend fun getApplicationRawData(): List<StrapiElement> {
-        return retrofitService.getApplicationsRawData()
+        return retrofitService.getEvaluationsRawData()
     }
 
     suspend fun searchApplicationsFromStrapi(pattern: String): List<RemoteEvaluation> {
-        return retrofitService.searchApplication(pattern)
+        return retrofitService.searchEvaluation(pattern)
     }
 
     suspend fun getFeedApplications(): List<RemoteEvaluation> {
@@ -45,11 +45,11 @@ class RemoteEvaluationRepository @Inject constructor() {
     }
 
     suspend fun addApplication(app: UploadEvaluation): Response<UploadAnswer> {
-        return retrofitService.addApplication(app)
+        return retrofitService.addEvaluation(app)
     }
 
     suspend fun updateApplication(app: UploadEvaluation, id: Int): Response<UploadAnswer> {
-        return retrofitService.updateApplication(app, id)
+        return retrofitService.updateEvaluation(app, id)
     }
 
     suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>> {

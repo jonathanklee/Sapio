@@ -62,14 +62,14 @@ interface ApplicationApi {
     fun addIcon(@Part image: MultipartBody.Part): Call<ArrayList<UploadIconAnswer>>
 }
 
-class ApplicationService {
+class EvaluationService {
 
     private val retrofit = RetrofitClient.getClient()
-    private val applicationsApi = retrofit.create(ApplicationApi::class.java)
+    private val evaluationsApi = retrofit.create(ApplicationApi::class.java)
 
-    suspend fun getAllApplications(): List<RemoteEvaluation> {
+    suspend fun getAllEvaluations(): List<RemoteEvaluation> {
         val list = ArrayList<RemoteEvaluation>()
-        val strapiAnswer = fetchApplications()
+        val strapiAnswer = fetchEvaluations()
 
         strapiAnswer.data.map {
             list.add(it.attributes)
@@ -78,10 +78,10 @@ class ApplicationService {
         return list.sortedByDescending { it.updatedAt }
     }
 
-    suspend fun searchApplication(pattern: String): List<RemoteEvaluation> {
+    suspend fun searchEvaluation(pattern: String): List<RemoteEvaluation> {
         val list = ArrayList<RemoteEvaluation>()
 
-        val strapiAnswer = fetchApplications()
+        val strapiAnswer = fetchEvaluations()
 
         strapiAnswer.data.map {
             val app = it.attributes
@@ -93,8 +93,8 @@ class ApplicationService {
         return list
     }
 
-    suspend fun getApplicationsRawData(): List<StrapiElement> {
-        val strapiAnswer = fetchApplications()
+    suspend fun getEvaluationsRawData(): List<StrapiElement> {
+        val strapiAnswer = fetchEvaluations()
         val list = ArrayList<StrapiElement>()
 
         strapiAnswer.data.map {
@@ -104,31 +104,31 @@ class ApplicationService {
         return list
     }
 
-    private suspend fun fetchApplications(): StrapiAnswer {
+    private suspend fun fetchEvaluations(): StrapiAnswer {
         var strapiAnswer: StrapiAnswer
 
         withContext(Dispatchers.IO) {
-            strapiAnswer = applicationsApi.getApplicationsAsync().await()
+            strapiAnswer = evaluationsApi.getApplicationsAsync().await()
         }
 
         return strapiAnswer
     }
 
-    suspend fun addApplication(app: UploadEvaluation): Response<UploadAnswer> {
+    suspend fun addEvaluation(app: UploadEvaluation): Response<UploadAnswer> {
         var response: Response<UploadAnswer>
 
         withContext(Dispatchers.IO) {
-            response = applicationsApi.addApplication(app).execute()
+            response = evaluationsApi.addApplication(app).execute()
         }
 
         return response
     }
 
-    suspend fun updateApplication(app: UploadEvaluation, id: Int): Response<UploadAnswer> {
+    suspend fun updateEvaluation(app: UploadEvaluation, id: Int): Response<UploadAnswer> {
         var response: Response<UploadAnswer>
 
         withContext(Dispatchers.IO) {
-            response = applicationsApi.updateApplication(app, id).execute()
+            response = evaluationsApi.updateApplication(app, id).execute()
         }
 
         return response
@@ -141,7 +141,7 @@ class ApplicationService {
         val requestBody = bytes.toRequestBody(null, 0, bytes.size)
         val image = MultipartBody.Part.createFormData("files", "plop.png", requestBody)
         withContext(Dispatchers.IO) {
-            response = applicationsApi.addIcon(image).execute()
+            response = evaluationsApi.addIcon(image).execute()
         }
 
         return response
