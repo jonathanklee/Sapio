@@ -42,18 +42,18 @@ object RetrofitClient {
         .build()
 }
 
-interface ApplicationApi {
+interface EvaluationApi {
     @GET("sapio-applications?populate=*")
-    fun getApplicationsAsync(): Deferred<StrapiAnswer>
+    fun getEvaluationsAsync(): Deferred<StrapiAnswer>
 
     @Headers("Content-Type: application/json")
     @POST("sapio-applications")
-    fun addApplication(@Body application: UploadEvaluation): Call<UploadAnswer>
+    fun addEvaluation(@Body evaluation: UploadEvaluation): Call<UploadAnswer>
 
     @Headers("Content-Type: application/json")
     @PUT("sapio-applications/{id}")
-    fun updateApplication(
-        @Body application: UploadEvaluation,
+    fun updateEvaluation(
+        @Body evaluation: UploadEvaluation,
         @Path(value = "id", encoded = false) id: Int
     ): Call<UploadAnswer>
 
@@ -65,7 +65,7 @@ interface ApplicationApi {
 class EvaluationService {
 
     private val retrofit = RetrofitClient.getClient()
-    private val evaluationsApi = retrofit.create(ApplicationApi::class.java)
+    private val evaluationsApi = retrofit.create(EvaluationApi::class.java)
 
     suspend fun getAllEvaluations(): List<RemoteEvaluation> {
         val list = ArrayList<RemoteEvaluation>()
@@ -108,7 +108,7 @@ class EvaluationService {
         var strapiAnswer: StrapiAnswer
 
         withContext(Dispatchers.IO) {
-            strapiAnswer = evaluationsApi.getApplicationsAsync().await()
+            strapiAnswer = evaluationsApi.getEvaluationsAsync().await()
         }
 
         return strapiAnswer
@@ -118,7 +118,7 @@ class EvaluationService {
         var response: Response<UploadAnswer>
 
         withContext(Dispatchers.IO) {
-            response = evaluationsApi.addApplication(app).execute()
+            response = evaluationsApi.addEvaluation(app).execute()
         }
 
         return response
@@ -128,7 +128,7 @@ class EvaluationService {
         var response: Response<UploadAnswer>
 
         withContext(Dispatchers.IO) {
-            response = evaluationsApi.updateApplication(app, id).execute()
+            response = evaluationsApi.updateEvaluation(app, id).execute()
         }
 
         return response

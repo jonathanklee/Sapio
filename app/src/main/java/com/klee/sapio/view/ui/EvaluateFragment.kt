@@ -113,12 +113,12 @@ class EvaluateFragment : Fragment() {
         val uploadApplication = UploadEvaluation(remoteApplication)
 
         if (isEvaluationExisting(remoteApplication)) {
-            mApplicationRepository.updateApplication(
+            mApplicationRepository.updateEvaluation(
                 uploadApplication,
                 getExistingEvaluationId(remoteApplication)
             )
         } else {
-            mApplicationRepository.addApplication(uploadApplication)
+            mApplicationRepository.addEvaluation(uploadApplication)
         }
     }
 
@@ -138,7 +138,7 @@ class EvaluateFragment : Fragment() {
 
     private suspend fun isEvaluationExisting(data: UploadEvaluationData): Boolean {
         return withContext(Dispatchers.IO) {
-            val apps = mApplicationRepository.getApplicationsFromStrapi()
+            val apps = mApplicationRepository.getEvaluations()
             for (existingApp in apps) {
                 if (hasSameEvaluation(data, existingApp)) {
                     return@withContext true
