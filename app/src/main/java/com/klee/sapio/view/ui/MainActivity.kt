@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import com.parse.Parse
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,8 +21,6 @@ class MainActivity : AppCompatActivity() {
 
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
-        initParse()
 
         val tabLayout = mBinding.tabLayout
         val viewPager = mBinding.viewPager
@@ -54,15 +51,5 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun initParse() {
-        Parse.initialize(
-            Parse.Configuration.Builder(this)
-                .applicationId(getString(R.string.back4app_app_id))
-                .clientKey(getString(R.string.back4app_client_key))
-                .server(getString(R.string.back4app_server_url))
-                .build()
-        )
     }
 }
