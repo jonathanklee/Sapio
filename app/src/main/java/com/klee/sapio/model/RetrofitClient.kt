@@ -75,7 +75,7 @@ class ApplicationService {
             list.add(it.attributes)
         }
 
-        return list
+        return list.sortedByDescending { it.updatedAt }
     }
 
     suspend fun searchApplication(pattern: String): List<RemoteEvaluation> {
