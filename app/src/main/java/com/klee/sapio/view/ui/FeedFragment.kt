@@ -1,10 +1,10 @@
 package com.klee.sapio.view.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +27,7 @@ class FeedFragment : Fragment() {
         mBinding = FragmentMainBinding.inflate(layoutInflater)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        mViewModel.applications.observe(viewLifecycleOwner) { list ->
+        mViewModel.evaluations.observe(viewLifecycleOwner) { list ->
             mAppAdapter = AppAdapter(requireContext(), list)
             mBinding.recyclerView.adapter = mAppAdapter
         }
@@ -37,6 +37,16 @@ class FeedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mViewModel.listApplications()
+
+        if (!mViewModel.isEvaluationAvailable()) {
+            Toast.makeText(
+                requireContext(),
+                "You seem to be offline. Connectivity is required.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        mViewModel.listEvaluations()
     }
 }

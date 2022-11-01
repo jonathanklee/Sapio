@@ -4,9 +4,14 @@ import android.graphics.drawable.Drawable
 import retrofit2.Response
 import javax.inject.Inject
 
-class RemoteEvaluationRepository @Inject constructor() {
+class EvaluationRepository @Inject constructor() {
 
-    private val retrofitService = EvaluationService()
+    @Inject
+    lateinit var retrofitService: EvaluationService
+
+    fun isAvailable(): Boolean {
+        return retrofitService.hasConnectivity()
+    }
 
     suspend fun getEvaluations(): List<RemoteEvaluation> {
         return retrofitService.getAllEvaluations()

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.model.RemoteEvaluation
-import com.klee.sapio.model.RemoteEvaluationRepository
+import com.klee.sapio.model.EvaluationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor() : ViewModel() {
 
     @Inject
-    lateinit var applicationRepository: RemoteEvaluationRepository
+    lateinit var applicationRepository: EvaluationRepository
 
     val foundApplications = MutableLiveData<List<RemoteEvaluation>>()
 

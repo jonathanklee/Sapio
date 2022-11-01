@@ -1,9 +1,13 @@
 package com.klee.sapio.model
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,6 +28,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
 object RetrofitClient {
 
@@ -62,8 +67,9 @@ interface EvaluationApi {
     fun addIcon(@Part image: MultipartBody.Part): Call<ArrayList<UploadIconAnswer>>
 }
 
-class EvaluationService {
-
+class EvaluationService @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     private val retrofit = RetrofitClient.getClient()
     private val evaluationsApi = retrofit.create(EvaluationApi::class.java)
 
@@ -145,6 +151,23 @@ class EvaluationService {
         }
 
         return response
+    }
+
+    fun hasConnectivity(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val currentNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
+            ?: return false
+
+        if (networkCapabilities.hasCapability(NetworkCapabilities.TRANSPORT_CELLULAR) or
+            networkCapabilities.hasCapability(NetworkCapabilities.TRANSPORT_WIFI)
+        ) {
+            return true
+        }
+
+        return false
     }
 
     private fun fromDrawableToByArray(drawable: Drawable): ByteArray {

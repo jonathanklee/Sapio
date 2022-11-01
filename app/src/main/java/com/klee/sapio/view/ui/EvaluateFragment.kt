@@ -16,7 +16,7 @@ import com.klee.sapio.model.InstalledApplication
 import com.klee.sapio.model.Label
 import com.klee.sapio.model.InstalledApplicationsRepository
 import com.klee.sapio.model.RemoteEvaluation
-import com.klee.sapio.model.RemoteEvaluationRepository
+import com.klee.sapio.model.EvaluationRepository
 import com.klee.sapio.model.UploadEvaluation
 import com.klee.sapio.model.UploadIconAnswer
 import com.klee.sapio.model.UploadEvaluationData
@@ -38,7 +38,7 @@ class EvaluateFragment : Fragment() {
     }
 
     @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
-    @Inject lateinit var mApplicationRepository: RemoteEvaluationRepository
+    @Inject lateinit var mEvaluationRepository: EvaluationRepository
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
     private var mIsMicroGInstalled by Delegates.notNull<Int>()
@@ -97,7 +97,7 @@ class EvaluateFragment : Fragment() {
     }
 
     private suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>> {
-        return mApplicationRepository.uploadIcon(icon)
+        return mEvaluationRepository.uploadIcon(icon)
     }
 
     private suspend fun evaluateApp(app: InstalledApplication, icon: UploadIconAnswer, view: View) {
@@ -113,12 +113,12 @@ class EvaluateFragment : Fragment() {
         val uploadApplication = UploadEvaluation(remoteApplication)
 
         if (isEvaluationExisting(remoteApplication)) {
-            mApplicationRepository.updateEvaluation(
+            mEvaluationRepository.updateEvaluation(
                 uploadApplication,
                 getExistingEvaluationId(remoteApplication)
             )
         } else {
-            mApplicationRepository.addEvaluation(uploadApplication)
+            mEvaluationRepository.addEvaluation(uploadApplication)
         }
     }
 
@@ -138,7 +138,7 @@ class EvaluateFragment : Fragment() {
 
     private suspend fun isEvaluationExisting(data: UploadEvaluationData): Boolean {
         return withContext(Dispatchers.IO) {
-            val apps = mApplicationRepository.getEvaluations()
+            val apps = mEvaluationRepository.getEvaluations()
             for (existingApp in apps) {
                 if (hasSameEvaluation(data, existingApp)) {
                     return@withContext true
@@ -150,7 +150,7 @@ class EvaluateFragment : Fragment() {
 
     private suspend fun getExistingEvaluationId(data: UploadEvaluationData): Int {
         return withContext(Dispatchers.IO) {
-            val apps = mApplicationRepository.getApplicationRawData()
+            val apps = mEvaluationRepository.getApplicationRawData()
             for (existingApp in apps) {
                 if (hasSameEvaluation(data, existingApp.attributes)) {
                     return@withContext existingApp.id
