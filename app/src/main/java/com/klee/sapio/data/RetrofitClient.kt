@@ -53,12 +53,12 @@ interface EvaluationApi {
 
     @Headers("Content-Type: application/json")
     @POST("sapio-applications")
-    fun addEvaluation(@Body evaluation: UploadEvaluation): Call<UploadAnswer>
+    fun addEvaluation(@Body evaluation: UploadEvaluationHeader): Call<UploadAnswer>
 
     @Headers("Content-Type: application/json")
     @PUT("sapio-applications/{id}")
     fun updateEvaluation(
-        @Body evaluation: UploadEvaluation,
+        @Body evaluation: UploadEvaluationHeader,
         @Path(value = "id", encoded = false) id: Int
     ): Call<UploadAnswer>
 
@@ -120,7 +120,7 @@ class EvaluationService @Inject constructor(
         return strapiAnswer
     }
 
-    suspend fun addEvaluation(app: UploadEvaluation): Response<UploadAnswer> {
+    suspend fun addEvaluation(app: UploadEvaluationHeader): Response<UploadAnswer> {
         var response: Response<UploadAnswer>
 
         withContext(Dispatchers.IO) {
@@ -130,7 +130,7 @@ class EvaluationService @Inject constructor(
         return response
     }
 
-    suspend fun updateEvaluation(app: UploadEvaluation, id: Int): Response<UploadAnswer> {
+    suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int): Response<UploadAnswer> {
         var response: Response<UploadAnswer>
 
         withContext(Dispatchers.IO) {

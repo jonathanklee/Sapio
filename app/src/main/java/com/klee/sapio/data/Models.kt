@@ -85,7 +85,7 @@ data class ImageThumbnail(
     @JsonProperty("url") val url: String
 )
 
-data class UploadEvaluationData(
+data class UploadEvaluation(
     @JsonProperty("name") val name: String,
     @JsonProperty("packageName") val packageName: String,
     @JsonProperty("icon") var icon: Int?,
@@ -94,13 +94,13 @@ data class UploadEvaluationData(
     @JsonProperty("rooted") val rooted: Int
 )
 
-data class UploadEvaluation(
-    @JsonProperty("data") val data: UploadEvaluationData
-)
-
 data class UploadAnswer(
     @JsonProperty("data") val data: StrapiElement,
     @JsonProperty("meta") val meta: StrapiMeta?
+)
+
+data class UploadEvaluationHeader(
+    @JsonProperty("data") var data: UploadEvaluation
 )
 
 data class UploadIconAnswer(

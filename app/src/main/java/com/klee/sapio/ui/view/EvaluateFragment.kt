@@ -16,10 +16,10 @@ import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.Label
 import com.klee.sapio.data.InstalledApplicationsRepository
 import com.klee.sapio.data.Evaluation
-import com.klee.sapio.data.EvaluationRepository
-import com.klee.sapio.data.UploadEvaluation
+import com.klee.sapio.data.EvaluationRepositoryStrapi
+import com.klee.sapio.data.UploadEvaluationHeader
 import com.klee.sapio.data.UploadIconAnswer
-import com.klee.sapio.data.UploadEvaluationData
+import com.klee.sapio.data.UploadEvaluation
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,7 @@ class EvaluateFragment : Fragment() {
     }
 
     @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
-    @Inject lateinit var mEvaluationRepository: EvaluationRepository
+    @Inject lateinit var mEvaluationRepository: EvaluationRepositoryStrapi
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
     private var mIsMicroGInstalled by Delegates.notNull<Int>()
@@ -101,7 +101,7 @@ class EvaluateFragment : Fragment() {
     }
 
     private suspend fun evaluateApp(app: InstalledApplication, icon: UploadIconAnswer, view: View) {
-        val remoteApplication = UploadEvaluationData(
+        val remoteApplication = UploadEvaluation(
             app.name,
             app.packageName,
             icon.id,
@@ -110,15 +110,13 @@ class EvaluateFragment : Fragment() {
             isRooted()
         )
 
-        val uploadApplication = UploadEvaluation(remoteApplication)
-
         if (isEvaluationExisting(remoteApplication)) {
             mEvaluationRepository.updateEvaluation(
-                uploadApplication,
+                remoteApplication,
                 getExistingEvaluationId(remoteApplication)
             )
         } else {
-            mEvaluationRepository.addEvaluation(uploadApplication)
+            mEvaluationRepository.addEvaluation(remoteApplication)
         }
     }
 
@@ -136,7 +134,7 @@ class EvaluateFragment : Fragment() {
         return Label.BARE_AOSP
     }
 
-    private suspend fun isEvaluationExisting(data: UploadEvaluationData): Boolean {
+    private suspend fun isEvaluationExisting(data: UploadEvaluation): Boolean {
         return withContext(Dispatchers.IO) {
             val apps = mEvaluationRepository.getEvaluations()
             for (existingApp in apps) {
@@ -148,7 +146,7 @@ class EvaluateFragment : Fragment() {
         }
     }
 
-    private suspend fun getExistingEvaluationId(data: UploadEvaluationData): Int {
+    private suspend fun getExistingEvaluationId(data: UploadEvaluation): Int {
         return withContext(Dispatchers.IO) {
             val apps = mEvaluationRepository.getEvaluationsRawData()
             for (existingApp in apps) {
@@ -160,7 +158,7 @@ class EvaluateFragment : Fragment() {
         }
     }
 
-    private fun hasSameEvaluation(one: UploadEvaluationData, two: Evaluation): Boolean {
+    private fun hasSameEvaluation(one: UploadEvaluation, two: Evaluation): Boolean {
         return one.packageName == two.packageName && one.name == two.name &&
             one.microg == two.microg && one.rooted == two.rooted
     }

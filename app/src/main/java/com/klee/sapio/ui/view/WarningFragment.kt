@@ -7,14 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentWarningBinding
-import com.klee.sapio.data.EvaluationRepository
+import com.klee.sapio.data.EvaluationRepositoryStrapi
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class WarningFragment : Fragment() {
 
-    @Inject lateinit var mEvaluationRepository: EvaluationRepository
+    @Inject lateinit var mEvaluationRepository: EvaluationRepositoryStrapi
     private lateinit var mBinding: FragmentWarningBinding
 
     override fun onCreateView(
