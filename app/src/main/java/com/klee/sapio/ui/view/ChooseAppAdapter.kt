@@ -1,11 +1,11 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.ChooseAppCardBinding
-import com.klee.sapio.model.InstalledApplication
+import com.klee.sapio.data.InstalledApplication
 
 class ChooseAppAdapter(
     private var mApps: List<InstalledApplication>,

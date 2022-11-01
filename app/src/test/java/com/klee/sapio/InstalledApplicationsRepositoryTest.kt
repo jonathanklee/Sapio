@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import com.klee.sapio.model.InstalledApplicationsRepository
+import com.klee.sapio.data.InstalledApplicationsRepository
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert
 import org.junit.Before

@@ -1,4 +1,4 @@
-package com.klee.sapio.model
+package com.klee.sapio.data
 
 import android.graphics.drawable.Drawable
 import retrofit2.Response

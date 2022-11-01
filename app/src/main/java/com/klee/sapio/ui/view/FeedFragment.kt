@@ -1,4 +1,4 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.sapio.databinding.FragmentMainBinding
-import com.klee.sapio.view.viewmodel.EvaluationViewModel
+import com.klee.sapio.ui.viewmodel.EvaluationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

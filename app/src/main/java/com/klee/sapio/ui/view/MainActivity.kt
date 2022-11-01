@@ -1,4 +1,4 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.content.Intent
 import android.os.Bundle

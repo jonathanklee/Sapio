@@ -1,4 +1,4 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentChooseAppBinding
-import com.klee.sapio.model.InstalledApplication
+import com.klee.sapio.data.InstalledApplication
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 

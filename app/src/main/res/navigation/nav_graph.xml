@@ -6,7 +6,7 @@
     app:startDestination="@id/warningFragment">
     <fragment
         android:id="@+id/warningFragment"
-        android:name="com.klee.sapio.view.ui.WarningFragment"
+        android:name="com.klee.sapio.ui.view.WarningFragment"
         android:label="WarningFragment" >
         <action
             android:id="@+id/action_warningFragment_to_chooseAppFragment"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseAppFragment"
-        android:name="com.klee.sapio.view.ui.ChooseAppFragment"
+        android:name="com.klee.sapio.ui.view.ChooseAppFragment"
         android:label="ChooseAppFragment" >
         <action
             android:id="@+id/action_chooseAppFragment_to_evaluateFragment"
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/evaluateFragment"
-        android:name="com.klee.sapio.view.ui.EvaluateFragment"
+        android:name="com.klee.sapio.ui.view.EvaluateFragment"
         android:label="EvaluateFragment" >
         <action
             android:id="@+id/action_evaluateFragment_to_chooseAppFragment"
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/successFragment"
-        android:name="com.klee.sapio.view.ui.SuccessFragment"
+        android:name="com.klee.sapio.ui.view.SuccessFragment"
         android:label="SuccessFragment" >
         <action
             android:id="@+id/action_successFragment_to_warningFragment"

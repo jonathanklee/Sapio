@@ -1,4 +1,4 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,8 +10,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.DialogChooseAppBinding
-import com.klee.sapio.model.InstalledApplication
-import com.klee.sapio.model.InstalledApplicationsRepository
+import com.klee.sapio.data.InstalledApplication
+import com.klee.sapio.data.InstalledApplicationsRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

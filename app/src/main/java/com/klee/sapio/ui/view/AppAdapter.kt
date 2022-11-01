@@ -1,4 +1,4 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.content.Context
 import android.os.Build
@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.AppCardBinding
-import com.klee.sapio.model.Evaluation
-import com.klee.sapio.model.Label
-import com.klee.sapio.model.Rating
+import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.Label
+import com.klee.sapio.data.Rating
 import com.bumptech.glide.Glide
-import com.klee.sapio.model.RetrofitClient
+import com.klee.sapio.data.RetrofitClient
 import java.text.SimpleDateFormat
 import java.util.Locale
 

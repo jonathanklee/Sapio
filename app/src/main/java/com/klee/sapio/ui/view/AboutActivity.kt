@@ -1,7 +1,6 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.klee.sapio.databinding.ActivityAboutBinding
 

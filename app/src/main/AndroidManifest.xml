@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".view.ui.SplashActivity"
+            android:name=".ui.view.SplashActivity"
             android:theme="@style/Theme.Sapio.NoActionBar"
             android:screenOrientation="portrait"
             android:exported="true">
@@ -27,13 +27,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ui.MainActivity"
+            android:name=".ui.view.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sapio"
             android:exported="true">
         </activity>
         <activity
-            android:name=".view.ui.AboutActivity"
+            android:name=".ui.view.AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sapio"
             android:exported="true">

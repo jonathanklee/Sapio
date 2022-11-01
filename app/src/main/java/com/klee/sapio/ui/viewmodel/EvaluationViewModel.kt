@@ -1,10 +1,10 @@
-package com.klee.sapio.view.viewmodel
+package com.klee.sapio.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.klee.sapio.model.Evaluation
-import com.klee.sapio.model.EvaluationRepository
+import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.EvaluationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

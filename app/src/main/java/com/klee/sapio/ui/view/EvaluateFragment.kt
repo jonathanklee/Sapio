@@ -1,4 +1,4 @@
-package com.klee.sapio.view.ui
+package com.klee.sapio.ui.view
 
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -12,14 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluateBinding
-import com.klee.sapio.model.InstalledApplication
-import com.klee.sapio.model.Label
-import com.klee.sapio.model.InstalledApplicationsRepository
-import com.klee.sapio.model.Evaluation
-import com.klee.sapio.model.EvaluationRepository
-import com.klee.sapio.model.UploadEvaluation
-import com.klee.sapio.model.UploadIconAnswer
-import com.klee.sapio.model.UploadEvaluationData
+import com.klee.sapio.data.InstalledApplication
+import com.klee.sapio.data.Label
+import com.klee.sapio.data.InstalledApplicationsRepository
+import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.EvaluationRepository
+import com.klee.sapio.data.UploadEvaluation
+import com.klee.sapio.data.UploadIconAnswer
+import com.klee.sapio.data.UploadEvaluationData
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
