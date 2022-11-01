@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 object RetrofitClient {
 
-    const val BASE_URL = "http://192.168.1.42:1337"
+    const val BASE_URL = "http://176.159.53.237:1337"
 
     val okHttpClient = OkHttpClient()
         .newBuilder()
