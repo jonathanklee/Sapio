@@ -15,7 +15,7 @@ import com.klee.sapio.databinding.FragmentEvaluateBinding
 import com.klee.sapio.model.InstalledApplication
 import com.klee.sapio.model.Label
 import com.klee.sapio.model.InstalledApplicationsRepository
-import com.klee.sapio.model.RemoteEvaluation
+import com.klee.sapio.model.Evaluation
 import com.klee.sapio.model.EvaluationRepository
 import com.klee.sapio.model.UploadEvaluation
 import com.klee.sapio.model.UploadIconAnswer
@@ -150,7 +150,7 @@ class EvaluateFragment : Fragment() {
 
     private suspend fun getExistingEvaluationId(data: UploadEvaluationData): Int {
         return withContext(Dispatchers.IO) {
-            val apps = mEvaluationRepository.getApplicationRawData()
+            val apps = mEvaluationRepository.getEvaluationsRawData()
             for (existingApp in apps) {
                 if (hasSameEvaluation(data, existingApp.attributes)) {
                     return@withContext existingApp.id
@@ -160,7 +160,7 @@ class EvaluateFragment : Fragment() {
         }
     }
 
-    private fun hasSameEvaluation(one: UploadEvaluationData, two: RemoteEvaluation): Boolean {
+    private fun hasSameEvaluation(one: UploadEvaluationData, two: Evaluation): Boolean {
         return one.packageName == two.packageName && one.name == two.name &&
             one.microg == two.microg && one.rooted == two.rooted
     }

@@ -31,10 +31,10 @@ data class StrapiImageElement(
 
 data class StrapiElement(
     @JsonProperty("id") val id: Int,
-    @JsonProperty("attributes") val attributes: RemoteEvaluation
+    @JsonProperty("attributes") val attributes: Evaluation
 )
 
-data class RemoteEvaluation(
+data class Evaluation(
     @JsonProperty("name") val name: String,
     @JsonProperty("packageName") val packageName: String,
     @JsonProperty("icon") var icon: Icon?,

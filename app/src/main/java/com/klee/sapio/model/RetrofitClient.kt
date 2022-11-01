@@ -73,8 +73,8 @@ class EvaluationService @Inject constructor(
     private val retrofit = RetrofitClient.getClient()
     private val evaluationsApi = retrofit.create(EvaluationApi::class.java)
 
-    suspend fun getAllEvaluations(): List<RemoteEvaluation> {
-        val list = ArrayList<RemoteEvaluation>()
+    suspend fun getAllEvaluations(): List<Evaluation> {
+        val list = ArrayList<Evaluation>()
         val strapiAnswer = fetchEvaluations()
 
         strapiAnswer.data.map {
@@ -84,8 +84,8 @@ class EvaluationService @Inject constructor(
         return list.sortedByDescending { it.updatedAt }
     }
 
-    suspend fun searchEvaluation(pattern: String): List<RemoteEvaluation> {
-        val list = ArrayList<RemoteEvaluation>()
+    suspend fun searchEvaluation(pattern: String): List<Evaluation> {
+        val list = ArrayList<Evaluation>()
 
         val strapiAnswer = fetchEvaluations()
 

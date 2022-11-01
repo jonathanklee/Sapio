@@ -13,15 +13,15 @@ class EvaluationRepository @Inject constructor() {
         return retrofitService.hasConnectivity()
     }
 
-    suspend fun getEvaluations(): List<RemoteEvaluation> {
+    suspend fun getEvaluations(): List<Evaluation> {
         return retrofitService.getAllEvaluations()
     }
 
-    suspend fun getApplicationRawData(): List<StrapiElement> {
+    suspend fun getEvaluationsRawData(): List<StrapiElement> {
         return retrofitService.getEvaluationsRawData()
     }
 
-    suspend fun searchEvaluations(pattern: String): List<RemoteEvaluation> {
+    suspend fun searchEvaluations(pattern: String): List<Evaluation> {
         return retrofitService.searchEvaluation(pattern)
     }
 

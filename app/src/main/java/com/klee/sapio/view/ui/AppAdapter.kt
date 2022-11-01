@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.AppCardBinding
-import com.klee.sapio.model.RemoteEvaluation
+import com.klee.sapio.model.Evaluation
 import com.klee.sapio.model.Label
 import com.klee.sapio.model.Rating
 import com.bumptech.glide.Glide
@@ -16,7 +16,7 @@ import java.util.Locale
 
 class AppAdapter(
     private val mContext: Context,
-    private var mApps: List<RemoteEvaluation>
+    private var mApps: List<Evaluation>
 ) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
     companion object {
