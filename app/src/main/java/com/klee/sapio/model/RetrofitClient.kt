@@ -161,9 +161,7 @@ class EvaluationService @Inject constructor(
         val networkCapabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
             ?: return false
 
-        if (networkCapabilities.hasCapability(NetworkCapabilities.TRANSPORT_CELLULAR) or
-            networkCapabilities.hasCapability(NetworkCapabilities.TRANSPORT_WIFI)
-        ) {
+        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
             return true
         }
 
