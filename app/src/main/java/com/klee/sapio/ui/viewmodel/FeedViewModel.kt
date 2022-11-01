@@ -5,34 +5,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationRepository
+import com.klee.sapio.domain.ListAllEvaluationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EvaluationViewModel @Inject constructor() : ViewModel() {
+class FeedViewModel @Inject constructor(): ViewModel() {
 
     @Inject
     lateinit var applicationRepository: EvaluationRepository
 
+    @Inject
+    lateinit var listAllEvaluationUseCase: ListAllEvaluationUseCase
+
     var evaluations = MutableLiveData<List<Evaluation>>()
-    var foundEvaluations = MutableLiveData<List<Evaluation>>()
 
     fun listEvaluations() {
         viewModelScope.launch {
-            val result = applicationRepository.getEvaluations()
+            val result = listAllEvaluationUseCase.invoke()
             evaluations.postValue(result)
         }
-    }
-
-    fun searchApplication(pattern: String) {
-        viewModelScope.launch {
-            val result = applicationRepository.searchEvaluations(pattern)
-            foundEvaluations.postValue(result)
-        }
-    }
-
-    fun isEvaluationAvailable(): Boolean {
-        return applicationRepository.isAvailable()
     }
 }
