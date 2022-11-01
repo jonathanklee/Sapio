@@ -10,17 +10,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor() : ViewModel() {
+class EvaluationViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var applicationRepository: EvaluationRepository
 
-    val foundApplications = MutableLiveData<List<Evaluation>>()
+    var evaluations = MutableLiveData<List<Evaluation>>()
+    var foundEvaluations = MutableLiveData<List<Evaluation>>()
+
+    fun listEvaluations() {
+        viewModelScope.launch {
+            val result = applicationRepository.getEvaluations()
+            evaluations.postValue(result)
+        }
+    }
 
     fun searchApplication(pattern: String) {
         viewModelScope.launch {
             val result = applicationRepository.searchEvaluations(pattern)
-            foundApplications.postValue(result)
+            foundEvaluations.postValue(result)
         }
+    }
+
+    fun isEvaluationAvailable(): Boolean {
+        return applicationRepository.isAvailable()
     }
 }

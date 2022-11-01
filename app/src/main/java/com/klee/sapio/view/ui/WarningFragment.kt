@@ -7,9 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentWarningBinding
+import com.klee.sapio.model.EvaluationRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class WarningFragment : Fragment() {
 
+    @Inject lateinit var mEvaluationRepository: EvaluationRepository
     private lateinit var mBinding: FragmentWarningBinding
 
     override fun onCreateView(
@@ -20,6 +25,11 @@ class WarningFragment : Fragment() {
         mBinding = FragmentWarningBinding.inflate(layoutInflater)
 
         mBinding.proceedButton.setOnClickListener {
+            if (!mEvaluationRepository.isAvailable()) {
+                ToastMessage.showConnectivityIssue(requireContext())
+                return@setOnClickListener
+            }
+
             findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
