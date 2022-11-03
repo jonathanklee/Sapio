@@ -5,10 +5,10 @@ import android.widget.Toast
 
 object ToastMessage {
 
-    fun showConnectivityIssue(context: Context) {
+    fun showNetworkIssue(context: Context) {
         Toast.makeText(
             context,
-            "You seem to be offline. Connectivity is required.",
+            "Sapio's server cannot be reached.",
             Toast.LENGTH_LONG
         ).show()
     }

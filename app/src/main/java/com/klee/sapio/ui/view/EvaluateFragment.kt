@@ -17,7 +17,6 @@ import com.klee.sapio.data.Label
 import com.klee.sapio.data.InstalledApplicationsRepository
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationRepositoryStrapi
-import com.klee.sapio.data.UploadEvaluationHeader
 import com.klee.sapio.data.UploadIconAnswer
 import com.klee.sapio.data.UploadEvaluation
 import com.scottyab.rootbeer.RootBeer
@@ -88,15 +87,15 @@ class EvaluateFragment : Fragment() {
                 mPackageName
             ) ?: return@runBlocking
 
-            val uploadAnswer = uploadIcon(app.icon).body()
+            val uploadAnswer = uploadIcon(app.icon)?.body()
             uploadAnswer?.let {
                 evaluateApp(app, uploadAnswer[0], requireView())
                 findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
-            }
+            } ?: ToastMessage.showNetworkIssue(requireContext())
         }
     }
 
-    private suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>> {
+    private suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {
         return mEvaluationRepository.uploadIcon(icon)
     }
 

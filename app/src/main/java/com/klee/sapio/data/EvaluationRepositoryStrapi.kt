@@ -5,7 +5,7 @@ import com.klee.sapio.domain.EvaluationRepository
 import retrofit2.Response
 import javax.inject.Inject
 
-class EvaluationRepositoryStrapi @Inject constructor(): EvaluationRepository {
+class EvaluationRepositoryStrapi @Inject constructor() : EvaluationRepository {
 
     @Inject
     lateinit var retrofitService: EvaluationService
@@ -36,7 +36,7 @@ class EvaluationRepositoryStrapi @Inject constructor(): EvaluationRepository {
         return retrofitService.getEvaluationsRawData()
     }
 
-    suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>> {
+    suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {
         return retrofitService.uploadIcon(icon)
     }
 }

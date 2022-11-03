@@ -42,11 +42,6 @@ class FeedFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if (!isEvaluationsAvailableUseCase.invoke()) {
-            ToastMessage.showConnectivityIssue(requireContext())
-            return
-        }
-
-        mViewModel.listEvaluations()
+        mViewModel.listEvaluations(requireContext())
     }
 }

@@ -10,8 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.domain.IsEvaluationsAvailableUseCase
-import com.klee.sapio.domain.ListAllEvaluationUseCase
-import com.klee.sapio.ui.viewmodel.FeedViewModel
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -38,11 +36,6 @@ class SearchFragment : Fragment() {
         mViewModel.foundEvaluations.observe(viewLifecycleOwner) { list ->
             mAppAdapter = AppAdapter(requireContext(), list)
             mBinding.recyclerView.adapter = mAppAdapter
-        }
-
-        if (!mIsEvaluationsAvailableUseCase.invoke()) {
-            mBinding.editTextSearch.isEnabled = false
-            ToastMessage.showConnectivityIssue(requireContext())
         }
 
         mBinding.editTextSearch.addTextChangedListener { editable ->

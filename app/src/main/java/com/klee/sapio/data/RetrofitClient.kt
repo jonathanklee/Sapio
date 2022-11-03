@@ -28,6 +28,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import javax.inject.Inject
 
 object RetrofitClient {
@@ -70,12 +71,16 @@ interface EvaluationApi {
 class EvaluationService @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+    companion object {
+        const val TAG = "EvaluationService"
+    }
+
     private val retrofit = RetrofitClient.getClient()
     private val evaluationsApi = retrofit.create(EvaluationApi::class.java)
 
     suspend fun getAllEvaluations(): List<Evaluation> {
         val list = ArrayList<Evaluation>()
-        val strapiAnswer = fetchEvaluations()
+        val strapiAnswer = fetchEvaluations() ?: return ArrayList()
 
         strapiAnswer.data.map {
             list.add(it.attributes)
@@ -87,7 +92,7 @@ class EvaluationService @Inject constructor(
     suspend fun searchEvaluation(pattern: String): List<Evaluation> {
         val list = ArrayList<Evaluation>()
 
-        val strapiAnswer = fetchEvaluations()
+        val strapiAnswer = fetchEvaluations() ?: return ArrayList()
 
         strapiAnswer.data.map {
             val app = it.attributes
@@ -100,7 +105,8 @@ class EvaluationService @Inject constructor(
     }
 
     suspend fun getEvaluationsRawData(): List<StrapiElement> {
-        val strapiAnswer = fetchEvaluations()
+        val strapiAnswer = fetchEvaluations() ?: return ArrayList()
+
         val list = ArrayList<StrapiElement>()
 
         strapiAnswer.data.map {
@@ -110,44 +116,53 @@ class EvaluationService @Inject constructor(
         return list
     }
 
-    private suspend fun fetchEvaluations(): StrapiAnswer {
-        var strapiAnswer: StrapiAnswer
+    private suspend fun fetchEvaluations(): StrapiAnswer? {
+        var strapiAnswer: StrapiAnswer? = null
 
         withContext(Dispatchers.IO) {
-            strapiAnswer = evaluationsApi.getEvaluationsAsync().await()
+            try {
+                strapiAnswer = evaluationsApi.getEvaluationsAsync().await()
+            } catch (_: IOException) {}
         }
 
         return strapiAnswer
     }
 
-    suspend fun addEvaluation(app: UploadEvaluationHeader): Response<UploadAnswer> {
-        var response: Response<UploadAnswer>
+    suspend fun addEvaluation(app: UploadEvaluationHeader): Response<UploadAnswer>? {
+        var response: Response<UploadAnswer>? = null
 
         withContext(Dispatchers.IO) {
-            response = evaluationsApi.addEvaluation(app).execute()
+            try {
+                response = evaluationsApi.addEvaluation(app).execute()
+            } catch (_: IOException) {}
         }
 
         return response
     }
 
-    suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int): Response<UploadAnswer> {
-        var response: Response<UploadAnswer>
+    suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int): Response<UploadAnswer>? {
+        var response: Response<UploadAnswer>? = null
 
         withContext(Dispatchers.IO) {
-            response = evaluationsApi.updateEvaluation(app, id).execute()
+            try {
+                response = evaluationsApi.updateEvaluation(app, id).execute()
+            } catch (_: IOException) {}
         }
 
         return response
     }
 
-    suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>> {
-        var response: Response<ArrayList<UploadIconAnswer>>
+    suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {
+        var response: Response<ArrayList<UploadIconAnswer>>? = null
 
         val bytes = fromDrawableToByArray(icon)
         val requestBody = bytes.toRequestBody(null, 0, bytes.size)
         val image = MultipartBody.Part.createFormData("files", "plop.png", requestBody)
+
         withContext(Dispatchers.IO) {
-            response = evaluationsApi.addIcon(image).execute()
+            try {
+                response = evaluationsApi.addIcon(image).execute()
+            } catch (_: IOException) {}
         }
 
         return response

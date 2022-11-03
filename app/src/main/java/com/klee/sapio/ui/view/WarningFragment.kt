@@ -25,11 +25,6 @@ class WarningFragment : Fragment() {
         mBinding = FragmentWarningBinding.inflate(layoutInflater)
 
         mBinding.proceedButton.setOnClickListener {
-            if (!mEvaluationRepository.isAvailable()) {
-                ToastMessage.showConnectivityIssue(requireContext())
-                return@setOnClickListener
-            }
-
             findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
