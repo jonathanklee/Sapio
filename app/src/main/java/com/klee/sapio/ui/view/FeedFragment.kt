@@ -42,6 +42,10 @@ class FeedFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        mViewModel.listEvaluations(requireContext())
+        mViewModel.listEvaluations(this::onNetworkError)
+    }
+
+    private fun onNetworkError() {
+        ToastMessage.showNetworkIssue(requireContext())
     }
 }

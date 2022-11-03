@@ -21,10 +21,14 @@ class SearchViewModel @Inject constructor() : ViewModel() {
 
     var foundEvaluations = MutableLiveData<List<Evaluation>>()
 
-    fun searchApplication(pattern: String) {
+    fun searchApplication(pattern: String, onError: () -> Unit) {
         viewModelScope.launch {
             val result = searchEvaluationUseCase.invoke(pattern)
             foundEvaluations.postValue(result)
+
+            if (result.isEmpty()) {
+                onError.invoke()
+            }
         }
     }
 }

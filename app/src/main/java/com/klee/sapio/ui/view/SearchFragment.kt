@@ -42,9 +42,9 @@ class SearchFragment : Fragment() {
 
             val text = editable?.trim().toString()
             if (text.isNotEmpty()) {
-                mViewModel.searchApplication(text)
+                mViewModel.searchApplication(text, this::onNetworkError)
             } else {
-                mViewModel.searchApplication("pprrss")
+                mViewModel.searchApplication("pprrss", this::onNetworkError)
             }
 
             showResults(text.isNotEmpty())
@@ -53,12 +53,16 @@ class SearchFragment : Fragment() {
         return mBinding.root
     }
 
+    private fun onNetworkError() {
+        ToastMessage.showNetworkIssue(requireContext())
+    }
+
     private fun showResults(visible: Boolean) {
         if (visible) {
             mBinding.recyclerView.visibility = View.VISIBLE
             mBinding.searchIconBig.visibility = View.INVISIBLE
         } else {
-            mViewModel.searchApplication("pprrss")
+            mViewModel.searchApplication("pprrss", this::onNetworkError)
             mBinding.recyclerView.visibility = View.INVISIBLE
             mBinding.searchIconBig.visibility = View.VISIBLE
         }
