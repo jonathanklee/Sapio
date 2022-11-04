@@ -39,16 +39,6 @@
             android:exported="true">
             android:exported="true">
         </activity>
-
-        <meta-data
-            android:name="com.parse.SERVER_URL"
-            android:value="@string/back4app_server_url" />
-        <meta-data
-            android:name="com.parse.APPLICATION_ID"
-            android:value="@string/back4app_app_id" />
-        <meta-data
-            android:name="com.parse.CLIENT_KEY"
-            android:value="@string/back4app_client_key" />
     </application>
 
 </manifest>

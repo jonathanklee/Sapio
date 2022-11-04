@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Sapio</string>
-    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
 
     <!-- Paste BOTH strings as required -->
-    <string name="back4app_app_id">8zEFekyz9xD6PWxhxQklfGkszzLNPzmeaBJB7SXc</string>
-    <string name="back4app_client_key">Cuaga6kshqBPUFzWqtPQPVpAE5zrKhl6COWYBPzi</string>
     <string name="title_activity_report_app">ReportApp</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -22,7 +19,6 @@
     <string name="choose_app">Select</string>
     <string name="select_application_text">Select the application to evaluate</string>
     <string name="note_application_text">You can now evaluate the application</string>
-    <string name="safety_net_result"></string>
     <string name="microg_label">\ microG\ </string>
     <string name="bare_aosp_label">\ bareAOSP\ </string>
     <string name="user_label">\ user\ </string>
