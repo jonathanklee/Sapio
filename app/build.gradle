@@ -69,7 +69,6 @@ dependencies {
     implementation "androidx.emoji2:emoji2-views-helper:$emoji2_version"
 
     implementation 'com.scottyab:rootbeer-lib:0.1.0'
-    implementation 'com.nimbusds:nimbus-jose-jwt:5.1'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:4.3.1'
