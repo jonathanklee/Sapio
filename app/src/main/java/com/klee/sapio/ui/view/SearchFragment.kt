@@ -54,7 +54,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun onNetworkError() {
-        ToastMessage.showNetworkIssue(requireContext())
+        // Nothing for now
     }
 
     private fun showResults(visible: Boolean) {
