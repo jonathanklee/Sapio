@@ -47,12 +47,24 @@
         android:id="@+id/searchIconBig"
         android:layout_width="125dp"
         android:layout_height="101dp"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:src="@drawable/search"
         app:layout_constraintBottom_toTopOf="@+id/editTextSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recyclerView"
         app:tint="@color/teal_200" />
+
+    <TextView
+      android:id="@+id/searchText"
+      android:textStyle="bold"
+      android:layout_marginTop="10dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/look_for_an_application"
+      android:textSize="18sp"
+      app:layout_constraintEnd_toEndOf="@+id/searchIconBig"
+      app:layout_constraintStart_toStartOf="@+id/searchIconBig"
+      app:layout_constraintTop_toBottomOf="@+id/searchIconBig" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

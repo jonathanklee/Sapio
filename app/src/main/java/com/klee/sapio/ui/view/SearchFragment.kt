@@ -44,7 +44,7 @@ class SearchFragment : Fragment() {
             if (text.isNotEmpty()) {
                 mViewModel.searchApplication(text, this::onNetworkError)
             } else {
-                mViewModel.searchApplication("pprrss", this::onNetworkError)
+                mViewModel.searchApplication("", this::onNetworkError)
             }
 
             showResults(text.isNotEmpty())
@@ -61,10 +61,12 @@ class SearchFragment : Fragment() {
         if (visible) {
             mBinding.recyclerView.visibility = View.VISIBLE
             mBinding.searchIconBig.visibility = View.INVISIBLE
+            mBinding.searchText.visibility = View.INVISIBLE
         } else {
             mViewModel.searchApplication("pprrss", this::onNetworkError)
             mBinding.recyclerView.visibility = View.INVISIBLE
             mBinding.searchIconBig.visibility = View.VISIBLE
+            mBinding.searchText.visibility = View.VISIBLE
         }
     }
 }
