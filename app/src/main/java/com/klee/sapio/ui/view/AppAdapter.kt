@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.AppCardBinding
+import com.bumptech.glide.Glide
 import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Label
 import com.klee.sapio.data.Rating
-import com.bumptech.glide.Glide
-import com.klee.sapio.data.RetrofitClient
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -52,7 +52,7 @@ class AppAdapter(
             element.rooted.setBackgroundColor(rootLabel.color)
         }
 
-        val url = RetrofitClient.BASE_URL + app.icon?.data?.attributes?.url
+        val url = EvaluationService.BASE_URL + app.icon?.data?.attributes?.url
         Glide.with(mContext).load(url).into(holder.binding.imageIcon)
     }
 

@@ -11,10 +11,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.CertificatePinner
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -30,23 +30,6 @@ import retrofit2.http.Path
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import javax.inject.Inject
-
-object RetrofitClient {
-
-    const val BASE_URL = "http://176.159.53.237:1337"
-
-    val okHttpClient = OkHttpClient()
-        .newBuilder()
-        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-        .build()
-
-    fun getClient(): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl("$BASE_URL/api/")
-        .addConverterFactory(JacksonConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
-}
 
 interface EvaluationApi {
     @GET("sapio-applications?populate=*")
@@ -73,10 +56,31 @@ class EvaluationService @Inject constructor(
 ) {
     companion object {
         const val TAG = "EvaluationService"
+        const val BASE_URL = "https://sapio.ovh"
     }
 
-    private val retrofit = RetrofitClient.getClient()
-    private val evaluationsApi = retrofit.create(EvaluationApi::class.java)
+    private var retrofit: Retrofit
+    private var evaluationsApi: EvaluationApi
+
+    init {
+        val certificatePinner = CertificatePinner.Builder()
+            .add("sapio.ovh", "sha256/H6WgKeLXoWQUBdPJZWJNzD5X/vW/9TN2+HQ3mWD7pek=")
+            .build()
+
+        val okHttpClient = OkHttpClient()
+            .newBuilder()
+            .certificatePinner(certificatePinner)
+            .build()
+
+        retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl("$BASE_URL/api/")
+            .addConverterFactory(JacksonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .build()
+
+        evaluationsApi = retrofit.create(EvaluationApi::class.java)
+    }
 
     suspend fun getAllEvaluations(): List<Evaluation> {
         val list = ArrayList<Evaluation>()
