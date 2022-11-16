@@ -32,7 +32,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?populate=*")
+    @GET("sapio-applications?populate=*&pagination[pageSize]=100000")
     fun getEvaluationsAsync(): Deferred<StrapiAnswer>
 
     @Headers("Content-Type: application/json")
