@@ -7,7 +7,7 @@ interface EvaluationRepository {
 
     fun isAvailable(): Boolean
 
-    suspend fun getEvaluations(): List<Evaluation>
+    suspend fun listLatestEvaluations(): List<Evaluation>
 
     suspend fun searchEvaluations(pattern: String): List<Evaluation>
 

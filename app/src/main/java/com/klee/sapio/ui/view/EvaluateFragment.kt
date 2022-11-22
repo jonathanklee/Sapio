@@ -135,7 +135,7 @@ class EvaluateFragment : Fragment() {
 
     private suspend fun isEvaluationExisting(data: UploadEvaluation): Boolean {
         return withContext(Dispatchers.IO) {
-            val apps = mEvaluationRepository.getEvaluations()
+            val apps = mEvaluationRepository.listLatestEvaluations()
             for (existingApp in apps) {
                 if (hasSameEvaluation(data, existingApp)) {
                     return@withContext true

@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 interface EvaluationApi {
     @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=createdAt:Desc")
-    fun getFeedAsync(): Deferred<StrapiAnswer>
+    fun listLatestEvaluations(): Deferred<StrapiAnswer>
 
     @GET("sapio-applications?populate=*")
     fun searchAsync(
@@ -89,9 +89,9 @@ class EvaluationService @Inject constructor(
         evaluationsApi = retrofit.create(EvaluationApi::class.java)
     }
 
-    suspend fun getAllEvaluations(): List<Evaluation> {
+    suspend fun listLatestEvaluations(): List<Evaluation> {
         val list = ArrayList<Evaluation>()
-        val strapiAnswer = fetchEvaluations() ?: return ArrayList()
+        val strapiAnswer = listEvaluationsForFeed() ?: return ArrayList()
 
         strapiAnswer.data.map {
             list.add(it.attributes)
@@ -112,7 +112,7 @@ class EvaluationService @Inject constructor(
     }
 
     suspend fun getEvaluationsRawData(): List<StrapiElement> {
-        val strapiAnswer = fetchEvaluations() ?: return ArrayList()
+        val strapiAnswer = listEvaluationsForFeed() ?: return ArrayList()
 
         val list = ArrayList<StrapiElement>()
 
@@ -123,12 +123,12 @@ class EvaluationService @Inject constructor(
         return list
     }
 
-    private suspend fun fetchEvaluations(): StrapiAnswer? {
+    private suspend fun listEvaluationsForFeed(): StrapiAnswer? {
         var strapiAnswer: StrapiAnswer? = null
 
         withContext(Dispatchers.IO) {
             try {
-                strapiAnswer = evaluationsApi.getFeedAsync().await()
+                strapiAnswer = evaluationsApi.listLatestEvaluations().await()
             } catch (_: IOException) {}
         }
 

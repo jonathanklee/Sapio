@@ -14,8 +14,8 @@ class EvaluationRepositoryStrapi @Inject constructor() : EvaluationRepository {
         return retrofitService.hasConnectivity()
     }
 
-    override suspend fun getEvaluations(): List<Evaluation> {
-        return retrofitService.getAllEvaluations()
+    override suspend fun listLatestEvaluations(): List<Evaluation> {
+        return retrofitService.listLatestEvaluations()
     }
 
     override suspend fun searchEvaluations(pattern: String): List<Evaluation> {

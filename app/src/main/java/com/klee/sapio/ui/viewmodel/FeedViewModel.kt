@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationRepositoryStrapi
-import com.klee.sapio.domain.ListAllEvaluationUseCase
+import com.klee.sapio.domain.ListLatestEvaluationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,13 +17,13 @@ class FeedViewModel @Inject constructor() : ViewModel() {
     lateinit var applicationRepository: EvaluationRepositoryStrapi
 
     @Inject
-    lateinit var listAllEvaluationUseCase: ListAllEvaluationUseCase
+    lateinit var listLatestEvaluationsUseCase: ListLatestEvaluationsUseCase
 
     var evaluations = MutableLiveData<List<Evaluation>>()
 
     fun listEvaluations(onError: () -> Unit) {
         viewModelScope.launch {
-            val result = listAllEvaluationUseCase.invoke()
+            val result = listLatestEvaluationsUseCase.invoke()
             evaluations.postValue(result)
 
             if (result.isEmpty()) {
