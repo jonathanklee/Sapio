@@ -42,6 +42,11 @@ interface EvaluationApi {
         @Query("filters[\$or][1][packageName][\$contains]") packageName: String
     ): Deferred<StrapiAnswer>
 
+    @GET("sapio-applications?")
+    fun existingEvaluationsAsync(
+        @Query("filters[packageName][\$eq]") packageName: String
+    ): Deferred<StrapiAnswer>
+
     @Headers("Content-Type: application/json")
     @POST("sapio-applications")
     fun addEvaluation(@Body evaluation: UploadEvaluationHeader): Call<UploadAnswer>
@@ -111,11 +116,10 @@ class EvaluationService @Inject constructor(
         return list
     }
 
-    suspend fun getEvaluationsRawData(): List<StrapiElement> {
-        val strapiAnswer = listEvaluationsForFeed() ?: return ArrayList()
+    suspend fun existingEvaluations(packageName: String): List<StrapiElement> {
+        val strapiAnswer = getExistingEvaluations(packageName) ?: return ArrayList()
 
         val list = ArrayList<StrapiElement>()
-
         strapiAnswer.data.map {
             list.add(it)
         }
@@ -141,6 +145,18 @@ class EvaluationService @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 strapiAnswer = evaluationsApi.searchAsync(pattern, pattern).await()
+            } catch (_: IOException) {}
+        }
+
+        return strapiAnswer
+    }
+
+    private suspend fun getExistingEvaluations(packageName: String): StrapiAnswer? {
+        var strapiAnswer: StrapiAnswer? = null
+
+        withContext(Dispatchers.IO) {
+            try {
+                strapiAnswer = evaluationsApi.existingEvaluationsAsync(packageName).await()
             } catch (_: IOException) {}
         }
 

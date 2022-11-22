@@ -32,8 +32,8 @@ class EvaluationRepositoryStrapi @Inject constructor() : EvaluationRepository {
         retrofitService.updateEvaluation(header, id)
     }
 
-    suspend fun getEvaluationsRawData(): List<StrapiElement> {
-        return retrofitService.getEvaluationsRawData()
+    suspend fun existingEvaluations(packageName: String): List<StrapiElement> {
+        return retrofitService.existingEvaluations(packageName)
     }
 
     suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {

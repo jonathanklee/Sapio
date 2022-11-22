@@ -3,6 +3,7 @@ package com.klee.sapio.ui.view
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,7 @@ class EvaluateFragment : Fragment() {
 
     companion object {
         const val NOT_CHECKED = -1
+        const val NOT_EXISTING = -1
         const val MICRO_G_APP_LABEL = "microG Services Core"
     }
 
@@ -109,13 +111,11 @@ class EvaluateFragment : Fragment() {
             isRooted()
         )
 
-        if (isEvaluationExisting(remoteApplication)) {
-            mEvaluationRepository.updateEvaluation(
-                remoteApplication,
-                getExistingEvaluationId(remoteApplication)
-            )
-        } else {
+        val existingEvaluationId = getExistingEvaluationId(remoteApplication)
+        if (existingEvaluationId == NOT_EXISTING) {
             mEvaluationRepository.addEvaluation(remoteApplication)
+        } else {
+            mEvaluationRepository.updateEvaluation(remoteApplication, existingEvaluationId)
         }
     }
 
@@ -133,21 +133,9 @@ class EvaluateFragment : Fragment() {
         return Label.BARE_AOSP
     }
 
-    private suspend fun isEvaluationExisting(data: UploadEvaluation): Boolean {
-        return withContext(Dispatchers.IO) {
-            val apps = mEvaluationRepository.listLatestEvaluations()
-            for (existingApp in apps) {
-                if (hasSameEvaluation(data, existingApp)) {
-                    return@withContext true
-                }
-            }
-            return@withContext false
-        }
-    }
-
     private suspend fun getExistingEvaluationId(data: UploadEvaluation): Int {
         return withContext(Dispatchers.IO) {
-            val apps = mEvaluationRepository.getEvaluationsRawData()
+            val apps = mEvaluationRepository.existingEvaluations(data.packageName)
             for (existingApp in apps) {
                 if (hasSameEvaluation(data, existingApp.attributes)) {
                     return@withContext existingApp.id
