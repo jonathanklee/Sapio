@@ -27,13 +27,20 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?populate=*&pagination[pageSize]=100000")
-    fun getEvaluationsAsync(): Deferred<StrapiAnswer>
+    @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=createdAt:Desc")
+    fun getFeedAsync(): Deferred<StrapiAnswer>
+
+    @GET("sapio-applications?populate=*")
+    fun searchAsync(
+        @Query("filters[\$or][0][name][\$contains]") name: String,
+        @Query("filters[\$or][1][packageName][\$contains]") packageName: String
+    ): Deferred<StrapiAnswer>
 
     @Headers("Content-Type: application/json")
     @POST("sapio-applications")
@@ -96,13 +103,9 @@ class EvaluationService @Inject constructor(
     suspend fun searchEvaluation(pattern: String): List<Evaluation> {
         val list = ArrayList<Evaluation>()
 
-        val strapiAnswer = fetchEvaluations() ?: return ArrayList()
-
+        val strapiAnswer = searchEvaluations(pattern) ?: return ArrayList()
         strapiAnswer.data.map {
-            val app = it.attributes
-            if (app.name.contains(pattern, true) || app.packageName.contains(pattern, true)) {
-                list.add(app)
-            }
+            list.add(it.attributes)
         }
 
         return list
@@ -125,7 +128,19 @@ class EvaluationService @Inject constructor(
 
         withContext(Dispatchers.IO) {
             try {
-                strapiAnswer = evaluationsApi.getEvaluationsAsync().await()
+                strapiAnswer = evaluationsApi.getFeedAsync().await()
+            } catch (_: IOException) {}
+        }
+
+        return strapiAnswer
+    }
+
+    private suspend fun searchEvaluations(pattern: String): StrapiAnswer? {
+        var strapiAnswer: StrapiAnswer? = null
+
+        withContext(Dispatchers.IO) {
+            try {
+                strapiAnswer = evaluationsApi.searchAsync(pattern, pattern).await()
             } catch (_: IOException) {}
         }
 
