@@ -89,16 +89,27 @@ class EvaluateFragment : Fragment() {
                 mPackageName
             ) ?: return@runBlocking
 
-            val uploadAnswer = uploadIcon(app.icon)?.body()
+            // TODO: extract app evaluation into a use case class
+            evaluateApp(app)
+        }
+    }
+
+    private suspend fun evaluateApp(app: InstalledApplication) {
+        val existingIcons = getExistingIcons(app)
+        if (existingIcons.isEmpty()) {
+            val uploadAnswer = uploadIcon(app)?.body()
             uploadAnswer?.let {
                 evaluateApp(app, uploadAnswer[0], requireView())
                 findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
             } ?: ToastMessage.showNetworkIssue(requireContext())
+        } else {
+            evaluateApp(app, existingIcons[0], requireView())
+            findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
         }
     }
 
-    private suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {
-        return mEvaluationRepository.uploadIcon(icon)
+    private suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
+        return mEvaluationRepository.uploadIcon(app)
     }
 
     private suspend fun evaluateApp(app: InstalledApplication, icon: UploadIconAnswer, view: View) {
@@ -142,6 +153,17 @@ class EvaluateFragment : Fragment() {
                 }
             }
             return@withContext -1
+        }
+    }
+
+    private suspend fun getExistingIcons(app: InstalledApplication): List<UploadIconAnswer> {
+        return withContext(Dispatchers.IO) {
+            val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
+            if (icons.isEmpty()) {
+                return@withContext arrayListOf()
+            } else {
+                return@withContext icons
+            }
         }
     }
 

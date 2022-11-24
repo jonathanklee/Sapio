@@ -61,6 +61,11 @@ interface EvaluationApi {
     @Multipart
     @POST("upload")
     fun addIcon(@Part image: MultipartBody.Part): Call<ArrayList<UploadIconAnswer>>
+
+    @GET("upload/files?")
+    fun existingIcon(
+        @Query("filters[name][\$eq]") iconName: String
+    ): Deferred<List<UploadIconAnswer>>
 }
 
 class EvaluationService @Inject constructor(
@@ -187,12 +192,12 @@ class EvaluationService @Inject constructor(
         return response
     }
 
-    suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {
+    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
         var response: Response<ArrayList<UploadIconAnswer>>? = null
 
-        val bytes = fromDrawableToByArray(icon)
+        val bytes = fromDrawableToByArray(app.icon)
         val requestBody = bytes.toRequestBody(null, 0, bytes.size)
-        val image = MultipartBody.Part.createFormData("files", "plop.png", requestBody)
+        val image = MultipartBody.Part.createFormData("files", "${app.packageName}.png", requestBody)
 
         withContext(Dispatchers.IO) {
             try {
@@ -201,6 +206,18 @@ class EvaluationService @Inject constructor(
         }
 
         return response
+    }
+
+    suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
+        var remotesImage: List<UploadIconAnswer>? = null
+
+        withContext(Dispatchers.IO) {
+            try {
+                remotesImage = evaluationsApi.existingIcon(iconName).await()
+            } catch (_: IOException) {}
+        }
+
+        return remotesImage!!
     }
 
     fun hasConnectivity(): Boolean {

@@ -1,6 +1,5 @@
 package com.klee.sapio.data
 
-import android.graphics.drawable.Drawable
 import com.klee.sapio.domain.EvaluationRepository
 import retrofit2.Response
 import javax.inject.Inject
@@ -36,7 +35,11 @@ class EvaluationRepositoryStrapi @Inject constructor() : EvaluationRepository {
         return retrofitService.existingEvaluations(packageName)
     }
 
-    suspend fun uploadIcon(icon: Drawable): Response<ArrayList<UploadIconAnswer>>? {
-        return retrofitService.uploadIcon(icon)
+    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
+        return retrofitService.uploadIcon(app)
+    }
+
+    suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
+        return retrofitService.existingIcon(iconName)
     }
 }
