@@ -33,7 +33,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=createdAt:Desc")
+    @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=updatedAt:Desc")
     fun listLatestEvaluations(): Deferred<StrapiAnswer>
 
     @GET("sapio-applications?populate=*")
