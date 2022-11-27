@@ -20,7 +20,7 @@ class AppAdapter(
 ) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
     companion object {
-        const val DATE_FORMAT = "dd/MM/yyyy HH:MM"
+        const val DATE_FORMAT = "dd/MM/yyyy"
     }
 
     inner class ViewHolder(val binding: AppCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -37,7 +37,7 @@ class AppAdapter(
         element.packageName.text = app.packageName
 
         val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-        element.updatedDate.text = "Updated at ${dateFormat.format(app.updatedAt)}"
+        element.updatedDate.text = "Updated on ${dateFormat.format(app.updatedAt)}"
 
         element.emoji.text = Rating.create(app.rating)?.text
 

@@ -31,4 +31,5 @@
     <string name="evaluate_another_app">Evaluate another app</string>
     <string name="configuration_detected">Configuration detected</string>
     <string name="look_for_an_application">Look for an application</string>
+    <string name="updated_on">Updated on</string>
 </resources>

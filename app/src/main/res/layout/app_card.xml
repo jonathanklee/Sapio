@@ -18,24 +18,26 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageIcon"
-                android:layout_width="60dp"
-                android:layout_height="51dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
+                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
-                android:id="@+id/appName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:text="AppName"
-                android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/imageIcon"
-                app:layout_constraintTop_toTopOf="parent" />
+              android:id="@+id/appName"
+              android:layout_width="180dp"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="15dp"
+              android:maxLines="1"
+              android:ellipsize="end"
+              android:text="AppName"
+              android:textSize="16sp"
+              app:layout_constraintStart_toEndOf="@+id/imageIcon"
+              app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/packageName"
@@ -43,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="PackageName"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@+id/appName"
                 app:layout_constraintTop_toBottomOf="@+id/appName" />
 
@@ -52,37 +54,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Updated at"
+                android:text="@string/updated_on"
                 android:textSize="10sp"
                 android:textStyle="italic"
                 app:layout_constraintStart_toStartOf="@+id/appName"
                 app:layout_constraintTop_toBottomOf="@+id/emoji" />
 
             <TextView
-                android:id="@+id/microG"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/teal_200"
-                android:text=" microG "
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/appName"
-                app:layout_constraintTop_toTopOf="@+id/appName" />
+              android:id="@+id/microG"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="15dp"
+              android:layout_marginEnd="5dp"
+              android:background="@color/teal_200"
+              android:text=" microG "
+              android:textColor="@color/white"
+              android:textSize="11sp"
+              app:layout_constraintBottom_toBottomOf="@+id/appName"
+              app:layout_constraintEnd_toStartOf="@+id/rooted"
+              app:layout_constraintTop_toTopOf="@+id/appName" />
 
             <TextView
-                android:id="@+id/rooted"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@color/purple_200"
-                android:text=" rooted "
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/microG"
-                app:layout_constraintTop_toTopOf="parent" />
+              android:id="@+id/rooted"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="5dp"
+              android:background="@color/purple_200"
+              android:text=" rooted "
+              android:textColor="@color/white"
+              android:textSize="11sp"
+              app:layout_constraintBottom_toBottomOf="@+id/microG"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintTop_toTopOf="@+id/microG" />
 
             <androidx.emoji2.widget.EmojiTextView
                 android:id="@+id/emoji"
