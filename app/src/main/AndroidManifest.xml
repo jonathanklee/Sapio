@@ -37,7 +37,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sapio"
             android:exported="true">
-            android:exported="true">
         </activity>
     </application>
 
