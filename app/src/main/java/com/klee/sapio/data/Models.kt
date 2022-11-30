@@ -169,7 +169,7 @@ data class Rating(val value: Int, val text: String) {
         fun create(rating: Int): Rating {
             return when (rating) {
                 GOOD -> Rating(GOOD, "\uD83D\uDFE2")
-                AVERAGE -> Rating(AVERAGE, "\uD83D\uDFE0")
+                AVERAGE -> Rating(AVERAGE, "\uD83D\uDFE1")
                 BAD -> Rating(BAD, "\uD83D\uDD34")
                 else -> Rating(BAD, "\uD83D\uDD34")
             }
