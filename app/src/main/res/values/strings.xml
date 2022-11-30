@@ -13,7 +13,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="warning_desc">You are about to evaluate an Android application regarding its behavior on a bare Android Open Source Project (AOSP) device. Your device must not have the official Google Play Services installed.\n\nIf the device is running microG, please make sure that the application was tested with SafetyNet disabled in microG settings.</string>
+    <string name="warning_desc">You are about to evaluate an Android application regarding its behavior on a bare Android Open Source Project (AOSP) device.\n\nYour device must not have the official Google Play Services installed.\n\nIf the device is running microG, please make sure that the application was tested with SafetyNet disabled in microG settings.</string>
 
     <string name="proceed">Proceed</string>
     <string name="choose_app">Select</string>
