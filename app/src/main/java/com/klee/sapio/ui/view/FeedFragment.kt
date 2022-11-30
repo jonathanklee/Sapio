@@ -33,12 +33,25 @@ class FeedFragment : Fragment() {
             mBinding.recyclerView.adapter = mAppAdapter
         }
 
-        mViewModel.listEvaluations(this::onNetworkError)
+        mBinding.refreshView.setOnRefreshListener {
+            refreshFeed()
+        }
+
+        refreshFeed()
 
         return mBinding.root
     }
 
+    private fun refreshFeed() {
+        mViewModel.listEvaluations(this::onSuccess, this::onNetworkError)
+    }
+
     private fun onNetworkError() {
         ToastMessage.showNetworkIssue(requireContext())
+        mBinding.refreshView.isRefreshing = false
+    }
+
+    private fun onSuccess() {
+        mBinding.refreshView.isRefreshing = false
     }
 }

@@ -21,13 +21,15 @@ class FeedViewModel @Inject constructor() : ViewModel() {
 
     var evaluations = MutableLiveData<List<Evaluation>>()
 
-    fun listEvaluations(onError: () -> Unit) {
+    fun listEvaluations(onSuccess: () -> Unit, onError: () -> Unit) {
         viewModelScope.launch {
             val result = listLatestEvaluationsUseCase.invoke()
             evaluations.postValue(result)
 
             if (result.isEmpty()) {
                 onError.invoke()
+            } else {
+                onSuccess.invoke()
             }
         }
     }
