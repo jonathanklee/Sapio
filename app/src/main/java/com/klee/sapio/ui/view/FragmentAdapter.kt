@@ -17,7 +17,7 @@ class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         return when (position) {
             0 -> FeedFragment()
             1 -> SearchFragment()
-            2 -> EvaluationFragment()
+            2 -> ContributeFragment()
             else -> FeedFragment()
         }
     }
