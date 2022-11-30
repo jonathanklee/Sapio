@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             tab.text = when (position) {
                 0 -> "Feed"
                 1 -> "Search"
-                2 -> "Evaluate"
+                2 -> "Contribute"
                 else -> ""
             }
         }.attach()
