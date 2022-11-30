@@ -32,8 +32,17 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
     fun listEvaluations(packageName: String) {
         viewModelScope.launch {
             microgUserEvaluation.postValue(fetchAppMicrogUserEvaluationUseCase.invoke(packageName))
+        }
+
+        viewModelScope.launch {
             microgRootEvaluation.postValue(fetchAppMicrogRootEvaluationUseCase.invoke(packageName))
+        }
+
+        viewModelScope.launch {
             bareAospUserEvaluation.postValue(fetchAppBareAOspUserEvaluationUseCase.invoke(packageName))
+        }
+
+        viewModelScope.launch {
             bareAsopRootEvaluation.postValue(fetchAppBareAospRootEvaluationUseCase.invoke(packageName))
         }
     }
