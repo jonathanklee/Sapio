@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Sapio" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:textColor">@color/grey</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_500</item>
@@ -19,6 +20,7 @@
     <style name="Theme.Sapio.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="Theme.Sapio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

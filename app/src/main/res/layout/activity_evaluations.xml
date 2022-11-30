@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="horizontal"
+  tools:context=".ui.view.EvaluationsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+          android:id="@+id/icon"
+          android:layout_width="94dp"
+          android:layout_height="94dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TableLayout
+          android:id="@+id/table"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="50dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/packageName">
+
+            <TableRow
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+                <TextView
+                  android:id="@+id/empty"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:textSize="15sp" />
+
+                <TextView
+                  android:id="@+id/user"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:background="@color/purple_200"
+                  android:text=" user "
+                  android:textColor="@color/white"
+                  android:textSize="17sp" />
+
+                <TextView
+                  android:id="@+id/rooted"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:background="@color/purple_700"
+                  android:text=" root "
+                  android:textColor="@color/white"
+                  android:textSize="17sp" />
+
+
+            </TableRow>
+
+            <TableRow
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+                <TextView
+                  android:id="@+id/microg"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:background="@color/teal_200"
+                  android:text=" microG "
+                  android:textColor="@color/white"
+                  android:textSize="17sp" />
+
+                <androidx.emoji2.widget.EmojiTextView
+                  android:id="@+id/microgUser"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:textAlignment="center"
+                  android:textSize="17sp" />
+
+                <androidx.emoji2.widget.EmojiTextView
+                  android:id="@+id/microgRoot"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:textAlignment="center"
+                  android:textSize="17sp" />
+
+            </TableRow>
+
+            <TableRow
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+                <TextView
+                  android:id="@+id/bareAosp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:background="@color/teal_700"
+                  android:text=" bareAOSP "
+                  android:textColor="@color/white"
+                  android:textSize="17sp"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintTop_toBottomOf="@+id/dividerH1" />
+
+                <androidx.emoji2.widget.EmojiTextView
+                  android:id="@+id/bareAospUser"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:textAlignment="center"
+                  android:textSize="17sp" />
+
+                <androidx.emoji2.widget.EmojiTextView
+                  android:id="@+id/bareAospRoot"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  android:textAlignment="center"
+                  android:textSize="17sp" />
+
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+          android:id="@+id/packageName"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="20dp"
+          android:text="Package name"
+          android:textSize="12sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/applicationName" />
+
+        <TextView
+          android:id="@+id/applicationName"
+          android:textStyle="bold"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="30dp"
+          android:text="Application name"
+          android:textSize="20sp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/icon" />
+
+        <ImageView
+          android:id="@+id/infoIcon"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginTop="80dp"
+          app:tint="@color/grey_light"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/table"
+          app:srcCompat="@mipmap/ic_info_foreground" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

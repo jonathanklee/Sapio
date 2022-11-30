@@ -21,7 +21,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
               android:id="@+id/appName"
               android:layout_width="180dp"
               android:layout_height="wrap_content"
-              android:layout_marginStart="15dp"
+              android:layout_marginStart="20dp"
               android:maxLines="1"
               android:ellipsize="end"
               android:text="AppName"
@@ -95,6 +95,15 @@
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/appName"
                 app:layout_constraintTop_toBottomOf="@+id/packageName" />
+
+            <ImageView
+              android:id="@+id/infoIcon"
+              android:layout_width="25dp"
+              android:layout_height="25dp"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:srcCompat="@mipmap/ic_info_foreground"
+              app:tint="@color/grey_light" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -6,104 +6,116 @@
     android:layout_height="match_parent"
     tools:context=".ui.view.AboutActivity">
 
-    <TextView
-        android:id="@+id/aboutView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:text="@string/about_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/imageIcon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_margin="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/aboutView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@mipmap/ic_launcher" />
+        <ImageView
+          android:id="@+id/imageIcon"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_marginBottom="30dp"
+          app:layout_constraintBottom_toTopOf="@+id/aboutView"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/microgLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="40dp"
-        android:background="@color/teal_200"
-        android:textColor="@color/white"
-        android:text="@string/microg_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutView" />
+        <TextView
+          android:id="@+id/aboutView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="30dp"
+          android:layout_marginRight="30dp"
+          android:layout_marginBottom="30dp"
+          android:text="@string/about_text"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+          android:id="@+id/microgLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="40dp"
+          android:background="@color/teal_200"
+          android:text="@string/microg_label"
+          android:textColor="@color/white"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/aboutView" />
 
-    <TextView
-        android:id="@+id/microgExplanation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="40dp"
-        android:layout_marginStart="72dp"
-        android:text="The device has microG installed"
-        app:layout_constraintStart_toEndOf="@+id/microgLabel"
-        app:layout_constraintTop_toBottomOf="@+id/aboutView" />
+        <TextView
+          android:id="@+id/microgExplanation"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="40dp"
+          android:layout_marginStart="72dp"
+          android:text="The device has microG installed"
+          app:layout_constraintStart_toEndOf="@+id/microgLabel"
+          app:layout_constraintTop_toBottomOf="@+id/aboutView" />
 
-    <TextView
-        android:id="@+id/bareAospLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/teal_700"
-        android:textColor="@color/white"
-        android:text="@string/bare_aosp_label"
-        app:layout_constraintStart_toStartOf="@+id/microgLabel"
-        app:layout_constraintTop_toBottomOf="@+id/microgLabel" />
+        <TextView
+          android:id="@+id/bareAospLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:background="@color/teal_700"
+          android:text="@string/bare_aosp_label"
+          android:textColor="@color/white"
+          app:layout_constraintStart_toStartOf="@+id/microgLabel"
+          app:layout_constraintTop_toBottomOf="@+id/microgLabel" />
 
-    <TextView
-        android:id="@+id/bareAospExplanation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="The device is a bare AOSP device"
-        app:layout_constraintStart_toStartOf="@+id/microgExplanation"
-        app:layout_constraintTop_toTopOf="@+id/bareAospLabel" />
+        <TextView
+          android:id="@+id/bareAospExplanation"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="The device is a bare AOSP device"
+          app:layout_constraintStart_toStartOf="@+id/microgExplanation"
+          app:layout_constraintTop_toTopOf="@+id/bareAospLabel" />
 
-    <TextView
-        android:id="@+id/userLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/purple_200"
-        android:textColor="@color/white"
-        android:text="@string/user_label"
-        app:layout_constraintStart_toStartOf="@+id/bareAospLabel"
-        app:layout_constraintTop_toBottomOf="@+id/bareAospLabel" />
+        <TextView
+          android:id="@+id/userLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:background="@color/purple_200"
+          android:text="@string/user_label"
+          android:textColor="@color/white"
+          app:layout_constraintStart_toStartOf="@+id/bareAospLabel"
+          app:layout_constraintTop_toBottomOf="@+id/bareAospLabel" />
 
-    <TextView
-        android:id="@+id/userExplanation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="The device is not rooted"
-        app:layout_constraintStart_toStartOf="@+id/bareAospExplanation"
-        app:layout_constraintTop_toTopOf="@+id/userLabel" />
+        <TextView
+          android:id="@+id/userExplanation"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="The device is not rooted"
+          app:layout_constraintStart_toStartOf="@+id/bareAospExplanation"
+          app:layout_constraintTop_toTopOf="@+id/userLabel" />
 
-    <TextView
-        android:id="@+id/rootedLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/purple_700"
-        android:textColor="@color/white"
-        android:text="@string/rooted_label"
-        app:layout_constraintStart_toStartOf="@+id/userLabel"
-        app:layout_constraintTop_toBottomOf="@+id/userLabel" />
+        <TextView
+          android:id="@+id/rootedLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:background="@color/purple_700"
+          android:text="@string/rooted_label"
+          android:textColor="@color/white"
+          app:layout_constraintStart_toStartOf="@+id/userLabel"
+          app:layout_constraintTop_toBottomOf="@+id/userLabel" />
 
-    <TextView
-        android:id="@+id/rootedExplanation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="The device is considered rooted"
-        app:layout_constraintStart_toStartOf="@+id/userExplanation"
-        app:layout_constraintTop_toTopOf="@+id/rootedLabel" />
+        <TextView
+          android:id="@+id/rootedExplanation"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="The device is considered rooted"
+          app:layout_constraintStart_toStartOf="@+id/userExplanation"
+          app:layout_constraintTop_toTopOf="@+id/rootedLabel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

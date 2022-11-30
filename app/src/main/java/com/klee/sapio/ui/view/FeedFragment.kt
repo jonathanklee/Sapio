@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,13 +33,9 @@ class FeedFragment : Fragment() {
             mBinding.recyclerView.adapter = mAppAdapter
         }
 
-        return mBinding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         mViewModel.listEvaluations(this::onNetworkError)
+
+        return mBinding.root
     }
 
     private fun onNetworkError() {

@@ -31,6 +31,38 @@ class EvaluationRepositoryStrapi @Inject constructor() : EvaluationRepository {
         retrofitService.updateEvaluation(header, id)
     }
 
+    override suspend fun fetchMicrogUserEvaluation(appPackageName: String): Evaluation? {
+        return retrofitService.fetchEvaluation(
+            appPackageName,
+            Label.MICROG,
+            Label.USER
+        )
+    }
+
+    override suspend fun fetchMicrogRootEvaluation(appPackageName: String): Evaluation? {
+        return retrofitService.fetchEvaluation(
+            appPackageName,
+            Label.MICROG,
+            Label.ROOTED
+        )
+    }
+
+    override suspend fun fetchBareAospUserEvaluation(appPackageName: String): Evaluation? {
+        return retrofitService.fetchEvaluation(
+            appPackageName,
+            Label.BARE_AOSP,
+            Label.USER
+        )
+    }
+
+    override suspend fun fetchBareAospRootEvaluation(appPackageName: String): Evaluation? {
+        return retrofitService.fetchEvaluation(
+            appPackageName,
+            Label.BARE_AOSP,
+            Label.ROOTED
+        )
+    }
+
     suspend fun existingEvaluations(packageName: String): List<StrapiElement> {
         return retrofitService.existingEvaluations(packageName)
     }

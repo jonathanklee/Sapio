@@ -15,6 +15,7 @@ import okhttp3.CertificatePinner
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -66,6 +67,13 @@ interface EvaluationApi {
     fun existingIcon(
         @Query("filters[name][\$eq]") iconName: String
     ): Deferred<List<UploadIconAnswer>>
+    
+    @GET("sapio-applications?")
+    fun getSingleEvaluationAsync(
+        @Query("filters[\$and][0][packageName][\$contains]") packageName: String,
+        @Query("filters[\$and][1][microG][\$contains]") microG: Int,
+        @Query("filters[\$and][2][rooted][\$contains]") rooted: Int
+    ): Deferred<StrapiAnswer>
 }
 
 class EvaluationService @Inject constructor(
@@ -73,7 +81,7 @@ class EvaluationService @Inject constructor(
 ) {
     companion object {
         const val TAG = "EvaluationService"
-        const val BASE_URL = "https://sapio.ovh"
+        const val BASE_URL = "http://sapio.ovh:1337"
     }
 
     private var retrofit: Retrofit
@@ -87,6 +95,7 @@ class EvaluationService @Inject constructor(
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .certificatePinner(certificatePinner)
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
 
         retrofit = Retrofit.Builder()
@@ -218,6 +227,27 @@ class EvaluationService @Inject constructor(
         }
 
         return remotesImage!!
+    }
+
+    suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int): Evaluation? {
+        var answer: StrapiAnswer? = null
+
+        withContext(Dispatchers.IO) {
+            try {
+                answer = evaluationsApi.getSingleEvaluationAsync(
+                    appPackageName,
+                    microG,
+                    rooted
+                ).await()
+            } catch (_: IOException) {
+            }
+        }
+
+        if (answer?.data?.size!! <= 0) {
+            return null
+        }
+
+        return answer?.data?.get(0)?.attributes
     }
 
     fun hasConnectivity(): Boolean {

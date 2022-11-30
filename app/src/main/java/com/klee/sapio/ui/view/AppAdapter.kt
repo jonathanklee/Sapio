@@ -1,6 +1,7 @@
 package com.klee.sapio.ui.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -39,7 +40,7 @@ class AppAdapter(
         val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
         element.updatedDate.text = "Updated on ${dateFormat.format(app.updatedAt)}"
 
-        element.emoji.text = Rating.create(app.rating)?.text
+        element.emoji.text = Rating.create(app.rating).text
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val microgLabel = Label.create(mContext, app.microg)
@@ -54,6 +55,16 @@ class AppAdapter(
 
         val url = EvaluationService.BASE_URL + app.icon?.data?.attributes?.url
         Glide.with(mContext).load(url).into(holder.binding.imageIcon)
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(mContext, EvaluationsActivity::class.java)
+            intent.putExtra("packageName", app.packageName)
+            intent.putExtra("appName", app.name)
+            intent.putExtra("iconUrl", url)
+
+            mContext.startActivity(intent)
+        }
+
     }
 
     override fun getItemCount(): Int {
