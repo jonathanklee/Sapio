@@ -23,9 +23,9 @@
     <string name="bare_aosp_label">\ bareAOSP\ </string>
     <string name="user_label">\ user\ </string>
     <string name="rooted_label">\ root\ </string>
-    <string name="works_perfectly">It works perfectly. All features are usable as intended.</string>
-    <string name="works_partially">It works partially. Some features do not work.</string>
-    <string name="dont_work">It does not work at all or crashes.</string>
+    <string name="works_perfectly">\ It works perfectly. All features are working.</string>
+    <string name="works_partially">\ It works partially. Some features do not work.</string>
+    <string name="dont_work">\ It does not work at all or crashes.</string>
     <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio aims to provide an estimation of how Google dependent an Android application is, informing the community on how it behaves on bare Android Open Source Project (AOSP), coupled or not with microG.\n\nEvaluations in Sapio are given to the community by the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluate another app</string>
