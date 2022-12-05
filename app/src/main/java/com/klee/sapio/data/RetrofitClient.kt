@@ -81,7 +81,7 @@ class EvaluationService @Inject constructor(
 ) {
     companion object {
         const val TAG = "EvaluationService"
-        const val BASE_URL = "http://sapio.ovh:1337"
+        const val BASE_URL = "https://sapio.ovh"
     }
 
     private var retrofit: Retrofit
@@ -95,7 +95,6 @@ class EvaluationService @Inject constructor(
         val okHttpClient = OkHttpClient()
             .newBuilder()
             .certificatePinner(certificatePinner)
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
 
         retrofit = Retrofit.Builder()
