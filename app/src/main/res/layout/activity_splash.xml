@@ -17,10 +17,10 @@
 
         <ImageView
           android:id="@+id/imageView"
-          android:layout_width="100dp"
-          android:layout_height="100dp"
+          android:layout_width="150dp"
+          android:layout_height="150dp"
           android:layout_gravity="center"
-          app:srcCompat="@mipmap/ic_launcher" />
+          app:srcCompat="@mipmap/ic_launcher_foreground" />
 
         <TextView
           android:id="@+id/titleTextView"

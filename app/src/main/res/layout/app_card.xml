@@ -102,8 +102,8 @@
               android:layout_height="25dp"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
-              app:srcCompat="@mipmap/ic_info_foreground"
-              app:tint="@color/grey_light" />
+              app:tint="?android:colorPrimary"
+              app:srcCompat="@mipmap/ic_info_foreground"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -16,14 +16,14 @@
 
         <ImageView
           android:id="@+id/imageIcon"
-          android:layout_width="100dp"
-          android:layout_height="100dp"
+          android:layout_width="150dp"
+          android:layout_height="150dp"
           android:layout_marginBottom="30dp"
           app:layout_constraintBottom_toTopOf="@+id/aboutView"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
-          app:srcCompat="@mipmap/ic_launcher" />
+          app:srcCompat="@mipmap/ic_launcher_foreground" />
 
         <TextView
           android:id="@+id/aboutView"

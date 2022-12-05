@@ -162,7 +162,7 @@
           android:layout_width="40dp"
           android:layout_height="40dp"
           android:layout_marginTop="80dp"
-          app:tint="@color/grey_light"
+          app:tint="?android:colorPrimary"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/table"
