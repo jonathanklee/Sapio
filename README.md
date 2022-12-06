@@ -12,7 +12,7 @@ Evaluations in Sapio are given to the community by the community.
      alt="Get it on F-Droid"
      height="80">](https://f-droid.org/packages/com.klee.sapio/)
 
-<p><img src="https://github.com/jonathanklee/Sapio/blob/main/screen1.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/screen2.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/screen3.png" width="200"/>
+<p><img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="200"/>
 
 # Build
 ## Get the sources
