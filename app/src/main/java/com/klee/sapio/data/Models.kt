@@ -70,10 +70,12 @@ data class RemoteImage(
 )
 
 data class RemoteImageFormats(
-    @JsonProperty("thumbnail") val thumbnail: ImageThumbnail
+    @JsonProperty("thumbnail") val thumbnail: Image,
+    @JsonProperty("medium") val medium: Image?,
+    @JsonProperty("small") val small: Image?
 )
 
-data class ImageThumbnail(
+data class Image(
     @JsonProperty("name") val name: String,
     @JsonProperty("hash") val hash: String,
     @JsonProperty("ext") val ext: String,
