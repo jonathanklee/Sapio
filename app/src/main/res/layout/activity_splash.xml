@@ -17,26 +17,10 @@
 
         <ImageView
           android:id="@+id/imageView"
-          android:layout_width="150dp"
-          android:layout_height="150dp"
+          android:layout_width="250dp"
+          android:layout_height="250dp"
           android:layout_gravity="center"
           app:srcCompat="@mipmap/ic_launcher_foreground" />
-
-        <TextView
-          android:id="@+id/titleTextView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:text="Sapio"
-          android:textSize="24sp" />
-
-        <TextView
-          android:id="@+id/subtitleTextView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
-          android:layout_gravity="center"
-          android:text="Android Open Source API Compatibility" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
