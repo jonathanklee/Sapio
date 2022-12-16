@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +42,7 @@ class FeedFragment : Fragment() {
 
     private fun refreshFeed() {
         mViewModel.listEvaluations(this::onSuccess, this::onNetworkError)
+        mBinding.refreshView.isRefreshing = true
     }
 
     private fun onNetworkError() {
