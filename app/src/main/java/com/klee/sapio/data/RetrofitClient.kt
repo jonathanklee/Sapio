@@ -37,7 +37,7 @@ interface EvaluationApi {
     @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=updatedAt:Desc")
     fun listLatestEvaluations(): Deferred<StrapiAnswer>
 
-    @GET("sapio-applications?populate=*")
+    @GET("sapio-applications?populate=*&sort=name")
     fun searchAsync(
         @Query("filters[\$or][0][name][\$contains]") name: String,
         @Query("filters[\$or][1][packageName][\$contains]") packageName: String
