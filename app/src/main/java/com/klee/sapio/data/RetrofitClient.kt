@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,7 +17,6 @@ import okhttp3.CertificatePinner
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -35,7 +36,7 @@ import javax.inject.Inject
 
 interface EvaluationApi {
     @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=updatedAt:Desc")
-    fun listLatestEvaluations(): Deferred<StrapiAnswer>
+    fun listLatestEvaluationsAsync(): Deferred<StrapiAnswer>
 
     @GET("sapio-applications?populate=*&sort=name")
     fun searchAsync(
@@ -64,10 +65,10 @@ interface EvaluationApi {
     fun addIcon(@Part image: MultipartBody.Part): Call<ArrayList<UploadIconAnswer>>
 
     @GET("upload/files?")
-    fun existingIcon(
+    fun existingIconAsync(
         @Query("filters[name][\$eq]") iconName: String
     ): Deferred<List<UploadIconAnswer>>
-    
+
     @GET("sapio-applications?")
     fun getSingleEvaluationAsync(
         @Query("filters[\$and][0][packageName][\$contains]") packageName: String,
@@ -80,7 +81,6 @@ class EvaluationService @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     companion object {
-        const val TAG = "EvaluationService"
         const val BASE_URL = "https://sapio.ovh"
     }
 
@@ -145,7 +145,7 @@ class EvaluationService @Inject constructor(
 
         withContext(Dispatchers.IO) {
             try {
-                strapiAnswer = evaluationsApi.listLatestEvaluations().await()
+                strapiAnswer = evaluationsApi.listLatestEvaluationsAsync().await()
             } catch (_: IOException) {}
         }
 
@@ -205,7 +205,11 @@ class EvaluationService @Inject constructor(
 
         val bytes = fromDrawableToByArray(app.icon)
         val requestBody = bytes.toRequestBody(null, 0, bytes.size)
-        val image = MultipartBody.Part.createFormData("files", "${app.packageName}.png", requestBody)
+        val image = MultipartBody.Part.createFormData(
+            "files",
+            "${app.packageName}.png",
+            requestBody
+        )
 
         withContext(Dispatchers.IO) {
             try {
@@ -221,7 +225,7 @@ class EvaluationService @Inject constructor(
 
         withContext(Dispatchers.IO) {
             try {
-                remotesImage = evaluationsApi.existingIcon(iconName).await()
+                remotesImage = evaluationsApi.existingIconAsync(iconName).await()
             } catch (_: IOException) {}
         }
 
@@ -249,6 +253,7 @@ class EvaluationService @Inject constructor(
         return answer?.data?.get(0)?.attributes
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun hasConnectivity(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
