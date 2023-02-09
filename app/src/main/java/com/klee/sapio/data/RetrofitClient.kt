@@ -89,7 +89,7 @@ class EvaluationService @Inject constructor(
 
     init {
         val certificatePinner = CertificatePinner.Builder()
-            .add("sapio.ovh", "sha256/H6WgKeLXoWQUBdPJZWJNzD5X/vW/9TN2+HQ3mWD7pek=")
+            .add("sapio.ovh", "sha256/4bdk0Ru05BjKvJ/spawez9iVBQUUdzQRWCDbOtro+dk=")
             .build()
 
         val okHttpClient = OkHttpClient()
