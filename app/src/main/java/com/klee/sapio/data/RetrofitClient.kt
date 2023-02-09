@@ -13,7 +13,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.CertificatePinner
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -88,13 +87,8 @@ class EvaluationService @Inject constructor(
     private var evaluationsApi: EvaluationApi
 
     init {
-        val certificatePinner = CertificatePinner.Builder()
-            .add("sapio.ovh", "sha256/4bdk0Ru05BjKvJ/spawez9iVBQUUdzQRWCDbOtro+dk=")
-            .build()
-
         val okHttpClient = OkHttpClient()
             .newBuilder()
-            .certificatePinner(certificatePinner)
             .build()
 
         retrofit = Retrofit.Builder()
