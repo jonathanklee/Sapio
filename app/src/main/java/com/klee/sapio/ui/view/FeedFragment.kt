@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class FeedFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMainBinding
-    private lateinit var mAppAdapter: AppAdapter
+    private lateinit var mFeedAppAdapter: FeedAppAdapter
     private val mViewModel by viewModels<FeedViewModel>()
 
     override fun onCreateView(
@@ -27,8 +27,8 @@ class FeedFragment : Fragment() {
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         mViewModel.evaluations.observe(viewLifecycleOwner) { list ->
-            mAppAdapter = AppAdapter(requireContext(), list)
-            mBinding.recyclerView.adapter = mAppAdapter
+            mFeedAppAdapter = FeedAppAdapter(requireContext(), list)
+            mBinding.recyclerView.adapter = mFeedAppAdapter
         }
 
         mBinding.refreshView.setOnRefreshListener {

@@ -120,7 +120,9 @@ class EvaluationService @Inject constructor(
             list.add(it.attributes)
         }
 
-        return list
+        return list.distinctBy {
+            it.name
+        }
     }
 
     suspend fun existingEvaluations(packageName: String): List<StrapiElement> {

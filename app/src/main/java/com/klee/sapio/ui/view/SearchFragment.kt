@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private lateinit var mBinding: FragmentSearchBinding
-    private lateinit var mAppAdapter: AppAdapter
+    private lateinit var mSearchAppAdapter: SearchAppAdapter
     private val mViewModel by viewModels<SearchViewModel>()
 
     override fun onCreateView(
@@ -29,8 +29,8 @@ class SearchFragment : Fragment() {
         mBinding.recyclerView.visibility = View.INVISIBLE
 
         mViewModel.foundEvaluations.observe(viewLifecycleOwner) { list ->
-            mAppAdapter = AppAdapter(requireContext(), list)
-            mBinding.recyclerView.adapter = mAppAdapter
+            mSearchAppAdapter = SearchAppAdapter(requireContext(), list)
+            mBinding.recyclerView.adapter = mSearchAppAdapter
         }
 
         mBinding.editTextSearch.addTextChangedListener { editable ->

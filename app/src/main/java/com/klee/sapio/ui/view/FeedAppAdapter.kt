@@ -6,7 +6,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.databinding.AppCardBinding
+import com.klee.sapio.databinding.FeedAppCardBinding
 import com.bumptech.glide.Glide
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
@@ -15,19 +15,19 @@ import com.klee.sapio.data.Rating
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AppAdapter(
+class FeedAppAdapter(
     private val mContext: Context,
     private var mApps: List<Evaluation>
-) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<FeedAppAdapter.ViewHolder>() {
 
     companion object {
         const val DATE_FORMAT = "dd/MM/yyyy"
     }
 
-    inner class ViewHolder(val binding: AppCardBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: FeedAppCardBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = AppCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = FeedAppCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -64,7 +64,6 @@ class AppAdapter(
 
             mContext.startActivity(intent)
         }
-
     }
 
     override fun getItemCount(): Int {
