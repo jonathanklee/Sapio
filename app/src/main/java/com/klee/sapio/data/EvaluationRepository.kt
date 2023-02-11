@@ -4,7 +4,8 @@ import com.klee.sapio.domain.EvaluationRepository
 import retrofit2.Response
 import javax.inject.Inject
 
-class EvaluationRepositoryStrapi @Inject constructor() : EvaluationRepository {
+class EvaluationRepository @Inject constructor() :
+    EvaluationRepository {
 
     @Inject
     lateinit var retrofitService: EvaluationService

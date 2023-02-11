@@ -1,7 +1,7 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.DeviceConfiguration
-import com.klee.sapio.data.EvaluationRepositoryStrapi
+import com.klee.sapio.data.EvaluationRepository
 import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.UploadIconAnswer
 import com.klee.sapio.data.UploadEvaluation
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class EvaluateAppUseCase @Inject constructor() {
 
-    @Inject lateinit var mEvaluationRepository: EvaluationRepositoryStrapi
+    @Inject lateinit var mEvaluationRepository: EvaluationRepository
     @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
 
     suspend operator fun invoke(
@@ -39,11 +39,13 @@ class EvaluateAppUseCase @Inject constructor() {
         }
     }
 
-    private suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
+    private suspend fun uploadIcon(
+        app: InstalledApplication
+    ): Response<ArrayList<UploadIconAnswer>>? {
         return mEvaluationRepository.uploadIcon(app)
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int , rate: Int) {
+    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rate: Int) {
         val remoteApplication = UploadEvaluation(
             app.name,
             app.packageName,
@@ -86,6 +88,6 @@ class EvaluateAppUseCase @Inject constructor() {
 
     private fun hasSameEvaluation(one: UploadEvaluation, two: Evaluation): Boolean {
         return one.packageName == two.packageName && one.name == two.name &&
-                one.microg == two.microg && one.rooted == two.rooted
+            one.microg == two.microg && one.rooted == two.rooted
     }
 }
