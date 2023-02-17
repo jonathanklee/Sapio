@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout = mBinding.tabLayout
         val viewPager = mBinding.viewPager
-        viewPager.isUserInputEnabled = false
         viewPager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
         TabLayoutMediator(tabLayout, viewPager, true, false) { tab, position ->
             tab.text = when (position) {
