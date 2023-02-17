@@ -32,4 +32,7 @@
     <string name="configuration_detected">Configuration detected</string>
     <string name="look_for_an_application">Look for an application</string>
     <string name="updated_on">Updated on</string>
+    <string name="android_compatibility_matrix">Android Compatibility Matrix</string>
+    <string name="application_name">Application name</string>
+    <string name="package_name">Package name</string>
 </resources>

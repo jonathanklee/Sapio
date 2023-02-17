@@ -28,10 +28,10 @@
           android:id="@+id/table"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="50dp"
+          android:layout_marginTop="20dp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/packageName">
+          app:layout_constraintTop_toBottomOf="@id/compatibilityMatrix">
 
             <TableRow
               android:layout_width="wrap_content"
@@ -140,7 +140,7 @@
           android:layout_height="wrap_content"
           android:layout_marginBottom="20dp"
           android:layout_marginTop="5dp"
-          android:text="Package name"
+          android:text="@string/package_name"
           android:textSize="12sp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -152,12 +152,25 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_margin="30dp"
-          android:text="Application name"
+          android:layout_marginTop="100dp"
+          android:text="@string/application_name"
           android:textSize="20sp"
           app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintHorizontal_bias="0.507"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/icon" />
 
+        <TextView
+          android:id="@+id/compatibilityMatrix"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="40dp"
+          android:text="@string/android_compatibility_matrix"
+          android:textSize="14sp"
+          app:layout_constraintBottom_toTopOf="@+id/table"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/packageName" />
         <ImageView
           android:id="@+id/infoIcon"
           android:layout_width="40dp"
