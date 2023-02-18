@@ -1,4 +1,5 @@
 package com.klee.sapio.ui.view
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,20 @@ class WarningFragment : Fragment() {
             findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
+        mBinding.proceedButton.isEnabled = hasDeviceLatinLanguage()
+
         return mBinding.root
+    }
+
+    private fun hasDeviceLatinLanguage(): Boolean {
+        val languageCode = Resources.getSystem().configuration.locales.get(0).language
+        if (languageCode.startsWith("en") || languageCode.startsWith("fr") ||
+            languageCode.startsWith("es") || languageCode.startsWith("de") ||
+            languageCode.startsWith("it")
+        ) {
+            return true
+        }
+
+        return false
     }
 }
