@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
         TabLayoutMediator(tabLayout, viewPager, true, false) { tab, position ->
             tab.text = when (position) {
-                0 -> "Feed"
-                1 -> "Search"
-                2 -> "Contribute"
+                0 -> getString(R.string.feed_title)
+                1 -> getString(R.string.search_title)
+                2 -> getString(R.string.contribute_title)
                 else -> ""
             }
         }.attach()

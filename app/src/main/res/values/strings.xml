@@ -16,7 +16,7 @@
     <string name="warning_desc">You are about to evaluate an Android application regarding its behavior on a bare Android Open Source Project (AOSP) device.\n\nYour device must not have the official Google Play Services installed.\n\nThere is no need to evaluate applications which are available on F-Droid since they do not have any dependencies to Google Play Services.\n\nIf the device is running microG, please make sure that the application was tested with SafetyNet disabled in microG settings.\n\nNon-Latin locales are not yet supported. You can switch your device into a Latin language if you want to contribute though.</string>
 
     <string name="proceed">Proceed</string>
-    <string name="choose_app">Select</string>
+    <string name="select_button">Select</string>
     <string name="select_application_text">Select the application to evaluate</string>
     <string name="note_application_text">You can now evaluate the application</string>
     <string name="microg_label">\ microG\ </string>
@@ -35,4 +35,16 @@
     <string name="android_compatibility_matrix">Android Compatibility Matrix</string>
     <string name="application_name">Application name</string>
     <string name="package_name">Package name</string>
+    <string name="feed_title">Feed</string>
+    <string name="search_title">Search</string>
+    <string name="contribute_title">Contribute</string>
+    <string name="about">About</string>
+    <string name="the_device_has_microg_installed">The device has microG installed</string>
+    <string name="the_device_is_a_bare_aosp_device">The device is a bare AOSP device</string>
+    <string name="the_device_is_not_rooted">The device is not rooted</string>
+    <string name="the_device_is_considered_rooted">The device is considered rooted</string>
+    <string name="next_button">Next</string>
+    <string name="back_button">Back</string>
+    <string name="validate_button">Validate</string>
+    <string name="thank_you">Thank you for evaluating the application</string>
 </resources>

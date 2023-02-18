@@ -65,7 +65,7 @@
           android:layout_height="wrap_content"
           android:layout_margin="40dp"
           android:layout_marginStart="72dp"
-          android:text="The device has microG installed"
+          android:text="@string/the_device_has_microg_installed"
           app:layout_constraintStart_toEndOf="@+id/microgLabel"
           app:layout_constraintTop_toBottomOf="@+id/aboutView" />
 
@@ -84,7 +84,7 @@
           android:id="@+id/bareAospExplanation"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="The device is a bare AOSP device"
+          android:text="@string/the_device_is_a_bare_aosp_device"
           app:layout_constraintStart_toStartOf="@+id/microgExplanation"
           app:layout_constraintTop_toTopOf="@+id/bareAospLabel" />
 
@@ -103,7 +103,7 @@
           android:id="@+id/userExplanation"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="The device is not rooted"
+          android:text="@string/the_device_is_not_rooted"
           app:layout_constraintStart_toStartOf="@+id/bareAospExplanation"
           app:layout_constraintTop_toTopOf="@+id/userLabel" />
 
@@ -122,7 +122,7 @@
           android:id="@+id/rootedExplanation"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="The device is considered rooted"
+          android:text="@string/the_device_is_considered_rooted"
           app:layout_constraintStart_toStartOf="@+id/userExplanation"
           app:layout_constraintTop_toTopOf="@+id/rootedLabel" />
 

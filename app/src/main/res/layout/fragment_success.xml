@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_margin="20dp"
-        android:text="Thank you for evaluating the application"
+        android:text="@string/thank_you"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
