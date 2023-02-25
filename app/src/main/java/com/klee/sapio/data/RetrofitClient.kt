@@ -216,7 +216,7 @@ class EvaluationService @Inject constructor(
         return response
     }
 
-    suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
+    suspend fun existingIcon(iconName: String): List<UploadIconAnswer>? {
         var remotesImage: List<UploadIconAnswer>? = null
 
         withContext(Dispatchers.IO) {
@@ -225,7 +225,7 @@ class EvaluationService @Inject constructor(
             } catch (_: IOException) {}
         }
 
-        return remotesImage!!
+        return remotesImage
     }
 
     suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int): Evaluation? {

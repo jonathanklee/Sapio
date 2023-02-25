@@ -71,6 +71,7 @@ data class RemoteImage(
 
 data class RemoteImageFormats(
     @JsonProperty("thumbnail") val thumbnail: Image,
+    @JsonProperty("large") val large: Image?,
     @JsonProperty("medium") val medium: Image?,
     @JsonProperty("small") val small: Image?
 )
