@@ -75,7 +75,7 @@ class EvaluationRepository @Inject constructor() :
     suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
         val icons = retrofitService.existingIcon(iconName)
         icons?.let {
-            return@let it
+            return it
         }
         return emptyList()
     }
