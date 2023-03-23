@@ -35,16 +35,24 @@ class ChooseAppFragment : Fragment() {
         }
 
         mBinding.nextButton.setOnClickListener { onNextClicked() }
-        mBinding.backButton.setOnClickListener { findNavController().navigate(R.id.action_chooseAppFragment_to_warningFragment) }
+        mBinding.backButton.setOnClickListener {
+            findNavController().navigate(R.id.action_chooseAppFragment_to_warningFragment)
+        }
+
         return mBinding.root
     }
 
     private fun onNextClicked() {
         runBlocking {
             if (mApp == null) {
-                Toast.makeText(context, "Please select an app.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.select_application_error),
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@runBlocking
             }
+
             val bundle = bundleOf("package" to mApp?.packageName)
             findNavController().navigate(R.id.action_chooseAppFragment_to_evaluateFragment, bundle)
         }

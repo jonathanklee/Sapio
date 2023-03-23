@@ -6,7 +6,9 @@
     <string name="proceed">Proceed</string>
     <string name="select_button">Select</string>
     <string name="select_application_text">Select the application to evaluate</string>
+    <string name="select_application_error">Please select an application</string>
     <string name="note_application_text">You can now evaluate the application</string>
+    <string name="select_evaluation_error">Please select an evaluation</string>
     <string name="microg_label" translatable="false">\ microG\ </string>
     <string name="bare_aosp_label" translatable="false">\ bareAOSP\ </string>
     <string name="user_label" translatable="false">\ user\ </string>

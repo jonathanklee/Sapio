@@ -67,7 +67,7 @@ class EvaluateFragment : Fragment() {
         runBlocking {
 
             if (mBinding.note.checkedRadioButtonId == NOT_CHECKED) {
-                Toast.makeText(context, "Please select an evaluation.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please select an evaluation", Toast.LENGTH_SHORT).show()
                 return@runBlocking
             }
 

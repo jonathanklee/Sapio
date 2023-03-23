@@ -5,7 +5,9 @@
     <string name="proceed">Commencer</string>
     <string name="select_button">Sélectionner</string>
     <string name="select_application_text">Selectionner l\'application à évaluer</string>
+    <string name="select_application_error">Veuillez sélectionner une application</string>
     <string name="note_application_text">Vous pouvez désormais évaluer l\'application</string>
+    <string name="select_evaluation_error">Veuillez sélectionner une évaluation</string>
     <string name="works_perfectly">\ Elle fonctionne parfaitement.</string>
     <string name="works_partially">\ Elle fonctionne partiellement.</string>
     <string name="dont_work">\ Elle ne fonctionne pas du tout ou crashe.</string>
