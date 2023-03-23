@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.FeedAppCardBinding
 import com.bumptech.glide.Glide
+import com.klee.sapio.R
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Label
@@ -38,7 +39,8 @@ class FeedAppAdapter(
         element.packageName.text = app.packageName
 
         val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-        element.updatedDate.text = "Updated on ${dateFormat.format(app.updatedAt)}"
+        element.updatedDate.text =
+            "${mContext.getString(R.string.updated_on)} ${dateFormat.format(app.updatedAt)}"
 
         element.emoji.text = Rating.create(app.rating).text
 

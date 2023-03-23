@@ -16,7 +16,7 @@
     <string name="evaluate_another_app">Evaluer une autre application</string>
     <string name="configuration_detected">Configuration détéctée</string>
     <string name="look_for_an_application">Rechercher une application</string>
-    <string name="updated_on">Mise à jour le</string>
+    <string name="updated_on">Mis à jour le</string>
     <string name="android_compatibility_matrix">Matrice de compatibilité Android</string>
     <string name="application_name">Nom de l\'application</string>
     <string name="package_name">Nom du paquet</string>
