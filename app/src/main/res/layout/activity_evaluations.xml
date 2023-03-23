@@ -16,13 +16,23 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-          android:id="@+id/icon"
+        <androidx.cardview.widget.CardView
+          android:id="@+id/imageCard"
           android:layout_width="94dp"
           android:layout_height="94dp"
+          app:cardCornerRadius="50dp"
+          android:shape="ring"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+          app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+              android:id="@+id/image"
+              android:layout_width="104dp"
+              android:layout_height="104dp"
+              android:layout_gravity="center"
+              tools:srcCompat="@tools:sample/avatars" />
+
+        </androidx.cardview.widget.CardView>
 
         <TableLayout
           android:id="@+id/table"
@@ -158,7 +168,7 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintHorizontal_bias="0.507"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/icon" />
+          app:layout_constraintTop_toBottomOf="@id/imageCard" />
 
         <TextView
           android:id="@+id/compatibilityMatrix"

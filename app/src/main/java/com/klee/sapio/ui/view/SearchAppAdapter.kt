@@ -36,7 +36,7 @@ class SearchAppAdapter(
         element.packageName.text = app.packageName
 
         val url = EvaluationService.BASE_URL + app.icon?.data?.attributes?.url
-        Glide.with(mContext).load(url).into(holder.binding.imageIcon)
+        Glide.with(mContext).load(url).into(holder.binding.image)
 
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, EvaluationsActivity::class.java)

@@ -57,7 +57,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding.applicationName.text = appName
 
         val iconUrl = intent.getStringExtra("iconUrl").toString()
-        Glide.with(this).load(iconUrl).into(mBinding.icon)
+        Glide.with(this).load(iconUrl).into(mBinding.image)
 
         mBinding.infoIcon.setOnClickListener() {
             val intent = Intent(this, AboutActivity::class.java)

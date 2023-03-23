@@ -16,18 +16,30 @@
             android:layout_margin="5dp"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageIcon"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/imageCard"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                app:cardCornerRadius="50dp"
+                android:shape="ring"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars">
+
+                <ImageView
+                  android:id="@+id/image"
+                  android:layout_width="60dp"
+                  android:layout_height="60dp"
+                  android:layout_gravity="center"
+                  tools:srcCompat="@tools:sample/avatars" />
+
+            </androidx.cardview.widget.CardView>
+
 
             <androidx.appcompat.widget.LinearLayoutCompat
               android:layout_width="wrap_content"
@@ -35,7 +47,7 @@
               android:orientation="vertical"
               android:layout_marginStart="20dp"
               app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintStart_toEndOf="@+id/imageIcon"
+              app:layout_constraintStart_toEndOf="@+id/imageCard"
               app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
