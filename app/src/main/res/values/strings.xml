@@ -1,32 +1,20 @@
 <resources>
-    <string name="app_name">Sapio</string>
-
-    <!-- Paste BOTH strings as required -->
-    <string name="title_activity_report_app">ReportApp</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="app_name" translatable="false">Sapio</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="warning_desc">You are about to evaluate an Android application regarding its behavior on a bare Android Open Source Project (AOSP) device.\n\nYour device must not have the official Google Play Services installed.\n\nThere is no need to evaluate applications which are available on F-Droid since they do not have any dependencies to Google Play Services.\n\nIf the device is running microG, please make sure that the application was tested with SafetyNet disabled in microG settings.\n\nNon-Latin locales are not yet supported. You can switch your device into a Latin language if you want to contribute though.</string>
-
     <string name="proceed">Proceed</string>
     <string name="select_button">Select</string>
     <string name="select_application_text">Select the application to evaluate</string>
     <string name="note_application_text">You can now evaluate the application</string>
-    <string name="microg_label">\ microG\ </string>
-    <string name="bare_aosp_label">\ bareAOSP\ </string>
-    <string name="user_label">\ user\ </string>
-    <string name="rooted_label">\ root\ </string>
+    <string name="microg_label" translatable="false">\ microG\ </string>
+    <string name="bare_aosp_label" translatable="false">\ bareAOSP\ </string>
+    <string name="user_label" translatable="false">\ user\ </string>
+    <string name="rooted_label" translatable="false">\ root\ </string>
     <string name="works_perfectly">\ It works perfectly. All features are working.</string>
     <string name="works_partially">\ It works partially. Some features do not work.</string>
     <string name="dont_work">\ It does not work at all or crashes.</string>
-    <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio aims to provide an estimation of how Google dependent an Android application is, informing the community on how it behaves on bare Android Open Source Project (AOSP), coupled or not with microG.\n\nEvaluations in Sapio are given to the community by the community.</string>
+    <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio aims to provide an estimation of how Google Play Services dependent an Android application is, informing the community on how it behaves on bare Android Open Source Project (AOSP), coupled or not with microG.\n\nEvaluations in Sapio are given to the community by the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluate another app</string>
     <string name="configuration_detected">Configuration detected</string>
@@ -43,8 +31,6 @@
     <string name="the_device_is_a_bare_aosp_device">The device is a bare AOSP device</string>
     <string name="the_device_is_not_rooted">The device is not rooted</string>
     <string name="the_device_is_considered_rooted">The device is considered rooted</string>
-    <string name="next_button">Next</string>
-    <string name="back_button">Back</string>
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
 </resources>
