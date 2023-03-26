@@ -25,7 +25,6 @@ class EvaluateFragment : Fragment() {
     companion object {
         const val NOT_CHECKED = -1
         const val NOT_EXISTING = -1
-        const val MICRO_G_APP_LABEL = "microG Services Core"
     }
 
     @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
@@ -42,7 +41,7 @@ class EvaluateFragment : Fragment() {
     ): View {
         mBinding = FragmentEvaluateBinding.inflate(layoutInflater)
 
-        val microgLabel = Label.create(requireContext(), mDeviceConfiguration.isMicroGInstalled())
+        val microgLabel = Label.create(requireContext(), mDeviceConfiguration.getGmsType())
         mBinding.microgConfiguration.text = microgLabel.text
         mBinding.microgConfiguration.setBackgroundColor(microgLabel.color)
 

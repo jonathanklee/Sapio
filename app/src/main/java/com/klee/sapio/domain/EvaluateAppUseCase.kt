@@ -51,7 +51,7 @@ class EvaluateAppUseCase @Inject constructor() {
             app.packageName,
             iconId,
             rate,
-            mDeviceConfiguration.isMicroGInstalled(),
+            mDeviceConfiguration.getGmsType(),
             mDeviceConfiguration.isRooted()
         )
 

@@ -132,13 +132,24 @@ data class InstalledApplication(
     val icon: Drawable,
 )
 
+object GmsType {
+    const val MICROG = 1
+    const val BARE_AOSP = 2
+    const val GOOGLE_PLAY_SERVICES = 3
+}
+
+object UserType {
+    const val USER = 3
+    const val ROOT = 4
+}
+
 data class Label(val text: String, val color: Int) {
 
     companion object {
-        const val MICROG = 1
-        const val BARE_AOSP = 2
-        const val USER = 3
-        const val ROOTED = 4
+        const val MICROG = GmsType.MICROG
+        const val BARE_AOSP = GmsType.BARE_AOSP
+        const val USER = UserType.USER
+        const val ROOTED = UserType.ROOT
 
         @RequiresApi(Build.VERSION_CODES.M)
         fun create(context: Context, label: Int): Label {
@@ -165,9 +176,9 @@ data class Rating(val value: Int, val text: String) {
 
     companion object {
 
-        const val GOOD = 1
-        const val AVERAGE = 2
-        const val BAD = 3
+        private const val GOOD = 1
+        private const val AVERAGE = 2
+        private const val BAD = 3
 
         fun create(rating: Int): Rating {
             return when (rating) {

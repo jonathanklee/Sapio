@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
+import com.klee.sapio.data.DeviceConfiguration
 import com.klee.sapio.databinding.FragmentWarningBinding
 import com.klee.sapio.data.EvaluationRepository
+import com.klee.sapio.data.GmsType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -16,6 +18,7 @@ import javax.inject.Inject
 class WarningFragment : Fragment() {
 
     @Inject lateinit var mEvaluationRepository: EvaluationRepository
+    @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
     private lateinit var mBinding: FragmentWarningBinding
 
     override fun onCreateView(
@@ -29,7 +32,8 @@ class WarningFragment : Fragment() {
             findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
-        mBinding.proceedButton.isEnabled = hasDeviceLatinLanguage()
+        mBinding.proceedButton.isEnabled = hasDeviceLatinLanguage() &&
+                mDeviceConfiguration.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES
 
         return mBinding.root
     }

@@ -2,7 +2,6 @@ package com.klee.sapio.data
 
 import android.content.Context
 import android.content.pm.PackageManager
-import com.klee.sapio.ui.view.EvaluateFragment
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -12,19 +11,31 @@ import javax.inject.Singleton
 class DeviceConfiguration @Inject constructor(
     @ApplicationContext private val mContext: Context
 ) {
+    companion object {
+        const val GMS_SERVICES_PACKAGE_NAME = "com.google.android.gms"
+        const val MICRO_G_APP_LABEL = "microG Services Core"
+        const val GOOGLE_PLAY_SERVICES = "Google Play Services"
+    }
 
-    fun isMicroGInstalled(): Int {
-        val packageManager = mContext.packageManager
-        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+    private var packageManager: PackageManager = mContext.packageManager
+    private var apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+    fun getGmsType(): Int {
         for (app in apps) {
-            if (app.packageName == "com.google.android.gms" &&
-                packageManager.getApplicationLabel(app).toString() == EvaluateFragment.MICRO_G_APP_LABEL
+            if (app.packageName == GMS_SERVICES_PACKAGE_NAME &&
+                packageManager.getApplicationLabel(app).toString() == MICRO_G_APP_LABEL
             ) {
-                return Label.MICROG
+                return GmsType.MICROG
+            }
+
+            if (app.packageName == GMS_SERVICES_PACKAGE_NAME &&
+                packageManager.getApplicationLabel(app).toString() == GOOGLE_PLAY_SERVICES
+            ) {
+                return GmsType.GOOGLE_PLAY_SERVICES
             }
         }
 
-        return Label.BARE_AOSP
+        return GmsType.BARE_AOSP
     }
 
     fun isRooted(): Int {
