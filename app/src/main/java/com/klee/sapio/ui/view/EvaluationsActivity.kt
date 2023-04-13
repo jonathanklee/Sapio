@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.klee.sapio.R
 import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
@@ -30,24 +31,40 @@ class EvaluationsActivity : AppCompatActivity() {
             mBinding.microgUser.text = it?.let {
                 Rating.create(it.rating).text
             } ?: NO_VALUE_CHAR
+
+            mBinding.microgUser.tooltipText = it?.let {
+                computeTooltip(it.rating)
+            }
         }
 
         mViewModel.microgRootEvaluation.observe(this) {
             mBinding.microgRoot.text = it?.let {
                 Rating.create(it.rating).text
             } ?: NO_VALUE_CHAR
+
+            mBinding.microgRoot.tooltipText = it?.let {
+                computeTooltip(it.rating)
+            }
         }
 
         mViewModel.bareAospUserEvaluation.observe(this) {
             mBinding.bareAospUser.text = it?.let {
                 Rating.create(it.rating).text
             } ?: NO_VALUE_CHAR
+
+            mBinding.bareAospUser.tooltipText = it?.let {
+                computeTooltip(it.rating)
+            }
         }
 
         mViewModel.bareAsopRootEvaluation.observe(this) {
             mBinding.bareAospRoot.text = it?.let {
                 Rating.create(it.rating).text
             } ?: NO_VALUE_CHAR
+
+            mBinding.bareAospRoot.tooltipText = it?.let {
+                computeTooltip(it.rating)
+            }
         }
 
         val packageName = intent.getStringExtra("packageName").toString()
@@ -65,5 +82,14 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         mViewModel.listEvaluations(packageName)
+    }
+
+    private fun computeTooltip(rating: Int): String {
+        return when (rating) {
+            Rating.GOOD -> getString(R.string.good)
+            Rating.AVERAGE -> getString(R.string.average)
+            Rating.BAD -> getString(R.string.bad)
+            else -> getString(R.string.unknown)
+        }
     }
 }

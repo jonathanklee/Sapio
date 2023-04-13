@@ -35,4 +35,8 @@
     <string name="the_device_is_considered_rooted">The device is considered rooted</string>
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
+    <string name="good">Perfect</string>
+    <string name="average">Average</string>
+    <string name="bad">Bad</string>
+    <string name="unknown">Unknown</string>
 </resources>

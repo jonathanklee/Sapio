@@ -176,16 +176,16 @@ data class Rating(val value: Int, val text: String) {
 
     companion object {
 
-        private const val GOOD = 1
-        private const val AVERAGE = 2
-        private const val BAD = 3
+        const val GOOD = 1
+        const val AVERAGE = 2
+        const val BAD = 3
 
         fun create(rating: Int): Rating {
             return when (rating) {
-                GOOD -> Rating(GOOD, "\uD83D\uDC9A")
-                AVERAGE -> Rating(AVERAGE, "\uD83D\uDE10")
-                BAD -> Rating(BAD, "\uD83D\uDC94")
-                else -> Rating(BAD, "\uD83D\uDC94")
+                GOOD -> Rating(GOOD, String(Character.toChars(0x1F7E2)))
+                AVERAGE -> Rating(AVERAGE, String(Character.toChars(0x1F7E1)))
+                BAD -> Rating(BAD, String(Character.toChars(0x1F534)))
+                else -> Rating(BAD, String(Character.toChars(0x1F534)))
             }
         }
     }
