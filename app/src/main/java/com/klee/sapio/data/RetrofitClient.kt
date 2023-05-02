@@ -139,11 +139,9 @@ class EvaluationService @Inject constructor(
     private suspend fun listEvaluationsForFeed(): StrapiAnswer? {
         var strapiAnswer: StrapiAnswer? = null
 
-        withContext(Dispatchers.IO) {
-            try {
-                strapiAnswer = evaluationsApi.listLatestEvaluationsAsync().await()
-            } catch (_: IOException) {}
-        }
+        try {
+            strapiAnswer = evaluationsApi.listLatestEvaluationsAsync().await()
+        } catch (_: IOException) {}
 
         return strapiAnswer
     }
@@ -151,11 +149,9 @@ class EvaluationService @Inject constructor(
     private suspend fun searchEvaluations(pattern: String): StrapiAnswer? {
         var strapiAnswer: StrapiAnswer? = null
 
-        withContext(Dispatchers.IO) {
-            try {
-                strapiAnswer = evaluationsApi.searchAsync(pattern, pattern).await()
-            } catch (_: IOException) {}
-        }
+        try {
+            strapiAnswer = evaluationsApi.searchAsync(pattern, pattern).await()
+        } catch (_: IOException) {}
 
         return strapiAnswer
     }
@@ -163,11 +159,9 @@ class EvaluationService @Inject constructor(
     private suspend fun getExistingEvaluations(packageName: String): StrapiAnswer? {
         var strapiAnswer: StrapiAnswer? = null
 
-        withContext(Dispatchers.IO) {
-            try {
-                strapiAnswer = evaluationsApi.existingEvaluationsAsync(packageName).await()
-            } catch (_: IOException) {}
-        }
+        try {
+            strapiAnswer = evaluationsApi.existingEvaluationsAsync(packageName).await()
+        } catch (_: IOException) {}
 
         return strapiAnswer
     }
@@ -219,11 +213,9 @@ class EvaluationService @Inject constructor(
     suspend fun existingIcon(iconName: String): List<UploadIconAnswer>? {
         var remotesImage: List<UploadIconAnswer>? = null
 
-        withContext(Dispatchers.IO) {
-            try {
-                remotesImage = evaluationsApi.existingIconAsync(iconName).await()
-            } catch (_: IOException) {}
-        }
+        try {
+            remotesImage = evaluationsApi.existingIconAsync(iconName).await()
+        } catch (_: IOException) {}
 
         return remotesImage
     }
@@ -231,22 +223,19 @@ class EvaluationService @Inject constructor(
     suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int): Evaluation? {
         var answer: StrapiAnswer? = null
 
-        withContext(Dispatchers.IO) {
-            try {
-                answer = evaluationsApi.getSingleEvaluationAsync(
-                    appPackageName,
-                    microG,
-                    rooted
-                ).await()
-            } catch (_: IOException) {
-            }
-        }
+        try {
+            answer = evaluationsApi.getSingleEvaluationAsync(
+                appPackageName,
+                microG,
+                rooted
+            ).await()
+        } catch (_: IOException) { }
 
         if (answer?.data?.size!! <= 0) {
             return null
         }
 
-        return answer?.data?.get(0)?.attributes
+        return answer.data[0].attributes
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
