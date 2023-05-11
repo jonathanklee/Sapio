@@ -21,7 +21,7 @@
     <string name="application_name">Nom de l\'application</string>
     <string name="package_name">Nom du paquet</string>
     <string name="feed_title">Actualité</string>
-    <string name="search_title">Recherche</string>
+    <string name="search_title">Rechercher</string>
     <string name="contribute_title">Contribuer</string>
     <string name="about">A propos</string>
     <string name="the_device_has_microg_installed">L\'appareil a microG d\'installé</string>
