@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:text="@string/evaluate_another_app"
         android:layout_margin="20dp"
-        style="@style/Widget.FlatButton"
+        style="@style/Theme.Sapio.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -7,14 +7,26 @@
   android:orientation="horizontal"
   tools:context=".ui.view.EvaluationsActivity">
 
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:background="?android:colorBackgroundFloating"
       android:layout_gravity="center"
+
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
+      app:layout_constraintTop_toTopOf="parent"
+      tools:targetApi="m">
 
         <androidx.cardview.widget.CardView
           android:id="@+id/imageCard"
@@ -22,13 +34,14 @@
           android:layout_height="94dp"
           app:cardCornerRadius="50dp"
           android:shape="ring"
+          android:layout_margin="25dp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent">
             <ImageView
               android:id="@+id/image"
-              android:layout_width="104dp"
-              android:layout_height="104dp"
+              android:layout_width="115dp"
+              android:layout_height="115dp"
               android:layout_gravity="center"
               tools:srcCompat="@tools:sample/avatars" />
 
@@ -181,17 +194,21 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/packageName" />
+
         <ImageView
           android:id="@+id/infoIcon"
           android:layout_width="40dp"
           android:layout_height="40dp"
           android:layout_marginTop="80dp"
+          android:layout_marginBottom="20dp"
           app:tint="?android:colorPrimary"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/table"
+          app:layout_constraintBottom_toBottomOf="parent"
           app:srcCompat="@mipmap/ic_info_foreground" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

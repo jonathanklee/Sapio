@@ -1,13 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Sapio" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Sapio" parent="Theme.Material3.DayNight">
         <!-- Remove capitalized text in button -->
         <item name="textAllCaps">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.Sapio.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>
