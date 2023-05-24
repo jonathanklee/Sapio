@@ -4,7 +4,7 @@
 
 Sapio is the anagram of Open Source API.
 
-Sapio aims to provide an estimation of how Google-dependent an Android application is, informing the community of how it behaves on bare Android Open Source Project (AOSP), coupled or not with microG.
+Sapio provides the compatibility matrix of an Android application with bare Android Open Source Project (AOSP) devices, coupled or not with microG.
 
 Evaluations in Sapio are given to the community by the community.
 
