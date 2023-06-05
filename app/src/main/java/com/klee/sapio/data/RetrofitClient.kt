@@ -231,7 +231,7 @@ class EvaluationService @Inject constructor(
             ).await()
         } catch (_: IOException) { }
 
-        if (answer?.data?.size!! <= 0) {
+        if (answer == null || answer.data.size <= 0) {
             return null
         }
 
