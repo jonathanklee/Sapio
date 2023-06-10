@@ -18,7 +18,7 @@ class EvaluationsActivity : AppCompatActivity() {
     private val mViewModel by viewModels<AppEvaluationsViewModel>()
 
     companion object {
-        const val NO_VALUE_CHAR = ""
+        const val NO_EVALUATION_CHAR = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mViewModel.microgUserEvaluation.observe(this) {
             mBinding.microgUser.text = it?.let {
                 Rating.create(it.rating).text
-            } ?: NO_VALUE_CHAR
+            } ?: NO_EVALUATION_CHAR
 
             mBinding.microgUser.tooltipText = it?.let {
                 computeTooltip(it.rating)
@@ -40,7 +40,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mViewModel.microgRootEvaluation.observe(this) {
             mBinding.microgRoot.text = it?.let {
                 Rating.create(it.rating).text
-            } ?: NO_VALUE_CHAR
+            } ?: NO_EVALUATION_CHAR
 
             mBinding.microgRoot.tooltipText = it?.let {
                 computeTooltip(it.rating)
@@ -50,7 +50,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mViewModel.bareAospUserEvaluation.observe(this) {
             mBinding.bareAospUser.text = it?.let {
                 Rating.create(it.rating).text
-            } ?: NO_VALUE_CHAR
+            } ?: NO_EVALUATION_CHAR
 
             mBinding.bareAospUser.tooltipText = it?.let {
                 computeTooltip(it.rating)
@@ -60,7 +60,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mViewModel.bareAsopRootEvaluation.observe(this) {
             mBinding.bareAospRoot.text = it?.let {
                 Rating.create(it.rating).text
-            } ?: NO_VALUE_CHAR
+            } ?: NO_EVALUATION_CHAR
 
             mBinding.bareAospRoot.tooltipText = it?.let {
                 computeTooltip(it.rating)
