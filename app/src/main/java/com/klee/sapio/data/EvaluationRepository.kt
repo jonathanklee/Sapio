@@ -15,68 +15,112 @@ class EvaluationRepository @Inject constructor() :
     }
 
     override suspend fun listLatestEvaluations(): List<Evaluation> {
-        return retrofitService.listLatestEvaluations()
+        return try {
+            retrofitService.listLatestEvaluations()
+        } catch (exception: Exception) {
+            emptyList()
+        }
     }
 
     override suspend fun searchEvaluations(pattern: String): List<Evaluation> {
-        return retrofitService.searchEvaluation(pattern)
+        return try {
+            retrofitService.searchEvaluation(pattern)
+        } catch (exception: Exception) {
+            emptyList()
+        }
     }
 
     override suspend fun addEvaluation(evaluation: UploadEvaluation) {
         val header = UploadEvaluationHeader(evaluation)
-        retrofitService.addEvaluation(header)
+        try {
+            retrofitService.addEvaluation(header)
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
     }
 
     override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) {
         val header = UploadEvaluationHeader(evaluation)
-        retrofitService.updateEvaluation(header, id)
+        try {
+            retrofitService.updateEvaluation(header, id)
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
     }
 
     override suspend fun fetchMicrogUserEvaluation(appPackageName: String): Evaluation? {
-        return retrofitService.fetchEvaluation(
-            appPackageName,
-            Label.MICROG,
-            Label.USER
-        )
+        return try {
+            retrofitService.fetchEvaluation(
+                appPackageName,
+                Label.MICROG,
+                Label.USER
+            )
+        } catch (exception: Exception) {
+            null
+        }
     }
 
     override suspend fun fetchMicrogRootEvaluation(appPackageName: String): Evaluation? {
-        return retrofitService.fetchEvaluation(
-            appPackageName,
-            Label.MICROG,
-            Label.ROOTED
-        )
+        return try {
+            retrofitService.fetchEvaluation(
+                appPackageName,
+                Label.MICROG,
+                Label.ROOTED
+            )
+        } catch (exception: Exception) {
+            null
+        }
     }
 
     override suspend fun fetchBareAospUserEvaluation(appPackageName: String): Evaluation? {
-        return retrofitService.fetchEvaluation(
-            appPackageName,
-            Label.BARE_AOSP,
-            Label.USER
-        )
+        return try {
+            retrofitService.fetchEvaluation(
+                appPackageName,
+                Label.BARE_AOSP,
+                Label.USER
+            )
+        } catch (exception: Exception) {
+            null
+        }
     }
 
     override suspend fun fetchBareAospRootEvaluation(appPackageName: String): Evaluation? {
-        return retrofitService.fetchEvaluation(
-            appPackageName,
-            Label.BARE_AOSP,
-            Label.ROOTED
-        )
+        return try {
+            retrofitService.fetchEvaluation(
+                appPackageName,
+                Label.BARE_AOSP,
+                Label.ROOTED
+            )
+        } catch (exception: Exception) {
+            null
+        }
     }
 
     suspend fun existingEvaluations(packageName: String): List<StrapiElement> {
-        return retrofitService.existingEvaluations(packageName)
+        return try {
+            retrofitService.existingEvaluations(packageName)
+        } catch (exception: Exception) {
+            emptyList()
+        }
     }
 
     suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
-        return retrofitService.uploadIcon(app)
+        return try {
+            retrofitService.uploadIcon(app)
+        } catch (exception: Exception) {
+            null
+        }
     }
 
     suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
-        val icons = retrofitService.existingIcon(iconName)
-        icons?.let {
-            return it
+        return try {
+            val icons = retrofitService.existingIcon(iconName)
+            icons?.let {
+                return it
+            }
+            return emptyList()
+        } catch (exception: Exception) {
+            emptyList()
         }
-        return emptyList()
     }
 }
