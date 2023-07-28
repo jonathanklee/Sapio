@@ -1,7 +1,7 @@
 <resources>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
-    <string name="warning_desc">Vous êtes sur le point d\'évaluer une application en fonction de son fontionnement sur un appareil AOSP pure.\n\nVotre appareil ne doit pas avoir les Google Play Services d\'installés.\n\nCe n\'est pas la peine d\'évaluer les applications disponibles sur F-Droid car elles n\'ont pas de dépendances vers les Google Play Services.\n\nSi l\'appareil a les microG d\'installés, merci de tester l\'application avec SafetyNet désactivé dans les options microG.\n\nLes langues non latines ne sont pas encore supportées. Cependant, vous pouvez changer la langue de votre appareil pour contribuer.</string>
+    <string name="warning_desc">Vous êtes sur le point d\'évaluer une application en fonction de son fontionnement sur un appareil AOSP pure.\n\nVotre appareil ne doit pas avoir les Google Play Services d\'installés.\n\nCe n\'est pas nécessaire d\'évaluer les applications disponibles sur F-Droid car elles n\'ont pas de dépendances vers les Google Play Services.\n\nSi l\'appareil a les microG d\'installés, merci de tester l\'application avec SafetyNet désactivé dans les options microG.\n\nLes langues non latines ne sont pas encore supportées. Cependant, vous pouvez changer la langue de votre appareil pour contribuer.</string>
     <string name="proceed">Commencer</string>
     <string name="select_button">Sélectionner</string>
     <string name="select_application_text">Selectionnez l\'application à évaluer</string>
@@ -11,7 +11,7 @@
     <string name="works_perfectly">\ Elle fonctionne parfaitement.</string>
     <string name="works_partially">\ Elle fonctionne partiellement.</string>
     <string name="dont_work">\ Elle ne fonctionne pas du tout ou crashe.</string>
-    <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio a pour but de fournir une évaluation de la dépendance d\'une application Android aux Google Play Services en informant la communauté de son bon fonctionnement ou non sur un appareil AOSP pure, couplé ou pas avec microG.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
+    <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la matrice de compatibilité d\'une application Android avec les téléphones fonctionnant sur un Android Open Source Project (AOSP) pure, associés ou non à microG.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluer une autre application</string>
     <string name="configuration_detected">Configuration détéctée</string>
