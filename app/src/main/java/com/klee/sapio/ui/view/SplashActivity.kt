@@ -16,15 +16,20 @@ class SplashActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { Build.VERSION.SDK_INT >= 31 }
 
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+
         val binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val delay = if (Build.VERSION.SDK_INT >= 31) 0 else 2000
 
         Handler().postDelayed({
             val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 2000)
+        }, delay.toLong())
     }
-
 }
