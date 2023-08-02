@@ -121,7 +121,7 @@ class EvaluationService @Inject constructor(
         }
 
         return list.distinctBy {
-            it.name
+            it.packageName
         }
     }
 
