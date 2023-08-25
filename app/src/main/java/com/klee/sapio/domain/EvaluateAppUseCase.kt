@@ -87,7 +87,7 @@ class EvaluateAppUseCase @Inject constructor() {
     }
 
     private fun hasSameEvaluation(one: UploadEvaluation, two: Evaluation): Boolean {
-        return one.packageName == two.packageName && one.name == two.name &&
+        return one.packageName == two.packageName &&
             one.microg == two.microg && one.rooted == two.rooted
     }
 }

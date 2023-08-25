@@ -68,7 +68,7 @@ interface EvaluationApi {
         @Query("filters[name][\$eq]") iconName: String
     ): Deferred<List<UploadIconAnswer>>
 
-    @GET("sapio-applications?")
+    @GET("sapio-applications?sort=updatedAt:Desc")
     fun getSingleEvaluationAsync(
         @Query("filters[\$and][0][packageName][\$contains]") packageName: String,
         @Query("filters[\$and][1][microG][\$contains]") microG: Int,
