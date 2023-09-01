@@ -3,6 +3,7 @@ package com.klee.sapio
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Build
 import com.klee.sapio.data.InstalledApplicationsRepository
 import junit.framework.TestCase.assertEquals
@@ -36,6 +37,12 @@ class InstalledApplicationsRepositoryTest {
     @Mock
     private lateinit var mockedContext: Context
 
+    @Mock
+    private lateinit var mockedDrawable: Drawable
+
+    @Mock
+    private lateinit var mockedApplicationInfo: ApplicationInfo
+
     private lateinit var fakeRegularApplicationInfo: ApplicationInfo
     private lateinit var fakeSystemApplicationInfo: ApplicationInfo
 
@@ -59,13 +66,23 @@ class InstalledApplicationsRepositoryTest {
             flags = ApplicationInfo.FLAG_SYSTEM
         }
 
-
-        fakeListApplicationInfo = mutableListOf(fakeRegularApplicationInfo, fakeSystemApplicationInfo)
+        fakeListApplicationInfo = mutableListOf(
+            fakeRegularApplicationInfo,
+            fakeSystemApplicationInfo
+        )
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA))).thenReturn(fakeListApplicationInfo)
-        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo))).thenReturn("FakeApplicationOne")
-        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo))).thenReturn("FakeApplicationTwo")
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+            .thenReturn(fakeListApplicationInfo)
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
+            .thenReturn("FakeApplicationOne")
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
+            .thenReturn("FakeApplicationTwo")
+
+        Mockito.`when`(fakeRegularApplicationInfo.loadUnbadgedIcon(mockedPackageManager))
+            .thenReturn(mockedDrawable)
     }
 
     @Test
