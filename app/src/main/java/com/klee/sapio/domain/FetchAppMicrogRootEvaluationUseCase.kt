@@ -1,7 +1,7 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.Evaluation
-import com.klee.sapio.data.EvaluationRepository
+import com.klee.sapio.data.EvaluationRepositoryImpl
 import javax.inject.Inject
 
 class FetchAppMicrogRootEvaluationUseCase @Inject constructor() {

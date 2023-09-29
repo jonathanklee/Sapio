@@ -1,18 +1,18 @@
 package com.klee.sapio.data
 
 import com.klee.sapio.domain.EvaluationRepository
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Response
 import javax.inject.Inject
 
-class EvaluationRepository @Inject constructor() :
+class EvaluationRepositoryImpl @Inject constructor() :
     EvaluationRepository {
 
     @Inject
     lateinit var retrofitService: EvaluationService
-
-    override fun isAvailable(): Boolean {
-        return retrofitService.hasConnectivity()
-    }
 
     override suspend fun listLatestEvaluations(): List<Evaluation> {
         return try {
@@ -96,7 +96,7 @@ class EvaluationRepository @Inject constructor() :
         }
     }
 
-    suspend fun existingEvaluations(packageName: String): List<StrapiElement> {
+    override suspend fun existingEvaluations(packageName: String): List<StrapiElement> {
         return try {
             retrofitService.existingEvaluations(packageName)
         } catch (exception: Exception) {
@@ -104,7 +104,7 @@ class EvaluationRepository @Inject constructor() :
         }
     }
 
-    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
+    override suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
         return try {
             retrofitService.uploadIcon(app)
         } catch (exception: Exception) {
@@ -112,7 +112,7 @@ class EvaluationRepository @Inject constructor() :
         }
     }
 
-    suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
+    override suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
         return try {
             val icons = retrofitService.existingIcon(iconName)
             icons?.let {
@@ -123,4 +123,14 @@ class EvaluationRepository @Inject constructor() :
             emptyList()
         }
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class EvaluationRepositoryModule {
+
+    @Binds
+    abstract fun bindEvaluationRepository(
+        evaluationRepositoryImpl: EvaluationRepositoryImpl
+    ): EvaluationRepository
 }

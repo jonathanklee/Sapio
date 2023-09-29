@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.data.InstalledApplicationsRepository
-import com.klee.sapio.data.EvaluationRepository
+import com.klee.sapio.data.EvaluationRepositoryImpl
 import com.klee.sapio.data.DeviceConfiguration
 import com.klee.sapio.data.Label
 import com.klee.sapio.databinding.FragmentEvaluateBinding
@@ -28,7 +28,7 @@ class EvaluateFragment : Fragment() {
     }
 
     @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
-    @Inject lateinit var mEvaluationRepository: EvaluationRepository
+    @Inject lateinit var mEvaluationRepository: EvaluationRepositoryImpl
     @Inject lateinit var mEvaluateAppUseCase: EvaluateAppUseCase
     @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
     private lateinit var mBinding: FragmentEvaluateBinding
