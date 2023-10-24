@@ -13,7 +13,6 @@ class DeviceConfiguration @Inject constructor(
 ) {
     companion object {
         const val GMS_SERVICES_PACKAGE_NAME = "com.google.android.gms"
-        const val MICRO_G_APP_LABEL = "microG Services Core"
         const val GOOGLE_PLAY_SERVICES = "Google Play Services"
     }
 
@@ -22,15 +21,15 @@ class DeviceConfiguration @Inject constructor(
 
     fun getGmsType(): Int {
         for (app in apps) {
-            if (app.packageName == GMS_SERVICES_PACKAGE_NAME &&
-                packageManager.getApplicationLabel(app).toString() == MICRO_G_APP_LABEL
-            ) {
+            if (app.packageName != GMS_SERVICES_PACKAGE_NAME) {
+                continue
+            }
+
+            if (packageManager.getApplicationLabel(app).toString().contains("microG")) {
                 return GmsType.MICROG
             }
 
-            if (app.packageName == GMS_SERVICES_PACKAGE_NAME &&
-                packageManager.getApplicationLabel(app).toString() == GOOGLE_PLAY_SERVICES
-            ) {
+            if (packageManager.getApplicationLabel(app).toString() == GOOGLE_PLAY_SERVICES) {
                 return GmsType.GOOGLE_PLAY_SERVICES
             }
         }
