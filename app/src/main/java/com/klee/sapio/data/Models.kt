@@ -106,7 +106,7 @@ data class UploadEvaluationHeader(
     @JsonProperty("data") var data: UploadEvaluation
 )
 
-data class UploadIconAnswer(
+data class IconAnswer(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
     @JsonProperty("alternativeText") val alternativeText: String?,

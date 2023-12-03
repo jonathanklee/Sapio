@@ -1,9 +1,8 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.DeviceConfiguration
-import com.klee.sapio.data.EvaluationRepositoryImpl
 import com.klee.sapio.data.InstalledApplication
-import com.klee.sapio.data.UploadIconAnswer
+import com.klee.sapio.data.IconAnswer
 import com.klee.sapio.data.UploadEvaluation
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.ui.view.EvaluateFragment
@@ -27,39 +26,60 @@ class EvaluateAppUseCase @Inject constructor() {
 
     private suspend fun evaluateApp(app: InstalledApplication, rate: Int, onSuccess: () -> Unit) {
         val existingIcons = getExistingIcons(app)
-        if (existingIcons.isEmpty()) {
-            val uploadAnswer = uploadIcon(app)?.body()
-            uploadAnswer?.let {
-                evaluateApp(app, uploadAnswer[0].id, rate)
-                onSuccess()
+        val uploadAnswer = uploadIcon(app)?.body()
+
+        uploadAnswer?.let {
+            evaluateApp(app, uploadAnswer[0].id, rate)
+            updateEvaluationsIcon(app, uploadAnswer[0].id)
+            for (icon in existingIcons) {
+                deleteIcon(icon.id)
             }
-        } else {
-            evaluateApp(app, existingIcons[0].id, rate)
             onSuccess()
         }
     }
 
     private suspend fun uploadIcon(
         app: InstalledApplication
-    ): Response<ArrayList<UploadIconAnswer>>? {
+    ): Response<ArrayList<IconAnswer>>? {
         return mEvaluationRepository.uploadIcon(app)
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rate: Int) {
-        val remoteApplication = UploadEvaluation(
-            app.name,
-            app.packageName,
-            iconId,
-            rate,
-            mDeviceConfiguration.getGmsType(),
-            mDeviceConfiguration.isRooted()
-        )
+    private suspend fun deleteIcon(
+        id: Int
+    ) {
+        mEvaluationRepository.deleteIcon(id)
+    }
 
-        val existingEvaluationId = getExistingEvaluationId(remoteApplication)
-        if (existingEvaluationId == EvaluateFragment.NOT_EXISTING) {
-            mEvaluationRepository.addEvaluation(remoteApplication)
-        } else {
-            mEvaluationRepository.updateEvaluation(remoteApplication, existingEvaluationId)
+   private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rate: Int) {
+       val newEvaluation = UploadEvaluation(
+           app.name,
+           app.packageName,
+           iconId,
+           rate,
+           mDeviceConfiguration.getGmsType(),
+           mDeviceConfiguration.isRooted()
+       )
+
+       val existingEvaluationId = getExistingEvaluationId(newEvaluation)
+       if (existingEvaluationId == EvaluateFragment.NOT_EXISTING) {
+           mEvaluationRepository.addEvaluation(newEvaluation)
+       } else {
+           mEvaluationRepository.updateEvaluation(newEvaluation, existingEvaluationId)
+       }
+   }
+
+    private suspend fun updateEvaluationsIcon(app: InstalledApplication, iconId: Int) {
+        val evaluations = mEvaluationRepository.existingEvaluations(app.packageName)
+        for (evaluation in evaluations) {
+            val newEvaluation = UploadEvaluation(
+                evaluation.attributes.name,
+                evaluation.attributes.packageName,
+                iconId,
+                evaluation.attributes.rating,
+                evaluation.attributes.microg,
+                evaluation.attributes.rooted
+            )
+            mEvaluationRepository.updateEvaluation(newEvaluation, evaluation.id)
         }
     }
 
@@ -75,7 +95,7 @@ class EvaluateAppUseCase @Inject constructor() {
         }
     }
 
-    private suspend fun getExistingIcons(app: InstalledApplication): List<UploadIconAnswer> {
+    private suspend fun getExistingIcons(app: InstalledApplication): List<IconAnswer> {
         return withContext(Dispatchers.IO) {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
             if (icons.isEmpty()) {

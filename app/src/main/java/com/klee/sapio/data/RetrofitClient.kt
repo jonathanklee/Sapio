@@ -21,6 +21,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
@@ -61,12 +62,17 @@ interface EvaluationApi {
 
     @Multipart
     @POST("upload")
-    fun addIcon(@Part image: MultipartBody.Part): Call<ArrayList<UploadIconAnswer>>
+    fun addIcon(@Part image: MultipartBody.Part): Call<ArrayList<IconAnswer>>
 
-    @GET("upload/files?")
+    @GET("upload/files?sort=updatedAt")
     fun existingIconAsync(
         @Query("filters[name][\$eq]") iconName: String
-    ): Deferred<List<UploadIconAnswer>>
+    ): Deferred<List<IconAnswer>>
+
+    @DELETE("upload/files/{id}")
+    fun deleteIcon(
+        @Path(value = "id", encoded = false) id: Int
+    ): Call<IconAnswer>
 
     @GET("sapio-applications?sort=updatedAt:Desc")
     fun getSingleEvaluationAsync(
@@ -190,8 +196,8 @@ class EvaluationService @Inject constructor(
         return response
     }
 
-    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
-        var response: Response<ArrayList<UploadIconAnswer>>? = null
+    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<IconAnswer>>? {
+        var response: Response<ArrayList<IconAnswer>>? = null
 
         val bytes = fromDrawableToByArray(app.icon)
         val requestBody = bytes.toRequestBody(null, 0, bytes.size)
@@ -210,14 +216,26 @@ class EvaluationService @Inject constructor(
         return response
     }
 
-    suspend fun existingIcon(iconName: String): List<UploadIconAnswer>? {
-        var remotesImage: List<UploadIconAnswer>? = null
+    suspend fun existingIcon(iconName: String): List<IconAnswer>? {
+        var remotesImage: List<IconAnswer>? = null
 
         try {
             remotesImage = evaluationsApi.existingIconAsync(iconName).await()
         } catch (_: IOException) {}
 
         return remotesImage
+    }
+
+    suspend fun deleteIcon(id: Int): Response<IconAnswer>? {
+        var response: Response<IconAnswer>? = null
+
+        withContext(Dispatchers.IO) {
+            try {
+                response = evaluationsApi.deleteIcon(id).execute()
+            } catch (_: IOException) {}
+        }
+
+        return response
     }
 
     suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int): Evaluation? {

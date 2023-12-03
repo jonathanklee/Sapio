@@ -104,7 +104,7 @@ class EvaluationRepositoryImpl @Inject constructor() :
         }
     }
 
-    override suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>? {
+    override suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<IconAnswer>>? {
         return try {
             retrofitService.uploadIcon(app)
         } catch (exception: Exception) {
@@ -112,7 +112,7 @@ class EvaluationRepositoryImpl @Inject constructor() :
         }
     }
 
-    override suspend fun existingIcon(iconName: String): List<UploadIconAnswer> {
+    override suspend fun existingIcon(iconName: String): List<IconAnswer> {
         return try {
             val icons = retrofitService.existingIcon(iconName)
             icons?.let {
@@ -121,6 +121,14 @@ class EvaluationRepositoryImpl @Inject constructor() :
             return emptyList()
         } catch (exception: Exception) {
             emptyList()
+        }
+    }
+
+    override suspend fun deleteIcon(id: Int): Response<IconAnswer>? {
+        return try {
+            retrofitService.deleteIcon(id)
+        } catch (exception: Exception) {
+            null
         }
     }
 }

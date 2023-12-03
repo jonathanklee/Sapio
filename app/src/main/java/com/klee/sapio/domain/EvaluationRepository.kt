@@ -4,7 +4,7 @@ import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.StrapiElement
 import com.klee.sapio.data.UploadEvaluation
-import com.klee.sapio.data.UploadIconAnswer
+import com.klee.sapio.data.IconAnswer
 import retrofit2.Response
 
 interface EvaluationRepository {
@@ -27,7 +27,9 @@ interface EvaluationRepository {
 
     suspend fun existingEvaluations(packageName: String): List<StrapiElement>
 
-    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<UploadIconAnswer>>?
+    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<IconAnswer>>?
 
-    suspend fun existingIcon(iconName: String): List<UploadIconAnswer>
+    suspend fun existingIcon(iconName: String): List<IconAnswer>
+
+    suspend fun deleteIcon(id: Int): Response<IconAnswer>?
 }
