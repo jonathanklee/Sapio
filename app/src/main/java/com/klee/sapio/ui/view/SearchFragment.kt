@@ -1,9 +1,13 @@
 package com.klee.sapio.ui.view
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,6 +26,8 @@ class SearchFragment : Fragment() {
     private lateinit var mSearchAppAdapter: SearchAppAdapter
     private val mViewModel by viewModels<SearchViewModel>()
 
+    private lateinit var mHandler: Handler
+
     @Inject
     lateinit var mEvaluationRepository: EvaluationRepository
 
@@ -33,6 +39,8 @@ class SearchFragment : Fragment() {
         mBinding = FragmentSearchBinding.inflate(layoutInflater)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
         mBinding.recyclerView.visibility = View.INVISIBLE
+
+        mHandler = Handler(Looper.getMainLooper())
 
         mViewModel.foundEvaluations.observe(viewLifecycleOwner) { list ->
             mSearchAppAdapter = SearchAppAdapter(
@@ -59,6 +67,11 @@ class SearchFragment : Fragment() {
         return mBinding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        showKeyboard()
+    }
+
     private fun onNetworkError() {
         // Nothing for now
     }
@@ -74,5 +87,20 @@ class SearchFragment : Fragment() {
             mBinding.searchIconBig.visibility = View.VISIBLE
             mBinding.searchText.visibility = View.VISIBLE
         }
+    }
+
+    private fun showKeyboard() {
+        mHandler.postDelayed({
+            mBinding.editTextSearch.requestFocus()
+
+            val inputMethodManager =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE)
+                    as InputMethodManager
+
+            inputMethodManager.showSoftInput(
+                mBinding.editTextSearch,
+                InputMethodManager.SHOW_IMPLICIT
+            )
+        }, 50)
     }
 }
