@@ -30,7 +30,6 @@ class EvaluateAppUseCase @Inject constructor() {
 
         uploadAnswer?.let {
             evaluateApp(app, uploadAnswer[0].id, rate)
-            updateEvaluationsIcon(app, uploadAnswer[0].id)
             for (icon in existingIcons) {
                 deleteIcon(icon.id)
             }
@@ -50,36 +49,21 @@ class EvaluateAppUseCase @Inject constructor() {
         mEvaluationRepository.deleteIcon(id)
     }
 
-   private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rate: Int) {
-       val newEvaluation = UploadEvaluation(
-           app.name,
-           app.packageName,
-           iconId,
-           rate,
-           mDeviceConfiguration.getGmsType(),
-           mDeviceConfiguration.isRooted()
-       )
+    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rate: Int) {
+        val newEvaluation = UploadEvaluation(
+            app.name,
+            app.packageName,
+            iconId,
+            rate,
+            mDeviceConfiguration.getGmsType(),
+            mDeviceConfiguration.isRooted()
+        )
 
-       val existingEvaluationId = getExistingEvaluationId(newEvaluation)
-       if (existingEvaluationId == EvaluateFragment.NOT_EXISTING) {
-           mEvaluationRepository.addEvaluation(newEvaluation)
-       } else {
-           mEvaluationRepository.updateEvaluation(newEvaluation, existingEvaluationId)
-       }
-   }
-
-    private suspend fun updateEvaluationsIcon(app: InstalledApplication, iconId: Int) {
-        val evaluations = mEvaluationRepository.existingEvaluations(app.packageName)
-        for (evaluation in evaluations) {
-            val newEvaluation = UploadEvaluation(
-                evaluation.attributes.name,
-                evaluation.attributes.packageName,
-                iconId,
-                evaluation.attributes.rating,
-                evaluation.attributes.microg,
-                evaluation.attributes.rooted
-            )
-            mEvaluationRepository.updateEvaluation(newEvaluation, evaluation.id)
+        val existingEvaluationId = getExistingEvaluationId(newEvaluation)
+        if (existingEvaluationId == EvaluateFragment.NOT_EXISTING) {
+            mEvaluationRepository.addEvaluation(newEvaluation)
+        } else {
+            mEvaluationRepository.updateEvaluation(newEvaluation, existingEvaluationId)
         }
     }
 

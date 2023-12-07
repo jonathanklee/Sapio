@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.klee.sapio.R
+import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
@@ -67,14 +68,15 @@ class EvaluationsActivity : AppCompatActivity() {
             }
         }
 
+        mViewModel.iconUrl.observe(this) {
+            Glide.with(this).load(EvaluationService.BASE_URL + it).into(mBinding.image)
+        }
+
         val packageName = intent.getStringExtra("packageName").toString()
         mBinding.packageName.text = packageName
 
         val appName = intent.getStringExtra("appName").toString()
         mBinding.applicationName.text = appName
-
-        val iconUrl = intent.getStringExtra("iconUrl").toString()
-        Glide.with(this).load(iconUrl).into(mBinding.image)
 
         mBinding.infoIcon.setOnClickListener() {
             val intent = Intent(this, AboutActivity::class.java)

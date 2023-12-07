@@ -7,10 +7,13 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.sapio.databinding.FragmentSearchBinding
+import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -18,6 +21,9 @@ class SearchFragment : Fragment() {
     private lateinit var mBinding: FragmentSearchBinding
     private lateinit var mSearchAppAdapter: SearchAppAdapter
     private val mViewModel by viewModels<SearchViewModel>()
+
+    @Inject
+    lateinit var mEvaluationRepository: EvaluationRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +35,12 @@ class SearchFragment : Fragment() {
         mBinding.recyclerView.visibility = View.INVISIBLE
 
         mViewModel.foundEvaluations.observe(viewLifecycleOwner) { list ->
-            mSearchAppAdapter = SearchAppAdapter(requireContext(), list)
+            mSearchAppAdapter = SearchAppAdapter(
+                requireContext(),
+                list,
+                mEvaluationRepository,
+                lifecycleScope
+            )
             mBinding.recyclerView.adapter = mSearchAppAdapter
         }
 
