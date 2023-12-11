@@ -35,10 +35,10 @@ import java.io.IOException
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?populate=*&pagination[pageSize]=100&sort=updatedAt:Desc")
+    @GET("sapio-applications?pagination[pageSize]=100&sort=updatedAt:Desc")
     fun listLatestEvaluationsAsync(): Deferred<StrapiAnswer>
 
-    @GET("sapio-applications?populate=*&sort=name")
+    @GET("sapio-applications?sort=name")
     fun searchAsync(
         @Query("filters[\$or][0][name][\$contains]") name: String,
         @Query("filters[\$or][1][packageName][\$contains]") packageName: String
