@@ -76,7 +76,7 @@ interface EvaluationApi {
 
     @GET("sapio-applications?sort=updatedAt:Desc")
     fun getSingleEvaluationAsync(
-        @Query("filters[\$and][0][packageName][\$contains]") packageName: String,
+        @Query("filters[\$and][0][packageName][\$eq]") packageName: String,
         @Query("filters[\$and][1][microG][\$contains]") microG: Int,
         @Query("filters[\$and][2][rooted][\$contains]") rooted: Int
     ): Deferred<StrapiAnswer>
