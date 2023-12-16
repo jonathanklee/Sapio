@@ -20,21 +20,25 @@ class DeviceConfiguration @Inject constructor(
     private var apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
     fun getGmsType(): Int {
+        var type = GmsType.BARE_AOSP
+
         for (app in apps) {
             if (app.packageName != GMS_SERVICES_PACKAGE_NAME) {
                 continue
             }
 
             if (packageManager.getApplicationLabel(app).toString().contains("microG")) {
-                return GmsType.MICROG
+                type = GmsType.MICROG
+                break
             }
 
             if (packageManager.getApplicationLabel(app).toString() == GOOGLE_PLAY_SERVICES) {
-                return GmsType.GOOGLE_PLAY_SERVICES
+                type = GmsType.GOOGLE_PLAY_SERVICES
+                break;
             }
         }
 
-        return GmsType.BARE_AOSP
+        return type
     }
 
     fun isRooted(): Int {
