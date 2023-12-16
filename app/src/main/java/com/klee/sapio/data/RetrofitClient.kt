@@ -3,10 +3,6 @@ package com.klee.sapio.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -254,22 +250,6 @@ class EvaluationService @Inject constructor(
         }
 
         return answer.data[0].attributes
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    fun hasConnectivity(): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        val currentNetwork = connectivityManager.activeNetwork
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(currentNetwork)
-            ?: return false
-
-        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-            return true
-        }
-
-        return false
     }
 
     private fun fromDrawableToByArray(drawable: Drawable): ByteArray {
