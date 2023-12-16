@@ -12,7 +12,7 @@ Evaluations in Sapio are given to the community by the community.
 
 <p><img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="200"/>
 
-# Build
+# 🔨 Build
 ## Get the sources
 
 ```
@@ -23,12 +23,15 @@ git clone git@github.com:jonathanklee/Sapio.git
 cd Sapio
 ./gradlew assembleDebug
 ````
-# Install
+# 📱 Install
 ```
 adb install ./app/build/outputs/apk/debug/app-debug.apk
 ```
+# ☕ Coffee
 
-# Credits
+If you want to offer me a coffee: https://paypal.me/jnthnkl
+
+# 👏 Credits
 
 <a href="https://www.flaticon.com/free-icons/brain" title="brain icons">Brain icons created by Freepik - Flaticon</a>
 
