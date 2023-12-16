@@ -29,7 +29,7 @@ adb install ./app/build/outputs/apk/debug/app-debug.apk
 ```
 # ☕ Coffee
 
-If you want to offer me a coffee: https://paypal.me/jnthnkl
+If you want to offer me a coffee for the maintenance of the server part: https://paypal.me/jnthnkl
 
 # 👏 Credits
 
