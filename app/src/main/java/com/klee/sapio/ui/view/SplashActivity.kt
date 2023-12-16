@@ -11,10 +11,16 @@ import com.klee.sapio.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
 
+    companion object {
+        const val SPLASH_DELAY_MS = 2000
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { Build.VERSION.SDK_INT >= 31 }
+        splashScreen.setKeepOnScreenCondition {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        }
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -24,7 +30,7 @@ class SplashActivity : AppCompatActivity() {
         val binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val delay = if (Build.VERSION.SDK_INT >= 31) 0 else 2000
+        val delay = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) 0 else SPLASH_DELAY_MS
 
         Handler().postDelayed({
             val intent = Intent(this@SplashActivity, MainActivity::class.java)

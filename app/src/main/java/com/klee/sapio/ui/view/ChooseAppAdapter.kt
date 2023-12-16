@@ -12,7 +12,8 @@ class ChooseAppAdapter(
     private val mListener: Listener
 ) : RecyclerView.Adapter<ChooseAppAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ChooseAppCardBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    inner class ViewHolder(val binding: ChooseAppCardBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         private var mApp: InstalledApplication? = null
 

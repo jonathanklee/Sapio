@@ -26,6 +26,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
+    companion object {
+        const val KEYBOARD_DELAY_MS = 50L
+    }
+
     private lateinit var mBinding: FragmentSearchBinding
     private lateinit var mSearchAppAdapter: SearchAppAdapter
     private val mViewModel by viewModels<SearchViewModel>()
@@ -127,6 +131,6 @@ class SearchFragment : Fragment() {
                 mBinding.editTextSearch,
                 InputMethodManager.SHOW_IMPLICIT
             )
-        }, 50)
+        }, KEYBOARD_DELAY_MS)
     }
 }

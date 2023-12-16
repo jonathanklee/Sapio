@@ -13,6 +13,7 @@ import com.klee.sapio.data.InstalledApplicationsRepository
 import com.klee.sapio.data.EvaluationRepositoryImpl
 import com.klee.sapio.data.DeviceConfiguration
 import com.klee.sapio.data.Label
+import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.FragmentEvaluateBinding
 import com.klee.sapio.domain.EvaluateAppUseCase
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,9 +86,9 @@ class EvaluateFragment : Fragment() {
     private fun getRateFromId(id: Int, view: View): Int {
         val radioButton: RadioButton = view.findViewById(id)
         return when (radioButton.text) {
-            getString(R.string.works_perfectly) -> 1
-            getString(R.string.works_partially) -> 2
-            getString(R.string.dont_work) -> 3
+            getString(R.string.works_perfectly) -> Rating.GOOD
+            getString(R.string.works_partially) -> Rating.AVERAGE
+            getString(R.string.dont_work) -> Rating.BAD
             else -> 0
         }
     }

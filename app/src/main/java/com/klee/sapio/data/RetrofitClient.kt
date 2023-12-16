@@ -78,11 +78,10 @@ interface EvaluationApi {
     ): Deferred<StrapiAnswer>
 }
 
-class EvaluationService @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class EvaluationService @Inject constructor() {
     companion object {
         const val BASE_URL = "https://sapio.ovh"
+        const val COMPRESSION_QUALITY = 100
     }
 
     private var retrofit: Retrofit
@@ -255,7 +254,7 @@ class EvaluationService @Inject constructor(
     private fun fromDrawableToByArray(drawable: Drawable): ByteArray {
         val bitmap = drawable.toBitmap()
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)
         return stream.toByteArray()
     }
 }
