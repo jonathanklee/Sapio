@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ComplexCondition:WarningFragment.kt$WarningFragment$languageCode.startsWith("en") || languageCode.startsWith("fr") || languageCode.startsWith("es") || languageCode.startsWith("de") || languageCode.startsWith("it")</ID>
+    <ID>LoopWithTooManyJumpStatements:DeviceConfiguration.kt$DeviceConfiguration$for</ID>
+    <ID>TooManyFunctions:EvaluationRepository.kt$EvaluationRepository</ID>
+    <ID>TooManyFunctions:EvaluationRepositoryImpl.kt$EvaluationRepositoryImpl : EvaluationRepository</ID>
+  </CurrentIssues>
+</SmellBaseline>

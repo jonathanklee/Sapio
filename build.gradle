@@ -9,10 +9,29 @@ plugins {
     id 'com.android.application' version '8.0.2' apply false
     id 'com.android.library' version '8.0.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
-
+    id 'io.gitlab.arturbosch.detekt' version '1.23.1'
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+subprojects {
+    detekt {
+        source = files(
+                "src/main/java"
+        )
+
+        toolVersion = "1.23.1"
+        config.setFrom("detekt.yml")
+        baseline = file("detekt-baseline.xml")
+        parallel = false
+        buildUponDefaultConfig = true
+        allRules = false
+        disableDefaultRuleSets = false
+        debug = false
+        ignoreFailures = false
+        basePath = projectDir
+    }
 }
 
