@@ -1,7 +1,12 @@
 package com.klee.sapio.ui.view
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -78,6 +83,10 @@ class EvaluationsActivity : AppCompatActivity() {
         val appName = intent.getStringExtra("appName").toString()
         mBinding.applicationName.text = appName
 
+        mBinding.shareButton.setOnClickListener {
+            share(takeScreenshot(mBinding.card), appName)
+        }
+
         mBinding.infoIcon.setOnClickListener() {
             val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
@@ -93,5 +102,33 @@ class EvaluationsActivity : AppCompatActivity() {
             Rating.BAD -> getString(R.string.bad)
             else -> getString(R.string.unknown)
         }
+    }
+
+    private fun takeScreenshot(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
+    }
+
+    private fun share(bitmap: Bitmap, appName: String) {
+        val bitmapPath = MediaStore.Images.Media.insertImage(
+            contentResolver,
+            bitmap,
+            "screenshot",
+            "screenshot"
+        )
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_SUBJECT, "Sapio")
+            putExtra(Intent.EXTRA_STREAM, Uri.parse(bitmapPath))
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "$appName Android Compatibility Matrix from https://github.com/jonathanklee/Sapio"
+            )
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Share"))
     }
 }
