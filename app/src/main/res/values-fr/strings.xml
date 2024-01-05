@@ -1,7 +1,7 @@
 <resources>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
-    <string name="warning_desc">Vous êtes sur le point d\'évaluer le comportement d\'une application Android sur un appareil AOSP pure.\n\nPour garantir des tests précis, votre appareil ne doit pas avoir les Google Play Services d\'installés.\n\nVeuillez noter qu\'il n\'est pas nécessaire d\'évaluer les applications disponibles sur F-Droid car elles n\'ont pas de dépendances vers les Google Play Services.\n\nLes langues non latines ne sont pas encore supportées. Cependant, vous pouvez changer la langue de votre appareil pour contribuer.</string>
+    <string name="warning_desc">Vous êtes sur le point d\'évaluer le fonctionnement d\'une application Android sur un appareil AOSP pure.\n\nPar conséquent, votre appareil ne doit pas avoir les Google Play Services d\'installés.\n\nVeuillez noter qu\'il n\'est pas nécessaire d\'évaluer les applications disponibles sur F-Droid car elles n\'ont pas de dépendances vers les Google Play Services.\n\nLes langues non latines ne sont pas encore supportées. Cependant, vous pouvez changer la langue de votre appareil pour contribuer.</string>
     <string name="proceed">Commencer</string>
     <string name="select_button">Sélectionner</string>
     <string name="select_application_text">Selectionnez l\'application à évaluer</string>
