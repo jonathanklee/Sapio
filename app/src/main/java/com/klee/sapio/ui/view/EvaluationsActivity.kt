@@ -1,11 +1,12 @@
 package com.klee.sapio.ui.view
 
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.os.Environment
+import android.provider.MediaStore.Images.Media
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
 
 @AndroidEntryPoint
 class EvaluationsActivity : AppCompatActivity() {
@@ -87,7 +89,7 @@ class EvaluationsActivity : AppCompatActivity() {
             share(takeScreenshot(mBinding.card), appName)
         }
 
-        mBinding.infoIcon.setOnClickListener() {
+        mBinding.infoIcon.setOnClickListener {
             val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
         }
@@ -112,20 +114,36 @@ class EvaluationsActivity : AppCompatActivity() {
     }
 
     private fun share(bitmap: Bitmap, appName: String) {
-        val bitmapPath = MediaStore.Images.Media.insertImage(
-            contentResolver,
-            bitmap,
-            "screenshot",
-            "screenshot"
-        )
+
+        val contentValues = ContentValues().apply {
+            put(Media.DISPLAY_NAME, "screenshot_${System.currentTimeMillis()}")
+            put(Media.DESCRIPTION, "$appName Android Compatibility Matrix")
+            put(Media.MIME_TYPE, "image/jpeg")
+            put(
+                Media.RELATIVE_PATH,
+                "${Environment.DIRECTORY_PICTURES}/${Environment.DIRECTORY_SCREENSHOTS}"
+            )
+        }
+
+        val imageUri =
+            contentResolver.insert(Media.EXTERNAL_CONTENT_URI, contentValues)
+                ?: return
+
+        try {
+            contentResolver.openOutputStream(imageUri)?.use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+        } catch (exception: IOException) {
+            exception.printStackTrace()
+        }
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "image/*"
             putExtra(Intent.EXTRA_SUBJECT, "Sapio")
-            putExtra(Intent.EXTRA_STREAM, Uri.parse(bitmapPath))
+            putExtra(Intent.EXTRA_STREAM, imageUri)
             putExtra(
                 Intent.EXTRA_TEXT,
-                "$appName Android Compatibility Matrix from https://github.com/jonathanklee/Sapio"
+                "$appName Android Compatibility Matrix https://github.com/jonathanklee/Sapio"
             )
         }
 
