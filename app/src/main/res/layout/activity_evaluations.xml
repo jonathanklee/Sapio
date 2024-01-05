@@ -8,6 +8,7 @@
   tools:context=".ui.view.EvaluationsActivity">
 
     <androidx.cardview.widget.CardView
+      android:backgroundTint="@color/cardview_background_color"
       android:id="@+id/card"
       app:cardCornerRadius="30dp"
       android:layout_width="wrap_content"
@@ -20,7 +21,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:background="?android:colorBackgroundFloating"
       android:layout_gravity="center"
 
       app:layout_constraintBottom_toBottomOf="parent"
