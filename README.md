@@ -27,6 +27,50 @@ cd Sapio
 ```
 adb install ./app/build/outputs/apk/debug/app-debug.apk
 ```
+# Public API
+
+## Base url
+```
+https://sapio.ovh/api
+```
+## Endpoints
+
+### List evaluations
+
+- Endpoint: /sapio-applications
+- Method: GET
+- Description: List evaluations
+- Parameters: https://docs.strapi.io/dev-docs/api/rest/parameters
+- Result: https://docs.strapi.io/dev-docs/api/rest#requests
+- Example: Get the latest 100 evaluations
+
+```
+curl -X GET "https://sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100&sort=updatedAt:Desc"
+```
+
+### Search evaluations
+
+- Endpoint: /sapio-applications
+- Method: GET
+- Description: Search evaluations
+- Parameters: https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication#filtering
+- Result: https://docs.strapi.io/dev-docs/api/rest#requests
+- Example: Search evaluations for an app called ChatGPT
+ ```
+ curl -X GET "https://sapio.ovh/api/sapio-applications?filters\[name\]\[\$eq\]=ChatGPT"
+ ```
+
+### Get icons
+
+- Endpoint: /upload/files
+- Method: GET
+- Description: Get icons
+- Parameters: https://docs.strapi.io/dev-docs/api/rest/parameters
+- Example: Get ChatGPT icon
+ ```
+curl -X GET "https://sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=com.openai.chatgpt.png"
+ ```
+
 # ☕ Coffee
 
 If you want to offer me a coffee for the maintenance of the server part: https://paypal.me/jnthnkl
