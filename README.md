@@ -42,7 +42,12 @@ https://sapio.ovh/api
 - Method: GET
 - Description: List evaluations
 - Parameters: https://docs.strapi.io/dev-docs/api/rest/parameters
-- Result: https://docs.strapi.io/dev-docs/api/rest#requests
+- Result:
+    - https://docs.strapi.io/dev-docs/api/rest#requests
+    - attributes:
+        - microg: 1 for microG, 2 for bareAOSP
+        - rooted: 3 for user, 4 for root
+        - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Get the latest 100 evaluations
 
 ```
@@ -55,7 +60,12 @@ curl -X GET "https://sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100
 - Method: GET
 - Description: Search evaluations
 - Parameters: https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication#filtering
-- Result: https://docs.strapi.io/dev-docs/api/rest#requests
+- Result:
+    - https://docs.strapi.io/dev-docs/api/rest#requests
+    - attributes:
+        - microg: 1 for microG, 2 for bareAOSP
+        - rooted: 3 for user, 4 for root
+        - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Search evaluations for an app called ChatGPT
  ```
  curl -X GET "https://sapio.ovh/api/sapio-applications?filters\[name\]\[\$eq\]=ChatGPT"
