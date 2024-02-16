@@ -43,7 +43,8 @@ data class Evaluation(
     @JsonProperty("rooted") val rooted: Int,
     @JsonProperty("updatedAt") val updatedAt: Date?,
     @JsonProperty("createdAt") val createdAt: Date?,
-    @JsonProperty("publishedAt") val publishedAt: Date?
+    @JsonProperty("publishedAt") val publishedAt: Date?,
+    @JsonProperty("versionName") val versionName: String?
 )
 
 data class Icon(
