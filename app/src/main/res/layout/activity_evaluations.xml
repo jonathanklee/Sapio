@@ -163,7 +163,8 @@
 
         <TextView
           android:id="@+id/packageName"
-          android:layout_width="wrap_content"
+          android:gravity="center_horizontal"
+          android:layout_width="200dp"
           android:layout_height="wrap_content"
           android:layout_marginBottom="20dp"
           android:layout_marginTop="5dp"
