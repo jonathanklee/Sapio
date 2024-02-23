@@ -1,5 +1,11 @@
 <p align="left"><img src="https://github.com/jonathanklee/Sapio/blob/main/app/src/main/icon.png" width="200"/></p>
 
+# ⚠️ Server Status ⚠️
+
+*Feburary 23rd 2024* 
+
+Sapio server will be down for a few days. My dog ate the fiber optic cable 🐶 
+
 # Sapio
 
 Sapio is the anagram of Open Source API.
