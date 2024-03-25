@@ -6,6 +6,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,17 +25,20 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        val tabLayout = mBinding.tabLayout
-        val viewPager = mBinding.viewPager
-        viewPager.adapter = FragmentAdapter(supportFragmentManager, lifecycle)
-        TabLayoutMediator(tabLayout, viewPager, true, false) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.feed_title)
-                1 -> getString(R.string.search_title)
-                2 -> getString(R.string.contribute_title)
-                else -> ""
+        displayFragment(FeedFragment())
+
+        mBinding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.feed -> displayFragment(FeedFragment())
+                R.id.search -> displayFragment(SearchFragment())
+                R.id.contribute -> displayFragment(ContributeFragment())
             }
-        }.attach()
+            return@setOnItemSelectedListener true
+        }
+    }
+
+    private fun displayFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

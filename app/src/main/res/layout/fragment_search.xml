@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.FeedFragment">
+    tools:context=".ui.view.SearchFragment">
 
     <EditText
         android:id="@+id/editTextSearch"
@@ -14,6 +14,7 @@
         android:layout_margin="20dp"
         android:ems="10"
         android:gravity="left"
+        android:layout_alignParentBottom="true"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

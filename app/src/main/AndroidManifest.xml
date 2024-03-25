@@ -28,6 +28,7 @@
             android:name=".ui.view.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sapio"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
         </activity>
         <activity
