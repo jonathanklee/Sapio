@@ -38,6 +38,8 @@ class FeedAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.binding.image.setImageBitmap(null)
+
         val app = mApps[position]
         val element = holder.binding
         element.appName.text = app.name
