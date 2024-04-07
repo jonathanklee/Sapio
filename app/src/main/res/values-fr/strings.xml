@@ -25,8 +25,8 @@
     <string name="contribute_title">Contribuer</string>
     <string name="about">A propos</string>
     <string name="the_device_has_microg_installed">L\'appareil a microG d\'installé</string>
-    <string name="the_device_is_a_bare_aosp_device">L\'appareil possède un AOSP pure</string>
-    <string name="the_device_is_not_rooted">L\'appareil n\'est pas considéré rooté</string>
+    <string name="the_device_is_a_bare_aosp_device">L\'appareil est un AOSP pure</string>
+    <string name="the_device_is_not_rooted">L\'appareil n\'est pas rooté</string>
     <string name="the_device_is_considered_rooted">L\'appareil est considéré rooté</string>
     <string name="validate_button">Valider</string>
     <string name="thank_you">Merci d\'avoir évalué l\'application</string>
