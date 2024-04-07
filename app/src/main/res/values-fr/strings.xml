@@ -32,7 +32,7 @@
     <string name="thank_you">Merci d\'avoir évalué l\'application</string>
     <string name="good">Fonctionne parfaitement</string>
     <string name="average">Fonctionne partiellement</string>
-    <string name="bad">Plante ou ne fonctionne pas du tout</string>
+    <string name="bad">Ne fonctionne pas du tout</string>
     <string name="unknown">Inconnu</string>
     <string name="share">Partager</string>
 </resources>

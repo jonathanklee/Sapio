@@ -36,8 +36,8 @@
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
     <string name="good">Works perfectly</string>
-    <string name="average">Works partially</string>
-    <string name="bad">Crashes or does not work at all</string>
+    <string name="average">One or more feature don\'t work</string>
+    <string name="bad">Does not work at all</string>
     <string name="unknown">Unknown</string>
     <string name="share">Share</string>
 </resources>
