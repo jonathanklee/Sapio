@@ -32,21 +32,8 @@ class WarningFragment : Fragment() {
             findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
-        mBinding.proceedButton.isEnabled = hasDeviceLatinLanguage() &&
-                mDeviceConfiguration.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES
+        mBinding.proceedButton.isEnabled = mDeviceConfiguration.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES
 
         return mBinding.root
-    }
-
-    private fun hasDeviceLatinLanguage(): Boolean {
-        val languageCode = Resources.getSystem().configuration.locales.get(0).language
-        if (languageCode.startsWith("en") || languageCode.startsWith("fr") ||
-            languageCode.startsWith("es") || languageCode.startsWith("de") ||
-            languageCode.startsWith("it")
-        ) {
-            return true
-        }
-
-        return false
     }
 }
