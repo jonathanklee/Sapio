@@ -76,7 +76,7 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         mViewModel.iconUrl.observe(this) {
-            Glide.with(this).load(EvaluationService.BASE_URL + it).into(mBinding.image)
+            Glide.with(this.applicationContext).load(EvaluationService.BASE_URL + it).into(mBinding.image)
         }
 
         val packageName = intent.getStringExtra("packageName").toString()
