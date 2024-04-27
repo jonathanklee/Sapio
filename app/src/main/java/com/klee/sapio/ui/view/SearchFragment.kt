@@ -21,6 +21,7 @@ import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,17 +52,13 @@ class SearchFragment : Fragment() {
 
         mHandler = Handler(Looper.getMainLooper())
 
-        mViewModel.foundEvaluations.observe(viewLifecycleOwner) { list ->
-            mSearchAppAdapter = SearchAppAdapter(
-                requireContext(),
-                list,
-                mEvaluationRepository,
-                lifecycleScope
-            )
-            mBinding.recyclerView.adapter = mSearchAppAdapter
-        }
+        val coroutineScope = viewLifecycleOwner.lifecycleScope
 
         mBinding.editTextSearch.addTextChangedListener { editable ->
+
+            coroutineScope.launch {
+                collectSearch()
+            }
 
             val text = editable?.trim().toString()
             if (text.isNotEmpty()) {
@@ -76,6 +73,18 @@ class SearchFragment : Fragment() {
         setSearchIconsColor()
 
         return mBinding.root
+    }
+
+    private suspend fun collectSearch() {
+        mViewModel.evaluations.collect { list ->
+            mSearchAppAdapter = SearchAppAdapter(
+                requireContext(),
+                list,
+                mEvaluationRepository,
+                lifecycleScope
+            )
+            mBinding.recyclerView.adapter = mSearchAppAdapter
+        }
     }
 
     private fun setSearchIconsColor() {
