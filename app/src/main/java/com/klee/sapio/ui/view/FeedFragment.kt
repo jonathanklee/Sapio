@@ -36,13 +36,13 @@ class FeedFragment : Fragment() {
         val coroutineScope = viewLifecycleOwner.lifecycleScope
 
         coroutineScope.launchWhenCreated {
-            collect()
+            collectFeed()
         }
         refreshFeed()
 
         mBinding.refreshView.setOnRefreshListener {
             coroutineScope.launch {
-                collect()
+                collectFeed()
             }
             refreshFeed()
         }
@@ -50,7 +50,7 @@ class FeedFragment : Fragment() {
         return mBinding.root
     }
 
-    private suspend fun collect() {
+    private suspend fun collectFeed() {
         mViewModel.evaluations.collect { list ->
             mFeedAppAdapter = FeedAppAdapter(
                 requireContext(),
