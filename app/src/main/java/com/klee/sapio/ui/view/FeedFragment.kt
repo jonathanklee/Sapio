@@ -45,35 +45,27 @@ class FeedFragment : Fragment() {
     }
 
     private fun fetchFeed(coroutineScope: CoroutineScope) {
+        mBinding.refreshView.isRefreshing
         coroutineScope.launch {
             collectFeed()
         }
-        refreshFeed()
     }
 
     private suspend fun collectFeed() {
         mViewModel.evaluations.collect { list ->
+            if (list.isEmpty()) {
+                ToastMessage.showNetworkIssue(requireContext())
+            }
+
             mFeedAppAdapter = FeedAppAdapter(
                 requireContext(),
                 list,
                 mEvaluationRepository,
                 lifecycleScope
             )
+
             mBinding.recyclerView.adapter = mFeedAppAdapter
+            mBinding.refreshView.isRefreshing = false
         }
-    }
-
-    private fun refreshFeed() {
-        mViewModel.listEvaluation(this::onSuccess, this::onNetworkError)
-        mBinding.refreshView.isRefreshing = true
-    }
-
-    private fun onNetworkError() {
-        ToastMessage.showNetworkIssue(requireContext())
-        mBinding.refreshView.isRefreshing = false
-    }
-
-    private fun onSuccess() {
-        mBinding.refreshView.isRefreshing = false
     }
 }
