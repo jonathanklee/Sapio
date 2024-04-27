@@ -12,6 +12,7 @@ import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,20 +35,20 @@ class FeedFragment : Fragment() {
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         val coroutineScope = viewLifecycleOwner.lifecycleScope
-
-        coroutineScope.launchWhenCreated {
-            collectFeed()
-        }
-        refreshFeed()
+        fetchFeed(coroutineScope)
 
         mBinding.refreshView.setOnRefreshListener {
-            coroutineScope.launch {
-                collectFeed()
-            }
-            refreshFeed()
+            fetchFeed(coroutineScope)
         }
 
         return mBinding.root
+    }
+
+    private fun fetchFeed(coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            collectFeed()
+        }
+        refreshFeed()
     }
 
     private suspend fun collectFeed() {
@@ -63,7 +64,7 @@ class FeedFragment : Fragment() {
     }
 
     private fun refreshFeed() {
-        mViewModel.evaluations = mViewModel.listEvaluation(this::onSuccess, this::onNetworkError)
+        mViewModel.listEvaluation(this::onSuccess, this::onNetworkError)
         mBinding.refreshView.isRefreshing = true
     }
 
