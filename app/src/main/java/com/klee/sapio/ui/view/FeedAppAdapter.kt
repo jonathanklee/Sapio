@@ -47,8 +47,11 @@ class FeedAppAdapter(
 
         val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
         element.updatedDate.text =
-            "${mContext.getString(R.string.updated_on)} ${dateFormat.format(app.updatedAt)}"
-
+            mContext.getString(
+                R.string.updated_on,
+                app.updatedAt?.let { dateFormat.format(it) }
+            )
+        
         element.emoji.text = Rating.create(app.rating).text
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
