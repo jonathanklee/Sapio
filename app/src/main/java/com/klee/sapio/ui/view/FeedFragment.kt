@@ -33,13 +33,15 @@ class FeedFragment : Fragment() {
         mBinding = FragmentMainBinding.inflate(layoutInflater)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        val coroutineScope = viewLifecycleOwner.lifecycleScope
+
+        coroutineScope.launchWhenCreated {
             collect()
         }
         refreshFeed()
 
         mBinding.refreshView.setOnRefreshListener {
-            viewLifecycleOwner.lifecycleScope.launch {
+            coroutineScope.launch {
                 collect()
             }
             refreshFeed()
