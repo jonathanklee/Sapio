@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
@@ -24,7 +23,6 @@ import javax.inject.Inject
 class EvaluateFragment : Fragment() {
 
     companion object {
-        const val NOT_CHECKED = -1
         const val NOT_EXISTING = -1
     }
 
@@ -51,6 +49,10 @@ class EvaluateFragment : Fragment() {
         mBinding.rootConfiguration.setBackgroundColor(isRootedLabel.color)
 
         mPackageName = arguments?.getString("package")!!
+        mBinding.validateButton.isEnabled = false
+        mBinding.note.setOnCheckedChangeListener { _, value ->
+            mBinding.validateButton.isEnabled = value != -1
+        }
 
         mBinding.validateButton.setOnClickListener {
             onValidateClicked()
@@ -65,12 +67,6 @@ class EvaluateFragment : Fragment() {
 
     private fun onValidateClicked() {
         runBlocking {
-
-            if (mBinding.note.checkedRadioButtonId == NOT_CHECKED) {
-                Toast.makeText(context, "Please select an evaluation", Toast.LENGTH_SHORT).show()
-                return@runBlocking
-            }
-
             val app = mInstalledApplicationsRepository.getApplicationFromPackageName(
                 requireContext(),
                 mPackageName
