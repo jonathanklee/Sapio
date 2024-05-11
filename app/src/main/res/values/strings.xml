@@ -6,7 +6,7 @@
     <string name="proceed">Proceed</string>
     <string name="select_button">Select</string>
     <string name="select_application_text">Select the application to evaluate</string>
-    <string name="select_application_error">Please select an application</string>
+    <string name="select_application_error">The app does not have dependencies to Google Play Services</string>
     <string name="note_application_text">You can now evaluate the application</string>
     <string name="select_evaluation_error">Please select an evaluation</string>
     <string name="microg_label" translatable="false">\ microG\ </string>
