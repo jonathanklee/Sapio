@@ -1,6 +1,7 @@
 package com.klee.sapio.ui.view
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
+
+    companion object {
+        const val DONATE_URL = "https://www.paypal.com/donate/?hosted_button_id=RE3PM6W85N5HW"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +54,10 @@ class MainActivity : AppCompatActivity() {
             R.id.about -> {
                 val intent = Intent(this@MainActivity, AboutActivity::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.donate -> {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(DONATE_URL)))
                 return true
             }
             else -> super.onOptionsItemSelected(item)

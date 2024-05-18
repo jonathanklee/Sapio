@@ -84,7 +84,7 @@ curl -X GET "https://sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=com.open
 
 # ☕ Coffee
 
-If you want to offer me a coffee for the maintenance of the server part: https://paypal.me/jnthnkl
+If you want to offer me a coffee for the maintenance of the server part: [Donate](https://www.paypal.com/donate/?hosted_button_id=RE3PM6W85N5HW)
 
 # 👏 Credits
 

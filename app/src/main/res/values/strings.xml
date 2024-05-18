@@ -40,4 +40,5 @@
     <string name="bad">Does not work at all</string>
     <string name="unknown">Unknown</string>
     <string name="share">Share</string>
+    <string name="donate">Donate</string>
 </resources>

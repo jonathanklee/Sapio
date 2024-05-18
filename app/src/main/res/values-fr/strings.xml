@@ -24,6 +24,7 @@
     <string name="search_title">Rechercher</string>
     <string name="contribute_title">Contribuer</string>
     <string name="about">A propos</string>
+    <string name="donate">Faire un don</string>
     <string name="the_device_has_microg_installed">L\'appareil a microG d\'installé</string>
     <string name="the_device_is_a_bare_aosp_device">L\'appareil est un AOSP pure</string>
     <string name="the_device_is_not_rooted">L\'appareil n\'est pas rooté</string>
