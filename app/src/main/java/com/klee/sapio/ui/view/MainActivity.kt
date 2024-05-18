@@ -7,11 +7,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

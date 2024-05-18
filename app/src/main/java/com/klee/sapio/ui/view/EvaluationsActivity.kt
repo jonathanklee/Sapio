@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Images.Media
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +27,9 @@ class EvaluationsActivity : AppCompatActivity() {
     private val mViewModel by viewModels<AppEvaluationsViewModel>()
 
     companion object {
+        const val TAG = "EvaluationsActivity"
         const val NO_EVALUATION_CHAR = ""
+        const val COMPRESSION_QUALITY = 100
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,10 +134,10 @@ class EvaluationsActivity : AppCompatActivity() {
 
         try {
             contentResolver.openOutputStream(imageUri)?.use { outputStream ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESSION_QUALITY, outputStream)
             }
         } catch (exception: IOException) {
-            exception.printStackTrace()
+            Log.e(TAG, "Failed to share matrix", exception)
         }
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
