@@ -1,5 +1,5 @@
 Sapio est l'anagramme d'API Open Source.
 
-Sapio fournit la matrice de compatibilité d'une application Android avec les téléphones fonctionnant sur un Android Open Source Project (AOSP) pure, associés ou non à microG.
+Sapio fournit la matrice de compatibilité d'une application Android avec les téléphones fonctionnant sur un Android Open Source Project (AOSP) pure déGooglisé, associés ou non à microG.
 
 Les évaluations de Sapio sont fournies à la communauté par la communauté.
