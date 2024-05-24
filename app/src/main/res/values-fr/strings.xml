@@ -1,7 +1,7 @@
 <resources>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
-    <string name="warning_desc">Vous êtes sur le point d\'évaluer le fonctionnement d\'une application Android sur un appareil AOSP déGooglisé.\n\nPar conséquent, votre appareil ne doit pas avoir les Google Play Services d\'installés.\n\nVeuillez noter qu\'il n\'est pas nécessaire d\'évaluer les applications disponibles sur F-Droid car elles n\'ont pas de dépendances vers les Google Play Services.</string>
+    <string name="warning_desc"><![CDATA[Vous êtes sur le point d\'évaluer le fonctionnement d\'une application Android sur un appareil AOSP déGooglisé.<br><br>Par conséquent, votre appareil ne doit pas avoir les Google Play Services d\'installés.<br><br>Soyez certains de bien comprendre les <a href="%1$s">règles d\'évaluation</a> avant de contribuer.<br><br>Veuillez noter qu\'il n\'est pas nécessaire d\'évaluer les applications disponibles sur F-Droid car elles n\'ont pas de dépendances vers les Google Play Services.]]></string>
     <string name="proceed">Commencer</string>
     <string name="select_button">Sélectionner</string>
     <string name="select_application_text">Selectionnez l\'application à évaluer</string>
@@ -36,4 +36,5 @@
     <string name="bad">Ne fonctionne pas du tout</string>
     <string name="unknown">Inconnu</string>
     <string name="share">Partager</string>
+    <string name="rating_rules"><![CDATA[<a href="%1$s">Règles d\'évaluation</a>]]></string>
 </resources>

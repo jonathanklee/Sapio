@@ -47,137 +47,16 @@
           app:layout_constraintTop_toBottomOf="@id/version" />
 
         <TextView
-          android:id="@+id/microgLabel"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="40dp"
-          android:layout_marginTop="30dp"
-          android:background="@color/teal_200"
-          android:text="@string/microg_label"
-          android:textColor="@color/white"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/aboutView" />
-
-        <TextView
-          android:id="@+id/microgExplanation"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="30dp"
-          android:layout_marginStart="72dp"
-          android:text="@string/the_device_has_microg_installed"
-          app:layout_constraintStart_toEndOf="@+id/microgLabel"
-          app:layout_constraintTop_toBottomOf="@+id/aboutView" />
-
-        <TextView
-          android:id="@+id/bareAospLabel"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
-          android:background="@color/teal_700"
-          android:text="@string/bare_aosp_label"
-          android:textColor="@color/white"
-          app:layout_constraintStart_toStartOf="@+id/microgLabel"
-          app:layout_constraintTop_toBottomOf="@+id/microgLabel" />
-
-        <TextView
-          android:id="@+id/bareAospExplanation"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/the_device_is_a_bare_aosp_device"
-          app:layout_constraintStart_toStartOf="@+id/microgExplanation"
-          app:layout_constraintTop_toTopOf="@+id/bareAospLabel" />
-
-        <TextView
-          android:id="@+id/userLabel"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
-          android:background="@color/purple_200"
-          android:text="@string/user_label"
-          android:textColor="@color/white"
-          app:layout_constraintStart_toStartOf="@+id/bareAospLabel"
-          app:layout_constraintTop_toBottomOf="@+id/bareAospLabel" />
-
-        <TextView
-          android:id="@+id/userExplanation"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/the_device_is_not_rooted"
-          app:layout_constraintStart_toStartOf="@+id/bareAospExplanation"
-          app:layout_constraintTop_toTopOf="@+id/userLabel" />
-
-        <TextView
-          android:id="@+id/rootedLabel"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
-          android:background="@color/purple_700"
-          android:text="@string/rooted_label"
-          android:textColor="@color/white"
-          app:layout_constraintStart_toStartOf="@+id/userLabel"
-          app:layout_constraintTop_toBottomOf="@+id/userLabel" />
-
-        <TextView
-          android:id="@+id/rootedExplanation"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/the_device_is_considered_rooted"
-          app:layout_constraintStart_toStartOf="@+id/userExplanation"
-          app:layout_constraintTop_toTopOf="@+id/rootedLabel" />
-
-        <TextView
-            android:id="@+id/greenIcon"
-            android:text="greenEmoji"
-            app:layout_constraintTop_toBottomOf="@id/rootedLabel"
-            app:layout_constraintStart_toStartOf="@id/rootedLabel"
-            android:layout_marginTop="20dp"
+            android:id="@+id/ratingRules"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/rating_rules"
+            android:layout_margin="40dp"
+            app:layout_constraintStart_toStartOf="@id/aboutView"
+            app:layout_constraintEnd_toEndOf="@id/aboutView"
+            app:layout_constraintTop_toBottomOf="@id/aboutView"
+            />
 
-        <TextView
-            android:id="@+id/greenExplanation"
-            android:text="@string/good"
-            app:layout_constraintTop_toTopOf="@id/greenIcon"
-            app:layout_constraintStart_toStartOf="@id/rootedExplanation"
-            android:layout_marginEnd="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/yellowIcon"
-            android:text="yellowEmoji"
-            app:layout_constraintTop_toBottomOf="@id/greenIcon"
-            app:layout_constraintStart_toStartOf="@id/greenIcon"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/yellowExplanation"
-            android:text="@string/average"
-            app:layout_constraintTop_toTopOf="@id/yellowIcon"
-            app:layout_constraintStart_toStartOf="@id/greenExplanation"
-            android:layout_marginEnd="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/redIcon"
-            android:text="redEmoji"
-            app:layout_constraintTop_toBottomOf="@id/yellowIcon"
-            app:layout_constraintStart_toStartOf="@id/yellowIcon"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/redExplanation"
-            android:text="@string/bad"
-            app:layout_constraintTop_toTopOf="@id/redIcon"
-            app:layout_constraintStart_toStartOf="@id/yellowExplanation"
-            android:layout_marginEnd="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
