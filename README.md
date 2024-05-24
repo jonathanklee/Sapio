@@ -12,6 +12,22 @@ Evaluations in Sapio are given to the community by the community.
 
 <p><img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="200"/>&nbsp&nbsp<img src="https://github.com/jonathanklee/Sapio/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="200"/>
 
+# Rating
+
+🟢 The app works perfectly without Google Play Services
+
+🟡 At least one feature (notifications, in-app purchases etc) of the app does not work without Google Play Services
+
+🔴 The app does not work at all or crashes without Google Play Services
+
+**bareAOSP** The device is a bare AOSP device 
+
+**microG** The device has microG installed
+
+**root** The device is considered rooted
+
+**user** The device is not considered rooted
+
 # 🔨 Build
 ## Get the sources
 
