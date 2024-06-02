@@ -16,7 +16,7 @@ Evaluations in Sapio are given to the community by the community.
 
 🟢 The app works perfectly without Google Play Services
 
-🟡 At least one feature (notifications, in-app purchases etc) of the app does not work without Google Play Services
+🟡 The app works partially: at least one feature (notifications, in-app purchases etc) does not work without Google Play Services
 
 🔴 The app does not work at all or crashes without Google Play Services
 
