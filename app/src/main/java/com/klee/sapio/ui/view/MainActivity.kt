@@ -54,11 +54,11 @@ class MainActivity : AppCompatActivity() {
             R.id.about -> {
                 val intent = Intent(this@MainActivity, AboutActivity::class.java)
                 startActivity(intent)
-                return true
+                true
             }
             R.id.donate -> {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(DONATE_URL)))
-                return true
+                true
             }
             else -> super.onOptionsItemSelected(item)
         }

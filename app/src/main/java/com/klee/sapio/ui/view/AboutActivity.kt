@@ -24,7 +24,11 @@ class AboutActivity : AppCompatActivity() {
 
         mBinding = ActivityAboutBinding.inflate(layoutInflater)
         mBinding.version.text = "v${BuildConfig.VERSION_NAME}"
-        mBinding.ratingRules.text = Html.fromHtml(getString(R.string.rating_rules, RATING_RULES), Html.FROM_HTML_MODE_COMPACT)
+        mBinding.ratingRules.text = Html.fromHtml(
+            getString(R.string.rating_rules, RATING_RULES),
+            Html.FROM_HTML_MODE_COMPACT
+        )
+
         mBinding.ratingRules.movementMethod = LinkMovementMethod.getInstance()
 
         setContentView(mBinding.root)

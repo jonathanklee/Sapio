@@ -29,7 +29,11 @@ class WarningFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentWarningBinding.inflate(layoutInflater)
-        mBinding.reportAppDescription.text = Html.fromHtml(getString(R.string.warning_desc, AboutActivity.RATING_RULES), Html.FROM_HTML_MODE_LEGACY)
+        mBinding.reportAppDescription.text = Html.fromHtml(
+            getString(R.string.warning_desc, AboutActivity.RATING_RULES),
+            Html.FROM_HTML_MODE_LEGACY
+        )
+
         mBinding.reportAppDescription.movementMethod = LinkMovementMethod.getInstance()
 
         mBinding.proceedButton.setOnClickListener {
