@@ -40,8 +40,16 @@ class WarningFragment : Fragment() {
             findNavController().navigate(R.id.action_warningFragment_to_chooseAppFragment)
         }
 
-        mBinding.proceedButton.isEnabled = mDeviceConfiguration.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES
+        mBinding.checkbox.setOnClickListener {
+            updateProceedButton()
+        }
 
+        updateProceedButton()
         return mBinding.root
+    }
+
+    private fun updateProceedButton() {
+        mBinding.proceedButton.isEnabled =
+            mDeviceConfiguration.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES && mBinding.checkbox.isChecked
     }
 }

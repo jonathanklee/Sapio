@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Sapio</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="warning_desc"><![CDATA[You are tasked with evaluating the behavior of an Android application on a deGoogled bare Android Open Source Project (AOSP) device.<br><br>Therefore, your device must not have the official Google Play Services installed<br><br>Make sure to understand properly the <a href="%1$s">rating rules</a> before contributing.<br><br>Please note that there is no need to evaluate applications which are available on F-Droid, as they are free from any dependencies on Google Play Services.]]></string>
+    <string name="warning_desc"><![CDATA[You are tasked with evaluating the behavior of an Android application on a deGoogled bare Android Open Source Project (AOSP) device.<br><br>Therefore, your device must not have the official Google Play Services installed<br><br>Make sure to understand properly the <a href="%1$s">rating rules</a> before contributing.]]></string>
     <string name="proceed">Proceed</string>
     <string name="select_button">Select</string>
     <string name="select_application_text">Select the application to evaluate</string>
@@ -42,4 +42,5 @@
     <string name="share">Share</string>
     <string name="donate">Donate</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Rating rules</a>]]></string>
+    <string name="i_have_read_and_i_understand_the_rating_rules">I have read and I understand the rating rules</string>
 </resources>
