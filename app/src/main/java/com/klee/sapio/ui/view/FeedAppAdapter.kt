@@ -70,6 +70,8 @@ class FeedAppAdapter(
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
                     .load(EvaluationService.BASE_URL + icons[0].url)
+                    .placeholder(R.drawable.ic_android)
+                    .error(R.drawable.ic_android)
                     .into(holder.binding.image)
             }
         }

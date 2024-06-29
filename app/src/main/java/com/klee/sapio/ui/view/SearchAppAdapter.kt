@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.SearchAppCardBinding
 import com.bumptech.glide.Glide
+import com.klee.sapio.R
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.domain.EvaluationRepository
@@ -47,6 +48,8 @@ class SearchAppAdapter(
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
                     .load(EvaluationService.BASE_URL + icons[0].url)
+                    .placeholder(R.drawable.ic_android)
+                    .error(R.drawable.ic_android)
                     .into(holder.binding.image)
             }
         }
