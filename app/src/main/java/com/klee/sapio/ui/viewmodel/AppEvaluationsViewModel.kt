@@ -10,7 +10,10 @@ import com.klee.sapio.domain.FetchAppMicrogRootEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogUserEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,27 +38,45 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
 
     fun listEvaluations(packageName: String) {
         viewModelScope.launch {
-            microgUserEvaluation.postValue(fetchAppMicrogUserEvaluationUseCase.invoke(packageName))
+            withContext(Dispatchers.IO) {
+                microgUserEvaluation.postValue(
+                    fetchAppMicrogUserEvaluationUseCase.invoke(
+                        packageName
+                    )
+                )
+            }
         }
 
         viewModelScope.launch {
-            microgRootEvaluation.postValue(fetchAppMicrogRootEvaluationUseCase.invoke(packageName))
+            withContext(Dispatchers.IO) {
+                microgRootEvaluation.postValue(
+                    fetchAppMicrogRootEvaluationUseCase.invoke(
+                        packageName
+                    )
+                )
+            }
         }
 
         viewModelScope.launch {
-            bareAospUserEvaluation.postValue(
-                fetchAppBareAOspUserEvaluationUseCase.invoke(packageName)
-            )
+            withContext(Dispatchers.IO) {
+                bareAospUserEvaluation.postValue(
+                    fetchAppBareAOspUserEvaluationUseCase.invoke(packageName)
+                )
+            }
         }
 
         viewModelScope.launch {
-            bareAsopRootEvaluation.postValue(
-                fetchAppBareAospRootEvaluationUseCase.invoke(packageName)
-            )
+            withContext(Dispatchers.IO) {
+                bareAsopRootEvaluation.postValue(
+                    fetchAppBareAospRootEvaluationUseCase.invoke(packageName)
+                )
+            }
         }
 
         viewModelScope.launch {
-            iconUrl.postValue(fetchIconUrlUseCase.invoke(packageName))
+            withContext(Dispatchers.IO) {
+                iconUrl.postValue(fetchIconUrlUseCase.invoke(packageName))
+            }
         }
     }
 }
