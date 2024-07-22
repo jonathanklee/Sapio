@@ -15,6 +15,8 @@ import com.klee.sapio.data.Label
 import com.klee.sapio.data.Rating
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,15 +24,19 @@ import java.util.Locale
 class FeedAppAdapter(
     private val mContext: Context,
     private var mApps: List<Evaluation>,
-    private var mEvaluationRepository: EvaluationRepository,
-    private var mCoroutineScope: CoroutineScope
+    private var mEvaluationRepository: EvaluationRepository
 ) : RecyclerView.Adapter<FeedAppAdapter.ViewHolder>() {
 
     companion object {
         const val DATE_FORMAT = "dd/MM/yyyy"
     }
 
-    inner class ViewHolder(val binding: FeedAppCardBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(
+        val binding: FeedAppCardBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        val viewHolderScope = CoroutineScope(Dispatchers.Main + Job())
+        var imageLoadJob: Job? = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = FeedAppCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -38,8 +44,6 @@ class FeedAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.image.setImageBitmap(null)
-
         val app = mApps[position]
         val element = holder.binding
         element.appName.text = app.name
@@ -65,7 +69,8 @@ class FeedAppAdapter(
             element.rooted.setBackgroundColor(rootLabel.color)
         }
 
-        mCoroutineScope.launch {
+
+        holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
@@ -83,6 +88,12 @@ class FeedAppAdapter(
 
             mContext.startActivity(intent)
         }
+    }
+
+    override fun onViewRecycled(holder: ViewHolder) {
+        super.onViewRecycled(holder)
+        Glide.with(mContext.applicationContext).clear(holder.binding.image)
+        holder.imageLoadJob?.cancel()
     }
 
     override fun getItemCount(): Int {

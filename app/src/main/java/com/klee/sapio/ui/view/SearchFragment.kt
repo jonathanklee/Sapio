@@ -80,8 +80,7 @@ class SearchFragment : Fragment() {
             mSearchAppAdapter = SearchAppAdapter(
                 requireContext(),
                 list,
-                mEvaluationRepository,
-                lifecycleScope
+                mEvaluationRepository
             )
             mBinding.recyclerView.adapter = mSearchAppAdapter
         }

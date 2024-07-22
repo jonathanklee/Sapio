@@ -60,8 +60,7 @@ class FeedFragment : Fragment() {
             mFeedAppAdapter = FeedAppAdapter(
                 requireContext(),
                 list,
-                mEvaluationRepository,
-                lifecycleScope
+                mEvaluationRepository
             )
 
             mBinding.recyclerView.adapter = mFeedAppAdapter

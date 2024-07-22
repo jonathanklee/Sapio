@@ -12,18 +12,22 @@ import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class SearchAppAdapter(
     private val mContext: Context,
     private var mApps: List<Evaluation>,
     private var mEvaluationRepository: EvaluationRepository,
-    private var mCoroutineScope: CoroutineScope
 ) : RecyclerView.Adapter<SearchAppAdapter.ViewHolder>() {
 
     inner class ViewHolder(
         val binding: SearchAppCardBinding
-    ) : RecyclerView.ViewHolder(binding.root)
+    ) : RecyclerView.ViewHolder(binding.root) {
+        val viewHolderScope = CoroutineScope(Dispatchers.Main + Job())
+        var imageLoadJob: Job? = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = SearchAppCardBinding.inflate(
@@ -36,14 +40,12 @@ class SearchAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.image.setImageBitmap(null)
-
         val app = mApps[position]
         val element = holder.binding
         element.appName.text = app.name
         element.packageName.text = app.packageName
 
-        mCoroutineScope.launch {
+        holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
@@ -61,6 +63,12 @@ class SearchAppAdapter(
 
             mContext.startActivity(intent)
         }
+    }
+
+    override fun onViewRecycled(holder: SearchAppAdapter.ViewHolder) {
+        super.onViewRecycled(holder)
+        Glide.with(mContext.applicationContext).clear(holder.binding.image)
+        holder.imageLoadJob?.cancel()
     }
 
     override fun getItemCount(): Int {
