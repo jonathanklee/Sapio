@@ -38,6 +38,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding = ActivityEvaluationsBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+
         mViewModel.microgUserEvaluation.observe(this) {
             mBinding.microgUser.text = it?.let {
                 Rating.create(it.rating).text
@@ -100,6 +101,10 @@ class EvaluationsActivity : AppCompatActivity() {
             val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
         }
+
+        mBinding.image.setImageDrawable(
+            applicationContext.getDrawable(R.drawable.ic_android)
+        )
 
         mViewModel.listEvaluations(packageName)
     }
