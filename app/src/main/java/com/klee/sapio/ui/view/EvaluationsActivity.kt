@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.Glide
 import com.klee.sapio.R
 import com.klee.sapio.data.EvaluationService
@@ -103,7 +104,7 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         mBinding.image.setImageDrawable(
-            applicationContext.getDrawable(R.drawable.ic_android)
+            AppCompatResources.getDrawable(applicationContext, R.drawable.ic_android)
         )
 
         mViewModel.listEvaluations(packageName)

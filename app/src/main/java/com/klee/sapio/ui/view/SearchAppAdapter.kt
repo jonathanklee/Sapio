@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.SearchAppCardBinding
 import com.bumptech.glide.Glide
@@ -44,6 +45,10 @@ class SearchAppAdapter(
         val element = holder.binding
         element.appName.text = app.name
         element.packageName.text = app.packageName
+
+        holder.binding.image.setImageDrawable(
+            AppCompatResources.getDrawable(mContext, R.drawable.ic_android)
+        )
 
         holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.FeedAppCardBinding
 import com.bumptech.glide.Glide
@@ -69,6 +70,9 @@ class FeedAppAdapter(
             element.rooted.setBackgroundColor(rootLabel.color)
         }
 
+        holder.binding.image.setImageDrawable(
+            AppCompatResources.getDrawable(mContext, R.drawable.ic_android)
+        )
 
         holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
