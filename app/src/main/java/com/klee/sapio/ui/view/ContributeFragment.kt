@@ -16,7 +16,7 @@ class ContributeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentContributeBinding.inflate(layoutInflater)
+        mBinding = FragmentContributeBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 }

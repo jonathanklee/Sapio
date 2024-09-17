@@ -18,7 +18,7 @@ class SuccessFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = FragmentSuccessBinding.inflate(layoutInflater)
+        mBinding = FragmentSuccessBinding.inflate(inflater, container, false)
         mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
         mBinding.evaludateAnotherAppButton.setOnClickListener {
             findNavController().navigate(R.id.action_successFragment_to_warningFragment)

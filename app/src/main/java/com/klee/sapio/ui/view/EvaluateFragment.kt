@@ -38,7 +38,7 @@ class EvaluateFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentEvaluateBinding.inflate(layoutInflater)
+        mBinding = FragmentEvaluateBinding.inflate(inflater, container, false)
 
         val microgLabel = Label.create(requireContext(), mDeviceConfiguration.getGmsType())
         mBinding.microgConfiguration.text = microgLabel.text

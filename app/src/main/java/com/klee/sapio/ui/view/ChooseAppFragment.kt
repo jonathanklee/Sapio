@@ -33,7 +33,7 @@ class ChooseAppFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentChooseAppBinding.inflate(layoutInflater)
+        mBinding = FragmentChooseAppBinding.inflate(inflater, container, false)
         mBinding.chooseAppButton.setOnClickListener {
             mBinding.nextButton.isEnabled = false
             val chooseApp = ChooseAppDialog { app ->

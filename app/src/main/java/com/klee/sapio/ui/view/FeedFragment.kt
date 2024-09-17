@@ -31,7 +31,7 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentMainBinding.inflate(layoutInflater)
+        mBinding = FragmentMainBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         val coroutineScope = viewLifecycleOwner.lifecycleScope
