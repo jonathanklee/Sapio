@@ -1,13 +1,11 @@
 package com.klee.sapio.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
@@ -34,28 +32,10 @@ class ChooseAppFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentChooseAppBinding.inflate(inflater, container, false)
-        mBinding.chooseAppButton.setOnClickListener {
-            mBinding.nextButton.isEnabled = false
-            val chooseApp = ChooseAppDialog { app ->
-                mBinding.appName.text = app.name
-                mApp = app
-                runBlocking {
-                    if (isOnFdroid(app)) {
-                        Toast.makeText(
-                            context,
-                            getString(R.string.select_application_error),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        mBinding.nextButton.isEnabled = true
-                    }
-                }
-            }
-            chooseApp.show(parentFragmentManager, "")
-        }
+        mBinding.chooseAppButton.setOnClickListener { onChooseButtonClicked() }
 
         mBinding.nextButton.isEnabled = false
-        mBinding.nextButton.setOnClickListener { onNextClicked() }
+        mBinding.nextButton.setOnClickListener { onNextButtonClicked() }
         mBinding.backButton.setOnClickListener {
             findNavController().navigate(R.id.action_chooseAppFragment_to_warningFragment)
         }
@@ -63,7 +43,29 @@ class ChooseAppFragment : Fragment() {
         return mBinding.root
     }
 
-    private fun onNextClicked() {
+    private fun onChooseButtonClicked() {
+        mBinding.chooseAppButton.isEnabled = false
+        mBinding.nextButton.isEnabled = false
+        val dialog = ChooseAppDialog { chosenApp ->
+            mBinding.appName.text = chosenApp.name
+            mApp = chosenApp
+            runBlocking {
+                if (isOnFdroid(chosenApp)) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.select_application_error),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    mBinding.nextButton.isEnabled = true
+                }
+                mBinding.chooseAppButton.isEnabled = true
+            }
+        }
+        dialog.show(parentFragmentManager, "")
+    }
+
+    private fun onNextButtonClicked() {
         val bundle = bundleOf("package" to mApp?.packageName)
         findNavController().navigate(R.id.action_chooseAppFragment_to_evaluateFragment, bundle)
     }
