@@ -14,8 +14,8 @@ class EvaluationRepositoryImpl @Inject constructor() :
     @Inject
     lateinit var retrofitService: EvaluationService
 
-    override suspend fun listLatestEvaluations(): List<Evaluation> {
-        return retrofitService.listLatestEvaluations()
+    override suspend fun listLatestEvaluations(pageNumber: Int): List<Evaluation> {
+        return retrofitService.listLatestEvaluations(pageNumber)
     }
 
     override suspend fun searchEvaluations(pattern: String): List<Evaluation> {

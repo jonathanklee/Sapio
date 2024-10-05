@@ -19,6 +19,9 @@ class FeedViewModel @Inject constructor() : ViewModel() {
     lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
 
     val evaluations: Flow<List<Evaluation>> = flow {
-        emit(listLatestEvaluationsUseCase.invoke())
+
+        for (i in 1..10) {
+            emit(listLatestEvaluationsUseCase.invoke(i))
+        }
     }
 }

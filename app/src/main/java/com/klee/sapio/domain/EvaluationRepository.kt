@@ -9,7 +9,7 @@ import retrofit2.Response
 
 interface EvaluationRepository {
 
-    suspend fun listLatestEvaluations(): List<Evaluation>
+    suspend fun listLatestEvaluations(pageNumber: Int): List<Evaluation>
 
     suspend fun searchEvaluations(pattern: String): List<Evaluation>
 
