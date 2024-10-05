@@ -1,10 +1,12 @@
 package com.klee.sapio.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.domain.SearchEvaluationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,14 +24,13 @@ class SearchViewModel @Inject constructor() : ViewModel() {
 
     private var _evaluations: MutableStateFlow<List<Evaluation>> = MutableStateFlow(emptyList())
 
-    fun searchApplication(pattern: String, onError: () -> Unit) {
-        viewModelScope.launch {
-            val list = searchEvaluationUseCase.invoke(pattern)
-            if (list.isEmpty()) {
-                onError.invoke()
-            }
 
-            _evaluations.value = list
+    suspend fun searchApplication(pattern: String, onError: () -> Unit) {
+        val list = searchEvaluationUseCase.invoke(pattern)
+        if (list.isEmpty()) {
+            onError.invoke()
         }
+
+        _evaluations.value = list
     }
 }

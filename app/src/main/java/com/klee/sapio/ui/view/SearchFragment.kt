@@ -6,6 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,10 @@ import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,6 +39,7 @@ class SearchFragment : Fragment() {
     private lateinit var mBinding: FragmentSearchBinding
     private lateinit var mSearchAppAdapter: SearchAppAdapter
     private val mViewModel by viewModels<SearchViewModel>()
+    private var searchJob: Job? = null
 
     private lateinit var mHandler: Handler
 
@@ -55,24 +61,37 @@ class SearchFragment : Fragment() {
         val coroutineScope = viewLifecycleOwner.lifecycleScope
 
         mBinding.editTextSearch.addTextChangedListener { editable ->
-
-            coroutineScope.launch {
-                collectSearch()
-            }
-
-            val text = editable?.trim().toString()
-            if (text.isNotEmpty()) {
-                mViewModel.searchApplication(text, this::onNetworkError)
-            } else {
-                mViewModel.searchApplication("", this::onNetworkError)
-            }
-
-            showResults(text.isNotEmpty())
+            onTextChanged(editable, coroutineScope)
         }
 
         setSearchIconsColor()
 
         return mBinding.root
+    }
+
+    private fun onTextChanged(editable: Editable?, coroutineScope: CoroutineScope) {
+        mSearchAppAdapter = SearchAppAdapter(
+            requireContext(),
+            emptyList(),
+            mEvaluationRepository
+        )
+        mBinding.recyclerView.adapter = mSearchAppAdapter
+
+        val text = editable?.trim().toString()
+        searchJob?.cancel()
+        searchJob = coroutineScope.launch {
+            if (text.isNotEmpty()) {
+                mViewModel.searchApplication(text, this@SearchFragment::onNetworkError)
+            } else {
+                mViewModel.searchApplication("", this@SearchFragment::onNetworkError)
+            }
+        }
+
+        coroutineScope.launch {
+            collectSearch()
+        }
+
+        showResults(text.isNotEmpty())
     }
 
     private suspend fun collectSearch() {
@@ -120,7 +139,6 @@ class SearchFragment : Fragment() {
             mBinding.searchIconBig.visibility = View.INVISIBLE
             mBinding.searchText.visibility = View.INVISIBLE
         } else {
-            mViewModel.searchApplication("pprrss", this::onNetworkError)
             mBinding.recyclerView.visibility = View.INVISIBLE
             mBinding.searchIconBig.visibility = View.VISIBLE
             mBinding.searchText.visibility = View.VISIBLE
