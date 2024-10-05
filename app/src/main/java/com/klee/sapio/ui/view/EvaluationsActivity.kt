@@ -83,8 +83,6 @@ class EvaluationsActivity : AppCompatActivity() {
         mViewModel.iconUrl.observe(this) {
             Glide.with(this.applicationContext)
                 .load(EvaluationService.BASE_URL + it)
-                .placeholder(R.drawable.ic_android)
-                .error(R.drawable.ic_android)
                 .into(mBinding.image)
         }
 
@@ -102,10 +100,6 @@ class EvaluationsActivity : AppCompatActivity() {
             val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
         }
-
-        mBinding.image.setImageDrawable(
-            AppCompatResources.getDrawable(applicationContext, R.drawable.ic_android)
-        )
 
         mViewModel.listEvaluations(packageName)
     }

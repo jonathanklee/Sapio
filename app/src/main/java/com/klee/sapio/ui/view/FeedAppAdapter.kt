@@ -70,17 +70,11 @@ class FeedAppAdapter(
             element.rooted.setBackgroundColor(rootLabel.color)
         }
 
-        holder.binding.image.setImageDrawable(
-            AppCompatResources.getDrawable(mContext, R.drawable.ic_android)
-        )
-
         holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
                     .load(EvaluationService.BASE_URL + icons[0].url)
-                    .placeholder(R.drawable.ic_android)
-                    .error(R.drawable.ic_android)
                     .into(holder.binding.image)
             }
         }
