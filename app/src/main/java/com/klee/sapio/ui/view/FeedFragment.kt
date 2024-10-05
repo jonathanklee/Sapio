@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.klee.sapio.data.Evaluation
 import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +23,9 @@ class FeedFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMainBinding
     private lateinit var mFeedAppAdapter: FeedAppAdapter
+    private lateinit var mEvaluations: MutableList<Evaluation>
     private val mViewModel by viewModels<FeedViewModel>()
+    private var fetchJob: Job? = null
 
     @Inject
     lateinit var mEvaluationRepository: EvaluationRepository
@@ -46,24 +50,24 @@ class FeedFragment : Fragment() {
 
     private fun fetchFeed(coroutineScope: CoroutineScope) {
         mBinding.refreshView.isRefreshing
-        coroutineScope.launch {
+
+        mEvaluations = emptyList<Evaluation>().toMutableList()
+        mFeedAppAdapter = FeedAppAdapter(
+            requireContext(),
+            mEvaluations,
+            mEvaluationRepository
+        )
+        mBinding.recyclerView.adapter = mFeedAppAdapter
+
+        fetchJob?.cancel()
+        fetchJob = coroutineScope.launch {
             collectFeed()
         }
     }
 
     private suspend fun collectFeed() {
         mViewModel.evaluations.collect { list ->
-            if (list.isEmpty()) {
-                ToastMessage.showNetworkIssue(requireContext())
-            }
-
-            mFeedAppAdapter = FeedAppAdapter(
-                requireContext(),
-                list,
-                mEvaluationRepository
-            )
-
-            mBinding.recyclerView.adapter = mFeedAppAdapter
+            mFeedAppAdapter.addEvaluations(list)
             mBinding.refreshView.isRefreshing = false
         }
     }

@@ -31,8 +31,10 @@ import java.io.IOException
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?pagination[pageSize]=100&sort=updatedAt:Desc")
-    fun listLatestEvaluationsAsync(): Deferred<StrapiAnswer>
+    @GET("sapio-applications?pagination[pageSize]=10&sort=updatedAt:Desc")
+    fun listLatestEvaluationsAsync(
+        @Query("pagination[page]=pageNumber") pageNumber: Int
+    ): Deferred<StrapiAnswer>
 
     @GET("sapio-applications?sort=name")
     fun searchAsync(
@@ -102,9 +104,9 @@ class EvaluationService @Inject constructor() {
         evaluationsApi = retrofit.create(EvaluationApi::class.java)
     }
 
-    suspend fun listLatestEvaluations(): List<Evaluation> {
+    suspend fun listLatestEvaluations(pageNumber: Int): List<Evaluation> {
         val list = ArrayList<Evaluation>()
-        val strapiAnswer = listEvaluationsForFeed() ?: return ArrayList()
+        val strapiAnswer = listEvaluationsForFeed(pageNumber) ?: return ArrayList()
 
         strapiAnswer.data.map {
             list.add(it.attributes)
@@ -137,11 +139,11 @@ class EvaluationService @Inject constructor() {
         return list
     }
 
-    private suspend fun listEvaluationsForFeed(): StrapiAnswer? {
+    private suspend fun listEvaluationsForFeed(pageNumber: Int): StrapiAnswer? {
         var strapiAnswer: StrapiAnswer? = null
 
         try {
-            strapiAnswer = evaluationsApi.listLatestEvaluationsAsync().await()
+            strapiAnswer = evaluationsApi.listLatestEvaluationsAsync(pageNumber).await()
         } catch (_: IOException) {}
 
         return strapiAnswer

@@ -12,6 +12,10 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor() : ViewModel() {
 
+    companion object {
+        const val NUMBER_OF_PAGES = 10
+    }
+
     @Inject
     lateinit var listLatestEvaluationsUseCase: ListLatestEvaluationsUseCase
 
@@ -19,6 +23,8 @@ class FeedViewModel @Inject constructor() : ViewModel() {
     lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
 
     val evaluations: Flow<List<Evaluation>> = flow {
-        emit(listLatestEvaluationsUseCase.invoke())
+        for (i in 1..NUMBER_OF_PAGES) {
+            emit(listLatestEvaluationsUseCase.invoke(i))
+        }
     }
 }

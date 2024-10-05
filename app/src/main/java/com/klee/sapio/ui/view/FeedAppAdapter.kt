@@ -24,7 +24,7 @@ import java.util.Locale
 
 class FeedAppAdapter(
     private val mContext: Context,
-    private var mApps: List<Evaluation>,
+    private var mApps: MutableList<Evaluation>,
     private var mEvaluationRepository: EvaluationRepository
 ) : RecyclerView.Adapter<FeedAppAdapter.ViewHolder>() {
 
@@ -92,6 +92,12 @@ class FeedAppAdapter(
 
             mContext.startActivity(intent)
         }
+    }
+
+    fun addEvaluations(evaluations: List<Evaluation>) {
+        val oldSize = mApps.size
+        mApps.addAll(evaluations)
+        notifyItemRangeInserted(oldSize, evaluations.size)
     }
 
     override fun onViewRecycled(holder: ViewHolder) {

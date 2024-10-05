@@ -9,7 +9,7 @@ class ListLatestEvaluationsUseCase @Inject constructor() {
     @Inject
     lateinit var evaluationRepository: EvaluationRepositoryImpl
 
-    suspend operator fun invoke(): List<Evaluation> {
-        return evaluationRepository.listLatestEvaluations()
+    suspend operator fun invoke(pageNumber: Int): List<Evaluation> {
+        return evaluationRepository.listLatestEvaluations(pageNumber)
     }
 }
