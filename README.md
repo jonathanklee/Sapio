@@ -48,7 +48,7 @@ adb install ./app/build/outputs/apk/debug/app-debug.apk
 
 ## Base url
 ```
-https://sapio.ovh/api
+https://server.sapio.ovh/api
 ```
 ## Endpoints
 
@@ -67,7 +67,7 @@ https://sapio.ovh/api
 - Example: Get the latest 100 evaluations
 
 ```
-curl -X GET "https://sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100&sort=updatedAt:Desc"
+curl -X GET "https://server.sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100&sort=updatedAt:Desc"
 ```
 
 ### Search evaluations
@@ -84,7 +84,7 @@ curl -X GET "https://sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100
         - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Search evaluations for an app called ChatGPT
  ```
- curl -X GET "https://sapio.ovh/api/sapio-applications?filters\[name\]\[\$eq\]=ChatGPT"
+ curl -X GET "https://server.sapio.ovh/api/sapio-applications?filters\[name\]\[\$eq\]=ChatGPT"
  ```
 
 ### Get icons
@@ -95,7 +95,7 @@ curl -X GET "https://sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100
 - Parameters: https://docs.strapi.io/dev-docs/api/rest/parameters
 - Example: Get ChatGPT icon
  ```
-curl -X GET "https://sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=com.openai.chatgpt.png"
+curl -X GET "https://server.sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=com.openai.chatgpt.png"
  ```
 
 # ☕ Coffee

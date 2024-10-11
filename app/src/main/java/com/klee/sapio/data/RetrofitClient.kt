@@ -82,7 +82,7 @@ interface EvaluationApi {
 
 class EvaluationService @Inject constructor() {
     companion object {
-        const val BASE_URL = "https://sapio.ovh"
+        const val BASE_URL = "https://server.sapio.ovh"
         const val COMPRESSION_QUALITY = 100
     }
 
