@@ -18,16 +18,16 @@ class EvaluateAppUseCase @Inject constructor() {
 
     suspend operator fun invoke(
         app: InstalledApplication,
-        rate: Int,
+        rating: Int,
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
-        evaluateApp(app, rate, onSuccess, onError)
+        evaluateApp(app, rating, onSuccess, onError)
     }
 
     private suspend fun evaluateApp(
         app: InstalledApplication,
-        rate: Int,
+        rating: Int,
         onSuccess: () -> Unit,
         onError: () -> Unit
     ) {
@@ -41,7 +41,7 @@ class EvaluateAppUseCase @Inject constructor() {
         }
 
         uploadAnswerBody.let {
-            evaluateApp(app, uploadAnswerBody[0].id, rate)
+            evaluateApp(app, uploadAnswerBody[0].id, rating)
             for (icon in existingIcons) {
                 deleteIcon(icon.id)
             }
@@ -61,12 +61,12 @@ class EvaluateAppUseCase @Inject constructor() {
         mEvaluationRepository.deleteIcon(id)
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rate: Int) {
+    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rating: Int) {
         val newEvaluation = UploadEvaluation(
             app.name,
             app.packageName,
             iconId,
-            rate,
+            rating,
             mDeviceConfiguration.getGmsType(),
             mDeviceConfiguration.isRooted()
         )

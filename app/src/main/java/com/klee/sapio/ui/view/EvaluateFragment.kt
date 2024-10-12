@@ -76,8 +76,8 @@ class EvaluateFragment : Fragment() {
                 mPackageName
             ) ?: return@runBlocking
 
-            val rate = getRateFromId(mBinding.note.checkedRadioButtonId, requireView())
-            mEvaluateAppUseCase.invoke(app, rate,
+            val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
+            mEvaluateAppUseCase.invoke(app, rating,
                 { onUploadSuccess() },
                 { onUploadError() }
             )
@@ -92,7 +92,7 @@ class EvaluateFragment : Fragment() {
        Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
     }
 
-    private fun getRateFromId(id: Int, view: View): Int {
+    private fun getRatingFromRadioId(id: Int, view: View): Int {
         val radioButton: RadioButton = view.findViewById(id)
         return when (radioButton.text) {
             getString(R.string.works_perfectly) -> Rating.GOOD
