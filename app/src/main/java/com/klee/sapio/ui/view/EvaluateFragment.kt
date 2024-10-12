@@ -1,11 +1,13 @@
 package com.klee.sapio.ui.view
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
@@ -34,6 +36,7 @@ class EvaluateFragment : Fragment() {
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
