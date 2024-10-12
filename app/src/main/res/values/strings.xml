@@ -16,6 +16,7 @@
     <string name="works_perfectly">\ It works perfectly. All features are working.</string>
     <string name="works_partially">\ It works partially. Some features do not work.</string>
     <string name="dont_work">\ It does not work at all or crashes.</string>
+    <string name="upload_error">Error evaluating app</string>
     <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio provides the compatibility matrix of an Android application with deGoogled bare Android Open Source Project (AOSP) devices, coupled or not with microG.\n\nEvaluations in Sapio are given to the community by the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluate another app</string>

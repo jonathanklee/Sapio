@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
@@ -73,10 +74,19 @@ class EvaluateFragment : Fragment() {
             ) ?: return@runBlocking
 
             val rate = getRateFromId(mBinding.note.checkedRadioButtonId, requireView())
-            mEvaluateAppUseCase.invoke(app, rate) {
-                findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
-            }
+            mEvaluateAppUseCase.invoke(app, rate,
+                { onUploadSuccess() },
+                { onUploadError() }
+            )
         }
+    }
+
+    private fun onUploadSuccess() {
+        findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
+    }
+
+    private fun onUploadError() {
+       Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
     }
 
     private fun getRateFromId(id: Int, view: View): Int {

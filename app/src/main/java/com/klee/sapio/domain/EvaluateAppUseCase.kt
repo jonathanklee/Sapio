@@ -19,17 +19,29 @@ class EvaluateAppUseCase @Inject constructor() {
     suspend operator fun invoke(
         app: InstalledApplication,
         rate: Int,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
+        onError: () -> Unit
     ) {
-        evaluateApp(app, rate, onSuccess)
+        evaluateApp(app, rate, onSuccess, onError)
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, rate: Int, onSuccess: () -> Unit) {
+    private suspend fun evaluateApp(
+        app: InstalledApplication,
+        rate: Int,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
         val existingIcons = getExistingIcons(app)
-        val uploadAnswer = uploadIcon(app)?.body()
+        val uploadAnswer = uploadIcon(app)
+        val uploadAnswerBody = uploadAnswer?.body()
 
-        uploadAnswer?.let {
-            evaluateApp(app, uploadAnswer[0].id, rate)
+        if (uploadAnswerBody == null) {
+            onError()
+            return
+        }
+
+        uploadAnswerBody.let {
+            evaluateApp(app, uploadAnswerBody[0].id, rate)
             for (icon in existingIcons) {
                 deleteIcon(icon.id)
             }

@@ -1,14 +1,13 @@
 package com.klee.sapio.data
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -84,6 +83,7 @@ class EvaluationService @Inject constructor() {
     companion object {
         const val BASE_URL = "https://server.sapio.ovh"
         const val COMPRESSION_QUALITY = 100
+        const val UPLOAD_TIMEOUT_MS: kotlin.Long = 10000
     }
 
     private var retrofit: Retrofit
@@ -194,7 +194,7 @@ class EvaluationService @Inject constructor() {
     }
 
     suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<IconAnswer>>? {
-        var response: Response<ArrayList<IconAnswer>>? = null
+        var response: Response<ArrayList<IconAnswer>>?
 
         val bytes = fromDrawableToByArray(app.icon)
         val requestBody = bytes.toRequestBody(null, 0, bytes.size)
@@ -205,12 +205,19 @@ class EvaluationService @Inject constructor() {
         )
 
         withContext(Dispatchers.IO) {
-            try {
-                response = evaluationsApi.addIcon(image).execute()
-            } catch (_: IOException) {}
+            response = upload(image)
         }
 
         return response
+    }
+
+    private suspend fun upload(image: MultipartBody.Part): Response<ArrayList<IconAnswer>>? =
+    try {
+        withTimeout(UPLOAD_TIMEOUT_MS) {
+            evaluationsApi.addIcon(image).execute()
+        }
+    } catch (_: IOException) {
+        null
     }
 
     suspend fun existingIcon(iconName: String): List<IconAnswer>? {
@@ -259,4 +266,5 @@ class EvaluationService @Inject constructor() {
         bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)
         return stream.toByteArray()
     }
+
 }
