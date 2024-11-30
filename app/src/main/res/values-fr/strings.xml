@@ -12,7 +12,7 @@
     <string name="works_partially">\ Elle fonctionne partiellement.</string>
     <string name="dont_work">\ Elle ne fonctionne pas du tout ou crashe.</string>
     <string name="upload_error">Erreur lors de l\'évaluation</string>
-    <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la matrice de compatibilité d\'une application Android avec les téléphones fonctionnant sur un Android Open Source Project (AOSP) déGooglisé, associés ou non à microG.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
+    <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la matrice de compatibilité d\'une application Android avec les téléphones fonctionnant sur un Android Open Source Project (AOSP) déGooglisé, associés ou non à microG.\n\nSapio peut être utilisé comme un outil de lobbying en partageant les matrices de compatibilité sur les réseaux sociaux pour sensibiliser les développeurs d\'applications aux données personnelles des utilisateurs.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
     <string name="evaluate_another_app">Evaluer une autre application</string>
     <string name="configuration_detected">Configuration détéctée</string>

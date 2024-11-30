@@ -6,6 +6,8 @@ Sapio is the anagram of Open Source API.
 
 Sapio provides the compatibility matrix of an Android application with deGoogled bare Android Open Source Project (AOSP) devices, coupled or not with microG.
 
+Sapio can serve as a lobbying tool by sharing compatibility matrices on social media to raise awareness among app developers about respecting users' personal data.
+
 Evaluations in Sapio are given to the community by the community.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.klee.sapio/) [<img src="ghbadge.png" alt="Get it on GitHub" height="80">](https://github.com/jonathanklee/Sapio/releases)
