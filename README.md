@@ -28,6 +28,8 @@ Evaluations in Sapio are given to the community by the community.
 
 **user** The device is not considered rooted
 
+NB: ratings for rooted devices are less visible as they are of secondary importance.
+
 # 🔨 Build
 ## Get the sources
 
