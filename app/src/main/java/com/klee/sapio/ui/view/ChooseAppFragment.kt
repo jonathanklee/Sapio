@@ -66,7 +66,11 @@ class ChooseAppFragment : Fragment() {
     }
 
     private fun onNextButtonClicked() {
-        val bundle = bundleOf("package" to mApp?.packageName)
+        val bundle = bundleOf(
+            "package" to mApp?.packageName,
+            "name" to mApp?.name
+        )
+
         findNavController().navigate(R.id.action_chooseAppFragment_to_evaluateFragment, bundle)
     }
 

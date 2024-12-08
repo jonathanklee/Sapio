@@ -150,7 +150,7 @@ class EvaluationsActivity : AppCompatActivity() {
             putExtra(Intent.EXTRA_STREAM, imageUri)
             putExtra(
                 Intent.EXTRA_TEXT,
-                "$appName Android Compatibility Matrix https://github.com/jonathanklee/Sapio"
+                "$appName Android Compatibility Matrix https://github.com/jonathanklee/Sapio #sapio"
             )
         }
 
