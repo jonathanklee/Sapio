@@ -41,8 +41,11 @@
         android:id="@+id/successFragment"
         android:name="com.klee.sapio.ui.view.SuccessFragment"
         android:label="SuccessFragment" >
-        <action
-            android:id="@+id/action_successFragment_to_warningFragment"
-            app:destination="@id/warningFragment" />
+        <argument
+            android:name="package"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
     </fragment>
 </navigation>

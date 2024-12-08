@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
@@ -35,6 +36,7 @@ class EvaluateFragment : Fragment() {
     @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
+    private lateinit var mAppName: String
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -52,7 +54,8 @@ class EvaluateFragment : Fragment() {
         mBinding.rootConfiguration.text = isRootedLabel.text
         mBinding.rootConfiguration.setBackgroundColor(isRootedLabel.color)
 
-        mPackageName = arguments?.getString("package")!!
+        mPackageName = arguments?.getString("package").orEmpty()
+        mAppName = arguments?.getString("name").orEmpty()
         mBinding.validateButton.isEnabled = false
         mBinding.note.setOnCheckedChangeListener { _, value ->
             mBinding.validateButton.isEnabled = value != -1
@@ -85,7 +88,12 @@ class EvaluateFragment : Fragment() {
     }
 
     private fun onUploadSuccess() {
-        findNavController().navigate(R.id.action_evaluateFragment_to_successFragment)
+        val bundle = bundleOf(
+            "package" to mPackageName,
+            "name" to mAppName
+        )
+
+        findNavController().navigate(R.id.action_evaluateFragment_to_successFragment, bundle)
     }
 
     private fun onUploadError() {

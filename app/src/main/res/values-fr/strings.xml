@@ -14,7 +14,6 @@
     <string name="upload_error">Erreur lors de l\'évaluation</string>
     <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la matrice de compatibilité d\'une application Android avec les téléphones fonctionnant sur un Android Open Source Project (AOSP) déGooglisé, associés ou non à microG.\n\nSapio peut être utilisé comme un outil de lobbying en partageant les matrices de compatibilité sur les réseaux sociaux pour sensibiliser les développeurs d\'applications aux données personnelles des utilisateurs.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
-    <string name="evaluate_another_app">Evaluer une autre application</string>
     <string name="configuration_detected">Configuration détéctée</string>
     <string name="look_for_an_application">Rechercher une application</string>
     <string name="updated_on">Mis à jour le %1$s</string>
@@ -39,4 +38,5 @@
     <string name="share">Partager</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Règles d\'évaluation</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">J\'ai lu et je comprends les règles d\'évaluation</string>
+    <string name="share_text">N\'hésitez pas à partager votre évaluation sur les réseaux sociaux pour sensibiliser les développeurs au respect des données personnelles.</string>
 </resources>

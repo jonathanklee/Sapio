@@ -19,7 +19,6 @@
     <string name="upload_error">Error evaluating app</string>
     <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio provides the compatibility matrix of an Android application with deGoogled bare Android Open Source Project (AOSP) devices, coupled or not with microG.\n\nSapio can serve as a lobbying tool by sharing compatibility matrices on social media to raise awareness among app developers about respecting users\' personal data.\n\nEvaluations in Sapio are given to the community by the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
-    <string name="evaluate_another_app">Evaluate another app</string>
     <string name="configuration_detected">Configuration detected</string>
     <string name="look_for_an_application">Look for an application</string>
     <string name="updated_on">Updated on %1$s</string>
@@ -41,6 +40,7 @@
     <string name="bad">Does not work at all</string>
     <string name="unknown">Unknown</string>
     <string name="share">Share</string>
+    <string name="share_text">Feel free to share your evaluation on social media to raise awareness among app developers about respecting users\' personal data.</string>
     <string name="donate">Donate</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Rating rules</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">I have read and I understand the rating rules</string>
