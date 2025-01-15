@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
 
     companion object {
-        const val DONATE_URL = "https://www.paypal.com/donate/?hosted_button_id=RE3PM6W85N5HW"
+        const val DONATE_URL = "https://ko-fi.com/jnthnkl"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
