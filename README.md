@@ -106,7 +106,7 @@ curl -X GET "https://server.sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=c
 
 If you want to offer me a coffee for the maintenance of the server part:
 
-[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">](https://liberapay.com/jnthnkl/donate)
+<a href='https://ko-fi.com/Y8Y5191O6Z' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 # 👏 Credits
 
