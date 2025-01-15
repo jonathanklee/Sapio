@@ -104,7 +104,9 @@ curl -X GET "https://server.sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=c
 
 # ☕ Coffee
 
-If you want to offer me a coffee for the maintenance of the server part: [Donate](https://www.paypal.com/donate/?hosted_button_id=RE3PM6W85N5HW)
+If you want to offer me a coffee for the maintenance of the server part:
+
+[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">](https://liberapay.com/jnthnkl/donate)
 
 # 👏 Credits
 
