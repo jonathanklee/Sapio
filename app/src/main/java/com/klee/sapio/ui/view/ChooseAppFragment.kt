@@ -14,7 +14,7 @@ import com.klee.sapio.data.InstalledApplication
 import dagger.hilt.android.AndroidEntryPoint
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
-import io.ktor.client.features.HttpTimeout
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -25,6 +25,10 @@ class ChooseAppFragment : Fragment() {
 
     private lateinit var mBinding: FragmentChooseAppBinding
     private var mApp: InstalledApplication? = null
+
+    private companion object {
+        const val HTTP_200_SUCCESS = 200
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,12 +84,9 @@ class ChooseAppFragment : Fragment() {
         }
 
         return withContext(Dispatchers.IO) {
-            try {
-                client.get<String>("https://f-droid.org/api/v1/packages/${app.packageName}")
-                true
-            } catch (_: Exception) {
-                false
-            }
+            client.get(
+                "https://f-droid.org/api/v1/packages/${app.packageName}"
+            ).status.value == HTTP_200_SUCCESS
         }
     }
 }
