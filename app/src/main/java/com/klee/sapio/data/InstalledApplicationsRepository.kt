@@ -48,16 +48,8 @@ class InstalledApplicationsRepository @Inject constructor() {
         return InstalledApplication(
             packageManager.getApplicationLabel(info).toString(),
             info.packageName,
-            fetchIcon(packageManager, info)
+            packageManager.getApplicationIcon(info)
         )
-    }
-
-    private fun fetchIcon(packageManager: PackageManager, info: ApplicationInfo): Drawable {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            info.loadUnbadgedIcon(packageManager)
-        } else {
-            info.loadIcon(packageManager)
-        }
     }
 
     @VisibleForTesting

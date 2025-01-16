@@ -81,7 +81,7 @@ class InstalledApplicationsRepositoryTest {
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
             .thenReturn("FakeApplicationTwo")
 
-        Mockito.`when`(fakeRegularApplicationInfo.loadUnbadgedIcon(mockedPackageManager))
+        Mockito.`when`(mockedPackageManager.getApplicationIcon(eq(fakeRegularApplicationInfo)))
             .thenReturn(mockedDrawable)
     }
 
