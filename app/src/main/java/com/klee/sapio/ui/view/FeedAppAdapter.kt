@@ -81,8 +81,8 @@ class FeedAppAdapter(
 
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, EvaluationsActivity::class.java)
-            intent.putExtra("packageName", app.packageName)
-            intent.putExtra("appName", app.name)
+            intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, app.packageName)
+            intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
 
             mContext.startActivity(intent)
         }

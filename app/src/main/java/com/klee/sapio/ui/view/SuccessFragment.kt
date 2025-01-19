@@ -12,11 +12,6 @@ class SuccessFragment : Fragment() {
 
     private lateinit var mBinding: FragmentSuccessBinding
 
-    companion object {
-        const val EXTRA_PACKAGE_NAME = "packageName"
-        const val EXTRA_APP_NAME = "appName"
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,8 +24,9 @@ class SuccessFragment : Fragment() {
         mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
         mBinding.shareEvaluation.setOnClickListener {
             val intent = Intent(requireContext(), EvaluationsActivity::class.java)
-            intent.putExtra(EXTRA_PACKAGE_NAME, packageName)
-            intent.putExtra(EXTRA_APP_NAME, appName)
+            intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, packageName)
+            intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, appName)
+            intent.putExtra(EvaluationsActivity.EXTRA_SHARE_IMMEDIATELY, true)
             requireContext().startActivity(intent)
         }
 
