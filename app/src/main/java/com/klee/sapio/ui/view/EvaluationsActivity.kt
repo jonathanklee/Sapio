@@ -14,6 +14,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.emoji2.widget.EmojiTextView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -21,6 +23,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.klee.sapio.R
+import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
@@ -60,61 +63,10 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding = ActivityEvaluationsBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        mViewModel.microgUserEvaluation.observe(this) {
-            mBinding.microgUser.text = it?.let {
-                Rating.create(it.rating).text
-            } ?: NO_EVALUATION_CHAR
-
-            mBinding.microgUser.tooltipText = it?.let {
-                computeTooltip(it.rating)
-            }
-
-            lifecycleScope.launch {
-                microgUserReceived.emit(true)
-            }
-        }
-
-        mViewModel.microgRootEvaluation.observe(this) {
-            mBinding.microgRoot.text = it?.let {
-                Rating.create(it.rating).text
-            } ?: NO_EVALUATION_CHAR
-
-            mBinding.microgRoot.tooltipText = it?.let {
-                computeTooltip(it.rating)
-            }
-
-            lifecycleScope.launch {
-                microgRootReceived.emit(true)
-            }
-        }
-
-        mViewModel.bareAospUserEvaluation.observe(this) {
-            mBinding.bareAospUser.text = it?.let {
-                Rating.create(it.rating).text
-            } ?: NO_EVALUATION_CHAR
-
-            mBinding.bareAospUser.tooltipText = it?.let {
-                computeTooltip(it.rating)
-            }
-
-            lifecycleScope.launch {
-                bareAospUserReceived.emit(true)
-            }
-        }
-
-        mViewModel.bareAsopRootEvaluation.observe(this) {
-            mBinding.bareAospRoot.text = it?.let {
-                Rating.create(it.rating).text
-            } ?: NO_EVALUATION_CHAR
-
-            mBinding.bareAospRoot.tooltipText = it?.let {
-                computeTooltip(it.rating)
-            }
-
-            lifecycleScope.launch {
-                bareAospRootReceived.emit(true)
-            }
-        }
+        observeEvaluation(mViewModel.microgUserEvaluation, mBinding.microgUser, microgUserReceived)
+        observeEvaluation(mViewModel.microgRootEvaluation, mBinding.microgRoot, microgRootReceived)
+        observeEvaluation(mViewModel.bareAospUserEvaluation, mBinding.bareAospUser, bareAospUserReceived)
+        observeEvaluation(mViewModel.bareAsopRootEvaluation, mBinding.bareAospRoot, bareAospRootReceived)
 
         mViewModel.iconUrl.observe(this) {
             Glide.with(this.applicationContext)
@@ -146,6 +98,26 @@ class EvaluationsActivity : AppCompatActivity() {
                 bareAospRootReceived, iconReceived) { _, _, _, _, _ ->
                 share(takeScreenshot(mBinding.card), appName)
             }.launchIn(lifecycleScope)
+        }
+    }
+
+    private fun observeEvaluation(
+        liveData: MutableLiveData<Evaluation>,
+        textView: EmojiTextView,
+        flow: MutableSharedFlow<Boolean>
+    ) {
+        liveData.observe(this) {
+            textView.text = it?.let {
+                Rating.create(it.rating).text
+            } ?: NO_EVALUATION_CHAR
+
+            textView.tooltipText = it?.let {
+                computeTooltip(it.rating)
+            }
+
+            lifecycleScope.launch {
+                flow.emit(true)
+            }
         }
     }
 
