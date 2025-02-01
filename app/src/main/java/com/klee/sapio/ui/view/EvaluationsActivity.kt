@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Images.Media
 import android.util.Log
-import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -82,7 +81,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding.applicationName.text = appName
 
         mBinding.shareButton.setOnClickListener {
-            share(takeScreenshot(mBinding.card), appName)
+            share(takeScreenshot(), appName)
         }
 
         mBinding.infoIcon.setOnClickListener {
@@ -96,7 +95,7 @@ class EvaluationsActivity : AppCompatActivity() {
         if (shareImmediately) {
             combine(microgUserReceived, microgRootReceived, bareAospUserReceived,
                 bareAospRootReceived, iconReceived) { _, _, _, _, _ ->
-                share(takeScreenshot(mBinding.card), appName)
+                share(takeScreenshot(), appName)
             }.launchIn(lifecycleScope)
         }
     }
@@ -130,7 +129,8 @@ class EvaluationsActivity : AppCompatActivity() {
         }
     }
 
-    private fun takeScreenshot(view: View): Bitmap {
+    private fun takeScreenshot(): Bitmap {
+        val view = mBinding.root
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         view.draw(canvas)
@@ -165,7 +165,6 @@ class EvaluationsActivity : AppCompatActivity() {
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "image/*"
-            putExtra(Intent.EXTRA_SUBJECT, "Sapio")
             putExtra(Intent.EXTRA_STREAM, imageUri)
             putExtra(
                 Intent.EXTRA_TEXT,
