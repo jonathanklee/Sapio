@@ -28,6 +28,7 @@ import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -53,6 +54,7 @@ class EvaluationsActivity : AppCompatActivity() {
         const val EXTRA_PACKAGE_NAME = "packageName"
         const val EXTRA_APP_NAME = "appName"
         const val EXTRA_SHARE_IMMEDIATELY = "shareImmediately"
+        const val IMAGE_LOADING_DELAY_IN_MS = 200L
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -193,6 +195,7 @@ class EvaluationsActivity : AppCompatActivity() {
             isFirstResource: Boolean
         ): Boolean {
             lifecycleScope.launch {
+                delay(IMAGE_LOADING_DELAY_IN_MS)
                 iconReceived.emit(true)
             }
             return false
