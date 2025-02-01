@@ -39,20 +39,19 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/share"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appEvaluatedText" />
 
     <TextView
         android:id="@+id/shareText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/share_text"
         android:layout_margin="20dp"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/shareEvaluation"
+        android:text="@string/share_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appEvaluatedText" />
+        app:layout_constraintTop_toBottomOf="@+id/shareEvaluation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
