@@ -2,7 +2,6 @@ package com.klee.sapio.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.klee.sapio.data.Evaluation
-import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.domain.ListLatestEvaluationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -18,9 +17,6 @@ class FeedViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var listLatestEvaluationsUseCase: ListLatestEvaluationsUseCase
-
-    @Inject
-    lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
 
     val evaluations: Flow<List<Evaluation>> = flow {
         for (i in 1..NUMBER_OF_PAGES) {
