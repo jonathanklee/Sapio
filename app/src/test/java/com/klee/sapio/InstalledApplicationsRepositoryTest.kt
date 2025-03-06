@@ -11,6 +11,9 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -39,9 +42,6 @@ class InstalledApplicationsRepositoryTest {
 
     @Mock
     private lateinit var mockedDrawable: Drawable
-
-    @Mock
-    private lateinit var mockedApplicationInfo: ApplicationInfo
 
     private lateinit var fakeRegularApplicationInfo: ApplicationInfo
     private lateinit var fakeSystemApplicationInfo: ApplicationInfo
@@ -81,7 +81,7 @@ class InstalledApplicationsRepositoryTest {
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
             .thenReturn("FakeApplicationTwo")
 
-        Mockito.`when`(fakeRegularApplicationInfo.loadUnbadgedIcon(mockedPackageManager))
+        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
             .thenReturn(mockedDrawable)
     }
 
