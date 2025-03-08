@@ -15,7 +15,7 @@ class InstalledApplicationsRepository @Inject constructor() {
     fun getAppList(context: Context): List<InstalledApplication> {
         val apps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            apps.removeIf { x -> isSystemApp(x) }
+            apps.removeIf { x -> isSystemApp(x) || isGmsRelated(x) }
         }
 
         val results: MutableList<InstalledApplication> = arrayListOf()
@@ -59,5 +59,10 @@ class InstalledApplicationsRepository @Inject constructor() {
     @VisibleForTesting
     fun isSystemApp(info: ApplicationInfo): Boolean {
         return info.flags and ApplicationInfo.FLAG_SYSTEM != 0
+    }
+
+    @VisibleForTesting
+    fun isGmsRelated(info: ApplicationInfo): Boolean {
+        return info.packageName.contains(".gms.")
     }
 }

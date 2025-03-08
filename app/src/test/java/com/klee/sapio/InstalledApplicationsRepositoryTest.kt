@@ -45,6 +45,7 @@ class InstalledApplicationsRepositoryTest {
 
     private lateinit var fakeRegularApplicationInfo: ApplicationInfo
     private lateinit var fakeSystemApplicationInfo: ApplicationInfo
+    private lateinit var fakeGmsApp: ApplicationInfo
 
     private var fakeListApplicationInfo: List<ApplicationInfo>? = null
 
@@ -66,9 +67,15 @@ class InstalledApplicationsRepositoryTest {
             flags = ApplicationInfo.FLAG_SYSTEM
         }
 
+        fakeGmsApp = ApplicationInfo().apply {
+            packageName = "fake.package.gms.three"
+            name = "FakeApplicationThree"
+        }
+
         fakeListApplicationInfo = mutableListOf(
             fakeRegularApplicationInfo,
-            fakeSystemApplicationInfo
+            fakeSystemApplicationInfo,
+            fakeGmsApp
         )
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
@@ -100,6 +107,24 @@ class InstalledApplicationsRepositoryTest {
             "App status error",
             true,
             repository.isSystemApp(fakeSystemApplicationInfo)
+        )
+    }
+
+    @Test
+    fun test_isGmsWithRegularApp() {
+        Assert.assertEquals(
+            "App status error",
+            false,
+            repository.isGmsRelated(fakeRegularApplicationInfo)
+        )
+    }
+
+    @Test
+    fun test_isGmsWithGmsApp() {
+        Assert.assertEquals(
+            "App status error",
+            true,
+            repository.isGmsRelated(fakeGmsApp)
         )
     }
 
