@@ -44,7 +44,7 @@
 
             <TextView
               android:id="@+id/appName"
-              android:layout_width="150dp"
+              android:layout_width="200dp"
               android:layout_height="wrap_content"
               android:layout_marginStart="20dp"
               android:maxLines="1"
@@ -56,12 +56,14 @@
 
             <TextView
                 android:id="@+id/packageName"
-                android:layout_width="275dp"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:layout_marginEnd="5dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="PackageName"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/appName"
                 app:layout_constraintTop_toBottomOf="@+id/appName" />
@@ -81,29 +83,26 @@
               android:id="@+id/microG"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginStart="15dp"
-              android:layout_marginEnd="5dp"
+              android:layout_marginTop="5dp"
+              android:layout_marginEnd="10dp"
               android:background="@color/teal_200"
               android:text=" microG "
               android:textColor="@color/white"
               android:textSize="11sp"
-              app:layout_constraintBottom_toBottomOf="@+id/appName"
-              app:layout_constraintEnd_toStartOf="@+id/rooted"
+              app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintTop_toTopOf="@+id/appName" />
 
             <TextView
-              android:id="@+id/rooted"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginStart="5dp"
-              android:layout_marginEnd="15dp"
-              android:background="@color/purple_200"
-              android:text=" rooted "
-              android:textColor="@color/white"
-              android:textSize="11sp"
-              app:layout_constraintBottom_toBottomOf="@+id/microG"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toTopOf="@+id/microG" />
+                android:id="@+id/rooted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/purple_200"
+                android:text=" rooted "
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                app:layout_constraintEnd_toEndOf="@+id/microG"
+                app:layout_constraintTop_toBottomOf="@+id/microG"/>
 
             <androidx.emoji2.widget.EmojiTextView
                 android:id="@+id/emoji"

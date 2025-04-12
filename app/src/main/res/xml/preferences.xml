@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/general">
+        <SwitchPreferenceCompat
+            android:key="show_root"
+            android:title="@string/show_root"
+            android:summary="@string/show_root_configurations"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

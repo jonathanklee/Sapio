@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.Settings
+import com.klee.sapio.data.UserType
 import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.FeedViewModel
@@ -21,14 +23,18 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
 
+    @Inject
+    lateinit var mEvaluationRepository: EvaluationRepository
+
+    @Inject
+    lateinit var mSettings: Settings
+
     private lateinit var mBinding: FragmentMainBinding
     private lateinit var mFeedAppAdapter: FeedAppAdapter
     private lateinit var mEvaluations: MutableList<Evaluation>
     private val mViewModel by viewModels<FeedViewModel>()
     private var fetchJob: Job? = null
-
-    @Inject
-    lateinit var mEvaluationRepository: EvaluationRepository
+    private var mPreviousRootVisible: Int = UserType.USER
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +43,7 @@ class FeedFragment : Fragment() {
     ): View {
         mBinding = FragmentMainBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
+        mPreviousRootVisible = mSettings.getRootConfigurationLevel()
 
         val coroutineScope = viewLifecycleOwner.lifecycleScope
         fetchFeed(coroutineScope)
@@ -48,6 +55,15 @@ class FeedFragment : Fragment() {
         return mBinding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (mPreviousRootVisible != mSettings.getRootConfigurationLevel())  {
+            mPreviousRootVisible = mSettings.getRootConfigurationLevel()
+            fetchFeed(viewLifecycleOwner.lifecycleScope)
+        }
+    }
+
     private fun fetchFeed(coroutineScope: CoroutineScope) {
         mBinding.refreshView.isRefreshing
 
@@ -55,7 +71,8 @@ class FeedFragment : Fragment() {
         mFeedAppAdapter = FeedAppAdapter(
             requireContext(),
             mEvaluations,
-            mEvaluationRepository
+            mEvaluationRepository,
+            mSettings
         )
         mBinding.recyclerView.adapter = mFeedAppAdapter
 

@@ -109,7 +109,7 @@
 
                 <androidx.emoji2.widget.EmojiTextView
                   android:id="@+id/microgUser"
-                  android:layout_width="wrap_content"
+                  android:layout_width="20dp"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
                   android:textAlignment="center"
@@ -117,8 +117,7 @@
 
                 <androidx.emoji2.widget.EmojiTextView
                   android:id="@+id/microgRoot"
-                  android:alpha="0.3"
-                  android:layout_width="wrap_content"
+                  android:layout_width="20dp"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
                   android:textAlignment="center"
@@ -144,7 +143,7 @@
 
                 <androidx.emoji2.widget.EmojiTextView
                   android:id="@+id/bareAospUser"
-                  android:layout_width="wrap_content"
+                  android:layout_width="20dp"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
                   android:textAlignment="center"
@@ -152,8 +151,7 @@
 
                 <androidx.emoji2.widget.EmojiTextView
                   android:id="@+id/bareAospRoot"
-                  android:alpha="0.3"
-                  android:layout_width="wrap_content"
+                  android:layout_width="20dp"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
                   android:textAlignment="center"

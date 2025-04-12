@@ -71,24 +71,7 @@ class EvaluateAppUseCase @Inject constructor() {
             mDeviceConfiguration.isRooted()
         )
 
-        val existingEvaluationId = getExistingEvaluationId(newEvaluation)
-        if (existingEvaluationId == EvaluateFragment.NOT_EXISTING) {
-            mEvaluationRepository.addEvaluation(newEvaluation)
-        } else {
-            mEvaluationRepository.updateEvaluation(newEvaluation, existingEvaluationId)
-        }
-    }
-
-    private suspend fun getExistingEvaluationId(data: UploadEvaluation): Int {
-        return withContext(Dispatchers.IO) {
-            val apps = mEvaluationRepository.existingEvaluations(data.packageName)
-            for (existingApp in apps) {
-                if (hasSameEvaluation(data, existingApp.attributes)) {
-                    return@withContext existingApp.id
-                }
-            }
-            return@withContext -1
-        }
+        mEvaluationRepository.addEvaluation(newEvaluation)
     }
 
     private suspend fun getExistingIcons(app: InstalledApplication): List<IconAnswer> {
@@ -100,10 +83,5 @@ class EvaluateAppUseCase @Inject constructor() {
                 return@withContext icons
             }
         }
-    }
-
-    private fun hasSameEvaluation(one: UploadEvaluation, two: Evaluation): Boolean {
-        return one.packageName == two.packageName &&
-            one.microg == two.microg && one.rooted == two.rooted
     }
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.FeedAppCardBinding
 import com.bumptech.glide.Glide
@@ -14,6 +14,8 @@ import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Label
 import com.klee.sapio.data.Rating
+import com.klee.sapio.data.Settings
+import com.klee.sapio.data.UserType
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +27,8 @@ import java.util.Locale
 class FeedAppAdapter(
     private val mContext: Context,
     private var mApps: MutableList<Evaluation>,
-    private var mEvaluationRepository: EvaluationRepository
+    private var mEvaluationRepository: EvaluationRepository,
+    private var mSettings: Settings
 ) : RecyclerView.Adapter<FeedAppAdapter.ViewHolder>() {
 
     companion object {
@@ -68,6 +71,12 @@ class FeedAppAdapter(
 
             element.rooted.text = rootLabel.text
             element.rooted.setBackgroundColor(rootLabel.color)
+
+            if (mSettings.getRootConfigurationLevel() == UserType.ROOT) {
+                element.rooted.visibility = View.VISIBLE
+            } else {
+                element.rooted.visibility = View.GONE
+            }
         }
 
         holder.imageLoadJob = holder.viewHolderScope.launch {

@@ -32,6 +32,12 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".ui.view.PreferencesActivity"
+            android:theme="@style/Theme.Sapio.NoActionBar"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".ui.view.EvaluationsActivity"
           android:theme="@style/Theme.Sapio.NoActionBar"
             android:screenOrientation="portrait"

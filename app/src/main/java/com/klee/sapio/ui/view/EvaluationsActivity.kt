@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ import com.klee.sapio.R
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Rating
+import com.klee.sapio.data.Settings
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,9 +36,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import java.io.IOException
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EvaluationsActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var settings: Settings
 
     private lateinit var mBinding: ActivityEvaluationsBinding
     private val mViewModel by viewModels<AppEvaluationsViewModel>()
@@ -62,6 +68,7 @@ class EvaluationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivityEvaluationsBinding.inflate(layoutInflater)
+
         setContentView(mBinding.root)
 
         observeEvaluation(mViewModel.microgUserEvaluation, mBinding.microgUser, microgUserReceived)
@@ -99,6 +106,19 @@ class EvaluationsActivity : AppCompatActivity() {
                 bareAospRootReceived, iconReceived) { _, _, _, _, _ ->
                 share(takeScreenshot(), appName)
             }.launchIn(lifecycleScope)
+        }
+
+        handleRootConfigurationSetting()
+    }
+
+    private fun handleRootConfigurationSetting() {
+        val shouldShow = settings.isRootConfigurationEnabled()
+        with(mBinding) {
+            rooted.isVisible = shouldShow
+            microgRoot.isVisible = shouldShow
+            bareAospRoot.isVisible = shouldShow
+            empty.isVisible = shouldShow
+            user.isVisible = shouldShow
         }
     }
 

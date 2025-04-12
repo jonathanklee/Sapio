@@ -32,13 +32,15 @@ import javax.inject.Inject
 interface EvaluationApi {
     @GET("sapio-applications?pagination[pageSize]=10&sort=updatedAt:Desc")
     fun listLatestEvaluationsAsync(
+        @Query("filters[rooted][\$lte]") root: Int,
         @Query("pagination[page]=pageNumber") pageNumber: Int
     ): Deferred<StrapiAnswer>
 
     @GET("sapio-applications?sort=name")
     fun searchAsync(
         @Query("filters[\$or][0][name][\$contains]") name: String,
-        @Query("filters[\$or][1][packageName][\$contains]") packageName: String
+        @Query("filters[\$or][1][packageName][\$contains]") packageName: String,
+        @Query("filters[\$and][2][rooted][\$lte]") rooted: Int
     ): Deferred<StrapiAnswer>
 
     @GET("sapio-applications?")
@@ -86,6 +88,8 @@ class EvaluationService @Inject constructor() {
         const val UPLOAD_TIMEOUT_MS: kotlin.Long = 10000
     }
 
+    @Inject
+    lateinit var settings: Settings
     private var retrofit: Retrofit
     private var evaluationsApi: EvaluationApi
 
@@ -143,7 +147,10 @@ class EvaluationService @Inject constructor() {
         var strapiAnswer: StrapiAnswer? = null
 
         try {
-            strapiAnswer = evaluationsApi.listLatestEvaluationsAsync(pageNumber).await()
+            strapiAnswer = evaluationsApi.listLatestEvaluationsAsync(
+                settings.getRootConfigurationLevel(),
+                pageNumber
+            ).await()
         } catch (_: IOException) {}
 
         return strapiAnswer
@@ -153,7 +160,7 @@ class EvaluationService @Inject constructor() {
         var strapiAnswer: StrapiAnswer? = null
 
         try {
-            strapiAnswer = evaluationsApi.searchAsync(pattern, pattern).await()
+            strapiAnswer = evaluationsApi.searchAsync(pattern, pattern, settings.getRootConfigurationLevel()).await()
         } catch (_: IOException) {}
 
         return strapiAnswer

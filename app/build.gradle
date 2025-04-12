@@ -97,5 +97,7 @@ dependencies {
     implementation "io.ktor:ktor-client-core:3.0.3"
     implementation "io.ktor:ktor-client-android:3.0.3"
 
+    // preferences
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 }
 
