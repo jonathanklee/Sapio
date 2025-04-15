@@ -163,7 +163,7 @@ class EvaluationsActivity : AppCompatActivity() {
 
         val contentValues = ContentValues().apply {
             put(Media.DISPLAY_NAME, "screenshot_${System.currentTimeMillis()}")
-            put(Media.DESCRIPTION, "$appName Android Compatibility Matrix")
+            put(Media.DESCRIPTION, "$appName Android Compatibility")
             put(Media.MIME_TYPE, "image/jpeg")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(
@@ -190,7 +190,7 @@ class EvaluationsActivity : AppCompatActivity() {
             putExtra(Intent.EXTRA_STREAM, imageUri)
             putExtra(
                 Intent.EXTRA_TEXT,
-                "$appName Android Compatibility Matrix https://github.com/jonathanklee/Sapio #sapio"
+                "$appName Android Compatibility https://github.com/jonathanklee/Sapio #sapio"
             )
         }
 
