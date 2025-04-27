@@ -72,9 +72,20 @@ class EvaluationsActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         observeEvaluation(mViewModel.microgUserEvaluation, mBinding.microgUser, microgUserReceived)
-        observeEvaluation(mViewModel.microgRootEvaluation, mBinding.microgRoot, microgRootReceived)
         observeEvaluation(mViewModel.bareAospUserEvaluation, mBinding.bareAospUser, bareAospUserReceived)
-        observeEvaluation(mViewModel.bareAsopRootEvaluation, mBinding.bareAospRoot, bareAospRootReceived)
+
+        if (settings.isRootConfigurationEnabled()) {
+            observeEvaluation(
+                mViewModel.bareAsopRootEvaluation,
+                mBinding.bareAospRoot,
+                bareAospRootReceived
+            )
+            observeEvaluation(
+                mViewModel.microgRootEvaluation,
+                mBinding.microgRoot,
+                microgRootReceived
+            )
+        }
 
         mViewModel.iconUrl.observe(this) {
             Glide.with(this.applicationContext)
@@ -102,10 +113,18 @@ class EvaluationsActivity : AppCompatActivity() {
 
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
         if (shareImmediately) {
-            combine(microgUserReceived, microgRootReceived, bareAospUserReceived,
-                bareAospRootReceived, iconReceived) { _, _, _, _, _ ->
-                share(takeScreenshot(), appName)
-            }.launchIn(lifecycleScope)
+            if (settings.isRootConfigurationEnabled()) {
+                combine(
+                    microgUserReceived, microgRootReceived, bareAospUserReceived,
+                    bareAospRootReceived, iconReceived
+                ) { _, _, _, _, _ ->
+                    share(takeScreenshot(), appName)
+                }.launchIn(lifecycleScope)
+            } else {
+                combine(microgUserReceived, bareAospUserReceived, iconReceived) { _, _, _ ->
+                    share(takeScreenshot(), appName)
+                }.launchIn(lifecycleScope)
+            }
         }
 
         handleRootConfigurationSetting()

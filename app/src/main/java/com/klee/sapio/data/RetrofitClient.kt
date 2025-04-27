@@ -116,7 +116,8 @@ class EvaluationService @Inject constructor() {
             list.add(it.attributes)
         }
 
-        return list.sortedByDescending { it.updatedAt }
+        return list.distinctBy { it.packageName }
+            .sortedByDescending { it.updatedAt }
     }
 
     suspend fun searchEvaluation(pattern: String): List<Evaluation> {

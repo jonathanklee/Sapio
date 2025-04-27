@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.Settings
 import com.klee.sapio.domain.FetchAppBareAospRootEvaluationUseCase
 import com.klee.sapio.domain.FetchAppBareAospUserEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogRootEvaluationUseCase
@@ -29,6 +30,8 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
     lateinit var fetchAppBareAospRootEvaluationUseCase: FetchAppBareAospRootEvaluationUseCase
     @Inject
     lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
+    @Inject
+    lateinit var settings: Settings
 
     var microgUserEvaluation = MutableLiveData<Evaluation>()
     var microgRootEvaluation = MutableLiveData<Evaluation>()
@@ -49,27 +52,29 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                microgRootEvaluation.postValue(
-                    fetchAppMicrogRootEvaluationUseCase.invoke(
-                        packageName
-                    )
-                )
-            }
-        }
-
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
                 bareAospUserEvaluation.postValue(
                     fetchAppBareAOspUserEvaluationUseCase.invoke(packageName)
                 )
             }
         }
 
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                bareAsopRootEvaluation.postValue(
-                    fetchAppBareAospRootEvaluationUseCase.invoke(packageName)
-                )
+        if (settings.isRootConfigurationEnabled()) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    microgRootEvaluation.postValue(
+                        fetchAppMicrogRootEvaluationUseCase.invoke(
+                            packageName
+                        )
+                    )
+                }
+            }
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    bareAsopRootEvaluation.postValue(
+                        fetchAppBareAospRootEvaluationUseCase.invoke(packageName)
+                    )
+                }
             }
         }
 
