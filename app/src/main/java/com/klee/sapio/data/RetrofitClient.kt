@@ -1,13 +1,16 @@
 package com.klee.sapio.data
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import okhttp3.Cache
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -81,11 +84,14 @@ interface EvaluationApi {
     ): Deferred<StrapiAnswer>
 }
 
-class EvaluationService @Inject constructor() {
+class EvaluationService @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     companion object {
         const val BASE_URL = "https://server.sapio.ovh"
         const val COMPRESSION_QUALITY = 100
-        const val UPLOAD_TIMEOUT_MS: kotlin.Long = 10000
+        const val UPLOAD_TIMEOUT_MS: Long = 10000
+        const val CACHE_MAX_SIZE = 10 * 1024 * 1024L
     }
 
     @Inject
@@ -96,6 +102,7 @@ class EvaluationService @Inject constructor() {
     init {
         val okHttpClient = OkHttpClient()
             .newBuilder()
+            .cache(Cache(context.cacheDir, CACHE_MAX_SIZE))
             .build()
 
         retrofit = Retrofit.Builder()
