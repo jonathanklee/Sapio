@@ -156,16 +156,16 @@ data class Label(val text: String, val color: Int) {
         fun create(context: Context, label: Int): Label {
             return when (label) {
                 MICROG -> Label(
-                    context.getString(R.string.microg_label), context.getColor(R.color.teal_200)
+                    context.getString(R.string.microg_label), context.getColor(R.color.blue_200)
                 )
                 BARE_AOSP -> Label(
-                    context.getString(R.string.bare_aosp_label), context.getColor(R.color.teal_700)
+                    context.getString(R.string.bare_aosp_label), context.getColor(R.color.blue_700)
                 )
                 USER -> Label(
                     context.getString(R.string.user_label), context.getColor(R.color.purple_200)
                 )
                 ROOTED -> Label(
-                    context.getString(R.string.rooted_label), context.getColor(R.color.purple_500)
+                    context.getString(R.string.rooted_label), context.getColor(R.color.purple_700)
                 )
                 else -> Label(" Empty label ", context.getColor(R.color.black))
             }
