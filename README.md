@@ -26,9 +26,9 @@ Evaluations in Sapio are given to the community by the community.
 
 **microG** The device has microG installed
 
-**user** The device is not considered rooted
+**secure** The device is considered secured
 
-**root** The device is considered rooted
+**risky** The device is considered risky
 
 # 🔨 Build
 ## Get the sources

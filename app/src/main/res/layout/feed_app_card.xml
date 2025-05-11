@@ -86,19 +86,19 @@
               android:layout_marginTop="5dp"
               android:layout_marginEnd="10dp"
               android:background="@color/blue_200"
-              android:text=" microG "
+              android:text="@string/microg_label"
               android:textColor="@color/white"
               android:textSize="11sp"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintTop_toTopOf="@+id/appName" />
 
             <TextView
-                android:id="@+id/rooted"
+                android:id="@+id/secure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@color/purple_200"
-                android:text=" rooted "
+                android:text="@string/secure_label"
                 android:textColor="@color/white"
                 android:textSize="11sp"
                 app:layout_constraintEnd_toEndOf="@+id/microG"

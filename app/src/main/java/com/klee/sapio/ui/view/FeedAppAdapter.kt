@@ -64,18 +64,18 @@ class FeedAppAdapter(
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val microgLabel = Label.create(mContext, app.microg)
-            val rootLabel = Label.create(mContext, app.rooted)
+            val secureLabel = Label.create(mContext, app.secure)
 
             element.microG.text = microgLabel.text
             element.microG.setBackgroundColor(microgLabel.color)
 
-            element.rooted.text = rootLabel.text
-            element.rooted.setBackgroundColor(rootLabel.color)
+            element.secure.text = secureLabel.text
+            element.secure.setBackgroundColor(secureLabel.color)
 
-            if (mSettings.getRootConfigurationLevel() == UserType.ROOT) {
-                element.rooted.visibility = View.VISIBLE
+            if (mSettings.getRootConfigurationLevel() == UserType.RISKY) {
+                element.secure.visibility = View.VISIBLE
             } else {
-                element.rooted.visibility = View.GONE
+                element.secure.visibility = View.GONE
             }
         }
 

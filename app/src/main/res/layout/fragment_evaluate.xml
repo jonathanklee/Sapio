@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="50dp"
-        android:text="@string/configuration_detected"
+        android:text="@string/environment_detected"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,11 +43,11 @@
         app:layout_constraintTop_toBottomOf="@+id/configurationDetected" />
 
     <TextView
-        android:id="@+id/rootConfiguration"
+        android:id="@+id/secureConfiguration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:text="root configuration"
+        android:text="secure configuration"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/configurationDetected"
         app:layout_constraintStart_toEndOf="@+id/configurationDetected"

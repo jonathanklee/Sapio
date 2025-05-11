@@ -133,11 +133,11 @@ class EvaluationsActivity : AppCompatActivity() {
     private fun handleRootConfigurationSetting() {
         val shouldShow = settings.isRootConfigurationEnabled()
         with(mBinding) {
-            rooted.isVisible = shouldShow
+            secure.isVisible = shouldShow
             microgRoot.isVisible = shouldShow
             bareAospRoot.isVisible = shouldShow
             empty.isVisible = shouldShow
-            user.isVisible = shouldShow
+            risky.isVisible = shouldShow
         }
     }
 

@@ -40,7 +40,7 @@ data class Evaluation(
     @JsonProperty("icon") var icon: Icon?,
     @JsonProperty("rating") val rating: Int,
     @JsonProperty("microg") val microg: Int,
-    @JsonProperty("rooted") val rooted: Int,
+    @JsonProperty("rooted") val secure: Int,
     @JsonProperty("updatedAt") val updatedAt: Date?,
     @JsonProperty("createdAt") val createdAt: Date?,
     @JsonProperty("publishedAt") val publishedAt: Date?,
@@ -140,8 +140,8 @@ object GmsType {
 }
 
 object UserType {
-    const val USER = 3
-    const val ROOT = 4
+    const val SECURE = 3
+    const val RISKY = 4
 }
 
 data class Label(val text: String, val color: Int) {
@@ -149,8 +149,8 @@ data class Label(val text: String, val color: Int) {
     companion object {
         const val MICROG = GmsType.MICROG
         const val BARE_AOSP = GmsType.BARE_AOSP
-        const val USER = UserType.USER
-        const val ROOTED = UserType.ROOT
+        const val SECURE = UserType.SECURE
+        const val RISKY = UserType.RISKY
 
         @RequiresApi(Build.VERSION_CODES.M)
         fun create(context: Context, label: Int): Label {
@@ -161,11 +161,11 @@ data class Label(val text: String, val color: Int) {
                 BARE_AOSP -> Label(
                     context.getString(R.string.bare_aosp_label), context.getColor(R.color.blue_700)
                 )
-                USER -> Label(
-                    context.getString(R.string.user_label), context.getColor(R.color.purple_200)
+                SECURE -> Label(
+                    context.getString(R.string.secure_label), context.getColor(R.color.purple_200)
                 )
-                ROOTED -> Label(
-                    context.getString(R.string.rooted_label), context.getColor(R.color.purple_700)
+                RISKY -> Label(
+                    context.getString(R.string.risky_label), context.getColor(R.color.purple_700)
                 )
                 else -> Label(" Empty label ", context.getColor(R.color.black))
             }

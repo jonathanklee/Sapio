@@ -32,35 +32,35 @@ class EvaluationRepositoryImpl @Inject constructor() :
         retrofitService.updateEvaluation(header, id)
     }
 
-    override suspend fun fetchMicrogUserEvaluation(appPackageName: String): Evaluation? {
+    override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Evaluation? {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.MICROG,
-            Label.USER
+            Label.SECURE
         )
     }
 
-    override suspend fun fetchMicrogRootEvaluation(appPackageName: String): Evaluation? {
+    override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Evaluation? {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.MICROG,
-            Label.ROOTED
+            Label.RISKY
         )
     }
 
-    override suspend fun fetchBareAospUserEvaluation(appPackageName: String): Evaluation? {
+    override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Evaluation? {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.BARE_AOSP,
-            Label.USER
+            Label.SECURE
         )
     }
 
-    override suspend fun fetchBareAospRootEvaluation(appPackageName: String): Evaluation? {
+    override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Evaluation? {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.BARE_AOSP,
-            Label.ROOTED
+            Label.RISKY
         )
     }
 

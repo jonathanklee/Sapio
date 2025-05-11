@@ -11,15 +11,15 @@
     <string name="select_evaluation_error">Please select an evaluation</string>
     <string name="microg_label" translatable="false">\ microG\ </string>
     <string name="bare_aosp_label" translatable="false">\ bareAOSP\ </string>
-    <string name="user_label" translatable="false">\ user\ </string>
-    <string name="rooted_label" translatable="false">\ root\ </string>
+    <string name="secure_label" translatable="false">\ secure\ </string>
+    <string name="risky_label" translatable="false">\ risky\ </string>
     <string name="works_perfectly">\ It works perfectly. All features are working.</string>
     <string name="works_partially">\ It works partially. Some features do not work.</string>
     <string name="dont_work">\ It does not work at all or crashes.</string>
     <string name="upload_error">Error evaluating app</string>
     <string name="about_text">Sapio is the anagram of Open Source API.\n\nSapio provides the compatibility of an Android application running on a device without Google Play Services (i.e. deGoogled bare Android Open Source Project (AOSP) devices, coupled or not with microG).\n\nSapio can serve as a lobbying tool by sharing compatibility on social media to raise awareness among app developers about respecting users\' personal data.\n\nEvaluations in Sapio are given to the community by the community.</string>
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
-    <string name="configuration_detected">Configuration detected</string>
+    <string name="environment_detected">Environment detected</string>
     <string name="look_for_an_application">Look for an application</string>
     <string name="updated_on">Updated on %1$s</string>
     <string name="android_compatibility_matrix">Android Compatibility</string>
@@ -29,10 +29,6 @@
     <string name="search_title">Search</string>
     <string name="contribute_title">Contribute</string>
     <string name="about">About</string>
-    <string name="the_device_has_microg_installed">The device has microG installed</string>
-    <string name="the_device_is_a_bare_aosp_device">The device is a bare AOSP device</string>
-    <string name="the_device_is_not_rooted">The device is not rooted</string>
-    <string name="the_device_is_considered_rooted">The device is considered rooted</string>
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
     <string name="good">Works perfectly</string>
@@ -45,7 +41,7 @@
     <string name="settings">Settings</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Rating rules</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">I have read and I understand the rating rules</string>
-    <string name="show_root">Root</string>
-    <string name="show_root_configurations">Show root configurations</string>
+    <string name="show_risky">Environments</string>
+    <string name="show_risky_environments">Show risky environments</string>
     <string name="general">General</string>
 </resources>

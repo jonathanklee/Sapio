@@ -34,7 +34,7 @@ class FeedFragment : Fragment() {
     private lateinit var mEvaluations: MutableList<Evaluation>
     private val mViewModel by viewModels<FeedViewModel>()
     private var fetchJob: Job? = null
-    private var mPreviousRootVisible: Int = UserType.USER
+    private var mPreviousRootVisible: Int = UserType.SECURE
 
     override fun onCreateView(
         inflater: LayoutInflater,

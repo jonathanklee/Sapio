@@ -50,9 +50,9 @@ class EvaluateFragment : Fragment() {
         mBinding.microgConfiguration.text = microgLabel.text
         mBinding.microgConfiguration.setBackgroundColor(microgLabel.color)
 
-        val isRootedLabel = Label.create(requireContext(), mDeviceConfiguration.isRooted())
-        mBinding.rootConfiguration.text = isRootedLabel.text
-        mBinding.rootConfiguration.setBackgroundColor(isRootedLabel.color)
+        val isRootedLabel = Label.create(requireContext(), mDeviceConfiguration.isRisky())
+        mBinding.secureConfiguration.text = isRootedLabel.text
+        mBinding.secureConfiguration.setBackgroundColor(isRootedLabel.color)
 
         mPackageName = arguments?.getString("package").orEmpty()
         mAppName = arguments?.getString("name").orEmpty()

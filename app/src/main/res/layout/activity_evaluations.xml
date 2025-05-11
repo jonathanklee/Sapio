@@ -71,22 +71,22 @@
                   android:textSize="15sp" />
 
                 <TextView
-                  android:id="@+id/user"
+                  android:id="@+id/secure"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
                   android:background="@color/purple_200"
-                  android:text=" user "
+                  android:text="@string/secure_label"
                   android:textColor="@color/white"
                   android:textSize="17sp" />
 
                 <TextView
-                  android:id="@+id/rooted"
+                  android:id="@+id/risky"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
                   android:background="@color/purple_700"
-                  android:text=" root "
+                  android:text="@string/risky_label"
                   android:textColor="@color/white"
                   android:textSize="17sp" />
 

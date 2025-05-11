@@ -41,11 +41,11 @@ class DeviceConfiguration @Inject constructor(
         return type
     }
 
-    fun isRooted(): Int {
+    fun isRisky(): Int {
         return if (RootBeer(mContext).isRooted) {
-            Label.ROOTED
+            Label.RISKY
         } else {
-            Label.USER
+            Label.SECURE
         }
     }
 }

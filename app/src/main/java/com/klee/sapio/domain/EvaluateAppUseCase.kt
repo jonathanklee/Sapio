@@ -4,8 +4,6 @@ import com.klee.sapio.data.DeviceConfiguration
 import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.IconAnswer
 import com.klee.sapio.data.UploadEvaluation
-import com.klee.sapio.data.Evaluation
-import com.klee.sapio.ui.view.EvaluateFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -68,7 +66,7 @@ class EvaluateAppUseCase @Inject constructor() {
             iconId,
             rating,
             mDeviceConfiguration.getGmsType(),
-            mDeviceConfiguration.isRooted()
+            mDeviceConfiguration.isRisky()
         )
 
         mEvaluationRepository.addEvaluation(newEvaluation)

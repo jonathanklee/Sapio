@@ -3,8 +3,8 @@
     <PreferenceCategory android:title="@string/general">
         <SwitchPreferenceCompat
             android:key="show_root"
-            android:title="@string/show_root"
-            android:summary="@string/show_root_configurations"
+            android:title="@string/show_risky"
+            android:summary="@string/show_risky_environments"
             android:defaultValue="false" />
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

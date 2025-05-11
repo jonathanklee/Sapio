@@ -17,13 +17,13 @@ interface EvaluationRepository {
 
     suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int)
 
-    suspend fun fetchMicrogUserEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Evaluation?
 
-    suspend fun fetchMicrogRootEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Evaluation?
 
-    suspend fun fetchBareAospUserEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Evaluation?
 
-    suspend fun fetchBareAospRootEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Evaluation?
 
     suspend fun existingEvaluations(packageName: String): List<StrapiElement>
 

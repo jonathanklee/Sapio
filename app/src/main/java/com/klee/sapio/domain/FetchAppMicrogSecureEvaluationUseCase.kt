@@ -1,15 +1,14 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.Evaluation
-import com.klee.sapio.data.EvaluationRepositoryImpl
 import javax.inject.Inject
 
-class FetchAppBareAospUserEvaluationUseCase @Inject constructor() {
+class FetchAppMicrogSecureEvaluationUseCase @Inject constructor() {
 
     @Inject
     lateinit var evaluationRepository: EvaluationRepository
 
     suspend operator fun invoke(packageName: String): Evaluation? {
-        return evaluationRepository.fetchBareAospUserEvaluation(packageName)
+        return evaluationRepository.fetchMicrogSecureEvaluation(packageName)
     }
 }

@@ -5,29 +5,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.Settings
-import com.klee.sapio.domain.FetchAppBareAospRootEvaluationUseCase
-import com.klee.sapio.domain.FetchAppBareAospUserEvaluationUseCase
-import com.klee.sapio.domain.FetchAppMicrogRootEvaluationUseCase
-import com.klee.sapio.domain.FetchAppMicrogUserEvaluationUseCase
+import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
+import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase
+import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase
+import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 @HiltViewModel
 class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
 
     @Inject
-    lateinit var fetchAppMicrogUserEvaluationUseCase: FetchAppMicrogUserEvaluationUseCase
+    lateinit var fetchAppMicrogSecureEvaluationUseCase: FetchAppMicrogSecureEvaluationUseCase
     @Inject
-    lateinit var fetchAppMicrogRootEvaluationUseCase: FetchAppMicrogRootEvaluationUseCase
+    lateinit var fetchAppMicrogRiskyEvaluationUseCase: FetchAppMicrogRiskyEvaluationUseCase
     @Inject
-    lateinit var fetchAppBareAOspUserEvaluationUseCase: FetchAppBareAospUserEvaluationUseCase
+    lateinit var fetchAppBareAOspSecureEvaluationUseCase: FetchAppBareAospSecureEvaluationUseCase
     @Inject
-    lateinit var fetchAppBareAospRootEvaluationUseCase: FetchAppBareAospRootEvaluationUseCase
+    lateinit var fetchAppBareAospRiskyEvaluationUseCase: FetchAppBareAospRiskyEvaluationUseCase
     @Inject
     lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
     @Inject
@@ -43,7 +42,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 microgUserEvaluation.postValue(
-                    fetchAppMicrogUserEvaluationUseCase.invoke(
+                    fetchAppMicrogSecureEvaluationUseCase.invoke(
                         packageName
                     )
                 )
@@ -53,7 +52,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 bareAospUserEvaluation.postValue(
-                    fetchAppBareAOspUserEvaluationUseCase.invoke(packageName)
+                    fetchAppBareAOspSecureEvaluationUseCase.invoke(packageName)
                 )
             }
         }
@@ -62,7 +61,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     microgRootEvaluation.postValue(
-                        fetchAppMicrogRootEvaluationUseCase.invoke(
+                        fetchAppMicrogRiskyEvaluationUseCase.invoke(
                             packageName
                         )
                     )
@@ -72,7 +71,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     bareAsopRootEvaluation.postValue(
-                        fetchAppBareAospRootEvaluationUseCase.invoke(packageName)
+                        fetchAppBareAospRiskyEvaluationUseCase.invoke(packageName)
                     )
                 }
             }

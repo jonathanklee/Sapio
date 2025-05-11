@@ -14,7 +14,7 @@
     <string name="upload_error">Erreur lors de l\'évaluation</string>
     <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la compatibilité d\'une application Android sur un appareil sans Google Play Services (i.e. les téléphones fonctionnant sur un Android Open Source Project (AOSP) déGooglisé, associés ou non à microG).\n\nSapio peut être utilisé comme un outil de lobbying en partageant la compatibilité sur les réseaux sociaux pour sensibiliser les développeurs d\'applications aux données personnelles des utilisateurs.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
-    <string name="configuration_detected">Configuration détéctée</string>
+    <string name="environment_detected">Environnement détécté</string>
     <string name="look_for_an_application">Rechercher une application</string>
     <string name="updated_on">Mis à jour le %1$s</string>
     <string name="android_compatibility_matrix">Compatibilité Android</string>
@@ -25,10 +25,6 @@
     <string name="contribute_title">Contribuer</string>
     <string name="about">A propos</string>
     <string name="donate">Faire un don</string>
-    <string name="the_device_has_microg_installed">L\'appareil a microG d\'installé</string>
-    <string name="the_device_is_a_bare_aosp_device">L\'appareil est un AOSP pure</string>
-    <string name="the_device_is_not_rooted">L\'appareil n\'est pas rooté</string>
-    <string name="the_device_is_considered_rooted">L\'appareil est considéré rooté</string>
     <string name="validate_button">Valider</string>
     <string name="thank_you">Merci d\'avoir évalué l\'application</string>
     <string name="good">Fonctionne parfaitement</string>
@@ -40,7 +36,7 @@
     <string name="rating_rules"><![CDATA[<a href="%1$s">Règles d\'évaluation</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">J\'ai lu et je comprends les règles d\'évaluation</string>
     <string name="share_text">N\'hésitez pas à partager votre évaluation sur les réseaux sociaux pour sensibiliser les développeurs au respect des données personnelles.</string>
-    <string name="show_root">Root</string>
+    <string name="show_risky">Environnements</string>
     <string name="general">Général</string>
-    <string name="show_root_configurations">Montrer les configurations root</string>
+    <string name="show_risky_environments">Montrer les environnements non-securisés</string>
 </resources>
