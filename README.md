@@ -64,7 +64,7 @@ https://server.sapio.ovh/api
     - https://docs.strapi.io/dev-docs/api/rest#requests
     - attributes:
         - microg: 1 for microG, 2 for bareAOSP
-        - rooted: 3 for user, 4 for root
+        - secure: 3 for secure, 4 for risky
         - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Get the latest 100 evaluations
 
@@ -82,7 +82,7 @@ curl -X GET "https://server.sapio.ovh/api/sapio-applications?pagination\[pageSiz
     - https://docs.strapi.io/dev-docs/api/rest#requests
     - attributes:
         - microg: 1 for microG, 2 for bareAOSP
-        - rooted: 3 for user, 4 for root
+        - secure: 3 for secure, 4 for risky
         - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Search evaluations for an app called ChatGPT
  ```
