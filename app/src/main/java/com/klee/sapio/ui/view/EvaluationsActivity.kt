@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Images.Media
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -109,25 +110,44 @@ class EvaluationsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        hideCard()
         mViewModel.listEvaluations(packageName)
 
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
         if (shareImmediately) {
-            if (settings.isRootConfigurationEnabled()) {
-                combine(
-                    microgUserReceived, microgRootReceived, bareAospUserReceived,
-                    bareAospRootReceived, iconReceived
-                ) { _, _, _, _, _ ->
-                    share(takeScreenshot(), appName)
-                }.launchIn(lifecycleScope)
-            } else {
-                combine(microgUserReceived, bareAospUserReceived, iconReceived) { _, _, _ ->
-                    share(takeScreenshot(), appName)
-                }.launchIn(lifecycleScope)
+            onElementsLoaded {
+                share(takeScreenshot(), appName)
             }
         }
 
+        onElementsLoaded {
+            showCard()
+        }
+
         handleRootConfigurationSetting()
+    }
+
+    private fun hideCard() {
+        mBinding.card.visibility = View.INVISIBLE
+    }
+
+    private fun showCard() {
+        mBinding.card.visibility = View.VISIBLE
+    }
+
+    private fun onElementsLoaded(callback: () -> Unit) {
+        if (settings.isRootConfigurationEnabled()) {
+            combine(
+                microgUserReceived, microgRootReceived, bareAospUserReceived,
+                bareAospRootReceived, iconReceived
+            ) { _, _, _, _, _ ->
+                callback.invoke()
+            }.launchIn(lifecycleScope)
+        } else {
+            combine(microgUserReceived, bareAospUserReceived, iconReceived) { _, _, _ ->
+                callback.invoke()
+            }.launchIn(lifecycleScope)
+        }
     }
 
     private fun handleRootConfigurationSetting() {
