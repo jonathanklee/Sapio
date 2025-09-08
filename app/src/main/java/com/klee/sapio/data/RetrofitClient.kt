@@ -159,7 +159,9 @@ class EvaluationService @Inject constructor(
                 settings.getRootConfigurationLevel(),
                 pageNumber
             ).await()
-        } catch (_: IOException) {}
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
 
         return strapiAnswer
     }
