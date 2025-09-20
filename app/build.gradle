@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId "com.klee.sapio"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 61
         versionName "1.8.1"
 

@@ -6,7 +6,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
@@ -29,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
         displayFragment(FeedFragment())
 
+        handleEdgeToEdgeInsets()
+
         mBinding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.feed -> displayFragment(FeedFragment())
@@ -41,6 +47,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
+    }
+
+    private fun handleEdgeToEdgeInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.root) { v, windowInsets ->
+            val bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = bars.bottom
+                leftMargin = bars.left
+                rightMargin = bars.right
+                topMargin = bars.top
+            }
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
