@@ -3,6 +3,7 @@ package com.klee.sapio.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,6 +16,7 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
+import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
@@ -159,8 +161,8 @@ class EvaluationService @Inject constructor(
                 settings.getRootConfigurationLevel(),
                 pageNumber
             ).await()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
+        } catch (exception: HttpException) {
+            Log.i("EvaluationService", "HttpException: $exception")
         }
 
         return strapiAnswer
