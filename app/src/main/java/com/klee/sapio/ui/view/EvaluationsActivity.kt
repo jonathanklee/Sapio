@@ -1,6 +1,7 @@
 package com.klee.sapio.ui.view
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -10,10 +11,15 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Images.Media
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.View.MeasureSpec
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
 import androidx.lifecycle.MutableLiveData
@@ -38,6 +44,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
+import com.klee.sapio.data.SharedEvaluation
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import androidx.core.graphics.createBitmap
 
 @AndroidEntryPoint
 class EvaluationsActivity : AppCompatActivity() {
@@ -62,6 +76,8 @@ class EvaluationsActivity : AppCompatActivity() {
         const val EXTRA_APP_NAME = "appName"
         const val EXTRA_SHARE_IMMEDIATELY = "shareImmediately"
         const val IMAGE_LOADING_DELAY_IN_MS = 200L
+        const val SCREENSHOT_WIDTH_DP = 200
+        const val SCREENSHOT_HEIGHT_DP = 115
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -69,24 +85,9 @@ class EvaluationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivityEvaluationsBinding.inflate(layoutInflater)
-
         setContentView(mBinding.root)
 
-        observeEvaluation(mViewModel.microgUserEvaluation, mBinding.microgUser, microgUserReceived)
-        observeEvaluation(mViewModel.bareAospUserEvaluation, mBinding.bareAospUser, bareAospUserReceived)
-
-        if (settings.isRootConfigurationEnabled()) {
-            observeEvaluation(
-                mViewModel.bareAsopRootEvaluation,
-                mBinding.bareAospRoot,
-                bareAospRootReceived
-            )
-            observeEvaluation(
-                mViewModel.microgRootEvaluation,
-                mBinding.microgRoot,
-                microgRootReceived
-            )
-        }
+        observeEvaluations()
 
         mViewModel.iconUrl.observe(this) {
             Glide.with(this.applicationContext)
@@ -102,7 +103,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding.applicationName.text = appName
 
         mBinding.shareButton.setOnClickListener {
-            share(takeScreenshot(), appName)
+            startTakingScreenshot(appName, packageName)
         }
 
         mBinding.infoIcon.setOnClickListener {
@@ -116,7 +117,7 @@ class EvaluationsActivity : AppCompatActivity() {
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
         if (shareImmediately) {
             onElementsLoaded {
-                share(takeScreenshot(), appName)
+                startTakingScreenshot(appName, packageName)
             }
         }
 
@@ -161,6 +162,24 @@ class EvaluationsActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeEvaluations() {
+        observeEvaluation(mViewModel.microgUserEvaluation, mBinding.microgUser, microgUserReceived)
+        observeEvaluation(mViewModel.bareAospUserEvaluation, mBinding.bareAospUser, bareAospUserReceived)
+
+        if (settings.isRootConfigurationEnabled()) {
+            observeEvaluation(
+                mViewModel.bareAsopRootEvaluation,
+                mBinding.bareAospRoot,
+                bareAospRootReceived
+            )
+            observeEvaluation(
+                mViewModel.microgRootEvaluation,
+                mBinding.microgRoot,
+                microgRootReceived
+            )
+        }
+    }
+
     private fun observeEvaluation(
         liveData: MutableLiveData<Evaluation>,
         textView: EmojiTextView,
@@ -190,11 +209,103 @@ class EvaluationsActivity : AppCompatActivity() {
         }
     }
 
-    private fun takeScreenshot(): Bitmap {
-        val view = mBinding.root
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+    private fun startTakingScreenshot(appName: String, packageName: String) {
+        lifecycleScope.launch {
+            val icon = saveImageToFile(
+                this@EvaluationsActivity,
+                EvaluationService.BASE_URL + mViewModel.iconUrl.value
+            )
+            val sharedEvaluation = SharedEvaluation(
+                appName,
+                packageName,
+                icon,
+                mViewModel.microgUserEvaluation.value?.rating ?: 0,
+                mViewModel.bareAospUserEvaluation.value?.rating ?: 0,
+            )
+            share(takeScreenshot(sharedEvaluation), appName)
+        }
+    }
+
+    private fun takeScreenshot(sharedEvaluation: SharedEvaluation): Bitmap {
+        return composeToBitmap(this@EvaluationsActivity, SCREENSHOT_WIDTH_DP, SCREENSHOT_HEIGHT_DP) {
+                ShareScreenshot(sharedEvaluation)
+        }
+    }
+
+    private suspend fun saveImageToFile(
+        context: Context,
+        url: String
+    ): Bitmap = suspendCancellableCoroutine { continuation ->
+        val target = object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(
+                resource: Bitmap,
+                transition: Transition<in Bitmap>?
+            ) {
+                continuation.resume(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                continuation.resumeWithException(Exception("Failed to load image"))
+            }
+        }
+
+        Glide.with(applicationContext)
+            .asBitmap()
+            .load(url)
+            .into(target)
+
+        continuation.invokeOnCancellation {
+            Glide.with(context).clear(target)
+        }
+    }
+
+    private fun composeToBitmap(
+        context: Context,
+        widthDp: Int,
+        heightDp: Int,
+        scaleFactor: Float = 2f,
+        composable: @Composable () -> Unit,
+    ): Bitmap {
+        val displayMetrics = context.resources.displayMetrics
+        val widthPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            widthDp.toFloat(),
+            displayMetrics
+        ).toInt()
+        val heightPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            heightDp.toFloat(),
+            displayMetrics
+        ).toInt()
+
+        val composeView = ComposeView(context).apply {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+            setContent { composable() }
+            layoutParams = ViewGroup.LayoutParams(widthPx, heightPx)
+        }
+
+        // Add to container for proper rendering context
+        mBinding.bitmapContainer.addView(composeView)
+
+        // Measure and layout
+        composeView.measure(
+            MeasureSpec.makeMeasureSpec(widthPx, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(heightPx, MeasureSpec.EXACTLY)
+        )
+        composeView.layout(0, 0, composeView.measuredWidth, composeView.measuredHeight)
+
+        // Create bitmap and draw
+        val bitmap = createBitmap(
+            (composeView.width * scaleFactor).toInt(),
+            (composeView.height * scaleFactor).toInt()
+        )
         val canvas = Canvas(bitmap)
-        view.draw(canvas)
+        canvas.scale(scaleFactor, scaleFactor)
+        composeView.draw(canvas)
+
+        // Clean up
+        mBinding.bitmapContainer.removeView(composeView)
+
         return bitmap
     }
 

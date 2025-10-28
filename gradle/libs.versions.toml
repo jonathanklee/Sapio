@@ -1,16 +1,21 @@
 [versions]
+activityCompose = "1.11.0"
 appcompat = "1.7.0"
 circleimageview = "3.1.0"
+coilCompose = "3.3.0"
+coilNetworkOkhttp = "3.3.0"
+composeBom = "2025.09.01"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.0.1"
 emoji2 = "1.3.0"
 espressoCore = "3.6.1"
-glide = "4.13.1"
+glide = "5.0.5"
 hiltAndroid = "2.54"
 hiltAndroidTesting = "2.38.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
+kotlin = "2.0.0"
 kotlinxCoroutinesAndroid = "1.10.1"
 ktorClientCore = "3.0.3"
 loggingInterceptor = "4.11.0"
@@ -27,9 +32,12 @@ robolectric = "4.14.1"
 rootbeerLib = "0.1.1"
 runner = "1.6.2"
 swiperefreshlayout = "1.1.0"
+material3AndroidVersion = "1.4.0"
 
 [libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -37,14 +45,21 @@ androidx-emoji2 = { module = "androidx.emoji2:emoji2", version.ref = "emoji2" }
 androidx-emoji2-views = { module = "androidx.emoji2:emoji2-views", version.ref = "emoji2" }
 androidx-emoji2-views-helper = { module = "androidx.emoji2:emoji2-views-helper", version.ref = "emoji2" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3AndroidVersion" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+androidx-ui = { module = "androidx.compose.ui:ui" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 converter-jackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
@@ -65,3 +80,5 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 rootbeer-lib = { module = "com.scottyab:rootbeer-lib", version.ref = "rootbeerLib" }
 
 [plugins]
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

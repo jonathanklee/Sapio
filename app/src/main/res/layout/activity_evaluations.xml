@@ -7,6 +7,13 @@
   android:orientation="horizontal"
   tools:context=".ui.view.EvaluationsActivity">
 
+    <FrameLayout
+        android:id="@+id/bitmap_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
     <androidx.cardview.widget.CardView
       android:backgroundTint="@color/cardview_background_color"
       android:id="@+id/card"

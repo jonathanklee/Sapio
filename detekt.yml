@@ -7,6 +7,13 @@ naming:
   VariableNaming:
     active: false
 
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
+
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][A-Za-z0-9]*'
 
 # Style rules
 style:
@@ -17,9 +24,16 @@ style:
   ReturnCount:
     excludeGuardClauses: true
 
+  MagicNumber:
+    active: true
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
 
 # Complexity rules
 complexity:
 
   TooManyFunctions:
     ignorePrivate: true
+
+  LongMethod:
+    ignoreAnnotated: ['Composable']

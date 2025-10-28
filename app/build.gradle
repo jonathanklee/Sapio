@@ -4,11 +4,11 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-
+    alias libs.plugins.compose.compiler
 }
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.klee.sapio"
@@ -40,6 +40,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
     namespace 'com.klee.sapio'
 }
@@ -52,6 +53,8 @@ dependencies {
     implementation libs.androidx.constraintlayout
 
     implementation libs.glide
+    implementation libs.coil.compose
+    implementation libs.coil.network.okhttp
 
     implementation libs.kotlinx.coroutines.android
     implementation libs.androidx.navigation.fragment.ktx
@@ -61,6 +64,7 @@ dependencies {
     // hilt
     implementation libs.hilt.android
     implementation libs.androidx.runner
+    implementation libs.androidx.material3.android
     kapt libs.hilt.compiler
     testImplementation libs.hilt.android.testing
 
@@ -91,12 +95,19 @@ dependencies {
 
     // splashscreen
     implementation libs.androidx.core.splashscreen
-
     // ktor
     implementation libs.ktor.client.core
     implementation libs.ktor.client.android
 
     // preferences
     implementation libs.androidx.preference.ktx
+
+    // compose
+    implementation platform(libs.androidx.compose.bom)
+    implementation(libs.androidx.foundation)
+    implementation libs.androidx.ui
+    implementation libs.androidx.ui.tooling.preview
+    implementation libs.androidx.activity.compose
+    debugImplementation libs.androidx.ui.tooling
 }
 

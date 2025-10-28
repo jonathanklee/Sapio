@@ -1,6 +1,7 @@
 package com.klee.sapio.data
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -37,7 +38,7 @@ data class StrapiElement(
 data class Evaluation(
     @JsonProperty("name") val name: String,
     @JsonProperty("packageName") val packageName: String,
-    @JsonProperty("icon") var icon: Icon?,
+    @JsonProperty("iconUrl") var iconUrl: String?,
     @JsonProperty("rating") val rating: Int,
     @JsonProperty("microg") val microg: Int,
     @JsonProperty("rooted") val secure: Int,
@@ -181,9 +182,9 @@ data class Rating(val value: Int, val text: String) {
         const val AVERAGE = 2
         const val BAD = 3
 
-        private const val GREEN_CIRCLE_EMOJI =  0x1F7E2
-        private const val YELLOW_CIRCLE_EMOJI = 0x1F7E1
-        private const val RED_CIRCLE_EMOJI = 0x1F534
+        const val GREEN_CIRCLE_EMOJI =  0x1F7E2
+        const val YELLOW_CIRCLE_EMOJI = 0x1F7E1
+        const val RED_CIRCLE_EMOJI = 0x1F534
 
         fun create(rating: Int): Rating {
             return when (rating) {
@@ -195,3 +196,11 @@ data class Rating(val value: Int, val text: String) {
         }
     }
 }
+
+data class SharedEvaluation(
+    val name: String,
+    val packageName: String,
+    val icon: Bitmap,
+    val ratingMicrog: Int,
+    val ratingBareAOSP: Int
+)
