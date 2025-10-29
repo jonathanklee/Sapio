@@ -1,10 +1,10 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.Evaluation
+import com.klee.sapio.data.IconAnswer
 import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.StrapiElement
 import com.klee.sapio.data.UploadEvaluation
-import com.klee.sapio.data.IconAnswer
 import retrofit2.Response
 
 interface EvaluationRepository {

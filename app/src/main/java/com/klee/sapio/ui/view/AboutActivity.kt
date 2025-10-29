@@ -1,14 +1,11 @@
 package com.klee.sapio.ui.view
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import com.klee.sapio.BuildConfig
 import com.klee.sapio.R
-import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.ActivityAboutBinding
 
 class AboutActivity : AppCompatActivity() {

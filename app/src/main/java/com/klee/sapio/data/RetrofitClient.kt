@@ -231,13 +231,13 @@ class EvaluationService @Inject constructor(
     }
 
     private suspend fun upload(image: MultipartBody.Part): Response<ArrayList<IconAnswer>>? =
-    try {
-        withTimeout(UPLOAD_TIMEOUT_MS) {
-            evaluationsApi.addIcon(image).execute()
+        try {
+            withTimeout(UPLOAD_TIMEOUT_MS) {
+                evaluationsApi.addIcon(image).execute()
+            }
+        } catch (_: IOException) {
+            null
         }
-    } catch (_: IOException) {
-        null
-    }
 
     suspend fun existingIcon(iconName: String): List<IconAnswer>? {
         var remotesImage: List<IconAnswer>? = null
@@ -285,5 +285,4 @@ class EvaluationService @Inject constructor(
         bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)
         return stream.toByteArray()
     }
-
 }

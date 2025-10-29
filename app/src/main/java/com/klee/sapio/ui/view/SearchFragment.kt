@@ -49,7 +49,6 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         mBinding = FragmentSearchBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
         mBinding.recyclerView.visibility = View.INVISIBLE

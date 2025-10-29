@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleEdgeToEdgeInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(mBinding.root) { v, windowInsets ->
-            val bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
+            val bars = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
                     or WindowInsetsCompat.Type.displayCutout()
             )
 

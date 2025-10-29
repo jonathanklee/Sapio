@@ -8,7 +8,7 @@ import androidx.core.view.updatePadding
 import androidx.preference.PreferenceFragmentCompat
 import com.klee.sapio.R
 
-class PreferencesFragment : PreferenceFragmentCompat()  {
+class PreferencesFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
@@ -18,8 +18,7 @@ class PreferencesFragment : PreferenceFragmentCompat()  {
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
             val bars = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-                        or WindowInsetsCompat.Type.displayCutout()
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
 
             v.updatePadding(

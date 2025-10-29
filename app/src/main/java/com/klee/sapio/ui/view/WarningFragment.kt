@@ -1,5 +1,5 @@
 package com.klee.sapio.ui.view
-import android.content.res.Resources
+
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -10,17 +10,21 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.data.DeviceConfiguration
-import com.klee.sapio.databinding.FragmentWarningBinding
 import com.klee.sapio.data.EvaluationRepositoryImpl
 import com.klee.sapio.data.GmsType
+import com.klee.sapio.databinding.FragmentWarningBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class WarningFragment : Fragment() {
 
-    @Inject lateinit var mEvaluationRepository: EvaluationRepositoryImpl
-    @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
+    @Inject
+    lateinit var mEvaluationRepository: EvaluationRepositoryImpl
+
+    @Inject
+    lateinit var mDeviceConfiguration: DeviceConfiguration
+
     private lateinit var mBinding: FragmentWarningBinding
 
     override fun onCreateView(

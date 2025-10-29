@@ -21,14 +21,19 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
 
     @Inject
     lateinit var fetchAppMicrogSecureEvaluationUseCase: FetchAppMicrogSecureEvaluationUseCase
+
     @Inject
     lateinit var fetchAppMicrogRiskyEvaluationUseCase: FetchAppMicrogRiskyEvaluationUseCase
+
     @Inject
     lateinit var fetchAppBareAOspSecureEvaluationUseCase: FetchAppBareAospSecureEvaluationUseCase
+
     @Inject
     lateinit var fetchAppBareAospRiskyEvaluationUseCase: FetchAppBareAospRiskyEvaluationUseCase
+
     @Inject
     lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
+
     @Inject
     lateinit var settings: Settings
 

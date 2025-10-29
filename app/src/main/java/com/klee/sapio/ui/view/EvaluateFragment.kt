@@ -12,9 +12,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
-import com.klee.sapio.data.InstalledApplicationsRepository
-import com.klee.sapio.data.EvaluationRepositoryImpl
 import com.klee.sapio.data.DeviceConfiguration
+import com.klee.sapio.data.EvaluationRepositoryImpl
+import com.klee.sapio.data.InstalledApplicationsRepository
 import com.klee.sapio.data.Label
 import com.klee.sapio.data.Rating
 import com.klee.sapio.databinding.FragmentEvaluateBinding
@@ -30,10 +30,18 @@ class EvaluateFragment : Fragment() {
         const val NOT_EXISTING = -1
     }
 
-    @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
-    @Inject lateinit var mEvaluationRepository: EvaluationRepositoryImpl
-    @Inject lateinit var mEvaluateAppUseCase: EvaluateAppUseCase
-    @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
+    @Inject
+    lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
+
+    @Inject
+    lateinit var mEvaluationRepository: EvaluationRepositoryImpl
+
+    @Inject
+    lateinit var mEvaluateAppUseCase: EvaluateAppUseCase
+
+    @Inject
+    lateinit var mDeviceConfiguration: DeviceConfiguration
+
     private lateinit var mBinding: FragmentEvaluateBinding
     private lateinit var mPackageName: String
     private lateinit var mAppName: String
@@ -80,7 +88,9 @@ class EvaluateFragment : Fragment() {
             ) ?: return@runBlocking
 
             val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
-            mEvaluateAppUseCase.invoke(app, rating,
+            mEvaluateAppUseCase.invoke(
+                app,
+                rating,
                 { onUploadSuccess() },
                 { onUploadError() }
             )
@@ -97,7 +107,7 @@ class EvaluateFragment : Fragment() {
     }
 
     private fun onUploadError() {
-       Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
     }
 
     private fun getRatingFromRadioId(id: Int, view: View): Int {

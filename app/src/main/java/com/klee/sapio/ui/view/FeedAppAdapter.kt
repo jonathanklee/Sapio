@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.databinding.FeedAppCardBinding
 import com.bumptech.glide.Glide
 import com.klee.sapio.R
 import com.klee.sapio.data.Evaluation
@@ -16,6 +15,7 @@ import com.klee.sapio.data.Label
 import com.klee.sapio.data.Rating
 import com.klee.sapio.data.Settings
 import com.klee.sapio.data.UserType
+import com.klee.sapio.databinding.FeedAppCardBinding
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +59,7 @@ class FeedAppAdapter(
                 R.string.updated_on,
                 app.updatedAt?.let { dateFormat.format(it) }
             )
-        
+
         element.emoji.text = Rating.create(app.rating).text
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

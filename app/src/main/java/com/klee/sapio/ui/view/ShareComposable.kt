@@ -23,13 +23,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.klee.sapio.R
-import com.klee.sapio.data.SharedEvaluation
 import androidx.core.graphics.createBitmap
+import com.klee.sapio.R
 import com.klee.sapio.data.Rating
 import com.klee.sapio.data.Rating.Companion.GREEN_CIRCLE_EMOJI
 import com.klee.sapio.data.Rating.Companion.RED_CIRCLE_EMOJI
 import com.klee.sapio.data.Rating.Companion.YELLOW_CIRCLE_EMOJI
+import com.klee.sapio.data.SharedEvaluation
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -102,7 +102,6 @@ fun ShareScreenshot(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Text(
                         " microG ",
                         style = TextStyle(
@@ -159,7 +158,6 @@ fun ShareScreenshot(
                         modifier = Modifier.padding(start = 5.dp)
                     )
                 }
-
             }
         }
 

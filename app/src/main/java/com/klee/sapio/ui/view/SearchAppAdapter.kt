@@ -5,10 +5,10 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.databinding.SearchAppCardBinding
 import com.bumptech.glide.Glide
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
+import com.klee.sapio.databinding.SearchAppCardBinding
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

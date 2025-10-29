@@ -1,8 +1,8 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.DeviceConfiguration
-import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.IconAnswer
+import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.UploadEvaluation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,8 +11,11 @@ import javax.inject.Inject
 
 class EvaluateAppUseCase @Inject constructor() {
 
-    @Inject lateinit var mEvaluationRepository: EvaluationRepository
-    @Inject lateinit var mDeviceConfiguration: DeviceConfiguration
+    @Inject
+    lateinit var mEvaluationRepository: EvaluationRepository
+
+    @Inject
+    lateinit var mDeviceConfiguration: DeviceConfiguration
 
     suspend operator fun invoke(
         app: InstalledApplication,

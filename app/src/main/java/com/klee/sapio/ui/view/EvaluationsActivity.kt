@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
 import androidx.lifecycle.MutableLiveData
@@ -31,12 +32,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Rating
 import com.klee.sapio.data.Settings
+import com.klee.sapio.data.SharedEvaluation
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,16 +49,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
 import javax.inject.Inject
-import com.klee.sapio.data.SharedEvaluation
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import kotlinx.coroutines.suspendCancellableCoroutine
-import java.lang.Exception
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import androidx.core.graphics.createBitmap
 
 @AndroidEntryPoint
 class EvaluationsActivity : AppCompatActivity() {
@@ -85,7 +84,6 @@ class EvaluationsActivity : AppCompatActivity() {
         const val SCREENSHOT_WIDTH_DP = 200
         const val SCREENSHOT_HEIGHT_DP = 115
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,13 +146,20 @@ class EvaluationsActivity : AppCompatActivity() {
     private fun onElementsLoaded(callback: () -> Unit) {
         if (settings.isRootConfigurationEnabled()) {
             combine(
-                microgUserReceived, microgRootReceived, bareAospUserReceived,
-                bareAospRootReceived, iconReceived
+                microgUserReceived,
+                microgRootReceived,
+                bareAospUserReceived,
+                bareAospRootReceived,
+                iconReceived
             ) { _, _, _, _, _ ->
                 callback.invoke()
             }.launchIn(lifecycleScope)
         } else {
-            combine(microgUserReceived, bareAospUserReceived, iconReceived) { _, _, _ ->
+            combine(
+                microgUserReceived,
+                bareAospUserReceived,
+                iconReceived
+            ) { _, _, _ ->
                 callback.invoke()
             }.launchIn(lifecycleScope)
         }
@@ -237,7 +242,7 @@ class EvaluationsActivity : AppCompatActivity() {
 
     private fun takeScreenshot(sharedEvaluation: SharedEvaluation): Bitmap {
         return composeToBitmap(this@EvaluationsActivity, SCREENSHOT_WIDTH_DP, SCREENSHOT_HEIGHT_DP) {
-                ShareScreenshot(sharedEvaluation)
+            ShareScreenshot(sharedEvaluation)
         }
     }
 
@@ -320,17 +325,12 @@ class EvaluationsActivity : AppCompatActivity() {
 
     private fun observeShare() {
         shareLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            try {
-                contentResolver.delete(shareImage!!, null, null)
-                shareImage = null
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to delete screenshot", e)
-            }
+            contentResolver.delete(shareImage!!, null, null)
+            shareImage = null
         }
     }
 
     private fun share(bitmap: Bitmap, appName: String) {
-
         val contentValues = ContentValues().apply {
             put(Media.DISPLAY_NAME, "screenshot_${System.currentTimeMillis()}")
             put(Media.DESCRIPTION, "$appName Android Compatibility")

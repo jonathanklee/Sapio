@@ -34,7 +34,7 @@ class DeviceConfiguration @Inject constructor(
 
             if (packageManager.getApplicationLabel(app).toString() == GOOGLE_PLAY_SERVICES) {
                 type = GmsType.GOOGLE_PLAY_SERVICES
-                break;
+                break
             }
         }
 

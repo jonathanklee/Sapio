@@ -58,7 +58,7 @@ class FeedFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if (mPreviousRootVisible != mSettings.getRootConfigurationLevel())  {
+        if (mPreviousRootVisible != mSettings.getRootConfigurationLevel()) {
             mPreviousRootVisible = mSettings.getRootConfigurationLevel()
             fetchFeed(viewLifecycleOwner.lifecycleScope)
         }
