@@ -8,6 +8,7 @@ composeBom = "2025.09.01"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.0.1"
+detekt = "1.23.8"
 emoji2 = "1.3.0"
 espressoCore = "3.6.1"
 glide = "5.0.5"
@@ -61,6 +62,7 @@ circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circ
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 converter-jackson = { module = "com.squareup.retrofit2:converter-jackson", version.ref = "retrofit" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
@@ -80,5 +82,5 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 rootbeer-lib = { module = "com.scottyab:rootbeer-lib", version.ref = "rootbeerLib" }
 
 [plugins]
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
