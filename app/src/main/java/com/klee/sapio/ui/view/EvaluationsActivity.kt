@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -15,6 +16,8 @@ import android.util.TypedValue
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -67,6 +70,9 @@ class EvaluationsActivity : AppCompatActivity() {
     private val bareAospUserReceived = MutableSharedFlow<Boolean>()
     private val bareAospRootReceived = MutableSharedFlow<Boolean>()
     private val iconReceived = MutableSharedFlow<Boolean>()
+    private lateinit var shareLauncher: ActivityResultLauncher<Intent>
+
+    private var shareImage: Uri? = null
 
     companion object {
         const val TAG = "EvaluationsActivity"
@@ -80,6 +86,7 @@ class EvaluationsActivity : AppCompatActivity() {
         const val SCREENSHOT_HEIGHT_DP = 115
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +95,8 @@ class EvaluationsActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         observeEvaluations()
+
+        observeShare()
 
         mViewModel.iconUrl.observe(this) {
             Glide.with(this.applicationContext)
@@ -309,6 +318,17 @@ class EvaluationsActivity : AppCompatActivity() {
         return bitmap
     }
 
+    private fun observeShare() {
+        shareLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            try {
+                contentResolver.delete(shareImage!!, null, null)
+                shareImage = null
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to delete screenshot", e)
+            }
+        }
+    }
+
     private fun share(bitmap: Bitmap, appName: String) {
 
         val contentValues = ContentValues().apply {
@@ -323,12 +343,12 @@ class EvaluationsActivity : AppCompatActivity() {
             }
         }
 
-        val imageUri =
+        shareImage =
             contentResolver.insert(Media.EXTERNAL_CONTENT_URI, contentValues)
                 ?: return
 
         try {
-            contentResolver.openOutputStream(imageUri)?.use { outputStream ->
+            contentResolver.openOutputStream(shareImage!!)?.use { outputStream ->
                 bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESSION_QUALITY, outputStream)
             }
         } catch (exception: IOException) {
@@ -337,14 +357,22 @@ class EvaluationsActivity : AppCompatActivity() {
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "image/*"
-            putExtra(Intent.EXTRA_STREAM, imageUri)
+            putExtra(Intent.EXTRA_STREAM, shareImage)
             putExtra(
                 Intent.EXTRA_TEXT,
                 "$appName Android Compatibility https://github.com/jonathanklee/Sapio #sapio"
             )
         }
 
-        startActivity(Intent.createChooser(shareIntent, "Share"))
+        shareLauncher.launch(Intent.createChooser(shareIntent, "Share"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        shareLauncher.unregister()
+        if (shareImage != null) {
+            contentResolver.delete(shareImage!!, null, null)
+        }
     }
 
     private val glideListener = object : RequestListener<Drawable> {
