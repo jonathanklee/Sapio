@@ -42,10 +42,15 @@ class DeviceConfiguration @Inject constructor(
     }
 
     fun isRisky(): Int {
-        return if (RootBeer(mContext).isRooted) {
+        return if (RootBeer(mContext).isRooted && !isBootloaderLocked()) {
             Label.RISKY
         } else {
             Label.SECURE
         }
+    }
+
+    private fun isBootloaderLocked(): Boolean {
+        val verifiedBootState = SystemPropertyReader().read("ro.boot.verifiedbootstate")
+        return verifiedBootState == "yellow" || verifiedBootState == "green"
     }
 }
