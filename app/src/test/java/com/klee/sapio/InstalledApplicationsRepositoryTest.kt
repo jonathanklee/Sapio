@@ -129,17 +129,94 @@ class InstalledApplicationsRepositoryTest {
     }
 
     @Test
-    fun listApplicationCheckListSize() {
+    fun test_listApplicationCheckListSize() {
         val list = repository.getAppList(mockedContext)
         assertEquals("Wrong list size.", 1, list.size)
     }
 
     @Test
-    fun listApplicationCheckElement() {
+    fun test_listApplicationCheckElement() {
         val list = repository.getAppList(mockedContext)
         assertEquals(
             "Package name are not the same.",
             fakeRegularApplicationInfo.packageName,
             list[0].packageName)
+    }
+
+    @Test
+    fun test_getApplicationFromPackageName_found() {
+        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+            .thenReturn(fakeListApplicationInfo)
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
+            .thenReturn("FakeApplicationOne")
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
+            .thenReturn("FakeApplicationTwo")
+
+        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
+            .thenReturn(mockedDrawable)
+
+        val result = repository.getApplicationFromPackageName(mockedContext, fakeRegularApplicationInfo.packageName)
+        Assert.assertNotNull("Should find the application", result)
+        Assert.assertEquals("Package names should match", fakeRegularApplicationInfo.packageName, result?.packageName)
+    }
+
+    @Test
+    fun test_getApplicationFromPackageName_notFound() {
+        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+            .thenReturn(fakeListApplicationInfo)
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
+            .thenReturn("FakeApplicationOne")
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
+            .thenReturn("FakeApplicationTwo")
+
+        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
+            .thenReturn(mockedDrawable)
+
+        val result = repository.getApplicationFromPackageName(mockedContext, "non.existent.package")
+        Assert.assertNull("Should return null for non-existent package", result)
+    }
+
+    @Test
+    fun test_getAppList_sorting() {
+        // Add another app to test sorting
+        val fakeAppZ = ApplicationInfo().apply {
+            packageName = "fake.package.name.z"
+            name = "ZebraApp"
+        }
+
+        val appsWithZ = mutableListOf(
+            fakeRegularApplicationInfo,
+            fakeSystemApplicationInfo,
+            fakeGmsApp,
+            fakeAppZ
+        )
+
+        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+            .thenReturn(appsWithZ)
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
+            .thenReturn("FakeApplicationOne")
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeAppZ)))
+            .thenReturn("ZebraApp")
+
+        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
+            .thenReturn(mockedDrawable)
+
+        val list = repository.getAppList(mockedContext)
+        
+        // Should only contain non-system apps (fakeRegularApplicationInfo and fakeAppZ)
+        Assert.assertEquals("Should have 2 apps", 2, list.size)
+        
+        // Should be sorted alphabetically
+        Assert.assertEquals("First app should be FakeApplicationOne", "fakeapplicationone", list[0].name.lowercase())
+        Assert.assertEquals("Second app should be ZebraApp", "zebraapp", list[1].name.lowercase())
     }
 }
