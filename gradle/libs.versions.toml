@@ -34,6 +34,7 @@ rootbeerLib = "0.1.1"
 runner = "1.6.2"
 swiperefreshlayout = "1.1.0"
 material3AndroidVersion = "1.4.0"
+archCoreTesting = "2.2.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -80,6 +81,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofit2KotlinCoroutinesAdapter" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 rootbeer-lib = { module = "com.scottyab:rootbeer-lib", version.ref = "rootbeerLib" }
+androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "archCoreTesting" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -7,6 +7,7 @@ import android.os.Build
 import com.klee.sapio.data.DeviceConfiguration
 import com.klee.sapio.data.GmsType
 import com.klee.sapio.data.Label
+import com.klee.sapio.data.SystemPropertyReader
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Config.NONE
+import org.robolectric.util.ReflectionHelpers
 
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = NONE, sdk = [Build.VERSION_CODES.M])
@@ -121,5 +123,47 @@ class DeviceConfigurationTest {
         // The actual result depends on the device state, so we'll just verify it returns a valid value
         Assert.assertTrue("Should return either RISKY or SECURE", 
             result == Label.RISKY || result == Label.SECURE)
+    }
+
+    @Test
+    fun test_isBootloaderLocked_states() {
+        // Force bootloader state via ShadowSystemProperties used by SystemPropertyReader inside DeviceConfiguration
+        ReflectionHelpers.callStaticMethod<Void>(
+            Class.forName("android.os.SystemProperties"),
+            "set",
+            org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "ro.boot.verifiedbootstate"),
+            org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "green")
+        )
+        Assert.assertEquals(Label.SECURE, deviceConfiguration.isRisky()) // green => locked -> secure if not rooted
+
+        ReflectionHelpers.callStaticMethod<Void>(
+            Class.forName("android.os.SystemProperties"),
+            "set",
+            org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "ro.boot.verifiedbootstate"),
+            org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "red")
+        )
+        val redResult = deviceConfiguration.isRisky()
+        Assert.assertTrue(redResult == Label.RISKY || redResult == Label.SECURE)
+    }
+
+    @Test
+    fun test_isRisky_branch_with_overrides() {
+        val fake = object : DeviceConfiguration(mockedContext) {
+            override fun isRooted(): Boolean = true
+            override fun isBootloaderLocked(): Boolean = false
+        }
+        Assert.assertEquals(Label.RISKY, fake.isRisky())
+
+        val secure = object : DeviceConfiguration(mockedContext) {
+            override fun isRooted(): Boolean = true
+            override fun isBootloaderLocked(): Boolean = true
+        }
+        Assert.assertEquals(Label.SECURE, secure.isRisky())
+
+        val clean = object : DeviceConfiguration(mockedContext) {
+            override fun isRooted(): Boolean = false
+            override fun isBootloaderLocked(): Boolean = false
+        }
+        Assert.assertEquals(Label.SECURE, clean.isRisky())
     }
 }

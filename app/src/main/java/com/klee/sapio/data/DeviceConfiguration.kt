@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DeviceConfiguration @Inject constructor(
+open class DeviceConfiguration @Inject constructor(
     @ApplicationContext private val mContext: Context
 ) {
     companion object {
@@ -19,7 +19,7 @@ class DeviceConfiguration @Inject constructor(
     private var packageManager: PackageManager = mContext.packageManager
     private var apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
-    fun getGmsType(): Int {
+    open fun getGmsType(): Int {
         var type = GmsType.BARE_AOSP
 
         for (app in apps) {
@@ -41,15 +41,17 @@ class DeviceConfiguration @Inject constructor(
         return type
     }
 
-    fun isRisky(): Int {
-        return if (RootBeer(mContext).isRooted && !isBootloaderLocked()) {
+    open fun isRisky(): Int {
+        return if (isRooted() && !isBootloaderLocked()) {
             Label.RISKY
         } else {
             Label.SECURE
         }
     }
 
-    private fun isBootloaderLocked(): Boolean {
+    protected open fun isRooted(): Boolean = RootBeer(mContext).isRooted
+
+    protected open fun isBootloaderLocked(): Boolean {
         val verifiedBootState = SystemPropertyReader().read("ro.boot.verifiedbootstate")
         return verifiedBootState == "yellow" || verifiedBootState == "green"
     }

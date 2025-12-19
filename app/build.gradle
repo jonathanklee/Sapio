@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     alias libs.plugins.compose.compiler
+    id 'jacoco'
 }
 
 android {
@@ -45,6 +46,70 @@ android {
     namespace 'com.klee.sapio'
 }
 
+jacoco {
+    toolVersion = "0.8.13"
+    reportsDirectory = layout.buildDirectory.dir("jacocoReports")
+}
+
+// Ensure jacoco agent instruments all JVM unit tests (including Robolectric).
+tasks.withType(Test).configureEach {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes += ['jdk.internal.*']
+}
+
+tasks.register("jacocoTestReport", JacocoReport) {
+    dependsOn tasks.test
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            '**/android/**/*.*',
+            '**/androidTest/**/*.*',
+            '**/test/**/*.*',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/databinding/**/*.*'
+    ]
+
+    // Kotlin and Java classes live in different intermediate folders with AGP 8+.
+    def kotlinDebugTree = fileTree(
+            dir: "${project.buildDir}/tmp/kotlin-classes/debug",
+            excludes: fileFilter
+    )
+    def javaDebugTree = fileTree(
+            dir: "${project.buildDir}/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+            excludes: fileFilter
+    )
+    def mainSrc = [
+            "${project.projectDir}/src/main/java",
+            "${project.projectDir}/src/main/kotlin"
+    ]
+
+    sourceDirectories.from = files(mainSrc)
+    classDirectories.from = files([kotlinDebugTree, javaDebugTree])
+    executionData.from = fileTree(dir: "${project.buildDir}", includes: ["**/*.exec", "**/*.ec"])
+}
+
+tasks.register("jacocoTestCoverageVerification", JacocoCoverageVerification) {
+    dependsOn tasks.jacocoTestReport
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5 // 50% coverage minimum
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation libs.androidx.core.ktx
@@ -78,6 +143,7 @@ dependencies {
     testImplementation libs.mockito.core
     testImplementation libs.robolectric
     testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.androidx.arch.core.testing
 
     androidTestImplementation libs.mockito.android
     androidTestImplementation libs.androidx.junit
@@ -110,4 +176,3 @@ dependencies {
     implementation libs.androidx.activity.compose
     debugImplementation libs.androidx.ui.tooling
 }
-

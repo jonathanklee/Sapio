@@ -1,6 +1,8 @@
 package com.klee.sapio
 
 import android.os.Build
+import com.klee.sapio.data.Evaluation
+import com.klee.sapio.domain.SearchEvaluationUseCase
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,5 +55,38 @@ class SearchViewModelTest {
         val initialState = searchViewModel.evaluations.first()
         Assert.assertNotNull("Flow should not be null", initialState)
         Assert.assertTrue("Should be a list", initialState is List<*>)
+    }
+
+    @Test
+    fun test_search_updates_state_and_calls_onError_when_empty() = runTest {
+        val fakeUseCase = FakeSearchUseCase(emptyList())
+        searchViewModel.searchEvaluationUseCase = fakeUseCase
+        var errored = false
+
+        searchViewModel.searchApplication("pattern") { errored = true }
+
+        val result = searchViewModel.evaluations.first()
+        Assert.assertTrue(errored)
+        Assert.assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun test_search_updates_state_with_results() = runTest {
+        val expected = listOf(
+            Evaluation("Name", "pkg", iconUrl = null, rating = 1, microg = 1, secure = 1, updatedAt = null, createdAt = null, publishedAt = null, versionName = null)
+        )
+        val fakeUseCase = FakeSearchUseCase(expected)
+        searchViewModel.searchEvaluationUseCase = fakeUseCase
+        var errored = false
+
+        searchViewModel.searchApplication("pattern") { errored = true }
+
+        val result = searchViewModel.evaluations.first()
+        Assert.assertFalse(errored)
+        Assert.assertEquals(expected, result)
+    }
+
+    private class FakeSearchUseCase(private val result: List<Evaluation>) : SearchEvaluationUseCase() {
+        override suspend operator fun invoke(pattern: String): List<Evaluation> = result
     }
 }

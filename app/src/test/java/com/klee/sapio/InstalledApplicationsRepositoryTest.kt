@@ -219,4 +219,42 @@ class InstalledApplicationsRepositoryTest {
         Assert.assertEquals("First app should be FakeApplicationOne", "fakeapplicationone", list[0].name.lowercase())
         Assert.assertEquals("Second app should be ZebraApp", "zebraapp", list[1].name.lowercase())
     }
+
+    @Test
+    fun test_getAppList_emptyListWhenNoApps() {
+        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+            .thenReturn(mutableListOf())
+
+        val list = repository.getAppList(mockedContext)
+
+        Assert.assertTrue("List should be empty when no apps are installed", list.isEmpty())
+    }
+
+    @Test
+    fun test_getAppList_filtersSystemAndGmsApps() {
+        // system app
+        fakeSystemApplicationInfo.flags = ApplicationInfo.FLAG_SYSTEM
+        // gms app
+        fakeGmsApp.packageName = "com.google.gms.something"
+
+        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+            .thenReturn(mutableListOf(fakeRegularApplicationInfo, fakeSystemApplicationInfo, fakeGmsApp))
+
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
+            .thenReturn("FakeApplicationOne")
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
+            .thenReturn("SystemApp")
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeGmsApp)))
+            .thenReturn("GmsApp")
+        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
+            .thenReturn(mockedDrawable)
+
+        val list = repository.getAppList(mockedContext)
+
+        // system and gms filtered out; only regular remains
+        Assert.assertEquals(1, list.size)
+        Assert.assertEquals(fakeRegularApplicationInfo.packageName, list.first().packageName)
+    }
 }

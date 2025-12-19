@@ -3,12 +3,12 @@ package com.klee.sapio.domain
 import com.klee.sapio.data.Evaluation
 import javax.inject.Inject
 
-class FetchAppMicrogRiskyEvaluationUseCase @Inject constructor() {
+open class FetchAppMicrogRiskyEvaluationUseCase @Inject constructor() {
 
     @Inject
     lateinit var evaluationRepository: EvaluationRepository
 
-    suspend operator fun invoke(packageName: String): Evaluation? {
+    open suspend operator fun invoke(packageName: String): Evaluation? {
         return evaluationRepository.fetchMicrogRiskyEvaluation(packageName)
     }
 }

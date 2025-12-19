@@ -12,6 +12,7 @@ import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -37,6 +38,8 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var settings: Settings
 
+    internal var ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
     var microgUserEvaluation = MutableLiveData<Evaluation>()
     var microgRootEvaluation = MutableLiveData<Evaluation>()
     var bareAospUserEvaluation = MutableLiveData<Evaluation>()
@@ -45,7 +48,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
 
     fun listEvaluations(packageName: String) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 microgUserEvaluation.postValue(
                     fetchAppMicrogSecureEvaluationUseCase.invoke(
                         packageName
@@ -55,7 +58,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
         }
 
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 bareAospUserEvaluation.postValue(
                     fetchAppBareAOspSecureEvaluationUseCase.invoke(packageName)
                 )
@@ -64,7 +67,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
 
         if (settings.isRootConfigurationEnabled()) {
             viewModelScope.launch {
-                withContext(Dispatchers.IO) {
+                withContext(ioDispatcher) {
                     microgRootEvaluation.postValue(
                         fetchAppMicrogRiskyEvaluationUseCase.invoke(
                             packageName
@@ -74,7 +77,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
             }
 
             viewModelScope.launch {
-                withContext(Dispatchers.IO) {
+                withContext(ioDispatcher) {
                     bareAsopRootEvaluation.postValue(
                         fetchAppBareAospRiskyEvaluationUseCase.invoke(packageName)
                     )
@@ -83,7 +86,7 @@ class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
         }
 
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 iconUrl.postValue(fetchIconUrlUseCase.invoke(packageName))
             }
         }
