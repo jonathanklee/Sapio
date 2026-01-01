@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/proceed"
-        style="@style/Theme.Sapio.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

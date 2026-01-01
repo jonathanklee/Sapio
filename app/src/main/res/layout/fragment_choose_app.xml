@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/select_button"
-        style="@style/Theme.Sapio.Button"
         app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +48,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/next"
-        style="@style/Theme.Sapio.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -59,7 +57,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="@string/previous"
-        style="@style/Theme.Sapio.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
