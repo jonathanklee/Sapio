@@ -1,11 +1,6 @@
 package com.klee.sapio.ui.view
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -40,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.feed -> displayFragment(FeedFragment())
                 R.id.search -> displayFragment(SearchFragment())
                 R.id.contribute -> displayFragment(ContributeFragment())
+                R.id.options -> displayFragment(PreferencesFragment())
             }
             return@setOnItemSelectedListener true
         }
@@ -64,32 +60,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             WindowInsetsCompat.CONSUMED
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.settings -> {
-                val intent = Intent(this@MainActivity, PreferencesActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.about -> {
-                val intent = Intent(this@MainActivity, AboutActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.donate -> {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(DONATE_URL)))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 }

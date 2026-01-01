@@ -21,6 +21,7 @@
     <string name="credits">Brain icons created by Freepik - Flaticon</string>
     <string name="environment_detected">Environment detected</string>
     <string name="look_for_an_application">Look for an application</string>
+    <string name="search_hint">Search applications...</string>
     <string name="updated_on">Updated on %1$s</string>
     <string name="android_compatibility_matrix">Android Compatibility</string>
     <string name="application_name">Application name</string>
@@ -28,6 +29,7 @@
     <string name="feed_title">Feed</string>
     <string name="search_title">Search</string>
     <string name="contribute_title">Contribute</string>
+    <string name="options_title">Options</string>
     <string name="about">About</string>
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
@@ -44,4 +46,6 @@
     <string name="show_risky">Environments</string>
     <string name="show_risky_environments">Show risky environments</string>
     <string name="general">General</string>
+    <string name="github_star">Star on GitHub</string>
+    <string name="github_url">https://github.com/jonathanklee/Sapio</string>
 </resources>

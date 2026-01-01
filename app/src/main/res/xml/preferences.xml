@@ -7,4 +7,18 @@
             android:summary="@string/show_risky_environments"
             android:defaultValue="false" />
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            android:key="github_star_preference"
+            android:title="@string/github_star" />
+        
+        <Preference
+            android:key="donate_preference"
+            android:title="@string/donate" />
+        
+        <Preference
+            android:key="about_preference"
+            android:title="@string/about" />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

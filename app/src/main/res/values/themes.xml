@@ -4,9 +4,17 @@
         <!-- Remove capitalized text in button -->
         <item name="textAllCaps">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="Theme.Sapio.NoActionBar">
+    <style name="Theme.Sapio.NoActionBar" parent="Theme.Material3.DynamicColors.DayNight">
+        <!-- Remove capitalized text in button -->
+        <item name="textAllCaps">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- Remove ActionBar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

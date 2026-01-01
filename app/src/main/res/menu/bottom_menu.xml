@@ -14,4 +14,8 @@
         android:id="@+id/contribute"
         android:icon="@drawable/ic_add"
         android:title="@string/contribute_title"/>
+    <item
+        android:id="@+id/options"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/options_title"/>
 </menu>

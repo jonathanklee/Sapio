@@ -14,6 +14,7 @@ class AboutActivity : AppCompatActivity() {
 
     companion object {
         const val RATING_RULES = "https://github.com/jonathanklee/Sapio?tab=readme-ov-file#rating"
+        const val GITHUB_URL = "https://github.com/jonathanklee/Sapio"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

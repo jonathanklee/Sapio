@@ -61,6 +61,7 @@ class SearchFragment : Fragment() {
             onTextChanged(editable, coroutineScope)
         }
 
+        setupClearButton()
         setSearchIconsColor()
 
         return mBinding.root
@@ -102,6 +103,16 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun setupClearButton() {
+        mBinding.editTextSearch.addTextChangedListener { text ->
+            mBinding.clearSearch.visibility = if (text?.isNotEmpty() == true) View.VISIBLE else View.GONE
+        }
+
+        mBinding.clearSearch.setOnClickListener {
+            mBinding.editTextSearch.text?.clear()
+        }
+    }
+
     private fun setSearchIconsColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             mBinding.searchIcon.setColorFilter(
@@ -133,17 +144,15 @@ class SearchFragment : Fragment() {
     private fun showResults(visible: Boolean) {
         if (visible) {
             mBinding.recyclerView.visibility = View.VISIBLE
-            mBinding.searchIconBig.visibility = View.INVISIBLE
-            mBinding.searchText.visibility = View.INVISIBLE
+            mBinding.emptyState.visibility = View.GONE
         } else {
             mBinding.recyclerView.visibility = View.INVISIBLE
-            mBinding.searchIconBig.visibility = View.VISIBLE
-            mBinding.searchText.visibility = View.VISIBLE
+            mBinding.emptyState.visibility = View.VISIBLE
         }
     }
 
     private fun showKeyboard() {
-        mHandler.postDelayed({
+        mBinding.editTextSearch.post {
             mBinding.editTextSearch.requestFocus()
 
             val inputMethodManager =
@@ -154,6 +163,6 @@ class SearchFragment : Fragment() {
                 mBinding.editTextSearch,
                 InputMethodManager.SHOW_IMPLICIT
             )
-        }, KEYBOARD_DELAY_MS)
+        }
     }
 }

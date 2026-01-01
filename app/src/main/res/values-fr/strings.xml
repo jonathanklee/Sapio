@@ -16,6 +16,7 @@
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
     <string name="environment_detected">Environnement détécté</string>
     <string name="look_for_an_application">Rechercher une application</string>
+    <string name="search_hint">Rechercher des applications ...</string>
     <string name="updated_on">Mis à jour le %1$s</string>
     <string name="android_compatibility_matrix">Compatibilité Android</string>
     <string name="application_name">Nom de l\'application</string>
@@ -23,6 +24,7 @@
     <string name="feed_title">Actualité</string>
     <string name="search_title">Rechercher</string>
     <string name="contribute_title">Contribuer</string>
+    <string name="options_title">Options</string>
     <string name="about">A propos</string>
     <string name="donate">Faire un don</string>
     <string name="validate_button">Valider</string>
@@ -39,4 +41,6 @@
     <string name="show_risky">Environnements</string>
     <string name="general">Général</string>
     <string name="show_risky_environments">Montrer les environnements non-securisés</string>
+    <string name="github_star">Étoiler sur GitHub</string>
+    <string name="github_url">https://github.com/jonathanklee/Sapio</string>
 </resources>

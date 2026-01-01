@@ -11,8 +11,8 @@ import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
