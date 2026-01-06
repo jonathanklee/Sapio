@@ -63,6 +63,7 @@ class InstalledApplicationsRepository @Inject constructor() {
 
     @VisibleForTesting
     fun isGmsRelated(info: ApplicationInfo): Boolean {
-        return info.packageName.contains(".gms.")
+        val pkgName = info.packageName ?: return false
+        return pkgName.endsWith(".gms") || pkgName == "com.android.vending"
     }
 }

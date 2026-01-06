@@ -68,7 +68,7 @@ class InstalledApplicationsRepositoryTest {
         }
 
         fakeGmsApp = ApplicationInfo().apply {
-            packageName = "fake.package.gms.three"
+            packageName = "fake.package.gms"
             name = "FakeApplicationThree"
         }
 
@@ -126,6 +126,16 @@ class InstalledApplicationsRepositoryTest {
             true,
             repository.isGmsRelated(fakeGmsApp)
         )
+    }
+
+    @Test
+    fun test_isGmsWithPlayStoreApp() {
+        val playStoreApp = ApplicationInfo().apply {
+            packageName = "com.android.vending"
+            name = "PlayStore"
+        }
+
+        Assert.assertTrue("Play Store should be treated as GMS", repository.isGmsRelated(playStoreApp))
     }
 
     @Test
@@ -236,7 +246,7 @@ class InstalledApplicationsRepositoryTest {
         // system app
         fakeSystemApplicationInfo.flags = ApplicationInfo.FLAG_SYSTEM
         // gms app
-        fakeGmsApp.packageName = "com.google.gms.something"
+        fakeGmsApp.packageName = "com.google.gms"
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
         Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
