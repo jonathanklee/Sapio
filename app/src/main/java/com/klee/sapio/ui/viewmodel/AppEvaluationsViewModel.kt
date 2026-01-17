@@ -3,7 +3,7 @@ package com.klee.sapio.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.klee.sapio.data.Evaluation
+import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.data.Settings
 import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.klee.sapio.domain.model.InstalledApplication
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

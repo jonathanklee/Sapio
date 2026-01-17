@@ -10,7 +10,7 @@ import com.klee.sapio.data.StrapiMeta
 import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.Settings
 import com.klee.sapio.data.IconAnswer
-import com.klee.sapio.data.InstalledApplication
+import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.data.UploadAnswer
 import com.klee.sapio.data.UploadEvaluation
 import com.klee.sapio.data.UploadEvaluationHeader

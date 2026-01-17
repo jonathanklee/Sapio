@@ -2,10 +2,11 @@ package com.klee.sapio
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import com.klee.sapio.data.IconAnswer
-import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.data.DeviceConfiguration
+import com.klee.sapio.domain.model.Icon
+import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.domain.model.UploadEvaluation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -18,7 +19,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Config.NONE
 import android.os.Build
-import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -80,48 +80,33 @@ class EvaluateAppUseCaseBehaviourTest {
         assertTrue(repository.deletedIds.isEmpty())
     }
 
-    private fun iconAnswer(id: Int, url: String) = IconAnswer(
+    private fun iconAnswer(id: Int, url: String) = Icon(
         id = id,
         name = "icon$id",
-        alternativeText = null,
-        caption = null,
-        width = 10,
-        height = 10,
-        formats = null,
-        hash = "hash$id",
-        ext = ".png",
-        mime = "image/png",
-        size = 12,
-        url = url,
-        previewUrl = null,
-        provider = null,
-        provider_metadata = null,
-        createdAt = Date(),
-        updatedAt = Date()
+        url = url
     )
 
     private class FakeRepository : com.klee.sapio.domain.EvaluationRepository {
-        var existingIcons: List<IconAnswer> = emptyList()
-        var uploadResponse: ArrayList<IconAnswer>? = null
+        var existingIcons: List<Icon> = emptyList()
+        var uploadResponse: List<Icon>? = null
         val deletedIds = mutableListOf<Int>()
-        val addedEvaluations = mutableListOf<com.klee.sapio.data.UploadEvaluation>()
+        val addedEvaluations = mutableListOf<UploadEvaluation>()
 
-        override suspend fun listLatestEvaluations(pageNumber: Int): List<com.klee.sapio.data.Evaluation> = emptyList()
-        override suspend fun searchEvaluations(pattern: String): List<com.klee.sapio.data.Evaluation> = emptyList()
-        override suspend fun addEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation) {
+        override suspend fun listLatestEvaluations(pageNumber: Int): List<com.klee.sapio.domain.model.Evaluation> = emptyList()
+        override suspend fun searchEvaluations(pattern: String): List<com.klee.sapio.domain.model.Evaluation> = emptyList()
+        override suspend fun addEvaluation(evaluation: UploadEvaluation) {
             addedEvaluations.add(evaluation)
         }
-        override suspend fun updateEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation, id: Int) = Unit
+        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) = Unit
         override suspend fun fetchMicrogSecureEvaluation(appPackageName: String) = null
         override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String) = null
         override suspend fun fetchBareAospSecureEvaluation(appPackageName: String) = null
         override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String) = null
-        override suspend fun existingEvaluations(packageName: String) = emptyList<com.klee.sapio.data.StrapiElement>()
-        override suspend fun uploadIcon(app: InstalledApplication) = uploadResponse?.let { retrofit2.Response.success(it) }
+        override suspend fun existingEvaluations(packageName: String): List<com.klee.sapio.domain.model.EvaluationRecord> = emptyList()
+        override suspend fun uploadIcon(app: InstalledApplication) = uploadResponse
         override suspend fun existingIcon(iconName: String) = existingIcons
-        override suspend fun deleteIcon(id: Int): retrofit2.Response<IconAnswer>? {
+        override suspend fun deleteIcon(id: Int) {
             deletedIds.add(id)
-            return retrofit2.Response.success(null)
         }
     }
 }

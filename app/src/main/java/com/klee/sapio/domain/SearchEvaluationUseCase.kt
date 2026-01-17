@@ -1,6 +1,6 @@
 package com.klee.sapio.domain
 
-import com.klee.sapio.data.Evaluation
+import com.klee.sapio.domain.model.Evaluation
 import javax.inject.Inject
 
 open class SearchEvaluationUseCase @Inject constructor(

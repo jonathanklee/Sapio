@@ -2,7 +2,6 @@ package com.klee.sapio.data
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -126,12 +125,6 @@ data class IconAnswer(
     @JsonProperty("provider_metadata") val provider_metadata: String?,
     @JsonProperty("createdAt") val createdAt: Date,
     @JsonProperty("updatedAt") val updatedAt: Date
-)
-
-data class InstalledApplication(
-    val name: String,
-    val packageName: String,
-    val icon: Drawable,
 )
 
 object GmsType {

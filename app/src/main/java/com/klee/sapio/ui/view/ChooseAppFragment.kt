@@ -9,7 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
-import com.klee.sapio.data.InstalledApplication
+import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.databinding.FragmentChooseAppBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.ktor.client.HttpClient

@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.data.InstalledApplicationsRepository
+import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.databinding.DialogChooseAppBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

@@ -3,10 +3,10 @@ package com.klee.sapio
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import com.klee.sapio.data.IconAnswer
-import com.klee.sapio.data.InstalledApplication
 import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.domain.EvaluationRepository
+import com.klee.sapio.domain.model.Icon
+import com.klee.sapio.domain.model.InstalledApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -24,7 +24,6 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Config.NONE
-import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
@@ -90,28 +89,14 @@ class EvaluateAppUseCaseTest {
     @Test
     fun test_evaluateApp_withSuccessfulIconUpload() = runTest {
         // Setup mock data
-        val fakeIconAnswer = IconAnswer(
+        val fakeIcon = Icon(
             id = 123,
             name = "test.png",
-            alternativeText = null,
-            caption = null,
-            width = 100,
-            height = 100,
-            formats = null,
-            hash = "abc123",
-            ext = ".png",
-            mime = "image/png",
-            size = 1024,
-            url = "http://example.com/test.png",
-            previewUrl = null,
-            provider = null,
-            provider_metadata = null,
-            createdAt = java.util.Date(),
-            updatedAt = java.util.Date()
+            url = "http://example.com/test.png"
         )
 
-        val fakeResponse = Response.success(arrayListOf(fakeIconAnswer))
-        val fakeExistingIcons = emptyList<IconAnswer>()
+        val fakeResponse = listOf(fakeIcon)
+        val fakeExistingIcons = emptyList<Icon>()
 
         Mockito.`when`(mockedEvaluationRepository.uploadIcon(realInstalledApplication))
             .thenReturn(fakeResponse)

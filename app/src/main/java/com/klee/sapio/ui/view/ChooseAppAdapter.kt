@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.data.InstalledApplication
+import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.databinding.ChooseAppCardBinding
 
 class ChooseAppAdapter(

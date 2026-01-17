@@ -2,13 +2,17 @@ package com.klee.sapio
 
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.klee.sapio.data.Evaluation
 import com.klee.sapio.data.Settings
 import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
+import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.EvaluationRecord
+import com.klee.sapio.domain.model.Icon
+import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.domain.model.UploadEvaluation
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -95,18 +99,18 @@ class AppEvaluationsViewModelTest {
         iconUrl: String = "https://icon"
     ): AppEvaluationsViewModel {
         val mockRepository = object : com.klee.sapio.domain.EvaluationRepository {
-            override suspend fun listLatestEvaluations(pageNumber: Int): List<com.klee.sapio.data.Evaluation> = emptyList()
-            override suspend fun searchEvaluations(pattern: String): List<com.klee.sapio.data.Evaluation> = emptyList()
-            override suspend fun addEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation) {}
-            override suspend fun updateEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation, id: Int) {}
+            override suspend fun listLatestEvaluations(pageNumber: Int): List<Evaluation> = emptyList()
+            override suspend fun searchEvaluations(pattern: String): List<Evaluation> = emptyList()
+            override suspend fun addEvaluation(evaluation: UploadEvaluation) {}
+            override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) {}
             override suspend fun fetchMicrogSecureEvaluation(appPackageName: String) = null
             override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String) = null
             override suspend fun fetchBareAospSecureEvaluation(appPackageName: String) = null
             override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String) = null
-            override suspend fun existingEvaluations(packageName: String) = emptyList<com.klee.sapio.data.StrapiElement>()
-            override suspend fun uploadIcon(app: com.klee.sapio.data.InstalledApplication) = null
-            override suspend fun existingIcon(iconName: String) = emptyList<com.klee.sapio.data.IconAnswer>()
-            override suspend fun deleteIcon(id: Int) = null
+            override suspend fun existingEvaluations(packageName: String): List<EvaluationRecord> = emptyList()
+            override suspend fun uploadIcon(app: InstalledApplication): List<Icon>? = null
+            override suspend fun existingIcon(iconName: String): List<Icon> = emptyList()
+            override suspend fun deleteIcon(id: Int) = Unit
         }
         
         val microgSecureUseCase = object : FetchAppMicrogSecureEvaluationUseCase(mockRepository) {

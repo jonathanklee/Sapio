@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.VisibleForTesting
+import com.klee.sapio.domain.model.InstalledApplication
 import javax.inject.Inject
 import javax.inject.Singleton
 

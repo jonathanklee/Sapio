@@ -1,12 +1,11 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.DeviceConfiguration
-import com.klee.sapio.data.IconAnswer
-import com.klee.sapio.data.InstalledApplication
-import com.klee.sapio.data.UploadEvaluation
+import com.klee.sapio.domain.model.Icon
+import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.domain.model.UploadEvaluation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 import javax.inject.Inject
 
 class EvaluateAppUseCase @Inject constructor(
@@ -30,16 +29,15 @@ class EvaluateAppUseCase @Inject constructor(
         onError: () -> Unit
     ) {
         val existingIcons = getExistingIcons(app)
-        val uploadAnswer = uploadIcon(app)
-        val uploadAnswerBody = uploadAnswer?.body()
+        val uploadedIcons = uploadIcon(app)
 
-        if (uploadAnswerBody == null) {
+        if (uploadedIcons.isNullOrEmpty()) {
             onError()
             return
         }
 
-        uploadAnswerBody.let {
-            evaluateApp(app, uploadAnswerBody[0].id, rating)
+        uploadedIcons.let {
+            evaluateApp(app, uploadedIcons[0].id, rating)
             for (icon in existingIcons) {
                 deleteIcon(icon.id)
             }
@@ -49,7 +47,7 @@ class EvaluateAppUseCase @Inject constructor(
 
     private suspend fun uploadIcon(
         app: InstalledApplication
-    ): Response<ArrayList<IconAnswer>>? {
+    ): List<Icon>? {
         return evaluationRepository.uploadIcon(app)
     }
 
@@ -72,7 +70,7 @@ class EvaluateAppUseCase @Inject constructor(
         evaluationRepository.addEvaluation(newEvaluation)
     }
 
-    private suspend fun getExistingIcons(app: InstalledApplication): List<IconAnswer> {
+    private suspend fun getExistingIcons(app: InstalledApplication): List<Icon> {
         return withContext(Dispatchers.IO) {
             val icons = evaluationRepository.existingIcon("${app.packageName}.png")
             if (icons.isEmpty()) {

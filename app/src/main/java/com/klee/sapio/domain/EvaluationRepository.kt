@@ -1,11 +1,10 @@
 package com.klee.sapio.domain
 
-import com.klee.sapio.data.Evaluation
-import com.klee.sapio.data.IconAnswer
-import com.klee.sapio.data.InstalledApplication
-import com.klee.sapio.data.StrapiElement
-import com.klee.sapio.data.UploadEvaluation
-import retrofit2.Response
+import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.EvaluationRecord
+import com.klee.sapio.domain.model.Icon
+import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.domain.model.UploadEvaluation
 
 interface EvaluationRepository {
 
@@ -25,11 +24,11 @@ interface EvaluationRepository {
 
     suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Evaluation?
 
-    suspend fun existingEvaluations(packageName: String): List<StrapiElement>
+    suspend fun existingEvaluations(packageName: String): List<EvaluationRecord>
 
-    suspend fun uploadIcon(app: InstalledApplication): Response<ArrayList<IconAnswer>>?
+    suspend fun uploadIcon(app: InstalledApplication): List<Icon>?
 
-    suspend fun existingIcon(iconName: String): List<IconAnswer>
+    suspend fun existingIcon(iconName: String): List<Icon>
 
-    suspend fun deleteIcon(id: Int): Response<IconAnswer>?
+    suspend fun deleteIcon(id: Int)
 }

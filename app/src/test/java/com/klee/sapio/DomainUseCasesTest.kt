@@ -1,13 +1,13 @@
 package com.klee.sapio
 
-import com.klee.sapio.data.Evaluation
-import com.klee.sapio.data.IconAnswer
 import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.domain.EvaluationRepository
+import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.Icon
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -17,7 +17,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DomainUseCasesTest {
@@ -43,24 +42,10 @@ class DomainUseCasesTest {
 
     @Test
     fun `fetch icon url returns first url when icons exist`() = runTest {
-        val icon = IconAnswer(
+        val icon = Icon(
             id = 1,
             name = "icon.png",
-            alternativeText = null,
-            caption = null,
-            width = 10,
-            height = 10,
-            formats = null,
-            hash = "hash",
-            ext = ".png",
-            mime = "image/png",
-            size = 12,
-            url = "https://example.com/icon.png",
-            previewUrl = null,
-            provider = null,
-            provider_metadata = null,
-            createdAt = Date(),
-            updatedAt = Date()
+            url = "https://example.com/icon.png"
         )
 
         `when`(evaluationRepository.existingIcon("com.test.png")).thenReturn(listOf(icon))

@@ -1,7 +1,7 @@
 package com.klee.sapio.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.klee.sapio.data.Evaluation
+import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.domain.ListLatestEvaluationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

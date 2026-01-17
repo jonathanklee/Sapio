@@ -36,7 +36,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
-import com.klee.sapio.data.Evaluation
+import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.data.EvaluationService
 import com.klee.sapio.data.Rating
 import com.klee.sapio.data.Settings
