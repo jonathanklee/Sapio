@@ -6,8 +6,8 @@ import com.klee.sapio.data.dto.StrapiElement
 import com.klee.sapio.data.dto.UploadEvaluation
 import com.klee.sapio.data.local.EvaluationEntity
 import com.klee.sapio.data.local.IconEntity
-import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.EvaluationRecord
+import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.Icon as DomainIcon
 import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation
 

@@ -12,13 +12,13 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
-import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.data.repository.EvaluationRepositoryImpl
 import com.klee.sapio.data.repository.InstalledApplicationsRepository
-import com.klee.sapio.ui.model.Label
-import com.klee.sapio.ui.model.Rating
+import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.databinding.FragmentEvaluateBinding
 import com.klee.sapio.domain.EvaluateAppUseCase
+import com.klee.sapio.ui.model.Label
+import com.klee.sapio.ui.model.Rating
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject

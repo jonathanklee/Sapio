@@ -2,8 +2,6 @@ package com.klee.sapio.data.system
 
 import android.content.Context
 import android.content.pm.PackageManager
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

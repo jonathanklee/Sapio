@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.R
 import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.domain.EvaluationRepository
-import com.klee.sapio.ui.viewmodel.SearchViewModel
 import com.klee.sapio.ui.state.SearchUiState
+import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

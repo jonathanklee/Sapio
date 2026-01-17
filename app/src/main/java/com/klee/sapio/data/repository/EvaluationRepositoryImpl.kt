@@ -10,16 +10,16 @@ import com.klee.sapio.data.mapper.toEntity
 import com.klee.sapio.data.system.GmsType
 import com.klee.sapio.data.system.UserType
 import com.klee.sapio.domain.EvaluationRepository
-import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
-import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
-import com.klee.sapio.domain.model.Icon as DomainIcon
-import com.klee.sapio.domain.model.InstalledApplication as DomainInstalledApplication
-import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
+import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
+import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
+import com.klee.sapio.domain.model.Icon as DomainIcon
+import com.klee.sapio.domain.model.InstalledApplication as DomainInstalledApplication
+import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation
 
 class EvaluationRepositoryImpl @Inject constructor(
     private val retrofitService: EvaluationService,
@@ -140,19 +140,24 @@ class EvaluationRepositoryImpl @Inject constructor(
         val minCachedAt = System.currentTimeMillis() - ICON_TTL_MS
         val cached = iconDao.findByName(iconName, minCachedAt)
             .map { it.toDomain() }
-        if (cached.isNotEmpty()) {
-            return Result.success(cached)
+        val remote = if (cached.isEmpty()) {
+            retrofitService.existingIcon(iconName)
+        } else {
+            null
         }
-
-        val remote = retrofitService.existingIcon(iconName)
-        if (remote.isSuccess) {
-            val icons = remote.getOrThrow()
-            val now = System.currentTimeMillis()
-            iconDao.upsertAll(icons.map { it.toEntity(now) })
-            return Result.success(icons.map { it.toDomain() })
+        val result = when {
+            cached.isNotEmpty() -> Result.success(cached)
+            remote?.isSuccess == true -> {
+                val icons = remote.getOrThrow()
+                val now = System.currentTimeMillis()
+                iconDao.upsertAll(icons.map { it.toEntity(now) })
+                Result.success(icons.map { it.toDomain() })
+            }
+            else -> Result.failure(
+                remote?.exceptionOrNull() ?: IllegalStateException("Failed to load icon")
+            )
         }
-
-        return Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load icon"))
+        return result
     }
 
     override suspend fun deleteIcon(id: Int): Result<Unit> {

@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
-import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.data.repository.EvaluationRepositoryImpl
+import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.data.system.GmsType
 import com.klee.sapio.databinding.FragmentWarningBinding
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,9 +1,9 @@
 package com.klee.sapio.ui.view
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.createBitmap
 import com.klee.sapio.R
 import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.model.Rating.Companion.GREEN_CIRCLE_EMOJI
@@ -246,7 +245,7 @@ fun ShareScreenshotPreview() {
         SharedEvaluation(
             "My great app",
             "my.great.app",
-            createBitmap(WIDTH, HEIGHT),
+            Bitmap.createBitmap(WIDTH, HEIGHT, Bitmap.Config.ARGB_8888),
             1,
             2
         )
