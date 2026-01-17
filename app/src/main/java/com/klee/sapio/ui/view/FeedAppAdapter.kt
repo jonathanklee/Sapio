@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.klee.sapio.R
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.data.EvaluationService
-import com.klee.sapio.data.Label
-import com.klee.sapio.data.Rating
-import com.klee.sapio.data.Settings
-import com.klee.sapio.data.UserType
+import com.klee.sapio.data.api.EvaluationService
+import com.klee.sapio.data.system.Settings
+import com.klee.sapio.data.system.UserType
+import com.klee.sapio.ui.model.Label
+import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.databinding.FeedAppCardBinding
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope

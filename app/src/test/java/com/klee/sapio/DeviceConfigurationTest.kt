@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import com.klee.sapio.data.DeviceConfiguration
-import com.klee.sapio.data.GmsType
-import com.klee.sapio.data.Label
-import com.klee.sapio.data.SystemPropertyReader
+import com.klee.sapio.data.system.DeviceConfiguration
+import com.klee.sapio.data.system.GmsType
+import com.klee.sapio.data.system.UserType
+import com.klee.sapio.data.system.SystemPropertyReader
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -122,7 +122,7 @@ class DeviceConfigurationTest {
         val result = deviceConfiguration.isRisky()
         // The actual result depends on the device state, so we'll just verify it returns a valid value
         Assert.assertTrue("Should return either RISKY or SECURE", 
-            result == Label.RISKY || result == Label.SECURE)
+            result == UserType.RISKY || result == UserType.SECURE)
     }
 
     @Test
@@ -134,7 +134,7 @@ class DeviceConfigurationTest {
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "ro.boot.verifiedbootstate"),
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "green")
         )
-        Assert.assertEquals(Label.SECURE, deviceConfiguration.isRisky()) // green => locked -> secure if not rooted
+        Assert.assertEquals(UserType.SECURE, deviceConfiguration.isRisky()) // green => locked -> secure if not rooted
 
         ReflectionHelpers.callStaticMethod<Void>(
             Class.forName("android.os.SystemProperties"),
@@ -143,7 +143,7 @@ class DeviceConfigurationTest {
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "red")
         )
         val redResult = deviceConfiguration.isRisky()
-        Assert.assertTrue(redResult == Label.RISKY || redResult == Label.SECURE)
+        Assert.assertTrue(redResult == UserType.RISKY || redResult == UserType.SECURE)
     }
 
     @Test
@@ -152,18 +152,18 @@ class DeviceConfigurationTest {
             override fun isRooted(): Boolean = true
             override fun isBootloaderLocked(): Boolean = false
         }
-        Assert.assertEquals(Label.RISKY, fake.isRisky())
+        Assert.assertEquals(UserType.RISKY, fake.isRisky())
 
         val secure = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = true
             override fun isBootloaderLocked(): Boolean = true
         }
-        Assert.assertEquals(Label.SECURE, secure.isRisky())
+        Assert.assertEquals(UserType.SECURE, secure.isRisky())
 
         val clean = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = false
             override fun isBootloaderLocked(): Boolean = false
         }
-        Assert.assertEquals(Label.SECURE, clean.isRisky())
+        Assert.assertEquals(UserType.SECURE, clean.isRisky())
     }
 }

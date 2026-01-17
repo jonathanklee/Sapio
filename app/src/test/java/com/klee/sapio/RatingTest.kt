@@ -1,6 +1,6 @@
 package com.klee.sapio
 
-import com.klee.sapio.data.Rating
+import com.klee.sapio.ui.model.Rating
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

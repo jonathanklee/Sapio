@@ -33,11 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.createBitmap
 import com.klee.sapio.R
-import com.klee.sapio.data.Rating
-import com.klee.sapio.data.Rating.Companion.GREEN_CIRCLE_EMOJI
-import com.klee.sapio.data.Rating.Companion.RED_CIRCLE_EMOJI
-import com.klee.sapio.data.Rating.Companion.YELLOW_CIRCLE_EMOJI
-import com.klee.sapio.data.SharedEvaluation
+import com.klee.sapio.ui.model.Rating
+import com.klee.sapio.ui.model.Rating.Companion.GREEN_CIRCLE_EMOJI
+import com.klee.sapio.ui.model.Rating.Companion.RED_CIRCLE_EMOJI
+import com.klee.sapio.ui.model.Rating.Companion.YELLOW_CIRCLE_EMOJI
+import com.klee.sapio.ui.model.SharedEvaluation
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

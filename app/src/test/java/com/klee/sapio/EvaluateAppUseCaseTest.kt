@@ -43,7 +43,7 @@ class EvaluateAppUseCaseTest {
         
         // Create a real DeviceConfiguration instance since it's a final class
         val roboContext = org.robolectric.RuntimeEnvironment.getApplication()
-        val deviceConfiguration = com.klee.sapio.data.DeviceConfiguration(roboContext)
+        val deviceConfiguration = com.klee.sapio.data.system.DeviceConfiguration(roboContext)
         
         fakeRepository = FakeRepository()
         evaluateAppUseCase = EvaluateAppUseCase(fakeRepository, deviceConfiguration)

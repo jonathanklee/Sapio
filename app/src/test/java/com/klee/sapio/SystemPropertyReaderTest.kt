@@ -1,7 +1,7 @@
 package com.klee.sapio
 
 import android.os.Build
-import com.klee.sapio.data.SystemPropertyReader
+import com.klee.sapio.data.system.SystemPropertyReader
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

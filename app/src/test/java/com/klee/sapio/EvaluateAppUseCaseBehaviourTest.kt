@@ -3,7 +3,7 @@ package com.klee.sapio
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import com.klee.sapio.domain.EvaluateAppUseCase
-import com.klee.sapio.data.DeviceConfiguration
+import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation

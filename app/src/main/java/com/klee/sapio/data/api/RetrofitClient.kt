@@ -1,4 +1,4 @@
-package com.klee.sapio.data
+package com.klee.sapio.data.api
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,6 +6,13 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.klee.sapio.data.system.Settings
+import com.klee.sapio.data.dto.Evaluation
+import com.klee.sapio.data.dto.IconAnswer
+import com.klee.sapio.data.dto.StrapiAnswer
+import com.klee.sapio.data.dto.StrapiElement
+import com.klee.sapio.data.dto.UploadAnswer
+import com.klee.sapio.data.dto.UploadEvaluationHeader
 import com.klee.sapio.domain.model.InstalledApplication
 import kotlinx.coroutines.withTimeout
 import okhttp3.Cache

@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
-import com.klee.sapio.data.InstalledApplicationsRepository
+import com.klee.sapio.data.repository.InstalledApplicationsRepository
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert
 import org.junit.Before

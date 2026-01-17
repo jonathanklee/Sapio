@@ -1,4 +1,4 @@
-package com.klee.sapio.data
+package com.klee.sapio.data.system
 
 import android.content.Context
 import androidx.preference.PreferenceManager

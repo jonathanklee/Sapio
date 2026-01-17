@@ -1,6 +1,12 @@
-package com.klee.sapio.data
+package com.klee.sapio.data.repository
 
+import com.klee.sapio.data.api.EvaluationService
+import com.klee.sapio.data.dto.UploadEvaluationHeader
 import com.klee.sapio.domain.EvaluationRepository
+import com.klee.sapio.data.system.GmsType
+import com.klee.sapio.data.system.UserType
+import com.klee.sapio.data.mapper.toData
+import com.klee.sapio.data.mapper.toDomain
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
 import com.klee.sapio.domain.model.Icon as DomainIcon
@@ -41,32 +47,32 @@ class EvaluationRepositoryImpl @Inject constructor() :
     override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
-            Label.MICROG,
-            Label.SECURE
+            GmsType.MICROG,
+            UserType.SECURE
         ).map { it?.toDomain() }
     }
 
     override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
-            Label.MICROG,
-            Label.RISKY
+            GmsType.MICROG,
+            UserType.RISKY
         ).map { it?.toDomain() }
     }
 
     override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
-            Label.BARE_AOSP,
-            Label.SECURE
+            GmsType.BARE_AOSP,
+            UserType.SECURE
         ).map { it?.toDomain() }
     }
 
     override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
-            Label.BARE_AOSP,
-            Label.RISKY
+            GmsType.BARE_AOSP,
+            UserType.RISKY
         ).map { it?.toDomain() }
     }
 

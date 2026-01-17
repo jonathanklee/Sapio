@@ -37,10 +37,10 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.data.EvaluationService
-import com.klee.sapio.data.Rating
-import com.klee.sapio.data.Settings
-import com.klee.sapio.data.SharedEvaluation
+import com.klee.sapio.data.api.EvaluationService
+import com.klee.sapio.data.system.Settings
+import com.klee.sapio.ui.model.Rating
+import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.databinding.ActivityEvaluationsBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint

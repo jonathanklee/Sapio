@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.data.Settings
-import com.klee.sapio.data.UserType
+import com.klee.sapio.data.system.Settings
+import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.FeedViewModel

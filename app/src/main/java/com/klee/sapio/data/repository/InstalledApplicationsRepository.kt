@@ -1,4 +1,4 @@
-package com.klee.sapio.data
+package com.klee.sapio.data.repository
 
 import android.content.Context
 import android.content.pm.ApplicationInfo

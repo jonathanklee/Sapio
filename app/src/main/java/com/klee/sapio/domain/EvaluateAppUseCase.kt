@@ -1,6 +1,6 @@
 package com.klee.sapio.domain
 
-import com.klee.sapio.data.DeviceConfiguration
+import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation

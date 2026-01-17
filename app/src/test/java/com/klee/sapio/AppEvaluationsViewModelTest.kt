@@ -2,7 +2,7 @@ package com.klee.sapio
 
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.klee.sapio.data.Settings
+import com.klee.sapio.data.system.Settings
 import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
 import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase
 import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase

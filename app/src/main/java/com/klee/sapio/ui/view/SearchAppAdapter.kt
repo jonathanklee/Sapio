@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.data.EvaluationService
+import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.databinding.SearchAppCardBinding
 import com.klee.sapio.domain.EvaluationRepository
 import kotlinx.coroutines.CoroutineScope

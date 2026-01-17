@@ -1,5 +1,9 @@
-package com.klee.sapio.data
+package com.klee.sapio.data.mapper
 
+import com.klee.sapio.data.dto.Evaluation
+import com.klee.sapio.data.dto.IconAnswer
+import com.klee.sapio.data.dto.StrapiElement
+import com.klee.sapio.data.dto.UploadEvaluation
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.EvaluationRecord
 import com.klee.sapio.domain.model.Icon as DomainIcon

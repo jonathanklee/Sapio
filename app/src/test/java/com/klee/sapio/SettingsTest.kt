@@ -2,8 +2,8 @@ package com.klee.sapio
 
 import android.os.Build
 import androidx.preference.PreferenceManager
-import com.klee.sapio.data.Settings
-import com.klee.sapio.data.UserType
+import com.klee.sapio.data.system.Settings
+import com.klee.sapio.data.system.UserType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
