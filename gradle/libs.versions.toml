@@ -23,6 +23,7 @@ loggingInterceptor = "4.11.0"
 material = "1.9.0"
 mockitoAndroid = "2.24.5"
 mockitoCore = "4.3.1"
+mockitoInline = "4.3.1"
 navigationFragmentKtx = "2.8.5"
 navigationUiKtx = "2.5.3"
 preferenceKtx = "1.2.1"
@@ -78,6 +79,7 @@ logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", ver
 material = { module = "com.google.android.material:material", version.ref = "material" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofit2KotlinCoroutinesAdapter" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
