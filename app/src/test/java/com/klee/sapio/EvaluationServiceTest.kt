@@ -14,7 +14,6 @@ import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.data.UploadAnswer
 import com.klee.sapio.data.UploadEvaluation
 import com.klee.sapio.data.UploadEvaluationHeader
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -56,17 +55,17 @@ class EvaluationServiceTest {
 
     @Test
     fun listLatestEvaluations_returnsEmptyOnHttpException() = runBlocking {
-        val deferred = CompletableDeferred<StrapiAnswer>()
         val errorBody = "error".toResponseBody("text/plain".toMediaTypeOrNull())
-        deferred.completeExceptionally(HttpException(Response.error<StrapiAnswer>(500, errorBody)))
         Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(0)
         val api = object : EvaluationApi by failingApi() {
-            override fun listLatestEvaluationsAsync(root: Int, pageNumber: Int) = deferred
+            override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int): StrapiAnswer {
+                throw HttpException(Response.error<StrapiAnswer>(500, errorBody))
+            }
         }
         setApi(api)
 
         val result = service.listLatestEvaluations(pageNumber = 1)
-        assertTrue(result.isEmpty())
+        assertTrue(result.isFailure)
     }
 
     @Test
@@ -75,13 +74,12 @@ class EvaluationServiceTest {
         val evalNewer = StrapiElement(1, createEvaluation("AppOne", "pkg1", updatedAtOffset = 2))
         val evalOlder = StrapiElement(2, createEvaluation("AppTwo", "pkg1", updatedAtOffset = 1)) // same package, should be dropped
         val answer = StrapiAnswer(arrayListOf(evalNewer, evalOlder), StrapiMeta(null))
-        val deferred = CompletableDeferred(answer)
         val api = object : EvaluationApi by failingApi() {
-            override fun listLatestEvaluationsAsync(root: Int, pageNumber: Int) = deferred
+            override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int): StrapiAnswer = answer
         }
         setApi(api)
 
-        val result = service.listLatestEvaluations(pageNumber = 0)
+        val result = service.listLatestEvaluations(pageNumber = 0).getOrThrow()
         assertEquals(1, result.size)
         assertEquals("pkg1", result.first().packageName)
         assertEquals("AppOne", result.first().name)
@@ -93,28 +91,27 @@ class EvaluationServiceTest {
         val older = StrapiElement(1, createEvaluation("Old", "pkg.old", updatedAtOffset = 1))
         val newer = StrapiElement(2, createEvaluation("New", "pkg.new", updatedAtOffset = 5))
         val answer = StrapiAnswer(arrayListOf(older, newer), StrapiMeta(null))
-        val deferred = CompletableDeferred(answer)
         setApi(object : EvaluationApi by failingApi() {
-            override fun listLatestEvaluationsAsync(root: Int, pageNumber: Int) = deferred
+            override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int): StrapiAnswer = answer
         })
 
-        val result = service.listLatestEvaluations(pageNumber = 0)
+        val result = service.listLatestEvaluations(pageNumber = 0).getOrThrow()
         assertEquals(listOf("pkg.new", "pkg.old"), result.map { it.packageName })
     }
 
     @Test
     fun listLatestEvaluations_respectsPageNumberParameter() = runBlocking {
         Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(1)
-        val page1 = CompletableDeferred(StrapiAnswer(arrayListOf(StrapiElement(1, createEvaluation("P1", "p1"))), StrapiMeta(null)))
-        val page2 = CompletableDeferred(StrapiAnswer(arrayListOf(StrapiElement(2, createEvaluation("P2", "p2"))), StrapiMeta(null)))
+        val page1 = StrapiAnswer(arrayListOf(StrapiElement(1, createEvaluation("P1", "p1"))), StrapiMeta(null))
+        val page2 = StrapiAnswer(arrayListOf(StrapiElement(2, createEvaluation("P2", "p2"))), StrapiMeta(null))
 
         setApi(object : EvaluationApi by failingApi() {
-            override fun listLatestEvaluationsAsync(root: Int, pageNumber: Int) =
+            override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int): StrapiAnswer =
                 if (pageNumber == 2) page2 else page1
         })
 
-        val first = service.listLatestEvaluations(pageNumber = 1)
-        val second = service.listLatestEvaluations(pageNumber = 2)
+        val first = service.listLatestEvaluations(pageNumber = 1).getOrThrow()
+        val second = service.listLatestEvaluations(pageNumber = 2).getOrThrow()
 
         assertEquals("p1", first.first().packageName)
         assertEquals("p2", second.first().packageName)
@@ -122,16 +119,16 @@ class EvaluationServiceTest {
 
     @Test
     fun searchEvaluation_returnsEmptyOnIOException() = runBlocking {
-        val deferred = CompletableDeferred<StrapiAnswer>()
-        deferred.completeExceptionally(IOException("boom"))
         Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(0)
         val api = object : EvaluationApi by failingApi() {
-            override fun searchAsync(name: String, packageName: String, rooted: Int) = deferred
+            override suspend fun searchAsync(name: String, packageName: String, rooted: Int): StrapiAnswer {
+                throw IOException("boom")
+            }
         }
         setApi(api)
 
         val result = service.searchEvaluation("pattern")
-        assertTrue(result.isEmpty())
+        assertTrue(result.isFailure)
     }
 
     @Test
@@ -140,13 +137,12 @@ class EvaluationServiceTest {
         val evalA = StrapiElement(1, createEvaluation("A", "pkgA"))
         val evalADuplicate = StrapiElement(2, createEvaluation("A2", "pkgA"))
         val answer = StrapiAnswer(arrayListOf(evalA, evalADuplicate), StrapiMeta(null))
-        val deferred = CompletableDeferred(answer)
         val api = object : EvaluationApi by failingApi() {
-            override fun searchAsync(name: String, packageName: String, rooted: Int) = deferred
+            override suspend fun searchAsync(name: String, packageName: String, rooted: Int): StrapiAnswer = answer
         }
         setApi(api)
 
-        val result = service.searchEvaluation("a")
+        val result = service.searchEvaluation("a").getOrThrow()
         assertEquals(1, result.size)
         assertEquals("pkgA", result.first().packageName)
         assertEquals("A", result.first().name)
@@ -155,13 +151,12 @@ class EvaluationServiceTest {
     @Test
     fun fetchEvaluation_returnsNullWhenNoData() = runBlocking {
         val answer = StrapiAnswer(arrayListOf(), StrapiMeta(null))
-        val deferred = CompletableDeferred(answer)
         val api = object : EvaluationApi by failingApi() {
-            override fun getSingleEvaluationAsync(packageName: String, microG: Int, rooted: Int) = deferred
+            override suspend fun getSingleEvaluationAsync(packageName: String, microG: Int, rooted: Int): StrapiAnswer = answer
         }
         setApi(api)
 
-        val result = service.fetchEvaluation("pkg", microG = 0, rooted = 0)
+        val result = service.fetchEvaluation("pkg", microG = 0, rooted = 0).getOrThrow()
         assertNull(result)
     }
 
@@ -169,13 +164,12 @@ class EvaluationServiceTest {
     fun existingEvaluations_returnsList() = runBlocking {
         val eval = StrapiElement(10, createEvaluation("B", "pkgB"))
         val answer = StrapiAnswer(arrayListOf(eval), StrapiMeta(null))
-        val deferred = CompletableDeferred(answer)
         val api = object : EvaluationApi by failingApi() {
-            override fun existingEvaluationsAsync(packageName: String) = deferred
+            override suspend fun existingEvaluationsAsync(packageName: String): StrapiAnswer = answer
         }
         setApi(api)
 
-        val result = service.existingEvaluations("pkgB")
+        val result = service.existingEvaluations("pkgB").getOrThrow()
         assertEquals(1, result.size)
         assertEquals(10, result.first().id)
         assertEquals("pkgB", result.first().attributes.packageName)
@@ -183,53 +177,53 @@ class EvaluationServiceTest {
 
     @Test
     fun existingIcon_returnsNullOnIOException() = runBlocking {
-        val deferred = CompletableDeferred<List<IconAnswer>>()
-        deferred.completeExceptionally(IOException("fail"))
         val api = object : EvaluationApi by failingApi() {
-            override fun existingIconAsync(iconName: String) = deferred
+            override suspend fun existingIconAsync(iconName: String): List<IconAnswer> {
+                throw IOException("fail")
+            }
         }
         setApi(api)
 
         val result = service.existingIcon("icon.png")
-        assertNull(result)
+        assertTrue(result.isFailure)
     }
 
     @Test
     fun existingIcon_returnsListOnSuccess() = runBlocking {
         val answer = emptyList<IconAnswer>()
-        val deferred = CompletableDeferred(answer)
         val api = object : EvaluationApi by failingApi() {
-            override fun existingIconAsync(iconName: String) = deferred
+            override suspend fun existingIconAsync(iconName: String): List<IconAnswer> = answer
         }
         setApi(api)
 
-        val result = service.existingIcon("icon.png")
-        assertTrue(result?.isEmpty() == true)
+        val result = service.existingIcon("icon.png").getOrThrow()
+        assertTrue(result.isEmpty())
     }
 
     @Test
     fun fetchEvaluation_returnsFirstElement() = runBlocking {
         val eval = StrapiElement(5, createEvaluation("PkgEval", "pkg.eval"))
-        val deferred = CompletableDeferred(StrapiAnswer(arrayListOf(eval), StrapiMeta(null)))
         val api = object : EvaluationApi by failingApi() {
-            override fun getSingleEvaluationAsync(packageName: String, microG: Int, rooted: Int) = deferred
+            override suspend fun getSingleEvaluationAsync(packageName: String, microG: Int, rooted: Int): StrapiAnswer =
+                StrapiAnswer(arrayListOf(eval), StrapiMeta(null))
         }
         setApi(api)
 
-        val result = service.fetchEvaluation("pkg.eval", 0, 0)
+        val result = service.fetchEvaluation("pkg.eval", 0, 0).getOrThrow()
         assertEquals("pkg.eval", result?.packageName)
     }
 
     @Test
     fun addEvaluation_returnsNullOnIOException() = runBlocking {
-        val call = ThrowingCall<UploadAnswer>(IOException("add failed"))
         val api = object : EvaluationApi by failingApi() {
-            override fun addEvaluation(evaluation: UploadEvaluationHeader) = call
+            override suspend fun addEvaluation(evaluation: UploadEvaluationHeader): UploadAnswer {
+                throw IOException("add failed")
+            }
         }
         setApi(api)
 
         val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)))
-        assertNull(result)
+        assertTrue(result.isFailure)
     }
 
     @Test
@@ -238,26 +232,26 @@ class EvaluationServiceTest {
             StrapiElement(1, createEvaluation("Success", "pkg.s")),
             StrapiMeta(null)
         )
-        val call = ImmediateCall(response)
         val api = object : EvaluationApi by failingApi() {
-            override fun addEvaluation(evaluation: UploadEvaluationHeader) = call
+            override suspend fun addEvaluation(evaluation: UploadEvaluationHeader): UploadAnswer = response
         }
         setApi(api)
 
         val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)))
-        assertEquals(1, result?.body()?.data?.id)
+        assertTrue(result.isSuccess)
     }
 
     @Test
     fun updateEvaluation_returnsNullOnIOException() = runBlocking {
-        val call = ThrowingCall<UploadAnswer>(IOException("update failed"))
         val api = object : EvaluationApi by failingApi() {
-            override fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int) = call
+            override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int): UploadAnswer {
+                throw IOException("update failed")
+            }
         }
         setApi(api)
 
         val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)), 1)
-        assertNull(result)
+        assertTrue(result.isFailure)
     }
 
     @Test
@@ -266,14 +260,13 @@ class EvaluationServiceTest {
             StrapiElement(2, createEvaluation("Updated", "pkg.u")),
             StrapiMeta(null)
         )
-        val call = ImmediateCall(response)
         val api = object : EvaluationApi by failingApi() {
-            override fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int) = call
+            override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int): UploadAnswer = response
         }
         setApi(api)
 
         val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)), 2)
-        assertEquals(2, result?.body()?.data?.id)
+        assertTrue(result.isSuccess)
     }
 
     @Test
@@ -284,26 +277,25 @@ class EvaluationServiceTest {
             bitmap
         )
         val app = InstalledApplication("n", "pkg.upload", drawable)
-        val call = ImmediateCall(arrayListOf(createIconAnswer()))
         val api = object : EvaluationApi by failingApi() {
-            override fun addIcon(image: okhttp3.MultipartBody.Part) = call
+            override suspend fun addIcon(image: okhttp3.MultipartBody.Part): ArrayList<IconAnswer> =
+                arrayListOf(createIconAnswer())
         }
         setApi(api)
 
         val result = service.uploadIcon(app)
-        assertEquals(1, result?.body()?.size)
+        assertEquals(1, result.getOrThrow().size)
     }
 
     @Test
     fun deleteIcon_returnsResponseOnSuccess() = runBlocking {
-        val call = ImmediateCall(createIconAnswer())
         val api = object : EvaluationApi by failingApi() {
-            override fun deleteIcon(id: Int) = call
+            override suspend fun deleteIcon(id: Int): IconAnswer = createIconAnswer()
         }
         setApi(api)
 
         val result = service.deleteIcon(99)
-        assertEquals(1, result?.body()?.id)
+        assertTrue(result.isSuccess)
     }
 
     @Test
@@ -315,26 +307,28 @@ class EvaluationServiceTest {
             bitmap
         )
         val app = InstalledApplication("n", "pkg.upload", drawable)
-        val call = ThrowingCall<ArrayList<IconAnswer>>(IOException("net down"))
         val api = object : EvaluationApi by failingApi() {
-            override fun addIcon(image: okhttp3.MultipartBody.Part) = call
+            override suspend fun addIcon(image: okhttp3.MultipartBody.Part): ArrayList<IconAnswer> {
+                throw IOException("net down")
+            }
         }
         setApi(api)
 
         val result = service.uploadIcon(app)
-        assertNull(result)
+        assertTrue(result.isFailure)
     }
 
     @Test
     fun deleteIcon_returnsNullOnIOException() = runBlocking {
-        val call = ThrowingCall<IconAnswer>(IOException("delete failed"))
         val api = object : EvaluationApi by failingApi() {
-            override fun deleteIcon(id: Int) = call
+            override suspend fun deleteIcon(id: Int): IconAnswer {
+                throw IOException("delete failed")
+            }
         }
         setApi(api)
 
         val result = service.deleteIcon(123)
-        assertNull(result)
+        assertTrue(result.isFailure)
     }
 
     private fun setField(name: String, value: Any) {
@@ -346,37 +340,18 @@ class EvaluationServiceTest {
     }
 
     private fun failingApi(): EvaluationApi = object : EvaluationApi {
-        override fun listLatestEvaluationsAsync(root: Int, pageNumber: Int) = throw NotImplementedError()
-        override fun searchAsync(name: String, packageName: String, rooted: Int) = throw NotImplementedError()
-        override fun existingEvaluationsAsync(packageName: String) = throw NotImplementedError()
-        override fun addEvaluation(evaluation: UploadEvaluationHeader) = throw NotImplementedError()
-        override fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int) = throw NotImplementedError()
-        override fun addIcon(image: okhttp3.MultipartBody.Part) = throw NotImplementedError()
-        override fun existingIconAsync(iconName: String) = throw NotImplementedError()
-        override fun deleteIcon(id: Int) = throw NotImplementedError()
-        override fun getSingleEvaluationAsync(packageName: String, microG: Int, rooted: Int) = throw NotImplementedError()
-    }
-
-    private class ThrowingCall<T>(private val error: IOException) : retrofit2.Call<T> {
-        override fun clone(): retrofit2.Call<T> = ThrowingCall(error)
-        override fun execute(): retrofit2.Response<T> { throw error }
-        override fun enqueue(callback: retrofit2.Callback<T>) { callback.onFailure(this, error) }
-        override fun isExecuted(): Boolean = false
-        override fun cancel() {}
-        override fun isCanceled(): Boolean = false
-        override fun request(): okhttp3.Request = okhttp3.Request.Builder().url("http://localhost").build()
-        override fun timeout(): okio.Timeout = okio.Timeout.NONE
-    }
-
-    private class ImmediateCall<T>(private val value: T) : retrofit2.Call<T> {
-        override fun clone(): retrofit2.Call<T> = ImmediateCall(value)
-        override fun execute(): retrofit2.Response<T> = retrofit2.Response.success(value)
-        override fun enqueue(callback: retrofit2.Callback<T>) { callback.onResponse(this, execute()) }
-        override fun isExecuted(): Boolean = true
-        override fun cancel() {}
-        override fun isCanceled(): Boolean = false
-        override fun request(): okhttp3.Request = okhttp3.Request.Builder().url("http://localhost").build()
-        override fun timeout(): okio.Timeout = okio.Timeout.NONE
+        override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int) =
+            throw NotImplementedError()
+        override suspend fun searchAsync(name: String, packageName: String, rooted: Int) =
+            throw NotImplementedError()
+        override suspend fun existingEvaluationsAsync(packageName: String) = throw NotImplementedError()
+        override suspend fun addEvaluation(evaluation: UploadEvaluationHeader) = throw NotImplementedError()
+        override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int) = throw NotImplementedError()
+        override suspend fun addIcon(image: okhttp3.MultipartBody.Part) = throw NotImplementedError()
+        override suspend fun existingIconAsync(iconName: String) = throw NotImplementedError()
+        override suspend fun deleteIcon(id: Int) = throw NotImplementedError()
+        override suspend fun getSingleEvaluationAsync(packageName: String, microG: Int, rooted: Int) =
+            throw NotImplementedError()
     }
 
     private fun createEvaluation(

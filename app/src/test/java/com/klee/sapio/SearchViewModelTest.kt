@@ -90,19 +90,29 @@ class SearchViewModelTest {
     }
 
     private class FakeSearchUseCase(private val result: List<Evaluation>) : SearchEvaluationUseCase(object : com.klee.sapio.domain.EvaluationRepository {
-        override suspend fun listLatestEvaluations(pageNumber: Int): List<Evaluation> = emptyList()
-        override suspend fun searchEvaluations(pattern: String): List<Evaluation> = emptyList()
-        override suspend fun addEvaluation(evaluation: UploadEvaluation) {}
-        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) {}
-        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String) = null
-        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String) = null
-        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String) = null
-        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String) = null
-        override suspend fun existingEvaluations(packageName: String): List<EvaluationRecord> = emptyList()
-        override suspend fun uploadIcon(app: InstalledApplication): List<Icon>? = null
-        override suspend fun existingIcon(iconName: String): List<Icon> = emptyList()
-        override suspend fun deleteIcon(id: Int) = Unit
+        override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<Evaluation>> =
+            Result.success(emptyList())
+        override suspend fun searchEvaluations(pattern: String): Result<List<Evaluation>> =
+            Result.success(emptyList())
+        override suspend fun addEvaluation(evaluation: UploadEvaluation): Result<Unit> = Result.success(Unit)
+        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> =
+            Result.success(Unit)
+        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<Evaluation?> =
+            Result.success(null)
+        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<Evaluation?> =
+            Result.success(null)
+        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<Evaluation?> =
+            Result.success(null)
+        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<Evaluation?> =
+            Result.success(null)
+        override suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>> =
+            Result.success(emptyList())
+        override suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>> =
+            Result.success(emptyList())
+        override suspend fun existingIcon(iconName: String): Result<List<Icon>> =
+            Result.success(emptyList())
+        override suspend fun deleteIcon(id: Int): Result<Unit> = Result.success(Unit)
     }) {
-        override suspend operator fun invoke(pattern: String): List<Evaluation> = result
+        override suspend operator fun invoke(pattern: String): Result<List<Evaluation>> = Result.success(result)
     }
 }

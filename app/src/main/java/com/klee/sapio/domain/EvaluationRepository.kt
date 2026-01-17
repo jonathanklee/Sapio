@@ -8,27 +8,27 @@ import com.klee.sapio.domain.model.UploadEvaluation
 
 interface EvaluationRepository {
 
-    suspend fun listLatestEvaluations(pageNumber: Int): List<Evaluation>
+    suspend fun listLatestEvaluations(pageNumber: Int): Result<List<Evaluation>>
 
-    suspend fun searchEvaluations(pattern: String): List<Evaluation>
+    suspend fun searchEvaluations(pattern: String): Result<List<Evaluation>>
 
-    suspend fun addEvaluation(evaluation: UploadEvaluation)
+    suspend fun addEvaluation(evaluation: UploadEvaluation): Result<Unit>
 
-    suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int)
+    suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit>
 
-    suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<Evaluation?>
 
-    suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<Evaluation?>
 
-    suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<Evaluation?>
 
-    suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Evaluation?
+    suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<Evaluation?>
 
-    suspend fun existingEvaluations(packageName: String): List<EvaluationRecord>
+    suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>>
 
-    suspend fun uploadIcon(app: InstalledApplication): List<Icon>?
+    suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>>
 
-    suspend fun existingIcon(iconName: String): List<Icon>
+    suspend fun existingIcon(iconName: String): Result<List<Icon>>
 
-    suspend fun deleteIcon(id: Int)
+    suspend fun deleteIcon(id: Int): Result<Unit>
 }

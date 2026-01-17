@@ -92,21 +92,32 @@ class EvaluateAppUseCaseBehaviourTest {
         val deletedIds = mutableListOf<Int>()
         val addedEvaluations = mutableListOf<UploadEvaluation>()
 
-        override suspend fun listLatestEvaluations(pageNumber: Int): List<com.klee.sapio.domain.model.Evaluation> = emptyList()
-        override suspend fun searchEvaluations(pattern: String): List<com.klee.sapio.domain.model.Evaluation> = emptyList()
-        override suspend fun addEvaluation(evaluation: UploadEvaluation) {
+        override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<com.klee.sapio.domain.model.Evaluation>> =
+            Result.success(emptyList())
+        override suspend fun searchEvaluations(pattern: String): Result<List<com.klee.sapio.domain.model.Evaluation>> =
+            Result.success(emptyList())
+        override suspend fun addEvaluation(evaluation: UploadEvaluation): Result<Unit> {
             addedEvaluations.add(evaluation)
+            return Result.success(Unit)
         }
-        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) = Unit
-        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String) = null
-        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String) = null
-        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String) = null
-        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String) = null
-        override suspend fun existingEvaluations(packageName: String): List<com.klee.sapio.domain.model.EvaluationRecord> = emptyList()
-        override suspend fun uploadIcon(app: InstalledApplication) = uploadResponse
-        override suspend fun existingIcon(iconName: String) = existingIcons
-        override suspend fun deleteIcon(id: Int) {
+        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> = Result.success(Unit)
+        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
+            Result.success(null)
+        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
+            Result.success(null)
+        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
+            Result.success(null)
+        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
+            Result.success(null)
+        override suspend fun existingEvaluations(packageName: String): Result<List<com.klee.sapio.domain.model.EvaluationRecord>> =
+            Result.success(emptyList())
+        override suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>> =
+            Result.success(uploadResponse ?: emptyList())
+        override suspend fun existingIcon(iconName: String): Result<List<Icon>> =
+            Result.success(existingIcons)
+        override suspend fun deleteIcon(id: Int): Result<Unit> {
             deletedIds.add(id)
+            return Result.success(Unit)
         }
     }
 }

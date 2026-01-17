@@ -7,7 +7,7 @@ open class ListLatestEvaluationsUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository
 ) {
 
-    open suspend operator fun invoke(pageNumber: Int): List<Evaluation> {
+    open suspend operator fun invoke(pageNumber: Int): Result<List<Evaluation>> {
         return evaluationRepository.listLatestEvaluations(pageNumber)
     }
 }

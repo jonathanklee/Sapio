@@ -6,12 +6,8 @@ open class FetchIconUrlUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository
 ) {
 
-    open suspend operator fun invoke(packageName: String): String {
-        val icons = evaluationRepository.existingIcon("$packageName.png")
-        if (icons.isEmpty()) {
-            return ""
-        }
-
-        return icons[0].url
+    open suspend operator fun invoke(packageName: String): Result<String> {
+        return evaluationRepository.existingIcon("$packageName.png")
+            .map { icons -> icons.firstOrNull()?.url.orEmpty() }
     }
 }

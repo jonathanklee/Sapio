@@ -7,7 +7,7 @@ open class SearchEvaluationUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository
 ) {
 
-    open suspend operator fun invoke(pattern: String): List<Evaluation> {
+    open suspend operator fun invoke(pattern: String): Result<List<Evaluation>> {
         return evaluationRepository.searchEvaluations(pattern)
     }
 }

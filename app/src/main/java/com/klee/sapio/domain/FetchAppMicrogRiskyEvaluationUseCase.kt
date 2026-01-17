@@ -7,7 +7,7 @@ open class FetchAppMicrogRiskyEvaluationUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository
 ) {
 
-    open suspend operator fun invoke(packageName: String): Evaluation? {
+    open suspend operator fun invoke(packageName: String): Result<Evaluation?> {
         return evaluationRepository.fetchMicrogRiskyEvaluation(packageName)
     }
 }

@@ -31,13 +31,16 @@ class EvaluateAppUseCase @Inject constructor(
         val existingIcons = getExistingIcons(app)
         val uploadedIcons = uploadIcon(app)
 
-        if (uploadedIcons.isNullOrEmpty()) {
+        if (uploadedIcons.isEmpty()) {
             onError()
             return
         }
 
         uploadedIcons.let {
-            evaluateApp(app, uploadedIcons[0].id, rating)
+            if (!evaluateApp(app, uploadedIcons[0].id, rating)) {
+                onError()
+                return
+            }
             for (icon in existingIcons) {
                 deleteIcon(icon.id)
             }
@@ -47,8 +50,8 @@ class EvaluateAppUseCase @Inject constructor(
 
     private suspend fun uploadIcon(
         app: InstalledApplication
-    ): List<Icon>? {
-        return evaluationRepository.uploadIcon(app)
+    ): List<Icon> {
+        return evaluationRepository.uploadIcon(app).getOrDefault(emptyList())
     }
 
     private suspend fun deleteIcon(
@@ -57,7 +60,7 @@ class EvaluateAppUseCase @Inject constructor(
         evaluationRepository.deleteIcon(id)
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rating: Int) {
+    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rating: Int): Boolean {
         val newEvaluation = UploadEvaluation(
             app.name,
             app.packageName,
@@ -67,12 +70,12 @@ class EvaluateAppUseCase @Inject constructor(
             deviceConfiguration.isRisky()
         )
 
-        evaluationRepository.addEvaluation(newEvaluation)
+        return evaluationRepository.addEvaluation(newEvaluation).isSuccess
     }
 
     private suspend fun getExistingIcons(app: InstalledApplication): List<Icon> {
         return withContext(Dispatchers.IO) {
-            val icons = evaluationRepository.existingIcon("${app.packageName}.png")
+            val icons = evaluationRepository.existingIcon("${app.packageName}.png").getOrDefault(emptyList())
             if (icons.isEmpty()) {
                 return@withContext arrayListOf()
             } else {

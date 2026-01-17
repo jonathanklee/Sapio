@@ -20,8 +20,14 @@ class SearchViewModel @Inject constructor(
     private var _evaluations: MutableStateFlow<List<Evaluation>> = MutableStateFlow(emptyList())
 
     suspend fun searchApplication(pattern: String, onError: () -> Unit) {
-        val list = searchEvaluationUseCase.invoke(pattern)
-        if (list.isEmpty()) {
+        val result = searchEvaluationUseCase.invoke(pattern)
+        var hasError = false
+        val list = result.getOrElse {
+            hasError = true
+            emptyList()
+        }
+
+        if (list.isEmpty() || hasError) {
             onError.invoke()
         }
 

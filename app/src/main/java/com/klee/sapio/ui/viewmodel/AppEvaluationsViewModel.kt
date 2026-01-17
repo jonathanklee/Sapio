@@ -41,7 +41,7 @@ class AppEvaluationsViewModel @Inject constructor(
                 microgUserEvaluation.postValue(
                     fetchAppMicrogSecureEvaluationUseCase.invoke(
                         packageName
-                    )
+                    ).getOrNull()
                 )
             }
         }
@@ -49,7 +49,7 @@ class AppEvaluationsViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 bareAospUserEvaluation.postValue(
-                    fetchAppBareAOspSecureEvaluationUseCase.invoke(packageName)
+                    fetchAppBareAOspSecureEvaluationUseCase.invoke(packageName).getOrNull()
                 )
             }
         }
@@ -60,7 +60,7 @@ class AppEvaluationsViewModel @Inject constructor(
                     microgRootEvaluation.postValue(
                         fetchAppMicrogRiskyEvaluationUseCase.invoke(
                             packageName
-                        )
+                        ).getOrNull()
                     )
                 }
             }
@@ -68,7 +68,7 @@ class AppEvaluationsViewModel @Inject constructor(
             viewModelScope.launch {
                 withContext(ioDispatcher) {
                     bareAsopRootEvaluation.postValue(
-                        fetchAppBareAospRiskyEvaluationUseCase.invoke(packageName)
+                        fetchAppBareAospRiskyEvaluationUseCase.invoke(packageName).getOrNull()
                     )
                 }
             }
@@ -76,7 +76,7 @@ class AppEvaluationsViewModel @Inject constructor(
 
         viewModelScope.launch {
             withContext(ioDispatcher) {
-                iconUrl.postValue(fetchIconUrlUseCase.invoke(packageName))
+                iconUrl.postValue(fetchIconUrlUseCase.invoke(packageName).getOrDefault(""))
             }
         }
     }

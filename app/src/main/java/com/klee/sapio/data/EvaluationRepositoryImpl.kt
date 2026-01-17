@@ -18,72 +18,75 @@ class EvaluationRepositoryImpl @Inject constructor() :
     @Inject
     lateinit var retrofitService: EvaluationService
 
-    override suspend fun listLatestEvaluations(pageNumber: Int): List<DomainEvaluation> {
-        return retrofitService.listLatestEvaluations(pageNumber).map { it.toDomain() }
+    override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<DomainEvaluation>> {
+        return retrofitService.listLatestEvaluations(pageNumber)
+            .map { evaluations -> evaluations.map { it.toDomain() } }
     }
 
-    override suspend fun searchEvaluations(pattern: String): List<DomainEvaluation> {
-        return retrofitService.searchEvaluation(pattern).map { it.toDomain() }
+    override suspend fun searchEvaluations(pattern: String): Result<List<DomainEvaluation>> {
+        return retrofitService.searchEvaluation(pattern)
+            .map { evaluations -> evaluations.map { it.toDomain() } }
     }
 
-    override suspend fun addEvaluation(evaluation: DomainUploadEvaluation) {
+    override suspend fun addEvaluation(evaluation: DomainUploadEvaluation): Result<Unit> {
         val header = UploadEvaluationHeader(evaluation.toData())
-        retrofitService.addEvaluation(header)
+        return retrofitService.addEvaluation(header)
     }
 
-    override suspend fun updateEvaluation(evaluation: DomainUploadEvaluation, id: Int) {
+    override suspend fun updateEvaluation(evaluation: DomainUploadEvaluation, id: Int): Result<Unit> {
         val header = UploadEvaluationHeader(evaluation.toData())
-        retrofitService.updateEvaluation(header, id)
+        return retrofitService.updateEvaluation(header, id)
     }
 
-    override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): DomainEvaluation? {
+    override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.MICROG,
             Label.SECURE
-        )?.toDomain()
+        ).map { it?.toDomain() }
     }
 
-    override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): DomainEvaluation? {
+    override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.MICROG,
             Label.RISKY
-        )?.toDomain()
+        ).map { it?.toDomain() }
     }
 
-    override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): DomainEvaluation? {
+    override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.BARE_AOSP,
             Label.SECURE
-        )?.toDomain()
+        ).map { it?.toDomain() }
     }
 
-    override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): DomainEvaluation? {
+    override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
         return retrofitService.fetchEvaluation(
             appPackageName,
             Label.BARE_AOSP,
             Label.RISKY
-        )?.toDomain()
+        ).map { it?.toDomain() }
     }
 
-    override suspend fun existingEvaluations(packageName: String): List<DomainEvaluationRecord> {
-        return retrofitService.existingEvaluations(packageName).map { it.toDomain() }
+    override suspend fun existingEvaluations(packageName: String): Result<List<DomainEvaluationRecord>> {
+        return retrofitService.existingEvaluations(packageName)
+            .map { evaluations -> evaluations.map { it.toDomain() } }
     }
 
-    override suspend fun uploadIcon(app: DomainInstalledApplication): List<DomainIcon>? {
-        val response = retrofitService.uploadIcon(app)
-        return response?.body()?.map { it.toDomain() }
+    override suspend fun uploadIcon(app: DomainInstalledApplication): Result<List<DomainIcon>> {
+        return retrofitService.uploadIcon(app)
+            .map { icons -> icons.map { it.toDomain() } }
     }
 
-    override suspend fun existingIcon(iconName: String): List<DomainIcon> {
-        val icons = retrofitService.existingIcon(iconName) ?: return emptyList()
-        return icons.map { it.toDomain() }
+    override suspend fun existingIcon(iconName: String): Result<List<DomainIcon>> {
+        return retrofitService.existingIcon(iconName)
+            .map { icons -> icons.map { it.toDomain() } }
     }
 
-    override suspend fun deleteIcon(id: Int) {
-        retrofitService.deleteIcon(id)
+    override suspend fun deleteIcon(id: Int): Result<Unit> {
+        return retrofitService.deleteIcon(id)
     }
 }
 

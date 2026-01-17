@@ -48,65 +48,65 @@ class DomainUseCasesTest {
             url = "https://example.com/icon.png"
         )
 
-        `when`(evaluationRepository.existingIcon("com.test.png")).thenReturn(listOf(icon))
+        `when`(evaluationRepository.existingIcon("com.test.png")).thenReturn(Result.success(listOf(icon)))
 
         val result = fetchIconUrlUseCase("com.test")
 
-        assertEquals("https://example.com/icon.png", result)
+        assertEquals("https://example.com/icon.png", result.getOrNull())
         verify(evaluationRepository).existingIcon("com.test.png")
     }
 
     @Test
     fun `fetch icon url returns empty string when no icons`() = runTest {
-        `when`(evaluationRepository.existingIcon("com.empty.png")).thenReturn(emptyList())
+        `when`(evaluationRepository.existingIcon("com.empty.png")).thenReturn(Result.success(emptyList()))
 
         val result = fetchIconUrlUseCase("com.empty")
 
-        assertEquals("", result)
+        assertEquals("", result.getOrNull())
         verify(evaluationRepository).existingIcon("com.empty.png")
     }
 
     @Test
     fun `fetch microg secure delegates to repository`() = runTest {
         val expected = dummyEvaluation("microg.secure")
-        `when`(evaluationRepository.fetchMicrogSecureEvaluation("pkg")).thenReturn(expected)
+        `when`(evaluationRepository.fetchMicrogSecureEvaluation("pkg")).thenReturn(Result.success(expected))
 
         val result = fetchMicrogSecure("pkg")
 
-        assertEquals(expected, result)
+        assertEquals(expected, result.getOrNull())
         verify(evaluationRepository).fetchMicrogSecureEvaluation("pkg")
     }
 
     @Test
     fun `fetch microg risky delegates to repository`() = runTest {
         val expected = dummyEvaluation("microg.risky")
-        `when`(evaluationRepository.fetchMicrogRiskyEvaluation("pkg")).thenReturn(expected)
+        `when`(evaluationRepository.fetchMicrogRiskyEvaluation("pkg")).thenReturn(Result.success(expected))
 
         val result = fetchMicrogRisky("pkg")
 
-        assertEquals(expected, result)
+        assertEquals(expected, result.getOrNull())
         verify(evaluationRepository).fetchMicrogRiskyEvaluation("pkg")
     }
 
     @Test
     fun `fetch bare aosp secure delegates to repository`() = runTest {
         val expected = dummyEvaluation("bare.secure")
-        `when`(evaluationRepository.fetchBareAospSecureEvaluation("pkg")).thenReturn(expected)
+        `when`(evaluationRepository.fetchBareAospSecureEvaluation("pkg")).thenReturn(Result.success(expected))
 
         val result = fetchBareSecure("pkg")
 
-        assertEquals(expected, result)
+        assertEquals(expected, result.getOrNull())
         verify(evaluationRepository).fetchBareAospSecureEvaluation("pkg")
     }
 
     @Test
     fun `fetch bare aosp risky delegates to repository`() = runTest {
         val expected = dummyEvaluation("bare.risky")
-        `when`(evaluationRepository.fetchBareAospRiskyEvaluation("pkg")).thenReturn(expected)
+        `when`(evaluationRepository.fetchBareAospRiskyEvaluation("pkg")).thenReturn(Result.success(expected))
 
         val result = fetchBareRisky("pkg")
 
-        assertEquals(expected, result)
+        assertEquals(expected, result.getOrNull())
         verify(evaluationRepository).fetchBareAospRiskyEvaluation("pkg")
     }
 

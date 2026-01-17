@@ -19,7 +19,8 @@ class FeedViewModel @Inject constructor(
 
     val evaluations: Flow<List<Evaluation>> = flow {
         for (i in 1..NUMBER_OF_PAGES) {
-            emit(listLatestEvaluationsUseCase.invoke(i))
+            val result = listLatestEvaluationsUseCase.invoke(i)
+            emit(result.getOrDefault(emptyList()))
         }
     }
 }

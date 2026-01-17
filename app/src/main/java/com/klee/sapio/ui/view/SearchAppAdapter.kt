@@ -46,6 +46,7 @@ class SearchAppAdapter(
 
         holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
+                .getOrDefault(emptyList())
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
                     .load(EvaluationService.BASE_URL + icons[0].url)
