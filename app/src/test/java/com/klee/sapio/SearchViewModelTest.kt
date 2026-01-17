@@ -10,8 +10,8 @@ import com.klee.sapio.domain.model.UploadEvaluation
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -48,16 +48,16 @@ class SearchViewModelTest {
     @Test
     fun test_searchViewModel_initialState() = runTest {
         // Test that the ViewModel initializes correctly
-        val initialState = searchViewModel.evaluations.first()
-        Assert.assertTrue("Initial state should be empty", initialState.isEmpty())
+        val initialState = searchViewModel.uiState.value
+        Assert.assertTrue("Initial state should be empty", initialState.items.isEmpty())
     }
 
     @Test
     fun test_searchViewModel_flowBehavior() = runTest {
         // Test basic flow behavior - this is a simple test to verify the ViewModel works
         // without needing to mock the complex use case
-        val initialState = searchViewModel.evaluations.first()
-        Assert.assertNotNull("Flow should not be null", initialState)
+        val initialState = searchViewModel.uiState.value
+        Assert.assertNotNull("State should not be null", initialState)
     }
 
     @Test
@@ -67,8 +67,9 @@ class SearchViewModelTest {
         var errored = false
 
         viewModel.searchApplication("pattern") { errored = true }
+        advanceUntilIdle()
 
-        val result = viewModel.evaluations.first()
+        val result = viewModel.uiState.value.items
         Assert.assertTrue(errored)
         Assert.assertTrue(result.isEmpty())
     }
@@ -83,8 +84,9 @@ class SearchViewModelTest {
         var errored = false
 
         viewModel.searchApplication("pattern") { errored = true }
+        advanceUntilIdle()
 
-        val result = viewModel.evaluations.first()
+        val result = viewModel.uiState.value.items
         Assert.assertFalse(errored)
         Assert.assertEquals(expected, result)
     }

@@ -21,8 +21,8 @@ import com.google.android.material.R
 import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.SearchViewModel
+import com.klee.sapio.ui.state.SearchUiState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,52 +55,41 @@ class SearchFragment : Fragment() {
 
         mHandler = Handler(Looper.getMainLooper())
 
-        val coroutineScope = viewLifecycleOwner.lifecycleScope
-
         mBinding.editTextSearch.addTextChangedListener { editable ->
-            onTextChanged(editable, coroutineScope)
+            onTextChanged(editable)
         }
 
         setupClearButton()
         setSearchIconsColor()
+        collectSearch()
 
         return mBinding.root
     }
 
-    private fun onTextChanged(editable: Editable?, coroutineScope: CoroutineScope) {
+    private fun onTextChanged(editable: Editable?) {
+        val text = editable?.trim().toString()
+        searchJob?.cancel()
+        searchJob = viewLifecycleOwner.lifecycleScope.launch {
+            mViewModel.searchApplication(text, this@SearchFragment::onNetworkError)
+        }
+    }
+
+    private fun collectSearch() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            mViewModel.uiState.collect { state ->
+                renderState(state)
+            }
+        }
+    }
+
+    private fun renderState(state: SearchUiState) {
         mSearchAppAdapter = SearchAppAdapter(
             requireContext(),
-            emptyList(),
+            state.items,
             mEvaluationRepository
         )
         mBinding.recyclerView.adapter = mSearchAppAdapter
-
-        val text = editable?.trim().toString()
-        searchJob?.cancel()
-        searchJob = coroutineScope.launch {
-            if (text.isNotEmpty()) {
-                mViewModel.searchApplication(text, this@SearchFragment::onNetworkError)
-            } else {
-                mViewModel.searchApplication("", this@SearchFragment::onNetworkError)
-            }
-        }
-
-        coroutineScope.launch {
-            collectSearch()
-        }
-
-        showResults(text.isNotEmpty())
-    }
-
-    private suspend fun collectSearch() {
-        mViewModel.evaluations.collect { list ->
-            mSearchAppAdapter = SearchAppAdapter(
-                requireContext(),
-                list,
-                mEvaluationRepository
-            )
-            mBinding.recyclerView.adapter = mSearchAppAdapter
-        }
+        showResults(state.query.isNotEmpty() && state.items.isNotEmpty())
     }
 
     private fun setupClearButton() {

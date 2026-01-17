@@ -15,7 +15,6 @@ import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,12 +43,11 @@ class FeedFragment : Fragment() {
         mBinding = FragmentMainBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
         mPreviousRootVisible = mSettings.getRootConfigurationLevel()
-
-        val coroutineScope = viewLifecycleOwner.lifecycleScope
-        fetchFeed(coroutineScope)
+        setupAdapter()
+        collectFeed()
 
         mBinding.refreshView.setOnRefreshListener {
-            fetchFeed(coroutineScope)
+            mViewModel.refresh()
         }
 
         return mBinding.root
@@ -60,13 +58,11 @@ class FeedFragment : Fragment() {
 
         if (mPreviousRootVisible != mSettings.getRootConfigurationLevel()) {
             mPreviousRootVisible = mSettings.getRootConfigurationLevel()
-            fetchFeed(viewLifecycleOwner.lifecycleScope)
+            mViewModel.refresh()
         }
     }
 
-    private fun fetchFeed(coroutineScope: CoroutineScope) {
-        mBinding.refreshView.isRefreshing
-
+    private fun setupAdapter() {
         mEvaluations = emptyList<Evaluation>().toMutableList()
         mFeedAppAdapter = FeedAppAdapter(
             requireContext(),
@@ -75,17 +71,15 @@ class FeedFragment : Fragment() {
             mSettings
         )
         mBinding.recyclerView.adapter = mFeedAppAdapter
-
-        fetchJob?.cancel()
-        fetchJob = coroutineScope.launch {
-            collectFeed()
-        }
     }
 
-    private suspend fun collectFeed() {
-        mViewModel.evaluations.collect { list ->
-            mFeedAppAdapter.addEvaluations(list)
-            mBinding.refreshView.isRefreshing = false
+    private fun collectFeed() {
+        fetchJob?.cancel()
+        fetchJob = viewLifecycleOwner.lifecycleScope.launch {
+            mViewModel.uiState.collect { state ->
+                mFeedAppAdapter.replaceEvaluations(state.items)
+                mBinding.refreshView.isRefreshing = state.isLoading
+            }
         }
     }
 }

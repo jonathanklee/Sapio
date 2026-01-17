@@ -61,11 +61,12 @@ class AppEvaluationsViewModelTest {
         vm.listEvaluations("pkg")
         advanceUntilIdle()
 
-        assertEquals("microg-secure", vm.microgUserEvaluation.value?.name)
-        assertEquals("bare-secure", vm.bareAospUserEvaluation.value?.name)
-        assertNull(vm.microgRootEvaluation.value)
-        assertNull(vm.bareAsopRootEvaluation.value)
-        assertEquals("https://icon", vm.iconUrl.value)
+        val state = vm.uiState.value
+        assertEquals("microg-secure", state.microgUser?.name)
+        assertEquals("bare-secure", state.bareAospUser?.name)
+        assertNull(state.microgRoot)
+        assertNull(state.bareAospRoot)
+        assertEquals("https://icon", state.iconUrl)
     }
 
     @Test
@@ -75,8 +76,9 @@ class AppEvaluationsViewModelTest {
         vm.listEvaluations("pkg")
         advanceUntilIdle()
 
-        assertEquals("microg-risky", vm.microgRootEvaluation.value?.name)
-        assertEquals("bare-risky", vm.bareAsopRootEvaluation.value?.name)
+        val state = vm.uiState.value
+        assertEquals("microg-risky", state.microgRoot?.name)
+        assertEquals("bare-risky", state.bareAospRoot?.name)
     }
 
     @Test
@@ -86,11 +88,12 @@ class AppEvaluationsViewModelTest {
         vm.listEvaluations("pkg")
         advanceUntilIdle()
 
-        assertNull(vm.microgUserEvaluation.value)
-        assertNull(vm.bareAospUserEvaluation.value)
-        assertNull(vm.microgRootEvaluation.value)
-        assertNull(vm.bareAsopRootEvaluation.value)
-        assertEquals("", vm.iconUrl.value)
+        val state = vm.uiState.value
+        assertNull(state.microgUser)
+        assertNull(state.bareAospUser)
+        assertNull(state.microgRoot)
+        assertNull(state.bareAospRoot)
+        assertEquals("", state.iconUrl)
     }
 
     private fun buildViewModel(

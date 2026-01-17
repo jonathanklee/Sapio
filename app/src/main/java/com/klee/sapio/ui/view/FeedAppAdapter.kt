@@ -104,6 +104,12 @@ class FeedAppAdapter(
         notifyItemRangeInserted(oldSize, evaluations.size)
     }
 
+    fun replaceEvaluations(evaluations: List<Evaluation>) {
+        mApps.clear()
+        mApps.addAll(evaluations)
+        notifyDataSetChanged()
+    }
+
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         Glide.with(mContext.applicationContext).clear(holder.binding.image)

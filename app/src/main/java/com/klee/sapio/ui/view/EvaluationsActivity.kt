@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -36,7 +35,6 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
-import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.system.Settings
 import com.klee.sapio.ui.model.Rating
@@ -72,6 +70,11 @@ class EvaluationsActivity : AppCompatActivity() {
     private lateinit var shareLauncher: ActivityResultLauncher<Intent>
 
     private var shareImage: Uri? = null
+    private var microgUserReady = false
+    private var microgRootReady = false
+    private var bareAospUserReady = false
+    private var bareAospRootReady = false
+    private var iconReady = false
 
     companion object {
         const val TAG = "EvaluationsActivity"
@@ -93,15 +96,7 @@ class EvaluationsActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         observeEvaluations()
-
         observeShare()
-
-        mViewModel.iconUrl.observe(this) {
-            Glide.with(this.applicationContext)
-                .load(EvaluationService.BASE_URL + it)
-                .listener(glideListener)
-                .into(mBinding.image)
-        }
 
         val packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME).toString()
         mBinding.packageName.text = packageName
@@ -119,6 +114,7 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         hideCard()
+        resetLoadedFlags()
         mViewModel.listEvaluations(packageName)
 
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
@@ -177,40 +173,65 @@ class EvaluationsActivity : AppCompatActivity() {
     }
 
     private fun observeEvaluations() {
-        observeEvaluation(mViewModel.microgUserEvaluation, mBinding.microgUser, microgUserReceived)
-        observeEvaluation(mViewModel.bareAospUserEvaluation, mBinding.bareAospUser, bareAospUserReceived)
+        lifecycleScope.launch {
+            mViewModel.uiState.collect { state ->
+                if (state.microgUserLoaded && !microgUserReady) {
+                    microgUserReady = true
+                    updateEvaluation(mBinding.microgUser, state.microgUser, microgUserReceived)
+                }
 
-        if (settings.isRootConfigurationEnabled()) {
-            observeEvaluation(
-                mViewModel.bareAsopRootEvaluation,
-                mBinding.bareAospRoot,
-                bareAospRootReceived
-            )
-            observeEvaluation(
-                mViewModel.microgRootEvaluation,
-                mBinding.microgRoot,
-                microgRootReceived
-            )
+                if (state.bareAospUserLoaded && !bareAospUserReady) {
+                    bareAospUserReady = true
+                    updateEvaluation(mBinding.bareAospUser, state.bareAospUser, bareAospUserReceived)
+                }
+
+                if (settings.isRootConfigurationEnabled()) {
+                    if (state.bareAospRootLoaded && !bareAospRootReady) {
+                        bareAospRootReady = true
+                        updateEvaluation(mBinding.bareAospRoot, state.bareAospRoot, bareAospRootReceived)
+                    }
+
+                    if (state.microgRootLoaded && !microgRootReady) {
+                        microgRootReady = true
+                        updateEvaluation(mBinding.microgRoot, state.microgRoot, microgRootReceived)
+                    }
+                }
+
+                if (state.iconLoaded && !iconReady) {
+                    iconReady = true
+                    Glide.with(this@EvaluationsActivity.applicationContext)
+                        .load(EvaluationService.BASE_URL + state.iconUrl)
+                        .listener(glideListener)
+                        .into(mBinding.image)
+                    lifecycleScope.launch { iconReceived.emit(true) }
+                }
+            }
         }
     }
 
-    private fun observeEvaluation(
-        liveData: MutableLiveData<Evaluation>,
+    private fun resetLoadedFlags() {
+        microgUserReady = false
+        microgRootReady = false
+        bareAospUserReady = false
+        bareAospRootReady = false
+        iconReady = false
+    }
+
+    private fun updateEvaluation(
         textView: EmojiTextView,
+        evaluation: com.klee.sapio.domain.model.Evaluation?,
         flow: MutableSharedFlow<Boolean>
     ) {
-        liveData.observe(this) {
-            textView.text = it?.let {
-                Rating.create(it.rating).text
-            } ?: NO_EVALUATION_CHAR
+        textView.text = evaluation?.let {
+            Rating.create(it.rating).text
+        } ?: NO_EVALUATION_CHAR
 
-            textView.tooltipText = it?.let {
-                computeTooltip(it.rating)
-            }
+        textView.tooltipText = evaluation?.let {
+            computeTooltip(it.rating)
+        }
 
-            lifecycleScope.launch {
-                flow.emit(true)
-            }
+        lifecycleScope.launch {
+            flow.emit(true)
         }
     }
 
@@ -225,16 +246,17 @@ class EvaluationsActivity : AppCompatActivity() {
 
     private fun startTakingScreenshot(appName: String, packageName: String) {
         lifecycleScope.launch {
+            val state = mViewModel.uiState.value
             val icon = saveImageToFile(
                 this@EvaluationsActivity,
-                EvaluationService.BASE_URL + mViewModel.iconUrl.value
+                EvaluationService.BASE_URL + state.iconUrl
             )
             val sharedEvaluation = SharedEvaluation(
                 appName,
                 packageName,
                 icon,
-                mViewModel.microgUserEvaluation.value?.rating ?: 0,
-                mViewModel.bareAospUserEvaluation.value?.rating ?: 0,
+                state.microgUser?.rating ?: 0,
+                state.bareAospUser?.rating ?: 0,
             )
             share(takeScreenshot(sharedEvaluation), appName)
         }

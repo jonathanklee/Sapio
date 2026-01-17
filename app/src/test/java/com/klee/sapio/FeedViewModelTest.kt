@@ -9,7 +9,7 @@ import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -72,11 +72,11 @@ class FeedViewModelTest {
         }
 
         val vm = FeedViewModel(fakeUseCase)
+        advanceUntilIdle()
 
-        val emissions = vm.evaluations.toList()
-
-        assertEquals(10, emissions.size)
-        assertEquals("page-1", emissions.first().first().name)
-        assertEquals("page-10", emissions.last().first().name)
+        val items = vm.uiState.value.items
+        assertEquals(10, items.size)
+        assertEquals("page-1", items.first().name)
+        assertEquals("page-10", items.last().name)
     }
 }
