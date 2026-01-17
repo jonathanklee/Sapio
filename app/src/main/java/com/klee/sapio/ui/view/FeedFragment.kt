@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.data.system.Settings
 import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FragmentMainBinding
@@ -30,7 +29,6 @@ class FeedFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMainBinding
     private lateinit var mFeedAppAdapter: FeedAppAdapter
-    private lateinit var mEvaluations: MutableList<Evaluation>
     private val mViewModel by viewModels<FeedViewModel>()
     private var fetchJob: Job? = null
     private var mPreviousRootVisible: Int = UserType.SECURE
@@ -63,10 +61,8 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        mEvaluations = emptyList<Evaluation>().toMutableList()
         mFeedAppAdapter = FeedAppAdapter(
             requireContext(),
-            mEvaluations,
             mEvaluationRepository,
             mSettings
         )
@@ -77,7 +73,7 @@ class FeedFragment : Fragment() {
         fetchJob?.cancel()
         fetchJob = viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
-                mFeedAppAdapter.replaceEvaluations(state.items)
+                mFeedAppAdapter.submitList(state.items)
                 mBinding.refreshView.isRefreshing = state.isLoading
             }
         }

@@ -55,6 +55,12 @@ class SearchFragment : Fragment() {
 
         mHandler = Handler(Looper.getMainLooper())
 
+        mSearchAppAdapter = SearchAppAdapter(
+            requireContext(),
+            mEvaluationRepository
+        )
+        mBinding.recyclerView.adapter = mSearchAppAdapter
+
         mBinding.editTextSearch.addTextChangedListener { editable ->
             onTextChanged(editable)
         }
@@ -83,12 +89,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun renderState(state: SearchUiState) {
-        mSearchAppAdapter = SearchAppAdapter(
-            requireContext(),
-            state.items,
-            mEvaluationRepository
-        )
-        mBinding.recyclerView.adapter = mSearchAppAdapter
+        mSearchAppAdapter.submitList(state.items)
         showResults(state.query.isNotEmpty() && state.items.isNotEmpty())
     }
 

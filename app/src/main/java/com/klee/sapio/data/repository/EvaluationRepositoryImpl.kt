@@ -2,11 +2,14 @@ package com.klee.sapio.data.repository
 
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.dto.UploadEvaluationHeader
-import com.klee.sapio.domain.EvaluationRepository
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
+import com.klee.sapio.data.local.EvaluationDao
+import com.klee.sapio.data.local.IconDao
 import com.klee.sapio.data.mapper.toData
 import com.klee.sapio.data.mapper.toDomain
+import com.klee.sapio.data.mapper.toEntity
+import com.klee.sapio.data.system.GmsType
+import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
 import com.klee.sapio.domain.model.Icon as DomainIcon
@@ -18,20 +21,53 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-class EvaluationRepositoryImpl @Inject constructor() :
+class EvaluationRepositoryImpl @Inject constructor(
+    private val retrofitService: EvaluationService,
+    private val evaluationDao: EvaluationDao,
+    private val iconDao: IconDao
+) :
     EvaluationRepository {
 
-    @Inject
-    lateinit var retrofitService: EvaluationService
+    companion object {
+        private const val PAGE_SIZE = 10
+        private const val ICON_TTL_MS = 24 * 60 * 60 * 1000L
+    }
 
     override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<DomainEvaluation>> {
-        return retrofitService.listLatestEvaluations(pageNumber)
-            .map { evaluations -> evaluations.map { it.toDomain() } }
+        val offset = (pageNumber - 1).coerceAtLeast(0) * PAGE_SIZE
+        val remote = retrofitService.listLatestEvaluations(pageNumber)
+        if (remote.isSuccess) {
+            val evaluations = remote.getOrThrow()
+            val now = System.currentTimeMillis()
+            evaluationDao.upsertAll(evaluations.map { it.toEntity(now) })
+            return Result.success(evaluations.map { it.toDomain() })
+        }
+
+        val cached = evaluationDao.listLatestEvaluations(PAGE_SIZE, offset)
+            .map { it.toDomain() }
+        return if (cached.isNotEmpty()) {
+            Result.success(cached)
+        } else {
+            Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load evaluations"))
+        }
     }
 
     override suspend fun searchEvaluations(pattern: String): Result<List<DomainEvaluation>> {
-        return retrofitService.searchEvaluation(pattern)
-            .map { evaluations -> evaluations.map { it.toDomain() } }
+        val remote = retrofitService.searchEvaluation(pattern)
+        if (remote.isSuccess) {
+            val evaluations = remote.getOrThrow()
+            val now = System.currentTimeMillis()
+            evaluationDao.upsertAll(evaluations.map { it.toEntity(now) })
+            return Result.success(evaluations.map { it.toDomain() })
+        }
+
+        val cached = evaluationDao.searchEvaluations("%$pattern%")
+            .map { it.toDomain() }
+        return if (cached.isNotEmpty()) {
+            Result.success(cached)
+        } else {
+            Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to search evaluations"))
+        }
     }
 
     override suspend fun addEvaluation(evaluation: DomainUploadEvaluation): Result<Unit> {
@@ -45,35 +81,35 @@ class EvaluationRepositoryImpl @Inject constructor() :
     }
 
     override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return retrofitService.fetchEvaluation(
+        return fetchEvaluationWithFallback(
             appPackageName,
             GmsType.MICROG,
             UserType.SECURE
-        ).map { it?.toDomain() }
+        )
     }
 
     override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return retrofitService.fetchEvaluation(
+        return fetchEvaluationWithFallback(
             appPackageName,
             GmsType.MICROG,
             UserType.RISKY
-        ).map { it?.toDomain() }
+        )
     }
 
     override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return retrofitService.fetchEvaluation(
+        return fetchEvaluationWithFallback(
             appPackageName,
             GmsType.BARE_AOSP,
             UserType.SECURE
-        ).map { it?.toDomain() }
+        )
     }
 
     override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return retrofitService.fetchEvaluation(
+        return fetchEvaluationWithFallback(
             appPackageName,
             GmsType.BARE_AOSP,
             UserType.RISKY
-        ).map { it?.toDomain() }
+        )
     }
 
     override suspend fun existingEvaluations(packageName: String): Result<List<DomainEvaluationRecord>> {
@@ -82,17 +118,73 @@ class EvaluationRepositoryImpl @Inject constructor() :
     }
 
     override suspend fun uploadIcon(app: DomainInstalledApplication): Result<List<DomainIcon>> {
-        return retrofitService.uploadIcon(app)
-            .map { icons -> icons.map { it.toDomain() } }
+        val remote = retrofitService.uploadIcon(app)
+        if (remote.isSuccess) {
+            val icons = remote.getOrThrow()
+            val now = System.currentTimeMillis()
+            iconDao.upsertAll(icons.map { it.toEntity(now) })
+            return Result.success(icons.map { it.toDomain() })
+        }
+
+        val minCachedAt = System.currentTimeMillis() - ICON_TTL_MS
+        val cached = iconDao.findByName("${app.packageName}.png", minCachedAt)
+            .map { it.toDomain() }
+        return if (cached.isNotEmpty()) {
+            Result.success(cached)
+        } else {
+            Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to upload icon"))
+        }
     }
 
     override suspend fun existingIcon(iconName: String): Result<List<DomainIcon>> {
-        return retrofitService.existingIcon(iconName)
-            .map { icons -> icons.map { it.toDomain() } }
+        val minCachedAt = System.currentTimeMillis() - ICON_TTL_MS
+        val cached = iconDao.findByName(iconName, minCachedAt)
+            .map { it.toDomain() }
+        if (cached.isNotEmpty()) {
+            return Result.success(cached)
+        }
+
+        val remote = retrofitService.existingIcon(iconName)
+        if (remote.isSuccess) {
+            val icons = remote.getOrThrow()
+            val now = System.currentTimeMillis()
+            iconDao.upsertAll(icons.map { it.toEntity(now) })
+            return Result.success(icons.map { it.toDomain() })
+        }
+
+        return Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load icon"))
     }
 
     override suspend fun deleteIcon(id: Int): Result<Unit> {
-        return retrofitService.deleteIcon(id)
+        val remote = retrofitService.deleteIcon(id)
+        if (remote.isSuccess) {
+            iconDao.deleteById(id)
+        }
+        return remote
+    }
+
+    private suspend fun fetchEvaluationWithFallback(
+        packageName: String,
+        microg: Int,
+        secure: Int
+    ): Result<DomainEvaluation?> {
+        val remote = retrofitService.fetchEvaluation(packageName, microg, secure)
+        if (remote.isSuccess) {
+            val evaluation = remote.getOrNull()
+            if (evaluation != null) {
+                val now = System.currentTimeMillis()
+                evaluationDao.upsertAll(listOf(evaluation.toEntity(now)))
+            }
+            return Result.success(evaluation?.toDomain())
+        }
+
+        val cached = evaluationDao.getEvaluation(packageName, microg, secure)
+            ?.toDomain()
+        return if (cached != null) {
+            Result.success(cached)
+        } else {
+            Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load evaluation"))
+        }
     }
 }
 

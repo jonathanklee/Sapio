@@ -6,6 +6,8 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.klee.sapio.R
@@ -26,13 +28,24 @@ import java.util.Locale
 
 class FeedAppAdapter(
     private val mContext: Context,
-    private var mApps: MutableList<Evaluation>,
     private var mEvaluationRepository: EvaluationRepository,
     private var mSettings: Settings
-) : RecyclerView.Adapter<FeedAppAdapter.ViewHolder>() {
+) : ListAdapter<Evaluation, FeedAppAdapter.ViewHolder>(DiffCallback) {
 
     companion object {
         const val DATE_FORMAT = "dd/MM/yyyy"
+
+        private val DiffCallback = object : DiffUtil.ItemCallback<Evaluation>() {
+            override fun areItemsTheSame(oldItem: Evaluation, newItem: Evaluation): Boolean {
+                return oldItem.packageName == newItem.packageName &&
+                    oldItem.microg == newItem.microg &&
+                    oldItem.secure == newItem.secure
+            }
+
+            override fun areContentsTheSame(oldItem: Evaluation, newItem: Evaluation): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     inner class ViewHolder(
@@ -48,7 +61,7 @@ class FeedAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val app = mApps[position]
+        val app = getItem(position)
         val element = holder.binding
         element.appName.text = app.name
         element.packageName.text = app.packageName
@@ -79,6 +92,8 @@ class FeedAppAdapter(
             }
         }
 
+        holder.imageLoadJob?.cancel()
+        Glide.with(mContext.applicationContext).clear(holder.binding.image)
         holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
                 .getOrDefault(emptyList())
@@ -98,25 +113,9 @@ class FeedAppAdapter(
         }
     }
 
-    fun addEvaluations(evaluations: List<Evaluation>) {
-        val oldSize = mApps.size
-        mApps.addAll(evaluations)
-        notifyItemRangeInserted(oldSize, evaluations.size)
-    }
-
-    fun replaceEvaluations(evaluations: List<Evaluation>) {
-        mApps.clear()
-        mApps.addAll(evaluations)
-        notifyDataSetChanged()
-    }
-
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         Glide.with(mContext.applicationContext).clear(holder.binding.image)
         holder.imageLoadJob?.cancel()
-    }
-
-    override fun getItemCount(): Int {
-        return mApps.size
     }
 }

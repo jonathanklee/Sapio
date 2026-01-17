@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.klee.sapio.domain.model.Evaluation
@@ -17,9 +19,22 @@ import kotlinx.coroutines.launch
 
 class SearchAppAdapter(
     private val mContext: Context,
-    private var mApps: List<Evaluation>,
     private var mEvaluationRepository: EvaluationRepository,
-) : RecyclerView.Adapter<SearchAppAdapter.ViewHolder>() {
+) : ListAdapter<Evaluation, SearchAppAdapter.ViewHolder>(DiffCallback) {
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Evaluation>() {
+            override fun areItemsTheSame(oldItem: Evaluation, newItem: Evaluation): Boolean {
+                return oldItem.packageName == newItem.packageName &&
+                    oldItem.microg == newItem.microg &&
+                    oldItem.secure == newItem.secure
+            }
+
+            override fun areContentsTheSame(oldItem: Evaluation, newItem: Evaluation): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     inner class ViewHolder(
         val binding: SearchAppCardBinding
@@ -39,11 +54,13 @@ class SearchAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val app = mApps[position]
+        val app = getItem(position)
         val element = holder.binding
         element.appName.text = app.name
         element.packageName.text = app.packageName
 
+        holder.imageLoadJob?.cancel()
+        Glide.with(mContext.applicationContext).clear(holder.binding.image)
         holder.imageLoadJob = holder.viewHolderScope.launch {
             val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
                 .getOrDefault(emptyList())
@@ -69,7 +86,4 @@ class SearchAppAdapter(
         holder.imageLoadJob?.cancel()
     }
 
-    override fun getItemCount(): Int {
-        return mApps.size
-    }
 }
