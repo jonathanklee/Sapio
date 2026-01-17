@@ -40,10 +40,7 @@ class EvaluateAppUseCaseBehaviourTest {
         repository = FakeRepository()
         val roboContext = org.robolectric.RuntimeEnvironment.getApplication()
         deviceConfiguration = DeviceConfiguration(roboContext)
-        useCase = EvaluateAppUseCase().apply {
-            mEvaluationRepository = repository
-            mDeviceConfiguration = deviceConfiguration
-        }
+        useCase = EvaluateAppUseCase(repository, deviceConfiguration)
     }
 
     @Test

@@ -9,14 +9,13 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
-class FeedViewModel @Inject constructor() : ViewModel() {
+class FeedViewModel @Inject constructor(
+    private val listLatestEvaluationsUseCase: ListLatestEvaluationsUseCase
+) : ViewModel() {
 
     companion object {
         const val NUMBER_OF_PAGES = 10
     }
-
-    @Inject
-    lateinit var listLatestEvaluationsUseCase: ListLatestEvaluationsUseCase
 
     val evaluations: Flow<List<Evaluation>> = flow {
         for (i in 1..NUMBER_OF_PAGES) {

@@ -34,11 +34,11 @@ class DomainUseCasesTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        fetchIconUrlUseCase = FetchIconUrlUseCase().also { it.evaluationRepository = evaluationRepository }
-        fetchMicrogSecure = FetchAppMicrogSecureEvaluationUseCase().also { it.evaluationRepository = evaluationRepository }
-        fetchMicrogRisky = FetchAppMicrogRiskyEvaluationUseCase().also { it.evaluationRepository = evaluationRepository }
-        fetchBareSecure = FetchAppBareAospSecureEvaluationUseCase().also { it.evaluationRepository = evaluationRepository }
-        fetchBareRisky = FetchAppBareAospRiskyEvaluationUseCase().also { it.evaluationRepository = evaluationRepository }
+        fetchIconUrlUseCase = FetchIconUrlUseCase(evaluationRepository)
+        fetchMicrogSecure = FetchAppMicrogSecureEvaluationUseCase(evaluationRepository)
+        fetchMicrogRisky = FetchAppMicrogRiskyEvaluationUseCase(evaluationRepository)
+        fetchBareSecure = FetchAppBareAospSecureEvaluationUseCase(evaluationRepository)
+        fetchBareRisky = FetchAppBareAospRiskyEvaluationUseCase(evaluationRepository)
     }
 
     @Test

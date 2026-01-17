@@ -1,17 +1,11 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.data.Evaluation
-import com.klee.sapio.data.EvaluationRepositoryImpl
-import com.klee.sapio.data.Settings
 import javax.inject.Inject
 
-open class ListLatestEvaluationsUseCase @Inject constructor() {
-
-    @Inject
-    lateinit var evaluationRepository: EvaluationRepositoryImpl
-
-    @Inject
-    lateinit var settings: Settings
+open class ListLatestEvaluationsUseCase @Inject constructor(
+    private val evaluationRepository: EvaluationRepository
+) {
 
     open suspend operator fun invoke(pageNumber: Int): List<Evaluation> {
         return evaluationRepository.listLatestEvaluations(pageNumber)

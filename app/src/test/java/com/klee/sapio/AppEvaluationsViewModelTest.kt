@@ -94,29 +94,52 @@ class AppEvaluationsViewModelTest {
         returnNullEvals: Boolean = false,
         iconUrl: String = "https://icon"
     ): AppEvaluationsViewModel {
-        return AppEvaluationsViewModel().apply {
-            fetchAppMicrogSecureEvaluationUseCase = object : FetchAppMicrogSecureEvaluationUseCase() {
-                override suspend fun invoke(packageName: String): Evaluation? =
-                    if (returnNullEvals) null else eval("microg-secure", packageName)
-            }
-            fetchAppMicrogRiskyEvaluationUseCase = object : FetchAppMicrogRiskyEvaluationUseCase() {
-                override suspend fun invoke(packageName: String): Evaluation? =
-                    if (returnNullEvals) null else eval("microg-risky", packageName)
-            }
-            fetchAppBareAOspSecureEvaluationUseCase = object : FetchAppBareAospSecureEvaluationUseCase() {
-                override suspend fun invoke(packageName: String): Evaluation? =
-                    if (returnNullEvals) null else eval("bare-secure", packageName)
-            }
-            fetchAppBareAospRiskyEvaluationUseCase = object : FetchAppBareAospRiskyEvaluationUseCase() {
-                override suspend fun invoke(packageName: String): Evaluation? =
-                    if (returnNullEvals) null else eval("bare-risky", packageName)
-            }
-            fetchIconUrlUseCase = object : FetchIconUrlUseCase() {
-                override suspend fun invoke(packageName: String): String = iconUrl
-            }
-            settings = object : Settings(appContext) {
-                override fun isRootConfigurationEnabled(): Boolean = rootEnabled
-            }
+        val mockRepository = object : com.klee.sapio.domain.EvaluationRepository {
+            override suspend fun listLatestEvaluations(pageNumber: Int): List<com.klee.sapio.data.Evaluation> = emptyList()
+            override suspend fun searchEvaluations(pattern: String): List<com.klee.sapio.data.Evaluation> = emptyList()
+            override suspend fun addEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation) {}
+            override suspend fun updateEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation, id: Int) {}
+            override suspend fun fetchMicrogSecureEvaluation(appPackageName: String) = null
+            override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String) = null
+            override suspend fun fetchBareAospSecureEvaluation(appPackageName: String) = null
+            override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String) = null
+            override suspend fun existingEvaluations(packageName: String) = emptyList<com.klee.sapio.data.StrapiElement>()
+            override suspend fun uploadIcon(app: com.klee.sapio.data.InstalledApplication) = null
+            override suspend fun existingIcon(iconName: String) = emptyList<com.klee.sapio.data.IconAnswer>()
+            override suspend fun deleteIcon(id: Int) = null
+        }
+        
+        val microgSecureUseCase = object : FetchAppMicrogSecureEvaluationUseCase(mockRepository) {
+            override suspend fun invoke(packageName: String): Evaluation? =
+                if (returnNullEvals) null else eval("microg-secure", packageName)
+        }
+        val microgRiskyUseCase = object : FetchAppMicrogRiskyEvaluationUseCase(mockRepository) {
+            override suspend fun invoke(packageName: String): Evaluation? =
+                if (returnNullEvals) null else eval("microg-risky", packageName)
+        }
+        val bareSecureUseCase = object : FetchAppBareAospSecureEvaluationUseCase(mockRepository) {
+            override suspend fun invoke(packageName: String): Evaluation? =
+                if (returnNullEvals) null else eval("bare-secure", packageName)
+        }
+        val bareRiskyUseCase = object : FetchAppBareAospRiskyEvaluationUseCase(mockRepository) {
+            override suspend fun invoke(packageName: String): Evaluation? =
+                if (returnNullEvals) null else eval("bare-risky", packageName)
+        }
+        val iconUrlUseCase = object : FetchIconUrlUseCase(mockRepository) {
+            override suspend fun invoke(packageName: String): String = iconUrl
+        }
+        val settingsObj = object : Settings(appContext) {
+            override fun isRootConfigurationEnabled(): Boolean = rootEnabled
+        }
+        
+        return AppEvaluationsViewModel(
+            microgSecureUseCase,
+            microgRiskyUseCase,
+            bareSecureUseCase,
+            bareRiskyUseCase,
+            iconUrlUseCase,
+            settingsObj
+        ).apply {
             ioDispatcher = dispatcher
         }
     }

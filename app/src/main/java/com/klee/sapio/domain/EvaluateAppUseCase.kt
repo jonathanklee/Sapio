@@ -9,13 +9,10 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
 
-class EvaluateAppUseCase @Inject constructor() {
-
-    @Inject
-    lateinit var mEvaluationRepository: EvaluationRepository
-
-    @Inject
-    lateinit var mDeviceConfiguration: DeviceConfiguration
+class EvaluateAppUseCase @Inject constructor(
+    private val evaluationRepository: EvaluationRepository,
+    private val deviceConfiguration: DeviceConfiguration
+) {
 
     suspend operator fun invoke(
         app: InstalledApplication,
@@ -53,13 +50,13 @@ class EvaluateAppUseCase @Inject constructor() {
     private suspend fun uploadIcon(
         app: InstalledApplication
     ): Response<ArrayList<IconAnswer>>? {
-        return mEvaluationRepository.uploadIcon(app)
+        return evaluationRepository.uploadIcon(app)
     }
 
     private suspend fun deleteIcon(
         id: Int
     ) {
-        mEvaluationRepository.deleteIcon(id)
+        evaluationRepository.deleteIcon(id)
     }
 
     private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rating: Int) {
@@ -68,16 +65,16 @@ class EvaluateAppUseCase @Inject constructor() {
             app.packageName,
             iconId,
             rating,
-            mDeviceConfiguration.getGmsType(),
-            mDeviceConfiguration.isRisky()
+            deviceConfiguration.getGmsType(),
+            deviceConfiguration.isRisky()
         )
 
-        mEvaluationRepository.addEvaluation(newEvaluation)
+        evaluationRepository.addEvaluation(newEvaluation)
     }
 
     private suspend fun getExistingIcons(app: InstalledApplication): List<IconAnswer> {
         return withContext(Dispatchers.IO) {
-            val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
+            val icons = evaluationRepository.existingIcon("${app.packageName}.png")
             if (icons.isEmpty()) {
                 return@withContext arrayListOf()
             } else {

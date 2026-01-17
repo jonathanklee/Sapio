@@ -33,7 +33,7 @@ class SearchViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         
-        searchViewModel = SearchViewModel()
+        searchViewModel = SearchViewModel(FakeSearchUseCase(emptyList()))
     }
 
     @After
@@ -60,12 +60,12 @@ class SearchViewModelTest {
     @Test
     fun test_search_updates_state_and_calls_onError_when_empty() = runTest {
         val fakeUseCase = FakeSearchUseCase(emptyList())
-        searchViewModel.searchEvaluationUseCase = fakeUseCase
+        val viewModel = SearchViewModel(fakeUseCase)
         var errored = false
 
-        searchViewModel.searchApplication("pattern") { errored = true }
+        viewModel.searchApplication("pattern") { errored = true }
 
-        val result = searchViewModel.evaluations.first()
+        val result = viewModel.evaluations.first()
         Assert.assertTrue(errored)
         Assert.assertTrue(result.isEmpty())
     }
@@ -76,17 +76,30 @@ class SearchViewModelTest {
             Evaluation("Name", "pkg", iconUrl = null, rating = 1, microg = 1, secure = 1, updatedAt = null, createdAt = null, publishedAt = null, versionName = null)
         )
         val fakeUseCase = FakeSearchUseCase(expected)
-        searchViewModel.searchEvaluationUseCase = fakeUseCase
+        val viewModel = SearchViewModel(fakeUseCase)
         var errored = false
 
-        searchViewModel.searchApplication("pattern") { errored = true }
+        viewModel.searchApplication("pattern") { errored = true }
 
-        val result = searchViewModel.evaluations.first()
+        val result = viewModel.evaluations.first()
         Assert.assertFalse(errored)
         Assert.assertEquals(expected, result)
     }
 
-    private class FakeSearchUseCase(private val result: List<Evaluation>) : SearchEvaluationUseCase() {
+    private class FakeSearchUseCase(private val result: List<Evaluation>) : SearchEvaluationUseCase(object : com.klee.sapio.domain.EvaluationRepository {
+        override suspend fun listLatestEvaluations(pageNumber: Int): List<com.klee.sapio.data.Evaluation> = emptyList()
+        override suspend fun searchEvaluations(pattern: String): List<com.klee.sapio.data.Evaluation> = emptyList()
+        override suspend fun addEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation) {}
+        override suspend fun updateEvaluation(evaluation: com.klee.sapio.data.UploadEvaluation, id: Int) {}
+        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String) = null
+        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String) = null
+        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String) = null
+        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String) = null
+        override suspend fun existingEvaluations(packageName: String) = emptyList<com.klee.sapio.data.StrapiElement>()
+        override suspend fun uploadIcon(app: com.klee.sapio.data.InstalledApplication) = null
+        override suspend fun existingIcon(iconName: String) = emptyList<com.klee.sapio.data.IconAnswer>()
+        override suspend fun deleteIcon(id: Int) = null
+    }) {
         override suspend operator fun invoke(pattern: String): List<Evaluation> = result
     }
 }

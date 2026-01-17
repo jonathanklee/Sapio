@@ -45,12 +45,11 @@ class EvaluateAppUseCaseTest {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
         
-        evaluateAppUseCase = EvaluateAppUseCase()
-        evaluateAppUseCase.mEvaluationRepository = mockedEvaluationRepository
-        
         // Create a real DeviceConfiguration instance since it's a final class
         val roboContext = org.robolectric.RuntimeEnvironment.getApplication()
-        evaluateAppUseCase.mDeviceConfiguration = com.klee.sapio.data.DeviceConfiguration(roboContext)
+        val deviceConfiguration = com.klee.sapio.data.DeviceConfiguration(roboContext)
+        
+        evaluateAppUseCase = EvaluateAppUseCase(mockedEvaluationRepository, deviceConfiguration)
         
         // Create a real InstalledApplication instance since it's a final class
         val fakeDrawable = ColorDrawable(Color.RED)

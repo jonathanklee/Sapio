@@ -18,25 +18,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class AppEvaluationsViewModel @Inject constructor() : ViewModel() {
-
-    @Inject
-    lateinit var fetchAppMicrogSecureEvaluationUseCase: FetchAppMicrogSecureEvaluationUseCase
-
-    @Inject
-    lateinit var fetchAppMicrogRiskyEvaluationUseCase: FetchAppMicrogRiskyEvaluationUseCase
-
-    @Inject
-    lateinit var fetchAppBareAOspSecureEvaluationUseCase: FetchAppBareAospSecureEvaluationUseCase
-
-    @Inject
-    lateinit var fetchAppBareAospRiskyEvaluationUseCase: FetchAppBareAospRiskyEvaluationUseCase
-
-    @Inject
-    lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
-
-    @Inject
-    lateinit var settings: Settings
+class AppEvaluationsViewModel @Inject constructor(
+    private val fetchAppMicrogSecureEvaluationUseCase: FetchAppMicrogSecureEvaluationUseCase,
+    private val fetchAppMicrogRiskyEvaluationUseCase: FetchAppMicrogRiskyEvaluationUseCase,
+    private val fetchAppBareAOspSecureEvaluationUseCase: FetchAppBareAospSecureEvaluationUseCase,
+    private val fetchAppBareAospRiskyEvaluationUseCase: FetchAppBareAospRiskyEvaluationUseCase,
+    private val fetchIconUrlUseCase: FetchIconUrlUseCase,
+    private val settings: Settings
+) : ViewModel() {
 
     internal var ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 

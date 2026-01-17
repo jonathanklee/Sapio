@@ -10,10 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor() : ViewModel() {
-
-    @Inject
-    lateinit var searchEvaluationUseCase: SearchEvaluationUseCase
+class SearchViewModel @Inject constructor(
+    private val searchEvaluationUseCase: SearchEvaluationUseCase
+) : ViewModel() {
 
     val evaluations: Flow<List<Evaluation>>
         get() = _evaluations.asStateFlow()
