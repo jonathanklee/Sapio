@@ -17,7 +17,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
@@ -101,7 +100,7 @@ class EvaluationRepositoryImplTest {
     }
 
     @Test
-    fun existingIcon_returnsCacheWithoutNetworkWhenFresh() = runTest {
+    fun existingIcon_networkFirstCachesWhenSuccessful() = runTest {
         val now = System.currentTimeMillis()
         iconDao.upsertAll(
             listOf(
@@ -112,39 +111,41 @@ class EvaluationRepositoryImplTest {
                 ).toEntity(now)
             )
         )
+        val remote = listOf(
+            iconAnswer(
+                id = 13,
+                name = "com.app.one.png",
+                url = "/remote.png"
+            )
+        )
+        Mockito.`when`(evaluationService.existingIcon("com.app.one.png"))
+            .thenReturn(Result.success(remote))
 
         val result = repository.existingIcon("com.app.one.png")
 
         assertTrue(result.isSuccess)
-        Mockito.verify(evaluationService, Mockito.never()).existingIcon(anyString())
+        assertEquals("/remote.png", result.getOrThrow().first().url)
     }
 
     @Test
-    fun existingIcon_fetchesRemoteWhenCacheExpired() = runTest {
-        val expired = System.currentTimeMillis() - (24 * 60 * 60 * 1000L) - 1
+    fun existingIcon_fallsBackToCacheOnFailure() = runTest {
+        val cachedAt = System.currentTimeMillis() - 1000
         iconDao.upsertAll(
             listOf(
                 iconAnswer(
                     id = 22,
                     name = "com.app.two.png",
                     url = "/old.png"
-                ).toEntity(expired)
-            )
-        )
-        val remote = listOf(
-            iconAnswer(
-                id = 23,
-                name = "com.app.two.png",
-                url = "/new.png"
+                ).toEntity(cachedAt)
             )
         )
         Mockito.`when`(evaluationService.existingIcon("com.app.two.png"))
-            .thenReturn(Result.success(remote))
+            .thenReturn(Result.failure(IllegalStateException("Network error")))
 
         val result = repository.existingIcon("com.app.two.png")
 
         assertTrue(result.isSuccess)
-        assertEquals("/new.png", result.getOrThrow().first().url)
+        assertEquals("/old.png", result.getOrThrow().first().url)
     }
 
     private fun iconAnswer(id: Int, name: String, url: String): IconAnswer {

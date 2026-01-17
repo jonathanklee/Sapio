@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.klee.sapio.R
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.system.Settings
@@ -100,6 +101,7 @@ class FeedAppAdapter(
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
                     .load(EvaluationService.BASE_URL + icons[0].url)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.binding.image)
             }
         }

@@ -30,7 +30,6 @@ class EvaluationRepositoryImpl @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 10
-        private const val ICON_TTL_MS = 24 * 60 * 60 * 1000L
     }
 
     override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<DomainEvaluation>> {
@@ -126,8 +125,7 @@ class EvaluationRepositoryImpl @Inject constructor(
             return Result.success(icons.map { it.toDomain() })
         }
 
-        val minCachedAt = System.currentTimeMillis() - ICON_TTL_MS
-        val cached = iconDao.findByName("${app.packageName}.png", minCachedAt)
+        val cached = iconDao.findByName("${app.packageName}.png")
             .map { it.toDomain() }
         return if (cached.isNotEmpty()) {
             Result.success(cached)
@@ -137,27 +135,21 @@ class EvaluationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun existingIcon(iconName: String): Result<List<DomainIcon>> {
-        val minCachedAt = System.currentTimeMillis() - ICON_TTL_MS
-        val cached = iconDao.findByName(iconName, minCachedAt)
+        val remote = retrofitService.existingIcon(iconName)
+        if (remote.isSuccess) {
+            val icons = remote.getOrThrow()
+            val now = System.currentTimeMillis()
+            iconDao.upsertAll(icons.map { it.toEntity(now) })
+            return Result.success(icons.map { it.toDomain() })
+        }
+
+        val cached = iconDao.findByName(iconName)
             .map { it.toDomain() }
-        val remote = if (cached.isEmpty()) {
-            retrofitService.existingIcon(iconName)
+        return if (cached.isNotEmpty()) {
+            Result.success(cached)
         } else {
-            null
+            Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load icon"))
         }
-        val result = when {
-            cached.isNotEmpty() -> Result.success(cached)
-            remote?.isSuccess == true -> {
-                val icons = remote.getOrThrow()
-                val now = System.currentTimeMillis()
-                iconDao.upsertAll(icons.map { it.toEntity(now) })
-                Result.success(icons.map { it.toDomain() })
-            }
-            else -> Result.failure(
-                remote?.exceptionOrNull() ?: IllegalStateException("Failed to load icon")
-            )
-        }
-        return result
     }
 
     override suspend fun deleteIcon(id: Int): Result<Unit> {

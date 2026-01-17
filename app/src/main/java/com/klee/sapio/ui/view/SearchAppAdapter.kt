@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.databinding.SearchAppCardBinding
 import com.klee.sapio.domain.EvaluationRepository
@@ -67,6 +68,7 @@ class SearchAppAdapter(
             if (icons.isNotEmpty()) {
                 Glide.with(mContext.applicationContext)
                     .load(EvaluationService.BASE_URL + icons[0].url)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.binding.image)
             }
         }

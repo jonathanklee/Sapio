@@ -53,11 +53,10 @@ interface IconDao {
         """
         SELECT * FROM IconEntity
         WHERE name = :iconName
-        AND cachedAt >= :minCachedAt
         ORDER BY id DESC
         """
     )
-    suspend fun findByName(iconName: String, minCachedAt: Long): List<IconEntity>
+    suspend fun findByName(iconName: String): List<IconEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(items: List<IconEntity>)

@@ -134,7 +134,7 @@ class EvaluationDaoTest {
     }
 
     @Test
-    fun findIconByName_filtersByCachedAt() = runTest {
+    fun findIconByName_returnsAllMatchingName() = runTest {
         val expired = IconEntity(
             id = 1,
             name = "com.app.png",
@@ -149,9 +149,9 @@ class EvaluationDaoTest {
         )
         iconDao.upsertAll(listOf(expired, fresh))
 
-        val results = iconDao.findByName("com.app.png", minCachedAt = 100)
+        val results = iconDao.findByName("com.app.png")
 
-        assertEquals(1, results.size)
-        assertTrue(results.first().url.contains("fresh"))
+        assertEquals(2, results.size)
+        assertTrue(results.any { it.url.contains("fresh") })
     }
 }
