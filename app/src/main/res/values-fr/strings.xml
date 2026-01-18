@@ -19,6 +19,7 @@
     <string name="search_hint">Rechercher des applications ...</string>
     <string name="updated_on">Mis à jour le %1$s</string>
     <string name="android_compatibility_matrix">Compatibilité Android</string>
+    <string name="android_compatibility_subtitle">sans Google Play Services</string>
     <string name="application_name">Nom de l\'application</string>
     <string name="package_name">Nom du paquet</string>
     <string name="feed_title">Actualité</string>
@@ -38,6 +39,9 @@
     <string name="rating_rules"><![CDATA[<a href="%1$s">Règles d\'évaluation</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">J\'ai lu et je comprends les règles d\'évaluation</string>
     <string name="share_text">N\'hésitez pas à partager votre évaluation sur les réseaux sociaux pour sensibiliser les développeurs au respect des données personnelles.</string>
+    <string name="share_android_compatibility">%1$s Compatibilité Android</string>
+    <string name="share_android_compatibility_text">%1$s Compatibilité Android https://github.com/jonathanklee/Sapio #sapio</string>
+    <string name="support_privacy_focused_apps">Soutenez les applications Android respectueuses de la vie privée !</string>
     <string name="show_risky">Environnements</string>
     <string name="general">Général</string>
     <string name="show_risky_environments">Montrer les environnements non-securisés</string>

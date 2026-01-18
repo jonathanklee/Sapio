@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,14 +65,14 @@ fun ShareScreenshot(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Android Compatibility",
+                        stringResource(R.string.android_compatibility_matrix),
                         style = TextStyle(
                             color = Color.White,
                             fontSize = 8.5.sp
                         )
                     )
                     Text(
-                        "without Google Play Services",
+                        stringResource(R.string.android_compatibility_subtitle),
                         style = TextStyle(
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 5.sp
@@ -159,7 +160,7 @@ fun ShareScreenshot(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        "Sapio",
+                        stringResource(R.string.app_name),
                         style = TextStyle(
                             color = Color.White,
                             fontSize = 5.5.sp
@@ -174,7 +175,7 @@ fun ShareScreenshot(
                     .padding(top = 2.dp)
             ) {
                 Text(
-                    "Support privacy-focused Android apps!",
+                    stringResource(R.string.support_privacy_focused_apps),
                     style = TextStyle(
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 4.sp
