@@ -136,17 +136,49 @@ fun ShareScreenshot(
 
                     Spacer(modifier = Modifier.height(6.dp))
 
-                    RatingPill(
-                        label = "microG",
-                        rating = sharedEvaluation.ratingMicrog,
-                        modifier = Modifier.align(Alignment.Start)
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-                    RatingPill(
-                        label = "bareAOSP",
-                        rating = sharedEvaluation.ratingBareAOSP,
-                        modifier = Modifier.align(Alignment.Start)
-                    )
+                    val availableRatings = buildList {
+                        if (hasRating(sharedEvaluation.ratingMicrog)) {
+                            add("microG" to sharedEvaluation.ratingMicrog)
+                        }
+                        if (hasRating(sharedEvaluation.ratingBareAOSP)) {
+                            add("bareAOSP" to sharedEvaluation.ratingBareAOSP)
+                        }
+                    }
+                    val pillHeight = 14.dp
+                    val pillSpacing = 3.dp
+                    val pillStackHeight = (pillHeight * 2) + pillSpacing
+                    val pillAreaHeight = if (availableRatings.isEmpty()) 0.dp else pillStackHeight
+
+                    Box(
+                        modifier = Modifier
+                            .height(pillAreaHeight),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        when (availableRatings.size) {
+                            1 -> {
+                                val (label, rating) = availableRatings[0]
+                                RatingPill(
+                                    label = label,
+                                    rating = rating,
+                                    modifier = Modifier.height(pillHeight)
+                                )
+                            }
+                            2 -> {
+                                Column {
+                                    availableRatings.forEachIndexed { index, (label, rating) ->
+                                        RatingPill(
+                                            label = label,
+                                            rating = rating,
+                                            modifier = Modifier.height(pillHeight)
+                                        )
+                                        if (index == 0) {
+                                            Spacer(modifier = Modifier.height(pillSpacing))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -234,6 +266,10 @@ private fun RatingPill(
             textAlign = TextAlign.End,
         )
     }
+}
+
+private fun hasRating(rating: Int): Boolean {
+    return rating == Rating.GOOD || rating == Rating.AVERAGE || rating == Rating.BAD
 }
 
 const val WIDTH = 5
