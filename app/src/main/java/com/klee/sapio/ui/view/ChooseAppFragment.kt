@@ -50,22 +50,27 @@ class ChooseAppFragment : Fragment() {
     private fun onChooseButtonClicked() {
         mBinding.chooseAppButton.isEnabled = false
         mBinding.nextButton.isEnabled = false
-        val dialog = ChooseAppDialog { chosenApp ->
-            mBinding.appName.text = chosenApp.name
-            mApp = chosenApp
-            runBlocking {
-                if (isOnFdroid(chosenApp)) {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.select_application_error),
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    mBinding.nextButton.isEnabled = true
+        val dialog = ChooseAppDialog(
+            onAppSelected = { chosenApp ->
+                mBinding.appName.text = chosenApp.name
+                mApp = chosenApp
+                runBlocking {
+                    if (isOnFdroid(chosenApp)) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.select_application_error),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        mBinding.nextButton.isEnabled = true
+                    }
+                    mBinding.chooseAppButton.isEnabled = true
                 }
+            },
+            onDismissed = {
                 mBinding.chooseAppButton.isEnabled = true
             }
-        }
+        )
         dialog.show(parentFragmentManager, "")
     }
 

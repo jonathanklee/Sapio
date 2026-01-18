@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -16,15 +17,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChooseAppDialog(private val mListener: Listener) : DialogFragment() {
+class ChooseAppDialog(
+    private val onAppSelected: (InstalledApplication) -> Unit,
+    private val onDismissed: (() -> Unit)? = null
+) : DialogFragment() {
 
     private lateinit var mBinding: DialogChooseAppBinding
+    private var hasSelection = false
 
     @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
-
-    fun interface Listener {
-        fun onAppSelected(app: InstalledApplication)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,8 +43,23 @@ class ChooseAppDialog(private val mListener: Listener) : DialogFragment() {
         val recyclerView = mBinding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         recyclerView.adapter = ChooseAppAdapter(list) { app ->
+            hasSelection = true
             dismiss()
-            mListener.onAppSelected(app)
+            onAppSelected(app)
+        }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        if (!hasSelection) {
+            onDismissed?.invoke()
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (!hasSelection) {
+            onDismissed?.invoke()
         }
     }
 }
