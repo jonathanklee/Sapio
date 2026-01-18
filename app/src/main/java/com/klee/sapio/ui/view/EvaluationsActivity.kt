@@ -44,8 +44,8 @@ import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
@@ -119,7 +119,7 @@ class EvaluationsActivity : AppCompatActivity() {
 
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
         if (shareImmediately) {
-            onElementsLoaded {
+            onElementsLoaded(once = true) {
                 startTakingScreenshot(appName, packageName)
             }
         }
@@ -139,26 +139,19 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding.card.visibility = View.VISIBLE
     }
 
-    private fun onElementsLoaded(callback: () -> Unit) {
-        if (settings.isRootConfigurationEnabled()) {
-            combine(
-                microgUserReceived,
-                microgRootReceived,
-                bareAospUserReceived,
-                bareAospRootReceived,
-                iconReceived
-            ) { _, _, _, _, _ ->
-                callback.invoke()
-            }.launchIn(lifecycleScope)
-        } else {
-            combine(
-                microgUserReceived,
-                bareAospUserReceived,
-                iconReceived
-            ) { _, _, _ ->
-                callback.invoke()
-            }.launchIn(lifecycleScope)
-        }
+    private fun onElementsLoaded(once: Boolean = false, callback: () -> Unit) {
+        elementsLoadedFlow(
+            settings.isRootConfigurationEnabled(),
+            ElementsLoadedSignals(
+                microgUserReceived = microgUserReceived,
+                microgRootReceived = microgRootReceived,
+                bareAospUserReceived = bareAospUserReceived,
+                bareAospRootReceived = bareAospRootReceived,
+                iconReceived = iconReceived
+            ),
+            once
+        ).onEach { callback.invoke() }
+            .launchIn(lifecycleScope)
     }
 
     private fun handleRootConfigurationSetting() {
