@@ -41,7 +41,7 @@
     <string name="share">Share</string>
     <string name="share_text">Feel free to share your evaluation on social media to raise awareness among app developers about respecting users\' personal data.</string>
     <string name="share_android_compatibility">%1$s Android Compatibility</string>
-    <string name="share_android_compatibility_text">%1$s Android Compatibility https://github.com/jonathanklee/Sapio #sapio</string>
+    <string name="share_android_compatibility_text">%1$s Android Compatibility https://github.com/jonathanklee/Sapio #degoogle #sapio</string>
     <string name="support_privacy_focused_apps">Support privacy-focused Android apps!</string>
     <string name="donate">Donate</string>
     <string name="settings">Settings</string>
