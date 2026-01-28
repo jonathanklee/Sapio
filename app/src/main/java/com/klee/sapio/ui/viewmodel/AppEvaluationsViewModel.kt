@@ -39,7 +39,7 @@ class AppEvaluationsViewModel @Inject constructor(
             withContext(ioDispatcher) {
                 _uiState.update {
                     it.copy(
-                        microgUser = fetchAppMicrogSecureEvaluationUseCase.invoke(
+                        microgUser = fetchAppMicrogSecureEvaluationUseCase(
                             packageName
                         ).getOrNull(),
                         microgUserLoaded = true
@@ -52,7 +52,7 @@ class AppEvaluationsViewModel @Inject constructor(
             withContext(ioDispatcher) {
                 _uiState.update {
                     it.copy(
-                        bareAospUser = fetchAppBareAOspSecureEvaluationUseCase.invoke(packageName).getOrNull(),
+                        bareAospUser = fetchAppBareAOspSecureEvaluationUseCase(packageName).getOrNull(),
                         bareAospUserLoaded = true
                     )
                 }
@@ -64,7 +64,7 @@ class AppEvaluationsViewModel @Inject constructor(
                 withContext(ioDispatcher) {
                     _uiState.update {
                         it.copy(
-                            microgRoot = fetchAppMicrogRiskyEvaluationUseCase.invoke(
+                            microgRoot = fetchAppMicrogRiskyEvaluationUseCase(
                                 packageName
                             ).getOrNull(),
                             microgRootLoaded = true
@@ -77,7 +77,7 @@ class AppEvaluationsViewModel @Inject constructor(
                 withContext(ioDispatcher) {
                     _uiState.update {
                         it.copy(
-                            bareAospRoot = fetchAppBareAospRiskyEvaluationUseCase.invoke(packageName).getOrNull(),
+                            bareAospRoot = fetchAppBareAospRiskyEvaluationUseCase(packageName).getOrNull(),
                             bareAospRootLoaded = true
                         )
                     }
@@ -89,7 +89,7 @@ class AppEvaluationsViewModel @Inject constructor(
             withContext(ioDispatcher) {
                 _uiState.update {
                     it.copy(
-                        iconUrl = fetchIconUrlUseCase.invoke(packageName).getOrDefault(""),
+                        iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""),
                         iconLoaded = true
                     )
                 }

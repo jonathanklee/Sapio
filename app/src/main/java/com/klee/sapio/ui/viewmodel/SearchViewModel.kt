@@ -22,7 +22,7 @@ class SearchViewModel @Inject constructor(
     fun searchApplication(pattern: String, onError: () -> Unit) {
         _uiState.update { it.copy(query = pattern, isLoading = true, hasError = false) }
         viewModelScope.launch {
-            val result = searchEvaluationUseCase.invoke(pattern)
+            val result = searchEvaluationUseCase(pattern)
             val list = result.getOrDefault(emptyList())
             val hasError = result.isFailure
 

@@ -31,7 +31,7 @@ class FeedViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(items = emptyList(), isLoading = true, hasError = false) }
             for (i in 1..NUMBER_OF_PAGES) {
-                val result = listLatestEvaluationsUseCase.invoke(i)
+                val result = listLatestEvaluationsUseCase(i)
                 if (result.isFailure) {
                     _uiState.update { it.copy(isLoading = false, hasError = true) }
                     return@launch

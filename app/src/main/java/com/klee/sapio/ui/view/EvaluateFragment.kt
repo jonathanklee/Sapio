@@ -88,7 +88,7 @@ class EvaluateFragment : Fragment() {
             ) ?: return@runBlocking
 
             val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
-            mEvaluateAppUseCase.invoke(
+            mEvaluateAppUseCase(
                 app,
                 rating,
                 { onUploadSuccess() },

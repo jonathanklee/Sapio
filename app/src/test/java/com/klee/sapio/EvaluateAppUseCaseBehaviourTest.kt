@@ -54,7 +54,7 @@ class EvaluateAppUseCaseBehaviourTest {
         var success = false
         var error = false
 
-        useCase.invoke(installedApp, rating = 5, onSuccess = { success = true }, onError = { error = true })
+        useCase(installedApp, rating = 5, onSuccess = { success = true }, onError = { error = true })
 
         assertTrue(repository.deletedIds.containsAll(listOf(10, 11)))
         assertTrue(repository.addedEvaluations.isNotEmpty())
@@ -72,7 +72,7 @@ class EvaluateAppUseCaseBehaviourTest {
         var success = false
         var error = false
 
-        useCase.invoke(installedApp, rating = 2, onSuccess = { success = true }, onError = { error = true })
+        useCase(installedApp, rating = 2, onSuccess = { success = true }, onError = { error = true })
 
         assertTrue(error)
         assertFalse(success)

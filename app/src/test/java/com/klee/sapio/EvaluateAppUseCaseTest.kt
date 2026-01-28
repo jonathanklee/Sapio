@@ -75,7 +75,7 @@ class EvaluateAppUseCaseTest {
         var successCalled = false
         var errorCalled = false
 
-        evaluateAppUseCase.invoke(realInstalledApplication, 1,
+        evaluateAppUseCase(realInstalledApplication, 1,
             onSuccess = { successCalled = true },
             onError = { errorCalled = true }
         )
@@ -102,7 +102,7 @@ class EvaluateAppUseCaseTest {
         var successCalled = false
         var errorCalled = false
 
-        evaluateAppUseCase.invoke(realInstalledApplication, 1,
+        evaluateAppUseCase(realInstalledApplication, 1,
             onSuccess = { successCalled = true },
             onError = { errorCalled = true }
         )
