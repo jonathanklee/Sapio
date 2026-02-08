@@ -22,9 +22,5 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew assemble
-    - name: Lint with Detekt
-      run: ./gradlew detekt
-    - name: Run test with Gradle
-      run: ./gradlew test
+    - name: Build and checks with Gradle
+      run: ./gradlew detekt assembleRelease testRelease --parallel
