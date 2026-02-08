@@ -37,6 +37,7 @@ swiperefreshlayout = "1.1.0"
 material3AndroidVersion = "1.4.0"
 archCoreTesting = "2.2.0"
 room = "2.7.0-rc01"
+work = "2.9.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -88,6 +89,7 @@ androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", versi
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

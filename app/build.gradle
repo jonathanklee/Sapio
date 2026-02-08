@@ -172,6 +172,9 @@ dependencies {
     // preferences
     implementation libs.androidx.preference.ktx
 
+    // workmanager
+    implementation libs.androidx.work.runtime.ktx
+
     // compose
     implementation platform(libs.androidx.compose.bom)
     implementation(libs.androidx.foundation)
