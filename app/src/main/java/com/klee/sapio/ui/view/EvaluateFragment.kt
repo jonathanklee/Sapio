@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.data.repository.EvaluationRepositoryImpl
@@ -20,7 +21,7 @@ import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.ui.model.Label
 import com.klee.sapio.ui.model.Rating
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -81,11 +82,17 @@ class EvaluateFragment : Fragment() {
     }
 
     private fun onValidateClicked() {
-        runBlocking {
+        mBinding.validateButton.isEnabled = false
+        mBinding.validateButton.isClickable = false
+        viewLifecycleOwner.lifecycleScope.launch {
             val app = mInstalledApplicationsRepository.getApplicationFromPackageName(
                 requireContext(),
                 mPackageName
-            ) ?: return@runBlocking
+            ) ?: run {
+                mBinding.validateButton.isEnabled = true
+                mBinding.validateButton.isClickable = true
+                return@launch
+            }
 
             val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
             mEvaluateAppUseCase(
@@ -108,6 +115,8 @@ class EvaluateFragment : Fragment() {
 
     private fun onUploadError() {
         Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
+        mBinding.validateButton.isEnabled = true
+        mBinding.validateButton.isClickable = true
     }
 
     private fun getRatingFromRadioId(id: Int, view: View): Int {

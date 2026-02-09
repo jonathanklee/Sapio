@@ -43,7 +43,7 @@
     <string name="share_android_compatibility_text">%1$s Compatibilité Android https://github.com/jonathanklee/Sapio #degoogle #sapio</string>
     <string name="compatibility_check_channel_name">Vérifications de compatibilité</string>
     <string name="compatibility_check_channel_description">Notifications sur les applications incompatibles avec votre configuration.</string>
-    <string name="compatibility_check_notification_title">Mauvaise compatibilité détectée</string>
+    <string name="compatibility_check_notification_title">App incompatible détectée</string>
     <string name="compatibility_check_notification_body">L\'application %1$s ne semble pas fonctionner sans Google Play Services. Aidez-nous à faire du bruit - partagez ceci et taguez le développeur pour demander une version respectueuse de la vie privée !</string>
     <string name="compatibility_check_notification_share_action">Partager maintenant</string>
     <string name="support_privacy_focused_apps">Soutenez les applications Android respectueuses de la vie privée !</string>
