@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -52,7 +53,6 @@ import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-
 @AndroidEntryPoint
 class EvaluationsActivity : AppCompatActivity() {
 
@@ -83,6 +83,7 @@ class EvaluationsActivity : AppCompatActivity() {
         const val EXTRA_PACKAGE_NAME = "packageName"
         const val EXTRA_APP_NAME = "appName"
         const val EXTRA_SHARE_IMMEDIATELY = "shareImmediately"
+        const val EXTRA_NOTIFICATION_ID = "notificationId"
         const val IMAGE_LOADING_DELAY_IN_MS = 200L
         const val SCREENSHOT_WIDTH_DP = 200
         const val SCREENSHOT_HEIGHT_DP = 115
@@ -119,6 +120,13 @@ class EvaluationsActivity : AppCompatActivity() {
 
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
         if (shareImmediately) {
+            val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
+            if (notificationId != -1) {
+                val notificationManager =
+                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+                notificationManager.cancel(notificationId)
+            }
             onElementsLoaded(once = true) {
                 startTakingScreenshot(appName, packageName)
             }

@@ -40,15 +40,24 @@ class CompatibilityCheckWorker(
         val userType = UserType.SECURE
 
         val badApps = mutableListOf<InstalledApplication>()
+        val averageApps = mutableListOf<InstalledApplication>()
         for (app in installedApps) {
-            if (isBadCompatibility(evaluationRepository, app, gmsType, userType)) {
-                badApps.add(app)
+            when {
+                isBadCompatibility(evaluationRepository, app, gmsType, userType) -> {
+                    badApps.add(app)
+                }
+                isAverageCompatibility(evaluationRepository, app, gmsType, userType) -> {
+                    averageApps.add(app)
+                }
             }
         }
 
         if (badApps.isNotEmpty()) {
             val badApp = badApps[Random.nextInt(badApps.size)]
             CompatibilityNotificationManager(applicationContext).show(badApp)
+        } else if (averageApps.isNotEmpty()) {
+            val averageApp = averageApps[Random.nextInt(averageApps.size)]
+            CompatibilityNotificationManager(applicationContext).show(averageApp)
         }
 
         return Result.success()
@@ -79,6 +88,33 @@ class CompatibilityCheckWorker(
         }
 
         return evaluation?.rating == Rating.BAD
+    }
+
+    private suspend fun isAverageCompatibility(
+        evaluationRepository: EvaluationRepository,
+        app: InstalledApplication,
+        gmsType: Int,
+        userType: Int
+    ): Boolean {
+        val evaluation = when (gmsType) {
+            GmsType.MICROG -> {
+                if (userType == UserType.RISKY) {
+                    evaluationRepository.fetchMicrogRiskyEvaluation(app.packageName).getOrNull()
+                } else {
+                    evaluationRepository.fetchMicrogSecureEvaluation(app.packageName).getOrNull()
+                }
+            }
+            GmsType.BARE_AOSP -> {
+                if (userType == UserType.RISKY) {
+                    evaluationRepository.fetchBareAospRiskyEvaluation(app.packageName).getOrNull()
+                } else {
+                    evaluationRepository.fetchBareAospSecureEvaluation(app.packageName).getOrNull()
+                }
+            }
+            else -> null
+        }
+
+        return evaluation?.rating == Rating.AVERAGE
     }
 }
 

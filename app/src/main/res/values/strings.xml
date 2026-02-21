@@ -47,8 +47,8 @@
     <string name="settings">Settings</string>
     <string name="compatibility_check_channel_name">Compatibility checks</string>
     <string name="compatibility_check_channel_description">Notifications about apps that are incompatible with your configuration.</string>
-    <string name="compatibility_check_notification_title">Incompatible app detected</string>
-    <string name="compatibility_check_notification_body">%1$s doesn\'t seem to work without Google Play Services. Help us make noise -- share this and tag the developer to request a privacy-respecting version!</string>
+    <string name="compatibility_check_notification_title">Incompatible app</string>
+    <string name="compatibility_check_notification_body">%1$s doesn\'t seem to work properly without Google Play Services. Help us make noise -- share this and tag the developer to request a privacy-respecting version!</string>
     <string name="compatibility_check_notification_share_action">Share now</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Rating rules</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">I have read and I understand the rating rules</string>

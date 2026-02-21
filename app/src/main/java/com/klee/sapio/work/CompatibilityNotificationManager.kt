@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.klee.sapio.R
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.ui.view.EvaluationsActivity
@@ -15,16 +16,6 @@ class CompatibilityNotificationManager(
     private val context: Context
 ) {
     fun show(app: InstalledApplication) {
-        notify(app)
-    }
-
-    fun showTest() {
-        val appInfo = context.applicationInfo
-        val app = InstalledApplication(
-            context.getString(R.string.app_name),
-            context.packageName,
-            context.packageManager.getApplicationIcon(appInfo)
-        )
         notify(app)
     }
 
@@ -64,6 +55,7 @@ class CompatibilityNotificationManager(
             putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
             if (shareImmediately) {
                 putExtra(EvaluationsActivity.EXTRA_SHARE_IMMEDIATELY, true)
+                putExtra(EvaluationsActivity.EXTRA_NOTIFICATION_ID, NOTIFICATION_ID)
             }
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
@@ -87,7 +79,8 @@ class CompatibilityNotificationManager(
         pendingIntent: PendingIntent,
         sharePendingIntent: PendingIntent
     ) = NotificationCompat.Builder(context, CHANNEL_ID)
-        .setSmallIcon(android.R.drawable.ic_dialog_alert)
+        .setSmallIcon(R.drawable.ic_notification_info)
+        .setLargeIcon(app.icon.toBitmap())
         .setContentTitle(context.getString(R.string.compatibility_check_notification_title))
         .setContentText(
             context.getString(
@@ -103,7 +96,7 @@ class CompatibilityNotificationManager(
                 )
             )
         )
-        .setAutoCancel(true)
+        .setAutoCancel(false)
         .setContentIntent(pendingIntent)
         .addAction(
             android.R.drawable.ic_menu_share,
