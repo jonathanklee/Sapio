@@ -2,7 +2,7 @@ package com.klee.sapio
 
 import android.app.Application
 import com.google.android.material.color.DynamicColors
-import com.klee.sapio.work.CompatibilityCheckScheduler
+import com.klee.sapio.data.work.CompatibilityCheckScheduler
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

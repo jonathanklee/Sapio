@@ -1,4 +1,4 @@
-package com.klee.sapio.work
+package com.klee.sapio.data.work
 
 import android.content.Context
 import androidx.work.Constraints
