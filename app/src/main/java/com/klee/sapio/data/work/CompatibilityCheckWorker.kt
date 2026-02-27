@@ -69,24 +69,7 @@ class CompatibilityCheckWorker(
         gmsType: Int,
         userType: Int
     ): Boolean {
-        val evaluation = when (gmsType) {
-            GmsType.MICROG -> {
-                if (userType == UserType.RISKY) {
-                    evaluationRepository.fetchMicrogRiskyEvaluation(app.packageName).getOrNull()
-                } else {
-                    evaluationRepository.fetchMicrogSecureEvaluation(app.packageName).getOrNull()
-                }
-            }
-            GmsType.BARE_AOSP -> {
-                if (userType == UserType.RISKY) {
-                    evaluationRepository.fetchBareAospRiskyEvaluation(app.packageName).getOrNull()
-                } else {
-                    evaluationRepository.fetchBareAospSecureEvaluation(app.packageName).getOrNull()
-                }
-            }
-            else -> null
-        }
-
+        val evaluation = evaluationRepository.fetchEvaluation(app.packageName, gmsType, userType).getOrNull()
         return evaluation?.rating == Rating.BAD
     }
 
@@ -96,24 +79,7 @@ class CompatibilityCheckWorker(
         gmsType: Int,
         userType: Int
     ): Boolean {
-        val evaluation = when (gmsType) {
-            GmsType.MICROG -> {
-                if (userType == UserType.RISKY) {
-                    evaluationRepository.fetchMicrogRiskyEvaluation(app.packageName).getOrNull()
-                } else {
-                    evaluationRepository.fetchMicrogSecureEvaluation(app.packageName).getOrNull()
-                }
-            }
-            GmsType.BARE_AOSP -> {
-                if (userType == UserType.RISKY) {
-                    evaluationRepository.fetchBareAospRiskyEvaluation(app.packageName).getOrNull()
-                } else {
-                    evaluationRepository.fetchBareAospSecureEvaluation(app.packageName).getOrNull()
-                }
-            }
-            else -> null
-        }
-
+        val evaluation = evaluationRepository.fetchEvaluation(app.packageName, gmsType, userType).getOrNull()
         return evaluation?.rating == Rating.AVERAGE
     }
 }

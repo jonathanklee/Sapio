@@ -16,13 +16,7 @@ interface EvaluationRepository {
 
     suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit>
 
-    suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<Evaluation?>
-
-    suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<Evaluation?>
-
-    suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<Evaluation?>
-
-    suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<Evaluation?>
+    suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<Evaluation?>
 
     suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>>
 

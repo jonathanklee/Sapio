@@ -2,11 +2,10 @@ package com.klee.sapio.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.klee.sapio.data.system.GmsType
 import com.klee.sapio.data.system.Settings
-import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
-import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase
-import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase
-import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
+import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.FetchAppEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.ui.state.AppEvaluationsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,10 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppEvaluationsViewModel @Inject constructor(
-    private val fetchAppMicrogSecureEvaluationUseCase: FetchAppMicrogSecureEvaluationUseCase,
-    private val fetchAppMicrogRiskyEvaluationUseCase: FetchAppMicrogRiskyEvaluationUseCase,
-    private val fetchAppBareAOspSecureEvaluationUseCase: FetchAppBareAospSecureEvaluationUseCase,
-    private val fetchAppBareAospRiskyEvaluationUseCase: FetchAppBareAospRiskyEvaluationUseCase,
+    private val fetchAppEvaluationUseCase: FetchAppEvaluationUseCase,
     private val fetchIconUrlUseCase: FetchIconUrlUseCase,
     private val settings: Settings
 ) : ViewModel() {
@@ -39,8 +35,10 @@ class AppEvaluationsViewModel @Inject constructor(
             withContext(ioDispatcher) {
                 _uiState.update {
                     it.copy(
-                        microgUser = fetchAppMicrogSecureEvaluationUseCase(
-                            packageName
+                        microgUser = fetchAppEvaluationUseCase(
+                            packageName,
+                            GmsType.MICROG,
+                            UserType.SECURE
                         ).getOrNull(),
                         microgUserLoaded = true
                     )
@@ -52,35 +50,45 @@ class AppEvaluationsViewModel @Inject constructor(
             withContext(ioDispatcher) {
                 _uiState.update {
                     it.copy(
-                        bareAospUser = fetchAppBareAOspSecureEvaluationUseCase(packageName).getOrNull(),
+                        bareAospUser = fetchAppEvaluationUseCase(
+                            packageName,
+                            GmsType.BARE_AOSP,
+                            UserType.SECURE
+                        ).getOrNull(),
                         bareAospUserLoaded = true
                     )
                 }
             }
         }
 
-        if (settings.isRootConfigurationEnabled()) {
-            viewModelScope.launch {
-                withContext(ioDispatcher) {
-                    _uiState.update {
-                        it.copy(
-                            microgRoot = fetchAppMicrogRiskyEvaluationUseCase(
-                                packageName
-                            ).getOrNull(),
-                            microgRootLoaded = true
-                        )
-                    }
+        loadRiskyEvaluationsIfEnabled(packageName)
+
+        viewModelScope.launch {
+            withContext(ioDispatcher) {
+                _uiState.update {
+                    it.copy(
+                        iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""),
+                        iconLoaded = true
+                    )
                 }
             }
+        }
+    }
 
-            viewModelScope.launch {
-                withContext(ioDispatcher) {
-                    _uiState.update {
-                        it.copy(
-                            bareAospRoot = fetchAppBareAospRiskyEvaluationUseCase(packageName).getOrNull(),
-                            bareAospRootLoaded = true
-                        )
-                    }
+    private fun loadRiskyEvaluationsIfEnabled(packageName: String) {
+        if (!settings.isRootConfigurationEnabled()) return
+
+        viewModelScope.launch {
+            withContext(ioDispatcher) {
+                _uiState.update {
+                    it.copy(
+                        microgRoot = fetchAppEvaluationUseCase(
+                            packageName,
+                            GmsType.MICROG,
+                            UserType.RISKY
+                        ).getOrNull(),
+                        microgRootLoaded = true
+                    )
                 }
             }
         }
@@ -89,8 +97,12 @@ class AppEvaluationsViewModel @Inject constructor(
             withContext(ioDispatcher) {
                 _uiState.update {
                     it.copy(
-                        iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""),
-                        iconLoaded = true
+                        bareAospRoot = fetchAppEvaluationUseCase(
+                            packageName,
+                            GmsType.BARE_AOSP,
+                            UserType.RISKY
+                        ).getOrNull(),
+                        bareAospRootLoaded = true
                     )
                 }
             }

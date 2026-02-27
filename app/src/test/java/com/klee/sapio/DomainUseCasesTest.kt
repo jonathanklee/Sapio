@@ -1,9 +1,8 @@
 package com.klee.sapio
 
-import com.klee.sapio.domain.FetchAppBareAospRiskyEvaluationUseCase
-import com.klee.sapio.domain.FetchAppBareAospSecureEvaluationUseCase
-import com.klee.sapio.domain.FetchAppMicrogRiskyEvaluationUseCase
-import com.klee.sapio.domain.FetchAppMicrogSecureEvaluationUseCase
+import com.klee.sapio.data.system.GmsType
+import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.FetchAppEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.model.Evaluation
@@ -25,19 +24,13 @@ class DomainUseCasesTest {
     lateinit var evaluationRepository: EvaluationRepository
 
     private lateinit var fetchIconUrlUseCase: FetchIconUrlUseCase
-    private lateinit var fetchMicrogSecure: FetchAppMicrogSecureEvaluationUseCase
-    private lateinit var fetchMicrogRisky: FetchAppMicrogRiskyEvaluationUseCase
-    private lateinit var fetchBareSecure: FetchAppBareAospSecureEvaluationUseCase
-    private lateinit var fetchBareRisky: FetchAppBareAospRiskyEvaluationUseCase
+    private lateinit var fetchEvaluationUseCase: FetchAppEvaluationUseCase
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         fetchIconUrlUseCase = FetchIconUrlUseCase(evaluationRepository)
-        fetchMicrogSecure = FetchAppMicrogSecureEvaluationUseCase(evaluationRepository)
-        fetchMicrogRisky = FetchAppMicrogRiskyEvaluationUseCase(evaluationRepository)
-        fetchBareSecure = FetchAppBareAospSecureEvaluationUseCase(evaluationRepository)
-        fetchBareRisky = FetchAppBareAospRiskyEvaluationUseCase(evaluationRepository)
+        fetchEvaluationUseCase = FetchAppEvaluationUseCase(evaluationRepository)
     }
 
     @Test
@@ -69,45 +62,49 @@ class DomainUseCasesTest {
     @Test
     fun `fetch microg secure delegates to repository`() = runTest {
         val expected = dummyEvaluation("microg.secure")
-        `when`(evaluationRepository.fetchMicrogSecureEvaluation("pkg")).thenReturn(Result.success(expected))
+        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.MICROG, UserType.SECURE))
+            .thenReturn(Result.success(expected))
 
-        val result = fetchMicrogSecure("pkg")
+        val result = fetchEvaluationUseCase("pkg", GmsType.MICROG, UserType.SECURE)
 
         assertEquals(expected, result.getOrNull())
-        verify(evaluationRepository).fetchMicrogSecureEvaluation("pkg")
+        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.MICROG, UserType.SECURE)
     }
 
     @Test
     fun `fetch microg risky delegates to repository`() = runTest {
         val expected = dummyEvaluation("microg.risky")
-        `when`(evaluationRepository.fetchMicrogRiskyEvaluation("pkg")).thenReturn(Result.success(expected))
+        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.MICROG, UserType.RISKY))
+            .thenReturn(Result.success(expected))
 
-        val result = fetchMicrogRisky("pkg")
+        val result = fetchEvaluationUseCase("pkg", GmsType.MICROG, UserType.RISKY)
 
         assertEquals(expected, result.getOrNull())
-        verify(evaluationRepository).fetchMicrogRiskyEvaluation("pkg")
+        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.MICROG, UserType.RISKY)
     }
 
     @Test
     fun `fetch bare aosp secure delegates to repository`() = runTest {
         val expected = dummyEvaluation("bare.secure")
-        `when`(evaluationRepository.fetchBareAospSecureEvaluation("pkg")).thenReturn(Result.success(expected))
+        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.SECURE))
+            .thenReturn(Result.success(expected))
 
-        val result = fetchBareSecure("pkg")
+        val result = fetchEvaluationUseCase("pkg", GmsType.BARE_AOSP, UserType.SECURE)
 
         assertEquals(expected, result.getOrNull())
-        verify(evaluationRepository).fetchBareAospSecureEvaluation("pkg")
+        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.SECURE)
     }
 
     @Test
     fun `fetch bare aosp risky delegates to repository`() = runTest {
         val expected = dummyEvaluation("bare.risky")
-        `when`(evaluationRepository.fetchBareAospRiskyEvaluation("pkg")).thenReturn(Result.success(expected))
+        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.RISKY))
+            .thenReturn(Result.success(expected))
 
-        val result = fetchBareRisky("pkg")
+        val result = fetchEvaluationUseCase("pkg", GmsType.BARE_AOSP, UserType.RISKY)
 
         assertEquals(expected, result.getOrNull())
-        verify(evaluationRepository).fetchBareAospRiskyEvaluation("pkg")
+        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.RISKY)
     }
 
     private fun dummyEvaluation(name: String) = Evaluation(

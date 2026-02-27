@@ -7,8 +7,6 @@ import com.klee.sapio.data.local.IconDao
 import com.klee.sapio.data.mapper.toData
 import com.klee.sapio.data.mapper.toDomain
 import com.klee.sapio.data.mapper.toEntity
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
 import com.klee.sapio.domain.EvaluationRepository
 import dagger.Binds
 import dagger.Module
@@ -79,36 +77,12 @@ class EvaluationRepositoryImpl @Inject constructor(
         return retrofitService.updateEvaluation(header, id)
     }
 
-    override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return fetchEvaluationWithFallback(
-            appPackageName,
-            GmsType.MICROG,
-            UserType.SECURE
-        )
-    }
-
-    override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return fetchEvaluationWithFallback(
-            appPackageName,
-            GmsType.MICROG,
-            UserType.RISKY
-        )
-    }
-
-    override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return fetchEvaluationWithFallback(
-            appPackageName,
-            GmsType.BARE_AOSP,
-            UserType.SECURE
-        )
-    }
-
-    override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<DomainEvaluation?> {
-        return fetchEvaluationWithFallback(
-            appPackageName,
-            GmsType.BARE_AOSP,
-            UserType.RISKY
-        )
+    override suspend fun fetchEvaluation(
+        appPackageName: String,
+        gmsType: Int,
+        userType: Int
+    ): Result<DomainEvaluation?> {
+        return fetchEvaluationWithFallback(appPackageName, gmsType, userType)
     }
 
     override suspend fun existingEvaluations(packageName: String): Result<List<DomainEvaluationRecord>> {

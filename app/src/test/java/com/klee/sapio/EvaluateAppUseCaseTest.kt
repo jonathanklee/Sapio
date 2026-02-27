@@ -128,16 +128,7 @@ class EvaluateAppUseCaseTest {
         override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> =
             Result.success(Unit)
 
-        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<Evaluation?> =
-            Result.success(null)
-
-        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<Evaluation?> =
-            Result.success(null)
-
-        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<Evaluation?> =
-            Result.success(null)
-
-        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<Evaluation?> =
+        override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<Evaluation?> =
             Result.success(null)
 
         override suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>> =

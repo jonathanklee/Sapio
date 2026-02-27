@@ -101,13 +101,7 @@ class EvaluateAppUseCaseBehaviourTest {
             return Result.success(Unit)
         }
         override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> = Result.success(Unit)
-        override suspend fun fetchMicrogSecureEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
-            Result.success(null)
-        override suspend fun fetchMicrogRiskyEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
-            Result.success(null)
-        override suspend fun fetchBareAospSecureEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
-            Result.success(null)
-        override suspend fun fetchBareAospRiskyEvaluation(appPackageName: String): Result<com.klee.sapio.domain.model.Evaluation?> =
+        override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<com.klee.sapio.domain.model.Evaluation?> =
             Result.success(null)
         override suspend fun existingEvaluations(packageName: String): Result<List<com.klee.sapio.domain.model.EvaluationRecord>> =
             Result.success(emptyList())
