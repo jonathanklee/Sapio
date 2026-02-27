@@ -29,11 +29,7 @@ import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
 import com.klee.sapio.data.api.EvaluationService
@@ -43,8 +39,7 @@ import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -62,18 +57,9 @@ class EvaluationsActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityEvaluationsBinding
     private val mViewModel by viewModels<AppEvaluationsViewModel>()
 
-    private val microgUserReceived = MutableSharedFlow<Boolean>()
-    private val microgRootReceived = MutableSharedFlow<Boolean>()
-    private val bareAospUserReceived = MutableSharedFlow<Boolean>()
-    private val bareAospRootReceived = MutableSharedFlow<Boolean>()
-    private val iconReceived = MutableSharedFlow<Boolean>()
     private lateinit var shareLauncher: ActivityResultLauncher<Intent>
 
     private var shareImage: Uri? = null
-    private var microgUserReady = false
-    private var microgRootReady = false
-    private var bareAospUserReady = false
-    private var bareAospRootReady = false
     private var iconReady = false
 
     companion object {
@@ -84,7 +70,6 @@ class EvaluationsActivity : AppCompatActivity() {
         const val EXTRA_APP_NAME = "appName"
         const val EXTRA_SHARE_IMMEDIATELY = "shareImmediately"
         const val EXTRA_NOTIFICATION_ID = "notificationId"
-        const val IMAGE_LOADING_DELAY_IN_MS = 200L
         const val SCREENSHOT_WIDTH_DP = 200
         const val SCREENSHOT_HEIGHT_DP = 115
     }
@@ -115,7 +100,6 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         hideCard()
-        resetLoadedFlags()
         mViewModel.listEvaluations(packageName)
 
         val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
@@ -127,7 +111,7 @@ class EvaluationsActivity : AppCompatActivity() {
 
                 notificationManager.cancel(notificationId)
             }
-            onElementsLoaded(once = true) {
+            onElementsLoaded {
                 startTakingScreenshot(appName, packageName)
             }
         }
@@ -147,18 +131,10 @@ class EvaluationsActivity : AppCompatActivity() {
         mBinding.card.visibility = View.VISIBLE
     }
 
-    private fun onElementsLoaded(once: Boolean = false, callback: () -> Unit) {
-        elementsLoadedFlow(
-            settings.isRootConfigurationEnabled(),
-            ElementsLoadedSignals(
-                microgUserReceived = microgUserReceived,
-                microgRootReceived = microgRootReceived,
-                bareAospUserReceived = bareAospUserReceived,
-                bareAospRootReceived = bareAospRootReceived,
-                iconReceived = iconReceived
-            ),
-            once
-        ).onEach { callback.invoke() }
+    private fun onElementsLoaded(callback: () -> Unit) {
+        mViewModel.uiState
+            .filter { it.isFullyLoaded }
+            .onEach { callback.invoke() }
             .launchIn(lifecycleScope)
     }
 
@@ -176,52 +152,27 @@ class EvaluationsActivity : AppCompatActivity() {
     private fun observeEvaluations() {
         lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
-                if (state.microgUserLoaded && !microgUserReady) {
-                    microgUserReady = true
-                    updateEvaluation(mBinding.microgUser, state.microgUser, microgUserReceived)
-                }
-
-                if (state.bareAospUserLoaded && !bareAospUserReady) {
-                    bareAospUserReady = true
-                    updateEvaluation(mBinding.bareAospUser, state.bareAospUser, bareAospUserReceived)
-                }
+                renderEvaluation(mBinding.microgUser, state.microgUser)
+                renderEvaluation(mBinding.bareAospUser, state.bareAospUser)
 
                 if (settings.isRootConfigurationEnabled()) {
-                    if (state.bareAospRootLoaded && !bareAospRootReady) {
-                        bareAospRootReady = true
-                        updateEvaluation(mBinding.bareAospRoot, state.bareAospRoot, bareAospRootReceived)
-                    }
-
-                    if (state.microgRootLoaded && !microgRootReady) {
-                        microgRootReady = true
-                        updateEvaluation(mBinding.microgRoot, state.microgRoot, microgRootReceived)
-                    }
+                    renderEvaluation(mBinding.bareAospRoot, state.bareAospRoot)
+                    renderEvaluation(mBinding.microgRoot, state.microgRoot)
                 }
 
-                if (state.iconLoaded && !iconReady) {
+                if (state.iconUrl.isNotEmpty() && !iconReady) {
                     iconReady = true
                     Glide.with(this@EvaluationsActivity.applicationContext)
                         .load(EvaluationService.BASE_URL + state.iconUrl)
-                        .listener(glideListener)
                         .into(mBinding.image)
-                    lifecycleScope.launch { iconReceived.emit(true) }
                 }
             }
         }
     }
 
-    private fun resetLoadedFlags() {
-        microgUserReady = false
-        microgRootReady = false
-        bareAospUserReady = false
-        bareAospRootReady = false
-        iconReady = false
-    }
-
-    private fun updateEvaluation(
+    private fun renderEvaluation(
         textView: EmojiTextView,
-        evaluation: com.klee.sapio.domain.model.Evaluation?,
-        flow: MutableSharedFlow<Boolean>
+        evaluation: com.klee.sapio.domain.model.Evaluation?
     ) {
         textView.text = evaluation?.let {
             Rating.create(it.rating).text
@@ -229,10 +180,6 @@ class EvaluationsActivity : AppCompatActivity() {
 
         textView.tooltipText = evaluation?.let {
             computeTooltip(it.rating)
-        }
-
-        lifecycleScope.launch {
-            flow.emit(true)
         }
     }
 
@@ -395,31 +342,6 @@ class EvaluationsActivity : AppCompatActivity() {
         shareLauncher.unregister()
         if (shareImage != null) {
             contentResolver.delete(shareImage!!, null, null)
-        }
-    }
-
-    private val glideListener = object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            TODO("Not yet implemented")
-        }
-
-        override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-        ): Boolean {
-            lifecycleScope.launch {
-                delay(IMAGE_LOADING_DELAY_IN_MS)
-                iconReceived.emit(true)
-            }
-            return false
         }
     }
 }

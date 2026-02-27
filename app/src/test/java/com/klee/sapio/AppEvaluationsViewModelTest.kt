@@ -24,6 +24,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -67,6 +68,8 @@ class AppEvaluationsViewModelTest {
         assertNull(state.microgRoot)
         assertNull(state.bareAospRoot)
         assertEquals("https://icon", state.iconUrl)
+        assertTrue(state.isFullyLoaded)
+        assertEquals(0, state.pendingCount)
     }
 
     @Test
@@ -79,6 +82,8 @@ class AppEvaluationsViewModelTest {
         val state = vm.uiState.value
         assertEquals("microg-risky", state.microgRoot?.name)
         assertEquals("bare-risky", state.bareAospRoot?.name)
+        assertTrue(state.isFullyLoaded)
+        assertEquals(0, state.pendingCount)
     }
 
     @Test
@@ -94,6 +99,8 @@ class AppEvaluationsViewModelTest {
         assertNull(state.microgRoot)
         assertNull(state.bareAospRoot)
         assertEquals("", state.iconUrl)
+        assertTrue(state.isFullyLoaded)
+        assertEquals(0, state.pendingCount)
     }
 
     private fun buildViewModel(

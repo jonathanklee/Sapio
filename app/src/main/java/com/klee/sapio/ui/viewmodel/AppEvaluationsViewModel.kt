@@ -30,7 +30,15 @@ class AppEvaluationsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AppEvaluationsUiState())
     val uiState = _uiState.asStateFlow()
 
+    companion object {
+        private const val FETCHES_WITH_ROOT = 5
+        private const val FETCHES_WITHOUT_ROOT = 3
+    }
+
     fun listEvaluations(packageName: String) {
+        val expectedFetches = if (settings.isRootConfigurationEnabled()) FETCHES_WITH_ROOT else FETCHES_WITHOUT_ROOT
+        _uiState.update { it.copy(pendingCount = expectedFetches) }
+
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 _uiState.update {
@@ -40,7 +48,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             GmsType.MICROG,
                             UserType.SECURE
                         ).getOrNull(),
-                        microgUserLoaded = true
+                        pendingCount = it.pendingCount - 1
                     )
                 }
             }
@@ -55,7 +63,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             GmsType.BARE_AOSP,
                             UserType.SECURE
                         ).getOrNull(),
-                        bareAospUserLoaded = true
+                        pendingCount = it.pendingCount - 1
                     )
                 }
             }
@@ -68,7 +76,7 @@ class AppEvaluationsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""),
-                        iconLoaded = true
+                        pendingCount = it.pendingCount - 1
                     )
                 }
             }
@@ -87,7 +95,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             GmsType.MICROG,
                             UserType.RISKY
                         ).getOrNull(),
-                        microgRootLoaded = true
+                        pendingCount = it.pendingCount - 1
                     )
                 }
             }
@@ -102,7 +110,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             GmsType.BARE_AOSP,
                             UserType.RISKY
                         ).getOrNull(),
-                        bareAospRootLoaded = true
+                        pendingCount = it.pendingCount - 1
                     )
                 }
             }
