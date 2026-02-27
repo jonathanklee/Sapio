@@ -125,7 +125,6 @@ class EvaluationService @Inject constructor(
             )
 
             strapiAnswer.data.map { it.attributes }
-                .distinctBy { it.packageName }
                 .sortedByDescending { it.updatedAt }
         }.onFailure { exception ->
             if (exception is HttpException) {

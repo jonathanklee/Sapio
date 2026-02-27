@@ -69,20 +69,20 @@ class EvaluationServiceTest {
     }
 
     @Test
-    fun listLatestEvaluations_happyPathDistinctAndSorted() = runBlocking {
+    fun listLatestEvaluations_happyPathSorted() = runBlocking {
         Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(1)
         val evalNewer = StrapiElement(1, createEvaluation("AppOne", "pkg1", updatedAtOffset = 2))
-        val evalOlder = StrapiElement(2, createEvaluation("AppTwo", "pkg1", updatedAtOffset = 1)) // same package, should be dropped
-        val answer = StrapiAnswer(arrayListOf(evalNewer, evalOlder), StrapiMeta(null))
+        val evalOlder = StrapiElement(2, createEvaluation("AppTwo", "pkg1", updatedAtOffset = 1))
+        val answer = StrapiAnswer(arrayListOf(evalOlder, evalNewer), StrapiMeta(null))
         val api = object : EvaluationApi by failingApi() {
             override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int): StrapiAnswer = answer
         }
         setApi(api)
 
         val result = service.listLatestEvaluations(pageNumber = 0).getOrThrow()
-        assertEquals(1, result.size)
-        assertEquals("pkg1", result.first().packageName)
+        assertEquals(2, result.size)
         assertEquals("AppOne", result.first().name)
+        assertEquals("AppTwo", result.last().name)
     }
 
     @Test

@@ -54,7 +54,9 @@ class FeedViewModel @Inject constructor(
 
         val newItems = result.getOrDefault(emptyList())
         _uiState.update {
-            val combined = (it.items + newItems).distinctBy { item -> item.packageName }
+            val combined = (it.items + newItems).distinctBy { item ->
+                Triple(item.packageName, item.microg, item.secure)
+            }
             hasMorePages = combined.size > it.items.size
             it.copy(
                 items = combined,
