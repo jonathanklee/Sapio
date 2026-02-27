@@ -16,9 +16,8 @@ class FeedViewModel @Inject constructor(
     private val listLatestEvaluationsUseCase: ListLatestEvaluationsUseCase
 ) : ViewModel() {
 
-    companion object {
-        const val NUMBER_OF_PAGES = 10
-    }
+    private var currentPage = 0
+    private var hasMorePages = true
 
     private val _uiState = MutableStateFlow(FeedUiState(isLoading = true))
     val uiState = _uiState.asStateFlow()
@@ -29,18 +28,39 @@ class FeedViewModel @Inject constructor(
 
     fun refresh() {
         viewModelScope.launch {
-            _uiState.update { it.copy(items = emptyList(), isLoading = true, hasError = false) }
-            for (i in 1..NUMBER_OF_PAGES) {
-                val result = listLatestEvaluationsUseCase(i)
-                if (result.isFailure) {
-                    _uiState.update { it.copy(isLoading = false, hasError = true) }
-                    return@launch
-                }
+            currentPage = 0
+            hasMorePages = true
+            _uiState.update { it.copy(items = emptyList(), isLoading = true, isLoadingMore = false, hasError = false) }
+            loadPage()
+        }
+    }
 
-                val current = _uiState.value.items
-                val next = current + result.getOrDefault(emptyList())
-                _uiState.update { it.copy(items = next, isLoading = false) }
-            }
+    fun loadNextPage() {
+        val state = _uiState.value
+        if (state.isLoading || state.isLoadingMore || !hasMorePages) return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingMore = true) }
+            loadPage()
+        }
+    }
+
+    private suspend fun loadPage() {
+        currentPage++
+        val result = listLatestEvaluationsUseCase(currentPage)
+        if (result.isFailure) {
+            _uiState.update { it.copy(isLoading = false, isLoadingMore = false, hasError = true) }
+            return
+        }
+
+        val newItems = result.getOrDefault(emptyList())
+        _uiState.update {
+            val combined = (it.items + newItems).distinctBy { item -> item.packageName }
+            hasMorePages = combined.size > it.items.size
+            it.copy(
+                items = combined,
+                isLoading = false,
+                isLoadingMore = false
+            )
         }
     }
 }

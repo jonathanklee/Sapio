@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.data.system.Settings
 import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FragmentMainBinding
@@ -20,6 +21,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
+
+    companion object {
+        private const val LOAD_MORE_THRESHOLD = 3
+    }
 
     @Inject
     lateinit var mEvaluationRepository: EvaluationRepository
@@ -48,6 +53,8 @@ class FeedFragment : Fragment() {
             mViewModel.refresh()
         }
 
+        setupScrollListener()
+
         return mBinding.root
     }
 
@@ -69,12 +76,41 @@ class FeedFragment : Fragment() {
         mBinding.recyclerView.adapter = mFeedAppAdapter
     }
 
+    private fun setupScrollListener() {
+        mBinding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy <= 0) return
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val lastVisible = layoutManager.findLastVisibleItemPosition()
+                val total = layoutManager.itemCount
+                if (total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD) {
+                    mViewModel.loadNextPage()
+                }
+            }
+        })
+    }
+
     private fun collectFeed() {
         fetchJob?.cancel()
         fetchJob = viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
-                mFeedAppAdapter.submitList(state.items)
+                mFeedAppAdapter.submitList(state.items) {
+                    if (!state.isLoading && !state.isLoadingMore) {
+                        loadMoreIfNeeded()
+                    }
+                }
                 mBinding.refreshView.isRefreshing = state.isLoading
+            }
+        }
+    }
+
+    private fun loadMoreIfNeeded() {
+        mBinding.recyclerView.post {
+            val layoutManager = mBinding.recyclerView.layoutManager as? LinearLayoutManager ?: return@post
+            val lastVisible = layoutManager.findLastVisibleItemPosition()
+            val total = layoutManager.itemCount
+            if (total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD) {
+                mViewModel.loadNextPage()
             }
         }
     }

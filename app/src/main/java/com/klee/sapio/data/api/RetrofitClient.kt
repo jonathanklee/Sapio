@@ -39,7 +39,7 @@ interface EvaluationApi {
     @GET("sapio-applications?pagination[pageSize]=10&sort=updatedAt:Desc")
     suspend fun listLatestEvaluationsAsync(
         @Query("filters[rooted][\$lte]") root: Int,
-        @Query("pagination[page]=pageNumber") pageNumber: Int
+        @Query("pagination[page]") pageNumber: Int
     ): StrapiAnswer
 
     @GET("sapio-applications?sort=name")
