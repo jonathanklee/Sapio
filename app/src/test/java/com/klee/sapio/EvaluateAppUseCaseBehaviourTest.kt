@@ -2,6 +2,7 @@ package com.klee.sapio
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.model.Icon
@@ -18,7 +19,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Config.NONE
-import android.os.Build
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -51,40 +51,28 @@ class EvaluateAppUseCaseBehaviourTest {
         )
         repository.uploadResponse = arrayListOf(iconAnswer(id = 99, url = "new"))
 
-        var success = false
-        var error = false
-
-        useCase(installedApp, rating = 5, onSuccess = { success = true }, onError = { error = true })
+        val result = useCase(installedApp, rating = 5)
 
         assertTrue(repository.deletedIds.containsAll(listOf(10, 11)))
         assertTrue(repository.addedEvaluations.isNotEmpty())
         assertEquals(99, repository.addedEvaluations.first().icon)
         assertEquals(5, repository.addedEvaluations.first().rating)
-        assertTrue(success)
-        assertFalse(error)
+        assertTrue(result.isSuccess)
     }
 
     @Test
-    fun `invoke calls onError when upload fails`() = runTest {
+    fun `invoke returns failure when upload fails`() = runTest {
         repository.existingIcons = emptyList()
-        repository.uploadResponse = null // simulate upload failure
+        repository.uploadResponse = null
 
-        var success = false
-        var error = false
+        val result = useCase(installedApp, rating = 2)
 
-        useCase(installedApp, rating = 2, onSuccess = { success = true }, onError = { error = true })
-
-        assertTrue(error)
-        assertFalse(success)
+        assertTrue(result.isFailure)
         assertTrue(repository.addedEvaluations.isEmpty())
         assertTrue(repository.deletedIds.isEmpty())
     }
 
-    private fun iconAnswer(id: Int, url: String) = Icon(
-        id = id,
-        name = "icon$id",
-        url = url
-    )
+    private fun iconAnswer(id: Int, url: String) = Icon(id = id, name = "icon$id", url = url)
 
     private class FakeRepository : com.klee.sapio.domain.EvaluationRepository {
         var existingIcons: List<Icon> = emptyList()

@@ -8,59 +8,39 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class EvaluateAppUseCase @Inject constructor(
+open class EvaluateAppUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository,
     private val deviceConfiguration: DeviceConfiguration
 ) {
 
-    suspend operator fun invoke(
+    open suspend operator fun invoke(
         app: InstalledApplication,
-        rating: Int,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ) {
-        evaluateApp(app, rating, onSuccess, onError)
-    }
-
-    private suspend fun evaluateApp(
-        app: InstalledApplication,
-        rating: Int,
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ) {
+        rating: Int
+    ): Result<Unit> {
         val existingIcons = getExistingIcons(app)
         val uploadedIcons = uploadIcon(app)
 
-        if (uploadedIcons.isEmpty()) {
-            onError()
-            return
-        }
-
-        uploadedIcons.let {
-            if (!evaluateApp(app, uploadedIcons[0].id, rating)) {
-                onError()
-                return
+        return when {
+            uploadedIcons.isEmpty() ->
+                Result.failure(IllegalStateException("Failed to upload icon"))
+            !submitEvaluation(app, uploadedIcons[0].id, rating) ->
+                Result.failure(IllegalStateException("Failed to add evaluation"))
+            else -> {
+                existingIcons.forEach { deleteIcon(it.id) }
+                Result.success(Unit)
             }
-            for (icon in existingIcons) {
-                deleteIcon(icon.id)
-            }
-            onSuccess()
         }
     }
 
-    private suspend fun uploadIcon(
-        app: InstalledApplication
-    ): List<Icon> {
+    private suspend fun uploadIcon(app: InstalledApplication): List<Icon> {
         return evaluationRepository.uploadIcon(app).getOrDefault(emptyList())
     }
 
-    private suspend fun deleteIcon(
-        id: Int
-    ) {
+    private suspend fun deleteIcon(id: Int) {
         evaluationRepository.deleteIcon(id)
     }
 
-    private suspend fun evaluateApp(app: InstalledApplication, iconId: Int, rating: Int): Boolean {
+    private suspend fun submitEvaluation(app: InstalledApplication, iconId: Int, rating: Int): Boolean {
         val newEvaluation = UploadEvaluation(
             app.name,
             app.packageName,
@@ -75,12 +55,7 @@ class EvaluateAppUseCase @Inject constructor(
 
     private suspend fun getExistingIcons(app: InstalledApplication): List<Icon> {
         return withContext(Dispatchers.IO) {
-            val icons = evaluationRepository.existingIcon("${app.packageName}.png").getOrDefault(emptyList())
-            if (icons.isEmpty()) {
-                return@withContext arrayListOf()
-            } else {
-                return@withContext icons
-            }
+            evaluationRepository.existingIcon("${app.packageName}.png").getOrDefault(emptyList())
         }
     }
 }

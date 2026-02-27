@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class InstalledApplicationsRepository @Inject constructor() {
+open class InstalledApplicationsRepository @Inject constructor() {
 
     fun getAppList(context: Context): List<InstalledApplication> {
         val apps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
@@ -27,7 +27,7 @@ class InstalledApplicationsRepository @Inject constructor() {
         return results.sortedBy { app -> app.name.lowercase() }
     }
 
-    fun getApplicationFromPackageName(
+    open fun getApplicationFromPackageName(
         context: Context,
         packageName: String
     ): InstalledApplication? {
