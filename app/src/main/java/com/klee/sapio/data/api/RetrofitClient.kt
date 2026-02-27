@@ -36,7 +36,7 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?pagination[pageSize]=10&sort=updatedAt:Desc&populate[icon]=*")
+    @GET("sapio-applications?pagination[pageSize]=20&sort=updatedAt:Desc&populate[icon]=*")
     suspend fun listLatestEvaluationsAsync(
         @Query("filters[rooted][\$lte]") root: Int,
         @Query("pagination[page]") pageNumber: Int

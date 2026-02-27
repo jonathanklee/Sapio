@@ -31,7 +31,7 @@ class EvaluationRepositoryImpl @Inject constructor(
     EvaluationRepository {
 
     companion object {
-        private const val PAGE_SIZE = 10
+        private const val PAGE_SIZE = 20
     }
 
     override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<DomainEvaluation>> {
