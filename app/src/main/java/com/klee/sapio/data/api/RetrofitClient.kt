@@ -142,6 +142,10 @@ class EvaluationService @Inject constructor(
             )
 
             strapiAnswer.data.map { it.attributes }
+                .sortedWith(
+                    compareByDescending<Evaluation> { it.icon != null }
+                        .thenByDescending { it.updatedAt }
+                )
                 .distinctBy { it.packageName }
         }
 

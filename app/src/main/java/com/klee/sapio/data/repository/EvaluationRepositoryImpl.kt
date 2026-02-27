@@ -12,7 +12,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import com.klee.sapio.data.dto.Evaluation as DtoEvaluation
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
 import com.klee.sapio.domain.model.Icon as DomainIcon
@@ -37,7 +41,7 @@ class EvaluationRepositoryImpl @Inject constructor(
             val evaluations = remote.getOrThrow()
             val now = System.currentTimeMillis()
             evaluationDao.upsertAll(evaluations.map { it.toEntity(now) })
-            return Result.success(evaluations.map { it.toDomain() })
+            return Result.success(evaluations.enrichWithIcons())
         }
 
         val cached = evaluationDao.listLatestEvaluations(PAGE_SIZE, offset)
@@ -55,7 +59,7 @@ class EvaluationRepositoryImpl @Inject constructor(
             val evaluations = remote.getOrThrow()
             val now = System.currentTimeMillis()
             evaluationDao.upsertAll(evaluations.map { it.toEntity(now) })
-            return Result.success(evaluations.map { it.toDomain() })
+            return Result.success(evaluations.enrichWithIcons())
         }
 
         val cached = evaluationDao.searchEvaluations("%$pattern%")
@@ -157,6 +161,21 @@ class EvaluationRepositoryImpl @Inject constructor(
             Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load evaluation"))
         }
     }
+
+    private suspend fun List<DtoEvaluation>.enrichWithIcons(): List<DomainEvaluation> =
+        coroutineScope {
+            map { evaluation ->
+                async {
+                    val domain = evaluation.toDomain()
+                    if (domain.iconUrl == null) {
+                        val fallback = retrofitService.existingIcon("${evaluation.packageName}.png")
+                        domain.copy(iconUrl = fallback.getOrNull()?.firstOrNull()?.url)
+                    } else {
+                        domain
+                    }
+                }
+            }.awaitAll()
+        }
 }
 
 @Module
