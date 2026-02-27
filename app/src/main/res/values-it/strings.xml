@@ -1,0 +1,55 @@
+<resources>
+    <string name="next">Avanti</string>
+    <string name="previous">Indietro</string>
+    <string name="warning_desc"><![CDATA[Sei incaricato di valutare il comportamento di un\'applicazione Android su un dispositivo AOSP de-googlizzato (Android Open Source Project).<br><br>Pertanto, il tuo dispositivo non deve avere i Google Play Services ufficiali installati.<br><br>Assicurati di capire correttamente le <a href="%1$s">regole di valutazione</a> prima di contribuire.]]></string>
+    <string name="proceed">Procedi</string>
+    <string name="select_button">Seleziona</string>
+    <string name="select_application_text">Seleziona l\'applicazione da valutare</string>
+    <string name="select_application_error">L\'app non ha dipendenze da Google Play Services</string>
+    <string name="note_application_text">Ora puoi valutare l\'applicazione</string>
+    <string name="select_evaluation_error">Seleziona una valutazione</string>
+    <string name="works_perfectly">\ Funziona perfettamente. Tutte le funzionalità sono operative.</string>
+    <string name="works_partially">\ Funziona parzialmente. Alcune funzionalità non funzionano.</string>
+    <string name="dont_work">\ Non funziona affatto o va in crash.</string>
+    <string name="upload_error">Errore nella valutazione dell\'app</string>
+    <string name="about_text">Sapio è l\'anagramma di Open Source API.\n\nSapio fornisce la compatibilità di un\'applicazione Android su un dispositivo senza Google Play Services (es. dispositivi Android Open Source Project (AOSP) de-googlizzati, con o senza microG).\n\nSapio può essere usato come strumento di lobbying condividendo la compatibilità sui social media per sensibilizzare gli sviluppatori di app sul rispetto dei dati personali degli utenti.\n\nLe valutazioni in Sapio sono date alla comunità dalla comunità.</string>
+    <string name="credits">Icone cervello create da Freepik - Flaticon</string>
+    <string name="environment_detected">Ambiente rilevato</string>
+    <string name="look_for_an_application">Cerca un\'applicazione</string>
+    <string name="search_hint">Cerca applicazioni…</string>
+    <string name="updated_on">Aggiornato il %1$s</string>
+    <string name="android_compatibility_matrix">Compatibilità Android</string>
+    <string name="android_compatibility_subtitle">senza Google Play Services</string>
+    <string name="application_name">Nome dell\'applicazione</string>
+    <string name="package_name">Nome del pacchetto</string>
+    <string name="feed_title">Feed</string>
+    <string name="search_title">Cerca</string>
+    <string name="contribute_title">Contribuisci</string>
+    <string name="options_title">Opzioni</string>
+    <string name="about">Informazioni</string>
+    <string name="validate_button">Valida</string>
+    <string name="thank_you">Grazie per aver valutato l\'applicazione</string>
+    <string name="good">Funziona perfettamente</string>
+    <string name="average">Una o più funzionalità non funzionano</string>
+    <string name="bad">Non funziona affatto</string>
+    <string name="unknown">Sconosciuto</string>
+    <string name="share">Condividi</string>
+    <string name="share_text">Condividi la tua valutazione sui social media per sensibilizzare gli sviluppatori di app sul rispetto dei dati personali degli utenti.</string>
+    <string name="share_android_compatibility">Compatibilità Android di %1$s</string>
+    <string name="share_android_compatibility_text">Compatibilità Android di %1$s https://github.com/jonathanklee/Sapio #degoogle #sapio</string>
+    <string name="support_privacy_focused_apps">Supporta le app Android rispettose della privacy!</string>
+    <string name="donate">Dona</string>
+    <string name="settings">Impostazioni</string>
+    <string name="compatibility_check_channel_name">Controlli di compatibilità</string>
+    <string name="compatibility_check_channel_description">Notifiche sulle app incompatibili con la tua configurazione.</string>
+    <string name="compatibility_check_notification_title">App incompatibile</string>
+    <string name="compatibility_check_notification_body">%1$s non sembra funzionare correttamente senza Google Play Services. Aiutaci a far sentire la nostra voce — condividi e tagga lo sviluppatore per richiedere una versione rispettosa della privacy!</string>
+    <string name="compatibility_check_notification_share_action">Condividi ora</string>
+    <string name="rating_rules"><![CDATA[<a href="%1$s">Regole di valutazione</a>]]></string>
+    <string name="i_have_read_and_i_understand_the_rating_rules">Ho letto e capisco le regole di valutazione</string>
+    <string name="show_risky">Ambienti</string>
+    <string name="show_risky_environments">Mostra ambienti rischiosi</string>
+    <string name="general">Generale</string>
+    <string name="github_star">Metti una stella su GitHub</string>
+    <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+</resources>

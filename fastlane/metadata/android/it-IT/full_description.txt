@@ -1,0 +1,7 @@
+Sapio è l'anagramma di Open Source API.
+
+Sapio fornisce la compatibilità di un'applicazione Android su un dispositivo senza Google Play Services (es. dispositivi Android Open Source Project (AOSP) de-googlizzati, con o senza microG).
+
+Sapio può essere usato come strumento di lobbying condividendo la compatibilità sui social media per sensibilizzare gli sviluppatori di app sul rispetto dei dati personali degli utenti.
+
+Le valutazioni in Sapio sono date alla comunità dalla comunità.
