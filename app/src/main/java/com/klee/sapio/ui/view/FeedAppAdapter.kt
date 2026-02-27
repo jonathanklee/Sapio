@@ -16,20 +16,14 @@ import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.system.Settings
 import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FeedAppCardBinding
-import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.ui.model.Label
 import com.klee.sapio.ui.model.Rating
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class FeedAppAdapter(
     private val mContext: Context,
-    private var mEvaluationRepository: EvaluationRepository,
     private var mSettings: Settings
 ) : ListAdapter<Evaluation, FeedAppAdapter.ViewHolder>(DiffCallback) {
 
@@ -49,12 +43,7 @@ class FeedAppAdapter(
         }
     }
 
-    inner class ViewHolder(
-        val binding: FeedAppCardBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        val viewHolderScope = CoroutineScope(Dispatchers.Main + Job())
-        var imageLoadJob: Job? = null
-    }
+    inner class ViewHolder(val binding: FeedAppCardBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = FeedAppCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -93,24 +82,19 @@ class FeedAppAdapter(
             }
         }
 
-        holder.imageLoadJob?.cancel()
         Glide.with(mContext.applicationContext).clear(holder.binding.image)
-        holder.imageLoadJob = holder.viewHolderScope.launch {
-            val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
-                .getOrDefault(emptyList())
-            if (icons.isNotEmpty()) {
-                Glide.with(mContext.applicationContext)
-                    .load(EvaluationService.BASE_URL + icons[0].url)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.binding.image)
-            }
+        val iconUrl = app.iconUrl
+        if (!iconUrl.isNullOrEmpty()) {
+            Glide.with(mContext.applicationContext)
+                .load(EvaluationService.BASE_URL + iconUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.binding.image)
         }
 
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, EvaluationsActivity::class.java)
             intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, app.packageName)
             intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
-
             mContext.startActivity(intent)
         }
     }
@@ -118,6 +102,5 @@ class FeedAppAdapter(
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         Glide.with(mContext.applicationContext).clear(holder.binding.image)
-        holder.imageLoadJob?.cancel()
     }
 }

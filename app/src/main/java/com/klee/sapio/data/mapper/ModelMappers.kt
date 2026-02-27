@@ -14,7 +14,7 @@ import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation
 fun Evaluation.toDomain(): DomainEvaluation = DomainEvaluation(
     name = name,
     packageName = packageName,
-    iconUrl = iconUrl,
+    iconUrl = icon?.data?.attributes?.url,
     rating = rating,
     microg = microg,
     secure = secure,
@@ -27,7 +27,7 @@ fun Evaluation.toDomain(): DomainEvaluation = DomainEvaluation(
 fun Evaluation.toEntity(cachedAt: Long): EvaluationEntity = EvaluationEntity(
     name = name,
     packageName = packageName,
-    iconUrl = iconUrl,
+    iconUrl = icon?.data?.attributes?.url,
     rating = rating,
     microg = microg,
     secure = secure,

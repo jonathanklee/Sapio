@@ -11,16 +11,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.databinding.SearchAppCardBinding
-import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.model.Evaluation
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class SearchAppAdapter(
-    private val mContext: Context,
-    private var mEvaluationRepository: EvaluationRepository,
+    private val mContext: Context
 ) : ListAdapter<Evaluation, SearchAppAdapter.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -37,12 +31,7 @@ class SearchAppAdapter(
         }
     }
 
-    inner class ViewHolder(
-        val binding: SearchAppCardBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        val viewHolderScope = CoroutineScope(Dispatchers.Main + Job())
-        var imageLoadJob: Job? = null
-    }
+    inner class ViewHolder(val binding: SearchAppCardBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = SearchAppCardBinding.inflate(
@@ -50,7 +39,6 @@ class SearchAppAdapter(
             parent,
             false
         )
-
         return ViewHolder(binding)
     }
 
@@ -60,31 +48,25 @@ class SearchAppAdapter(
         element.appName.text = app.name
         element.packageName.text = app.packageName
 
-        holder.imageLoadJob?.cancel()
         Glide.with(mContext.applicationContext).clear(holder.binding.image)
-        holder.imageLoadJob = holder.viewHolderScope.launch {
-            val icons = mEvaluationRepository.existingIcon("${app.packageName}.png")
-                .getOrDefault(emptyList())
-            if (icons.isNotEmpty()) {
-                Glide.with(mContext.applicationContext)
-                    .load(EvaluationService.BASE_URL + icons[0].url)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.binding.image)
-            }
+        val iconUrl = app.iconUrl
+        if (!iconUrl.isNullOrEmpty()) {
+            Glide.with(mContext.applicationContext)
+                .load(EvaluationService.BASE_URL + iconUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.binding.image)
         }
 
         holder.itemView.setOnClickListener {
             val intent = Intent(mContext, EvaluationsActivity::class.java)
             intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, app.packageName)
             intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
-
             mContext.startActivity(intent)
         }
     }
 
-    override fun onViewRecycled(holder: SearchAppAdapter.ViewHolder) {
+    override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         Glide.with(mContext.applicationContext).clear(holder.binding.image)
-        holder.imageLoadJob?.cancel()
     }
 }

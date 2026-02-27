@@ -363,7 +363,7 @@ class EvaluationServiceTest {
         return Evaluation(
             name = name,
             packageName = packageName,
-            iconUrl = null,
+            icon = null,
             rating = 1,
             microg = 0,
             secure = 0,

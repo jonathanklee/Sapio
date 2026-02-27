@@ -36,13 +36,13 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 interface EvaluationApi {
-    @GET("sapio-applications?pagination[pageSize]=10&sort=updatedAt:Desc")
+    @GET("sapio-applications?pagination[pageSize]=10&sort=updatedAt:Desc&populate[icon]=*")
     suspend fun listLatestEvaluationsAsync(
         @Query("filters[rooted][\$lte]") root: Int,
         @Query("pagination[page]") pageNumber: Int
     ): StrapiAnswer
 
-    @GET("sapio-applications?sort=name")
+    @GET("sapio-applications?sort=name&populate[icon]=*")
     suspend fun searchAsync(
         @Query("filters[\$or][0][name][\$contains]") name: String,
         @Query("filters[\$or][1][packageName][\$contains]") packageName: String,

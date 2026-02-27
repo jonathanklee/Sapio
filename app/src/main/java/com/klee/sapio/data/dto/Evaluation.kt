@@ -6,7 +6,7 @@ import java.util.Date
 data class Evaluation(
     @JsonProperty("name") val name: String,
     @JsonProperty("packageName") val packageName: String,
-    @JsonProperty("iconUrl") var iconUrl: String?,
+    @JsonProperty("icon") val icon: Icon?,
     @JsonProperty("rating") val rating: Int,
     @JsonProperty("microg") val microg: Int,
     @JsonProperty("rooted") val secure: Int,

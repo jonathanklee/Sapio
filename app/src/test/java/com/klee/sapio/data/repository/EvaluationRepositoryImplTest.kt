@@ -55,7 +55,7 @@ class EvaluationRepositoryImplTest {
             Evaluation(
                 name = "App One",
                 packageName = "com.app.one",
-                iconUrl = "/icon.png",
+                icon = null,
                 rating = 1,
                 microg = 1,
                 secure = 0,
@@ -80,7 +80,7 @@ class EvaluationRepositoryImplTest {
         val cached = Evaluation(
             name = "Cached App",
             packageName = "com.cached.app",
-            iconUrl = null,
+            icon = null,
             rating = 2,
             microg = 0,
             secure = 1,

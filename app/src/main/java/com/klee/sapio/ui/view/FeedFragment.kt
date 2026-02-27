@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.data.system.Settings
 import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FragmentMainBinding
-import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -25,9 +24,6 @@ class FeedFragment : Fragment() {
     companion object {
         private const val LOAD_MORE_THRESHOLD = 3
     }
-
-    @Inject
-    lateinit var mEvaluationRepository: EvaluationRepository
 
     @Inject
     lateinit var mSettings: Settings
@@ -68,11 +64,7 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        mFeedAppAdapter = FeedAppAdapter(
-            requireContext(),
-            mEvaluationRepository,
-            mSettings
-        )
+        mFeedAppAdapter = FeedAppAdapter(requireContext(), mSettings)
         mBinding.recyclerView.adapter = mFeedAppAdapter
     }
 

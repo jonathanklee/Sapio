@@ -19,13 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.R
 import com.klee.sapio.databinding.FragmentSearchBinding
-import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.ui.state.SearchUiState
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -41,9 +39,6 @@ class SearchFragment : Fragment() {
 
     private lateinit var mHandler: Handler
 
-    @Inject
-    lateinit var mEvaluationRepository: EvaluationRepository
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,10 +50,7 @@ class SearchFragment : Fragment() {
 
         mHandler = Handler(Looper.getMainLooper())
 
-        mSearchAppAdapter = SearchAppAdapter(
-            requireContext(),
-            mEvaluationRepository
-        )
+        mSearchAppAdapter = SearchAppAdapter(requireContext())
         mBinding.recyclerView.adapter = mSearchAppAdapter
 
         mBinding.editTextSearch.addTextChangedListener { editable ->
