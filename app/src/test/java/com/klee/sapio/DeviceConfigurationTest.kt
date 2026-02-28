@@ -96,6 +96,23 @@ class DeviceConfigurationTest {
     }
 
     @Test
+    fun test_getGmsType_withMicroGRenamedAsAppCompatibilityServices() {
+        val renamedMicroGApp = ApplicationInfo().apply {
+            packageName = DeviceConfiguration.GMS_SERVICES_PACKAGE_NAME
+        }
+        val apps = listOf(renamedMicroGApp, fakeRegularApp)
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(PackageManager.GET_META_DATA))
+            .thenReturn(apps)
+        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(renamedMicroGApp)))
+            .thenReturn("App compatibility Services")
+
+        deviceConfiguration = DeviceConfiguration(mockedContext)
+
+        val result = deviceConfiguration.getGmsType()
+        Assert.assertEquals(GmsType.MICROG, result)
+    }
+
+    @Test
     fun test_getGmsType_withBareAosp() {
         // Setup the mock behavior BEFORE creating DeviceConfiguration
         val apps = listOf(fakeRegularApp)
