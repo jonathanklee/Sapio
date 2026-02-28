@@ -13,7 +13,6 @@ open class DeviceConfiguration @Inject constructor(
 ) {
     companion object {
         const val GMS_SERVICES_PACKAGE_NAME = "com.google.android.gms"
-        const val GOOGLE_PLAY_SERVICES = "Google Play Services"
     }
 
     private var packageManager: PackageManager = mContext.packageManager
@@ -27,13 +26,11 @@ open class DeviceConfiguration @Inject constructor(
                 continue
             }
 
-            if (packageManager.getApplicationLabel(app).toString().contains("microG")) {
-                type = GmsType.MICROG
-                break
-            }
-
-            if (packageManager.getApplicationLabel(app).toString() == GOOGLE_PLAY_SERVICES) {
+            if (packageManager.getApplicationLabel(app).toString().contains("Google", true)) {
                 type = GmsType.GOOGLE_PLAY_SERVICES
+                break
+            } else {
+                type = GmsType.MICROG
                 break
             }
         }
