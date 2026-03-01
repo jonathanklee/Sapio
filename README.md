@@ -46,7 +46,7 @@ cd Sapio
 adb install ./app/build/outputs/apk/debug/app-debug.apk
 ```
 
-# :earth_africa: Public API
+# 🌍 Public API
 
 ## Base url
 ```
