@@ -7,7 +7,7 @@ data class AppEvaluationsUiState(
     val microgRoot: Evaluation? = null,
     val bareAospUser: Evaluation? = null,
     val bareAospRoot: Evaluation? = null,
-    val iconUrl: String = "",
+    val iconUrl: String? = null,
     val pendingCount: Int = 0,
     val hasError: Boolean = false
 ) {

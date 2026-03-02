@@ -29,7 +29,11 @@ import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
 import com.klee.sapio.data.api.EvaluationService
@@ -160,11 +164,37 @@ class EvaluationsActivity : AppCompatActivity() {
                     renderEvaluation(mBinding.microgRoot, state.microgRoot)
                 }
 
-                if (state.iconUrl.isNotEmpty() && !iconReady) {
+                if (state.iconUrl != null && !iconReady) {
                     iconReady = true
-                    Glide.with(this@EvaluationsActivity.applicationContext)
-                        .load(EvaluationService.BASE_URL + state.iconUrl)
-                        .into(mBinding.image)
+                    if (state.iconUrl.isNotEmpty()) {
+                        Glide.with(this@EvaluationsActivity.applicationContext)
+                            .load(EvaluationService.BASE_URL + state.iconUrl)
+                            .listener(object : RequestListener<Drawable> {
+                                override fun onResourceReady(
+                                    resource: Drawable,
+                                    model: Any,
+                                    target: Target<Drawable>?,
+                                    dataSource: DataSource,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    mViewModel.onIconDisplayed()
+                                    return false
+                                }
+
+                                override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: Target<Drawable>,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    mViewModel.onIconDisplayed()
+                                    return false
+                                }
+                            })
+                            .into(mBinding.image)
+                    } else {
+                        mViewModel.onIconDisplayed()
+                    }
                 }
             }
         }
@@ -197,7 +227,7 @@ class EvaluationsActivity : AppCompatActivity() {
             val state = mViewModel.uiState.value
             val icon = saveImageToFile(
                 this@EvaluationsActivity,
-                EvaluationService.BASE_URL + state.iconUrl
+                EvaluationService.BASE_URL + (state.iconUrl ?: "")
             )
             val sharedEvaluation = SharedEvaluation(
                 appName,

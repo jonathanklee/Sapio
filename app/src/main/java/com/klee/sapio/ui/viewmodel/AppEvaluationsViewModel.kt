@@ -74,13 +74,14 @@ class AppEvaluationsViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 _uiState.update {
-                    it.copy(
-                        iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""),
-                        pendingCount = it.pendingCount - 1
-                    )
+                    it.copy(iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""))
                 }
             }
         }
+    }
+
+    fun onIconDisplayed() {
+        _uiState.update { it.copy(pendingCount = it.pendingCount - 1) }
     }
 
     private fun loadRiskyEvaluationsIfEnabled(packageName: String) {

@@ -61,6 +61,7 @@ class AppEvaluationsViewModelTest {
 
         vm.listEvaluations("pkg")
         advanceUntilIdle()
+        vm.onIconDisplayed()
 
         val state = vm.uiState.value
         assertEquals("microg-secure", state.microgUser?.name)
@@ -78,6 +79,7 @@ class AppEvaluationsViewModelTest {
 
         vm.listEvaluations("pkg")
         advanceUntilIdle()
+        vm.onIconDisplayed()
 
         val state = vm.uiState.value
         assertEquals("microg-risky", state.microgRoot?.name)
@@ -92,6 +94,7 @@ class AppEvaluationsViewModelTest {
 
         vm.listEvaluations("pkg")
         advanceUntilIdle()
+        vm.onIconDisplayed()
 
         val state = vm.uiState.value
         assertNull(state.microgUser)
