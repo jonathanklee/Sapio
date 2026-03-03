@@ -87,6 +87,7 @@
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintTop_toTopOf="parent"
+              android:layout_marginEnd="5dp"
               app:srcCompat="@mipmap/ic_info_foreground"
               app:tint="?android:colorPrimary" />
 
