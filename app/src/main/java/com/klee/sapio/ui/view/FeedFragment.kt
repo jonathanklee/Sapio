@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +30,7 @@ class FeedFragment : Fragment() {
 
     private lateinit var mBinding: FragmentMainBinding
     private lateinit var mFeedAppAdapter: FeedAppAdapter
-    private val mViewModel by viewModels<FeedViewModel>()
+    private val mViewModel by activityViewModels<FeedViewModel>()
     private var fetchJob: Job? = null
     private var mPreviousRootVisible: Int = UserType.SECURE
 
