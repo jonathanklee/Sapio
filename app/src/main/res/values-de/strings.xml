@@ -39,7 +39,7 @@
     <string name="share_android_compatibility">Android-Kompatibilität von %1$s</string>
     <string name="share_android_compatibility_text">Android-Kompatibilität von %1$s https://github.com/jonathanklee/Sapio #degoogle #sapio</string>
     <string name="support_privacy_focused_apps">Unterstützen Sie datenschutzorientierte Android-Apps!</string>
-    <string name="donate">Spenden</string>
+    <string name="donate">Einen Kaffee ausgeben</string>
     <string name="settings">Einstellungen</string>
     <string name="compatibility_check_channel_name">Kompatibilitätsprüfungen</string>
     <string name="compatibility_check_channel_description">Benachrichtigungen über Apps, die mit Ihrer Konfiguration nicht kompatibel sind.</string>
