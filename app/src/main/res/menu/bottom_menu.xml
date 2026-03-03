@@ -11,6 +11,11 @@
         android:title="@string/search_title"/>
 
     <item
+        android:id="@+id/my_apps"
+        android:icon="@drawable/ic_phone"
+        android:title="@string/device_title"/>
+
+    <item
         android:id="@+id/contribute"
         android:icon="@drawable/ic_add"
         android:title="@string/contribute_title"/>

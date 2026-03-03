@@ -25,6 +25,7 @@
     <string name="feed_title">Feed</string>
     <string name="search_title">Cerca</string>
     <string name="contribute_title">Contribuisci</string>
+    <string name="device_title">Dispositivo</string>
     <string name="options_title">Opzioni</string>
     <string name="about">Informazioni</string>
     <string name="validate_button">Valida</string>

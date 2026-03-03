@@ -25,6 +25,7 @@
     <string name="feed_title">Actualité</string>
     <string name="search_title">Rechercher</string>
     <string name="contribute_title">Contribuer</string>
+    <string name="device_title">Appareil</string>
     <string name="options_title">Options</string>
     <string name="about">A propos</string>
     <string name="donate">Faire un don</string>

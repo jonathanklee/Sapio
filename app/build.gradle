@@ -175,6 +175,9 @@ dependencies {
     // workmanager
     implementation libs.androidx.work.runtime.ktx
 
+    // lottie
+    implementation libs.lottie
+
     // compose
     implementation platform(libs.androidx.compose.bom)
     implementation(libs.androidx.foundation)

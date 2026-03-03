@@ -56,11 +56,16 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.feed -> displayFragment(FeedFragment())
                 R.id.search -> displayFragment(SearchFragment())
+                R.id.my_apps -> displayFragment(MyAppsFragment())
                 R.id.contribute -> displayFragment(ContributeFragment())
                 R.id.options -> displayFragment(PreferencesFragment())
             }
             return@setOnItemSelectedListener true
         }
+    }
+
+    fun navigateToContribute() {
+        mBinding.bottomNavigation.selectedItemId = R.id.contribute
     }
 
     private fun displayFragment(fragment: Fragment) {

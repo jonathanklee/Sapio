@@ -31,6 +31,7 @@
     <string name="search_title">Search</string>
     <string name="contribute_title">Contribute</string>
     <string name="options_title">Options</string>
+    <string name="device_title">Device</string>
     <string name="about">About</string>
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>

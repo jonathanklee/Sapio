@@ -29,4 +29,7 @@ object DatabaseModule {
 
     @Provides
     fun provideIconDao(database: AppDatabase): IconDao = database.iconDao()
+
+    @Provides
+    fun provideDeviceAppDao(database: AppDatabase): DeviceAppDao = database.deviceAppDao()
 }
