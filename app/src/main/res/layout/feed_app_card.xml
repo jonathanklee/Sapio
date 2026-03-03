@@ -19,81 +19,93 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_margin="8dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
-              android:id="@+id/imageCard"
-              android:layout_gravity="center"
-              android:layout_marginStart="10dp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toTopOf="parent"
-              android:backgroundTint="@color/cardview_background_color"
-              app:cardElevation="0dp"
-              android:layout_width="50dp"
-              android:layout_height="50dp">
+                android:id="@+id/imageCard"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:backgroundTint="@color/cardview_background_color"
+                app:cardElevation="0dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
 
-              <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                tools:srcCompat="@tools:sample/avatars" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    tools:srcCompat="@tools:sample/avatars" />
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/appName"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/textColumn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="AppName"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toStartOf="@+id/microG"
                 app:layout_constraintStart_toEndOf="@+id/imageCard"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toStartOf="@+id/microG"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/packageName"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/appName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="AppName"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/packageName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="PackageName"
+                    android:textSize="12sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.emoji2.widget.EmojiTextView
+                android:id="@+id/emoji"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:layout_marginEnd="8dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="PackageName"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/secure"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/appName"
-                app:layout_constraintTop_toBottomOf="@+id/appName" />
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/textColumn"
+                app:layout_constraintTop_toBottomOf="@+id/textColumn" />
 
             <TextView
                 android:id="@+id/updatedDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="8dp"
                 android:text="@string/updated_on"
                 android:textSize="10sp"
                 android:textStyle="italic"
-                app:layout_constraintStart_toStartOf="@+id/appName"
-                app:layout_constraintTop_toBottomOf="@+id/emoji" />
+                app:layout_constraintStart_toEndOf="@+id/emoji"
+                app:layout_constraintTop_toTopOf="@+id/emoji"
+                app:layout_constraintBottom_toBottomOf="@+id/emoji" />
 
             <TextView
-              android:id="@+id/microG"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="5dp"
-              android:layout_marginEnd="10dp"
-              android:background="@color/blue_200"
-              android:text="@string/microg_label"
-              android:textColor="@color/white"
-              android:textSize="11sp"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toTopOf="@+id/appName" />
+                android:id="@+id/microG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/blue_200"
+                android:text="@string/microg_label"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textColumn" />
 
             <TextView
                 android:id="@+id/secure"
@@ -105,26 +117,17 @@
                 android:textColor="@color/white"
                 android:textSize="11sp"
                 app:layout_constraintEnd_toEndOf="@+id/microG"
-                app:layout_constraintTop_toBottomOf="@+id/microG"/>
-
-            <androidx.emoji2.widget.EmojiTextView
-                android:id="@+id/emoji"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/appName"
-                app:layout_constraintTop_toBottomOf="@+id/packageName" />
+                app:layout_constraintTop_toBottomOf="@+id/microG" />
 
             <ImageView
-              android:id="@+id/infoIcon"
-              android:layout_width="25dp"
-              android:layout_height="25dp"
-              android:layout_marginEnd="15dp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:tint="?android:colorPrimary"
-              app:srcCompat="@mipmap/ic_info_foreground"/>
+                android:id="@+id/infoIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="?android:colorPrimary"
+                app:srcCompat="@mipmap/ic_info_foreground" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
