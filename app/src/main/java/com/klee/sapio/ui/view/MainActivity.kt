@@ -78,9 +78,10 @@ class MainActivity : AppCompatActivity() {
                 WindowInsetsCompat.Type.systemBars()
                     or WindowInsetsCompat.Type.displayCutout()
             )
+            val ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
 
             v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = bars.bottom
+                bottomMargin = maxOf(bars.bottom, ime.bottom)
                 leftMargin = bars.left
                 rightMargin = bars.right
                 topMargin = bars.top
