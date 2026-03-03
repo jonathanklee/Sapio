@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -37,6 +38,19 @@ class MainActivity : AppCompatActivity() {
         displayFragment(FeedFragment())
 
         handleEdgeToEdgeInsets()
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (mBinding.bottomNavigation.selectedItemId != R.id.feed) {
+                        mBinding.bottomNavigation.selectedItemId = R.id.feed
+                    } else {
+                        finish()
+                    }
+                }
+            }
+        )
 
         mBinding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
