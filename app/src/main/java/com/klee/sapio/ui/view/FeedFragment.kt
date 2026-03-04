@@ -91,7 +91,9 @@ class FeedFragment : Fragment() {
                         loadMoreIfNeeded()
                     }
                 }
-                mBinding.refreshView.isRefreshing = state.isLoading
+                val isInitialLoad = state.isLoading && state.items.isEmpty()
+                mBinding.progressBar.visibility = if (isInitialLoad) View.VISIBLE else View.GONE
+                mBinding.refreshView.isRefreshing = false
             }
         }
     }

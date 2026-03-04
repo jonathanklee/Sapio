@@ -43,24 +43,19 @@ class MyAppsFragment : Fragment() {
         return mBinding.root
     }
 
-    companion object {
-        private const val PROGRESS_MAX = 100f
-    }
-
     private fun collectState() {
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
                 if (state.isLoading) {
                     mAdapter.submitList(emptyList())
-                    mBinding.loadingAnimation.visibility = View.VISIBLE
-                    mBinding.loadingAnimation.progress = state.progress / PROGRESS_MAX
+                    mBinding.progressBar.visibility = View.VISIBLE
                 } else {
                     mAdapter.submitList(state.items)
-                    mBinding.loadingAnimation.visibility = View.GONE
+                    mBinding.progressBar.visibility = View.GONE
                 }
                 mBinding.recyclerView.visibility =
                     if (state.isLoading) View.GONE else View.VISIBLE
-                mBinding.swipeRefreshLayout.isRefreshing = state.isRefreshing && !state.isLoading
+                mBinding.swipeRefreshLayout.isRefreshing = false
             }
         }
     }
