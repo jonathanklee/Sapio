@@ -99,6 +99,9 @@ curl -X GET "https://server.sapio.ovh/api/sapio-applications?pagination\[pageSiz
  ```
 curl -X GET "https://server.sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=com.openai.chatgpt.png"
  ```
+# ⚠️ Disclaimer
+
+Evaluations are community-contributed and may be inaccurate, incomplete, or device-specific. Sapio and its maintainers are not responsible for any issues arising from relying on these evaluations.
 
 # ☕ Coffee
 
