@@ -42,6 +42,42 @@
                     tools:srcCompat="@tools:sample/avatars" />
             </androidx.cardview.widget.CardView>
 
+            <LinearLayout
+                android:id="@+id/labelsGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/microG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_label_rounded"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:text="@string/microg_label"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/secure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_label_rounded"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:text="@string/secure_label"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/textColumn"
                 android:layout_width="0dp"
@@ -50,7 +86,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toEndOf="@+id/imageCard"
-                app:layout_constraintEnd_toStartOf="@+id/microG"
+                app:layout_constraintEnd_toStartOf="@+id/labelsGroup"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -94,38 +130,15 @@
                 app:layout_constraintTop_toTopOf="@+id/emoji"
                 app:layout_constraintBottom_toBottomOf="@+id/emoji" />
 
-            <TextView
-                android:id="@+id/microG"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:background="@color/blue_200"
-                android:text="@string/microg_label"
-                android:textColor="@color/white"
-                android:textSize="11sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textColumn" />
-
-            <TextView
-                android:id="@+id/secure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/purple_200"
-                android:text="@string/secure_label"
-                android:textColor="@color/white"
-                android:textSize="11sp"
-                app:layout_constraintEnd_toEndOf="@+id/microG"
-                app:layout_constraintTop_toBottomOf="@+id/microG" />
-
             <ImageView
                 android:id="@+id/infoIcon"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelsGroup"
                 app:tint="?android:colorPrimary"
                 app:srcCompat="@mipmap/ic_info_foreground" />
 

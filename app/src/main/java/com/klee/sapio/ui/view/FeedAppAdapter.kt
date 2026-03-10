@@ -2,6 +2,7 @@ package com.klee.sapio.ui.view
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -70,10 +71,10 @@ class FeedAppAdapter(
             val secureLabel = Label.create(mContext, app.secure)
 
             element.microG.text = microgLabel.text
-            element.microG.setBackgroundColor(microgLabel.color)
+            element.microG.backgroundTintList = ColorStateList.valueOf(microgLabel.color)
 
             element.secure.text = secureLabel.text
-            element.secure.setBackgroundColor(secureLabel.color)
+            element.secure.backgroundTintList = ColorStateList.valueOf(secureLabel.color)
 
             if (mSettings.getRootConfigurationLevel() == UserType.RISKY) {
                 element.secure.visibility = View.VISIBLE

@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -46,11 +47,11 @@ class EvaluateFragment : Fragment() {
         val state = mViewModel.uiState.value
         val microgLabel = Label.create(requireContext(), state.gmsType)
         mBinding.microgConfiguration.text = microgLabel.text
-        mBinding.microgConfiguration.setBackgroundColor(microgLabel.color)
+        mBinding.microgConfiguration.backgroundTintList = ColorStateList.valueOf(microgLabel.color)
 
         val isRootedLabel = Label.create(requireContext(), state.userType)
         mBinding.secureConfiguration.text = isRootedLabel.text
-        mBinding.secureConfiguration.setBackgroundColor(isRootedLabel.color)
+        mBinding.secureConfiguration.backgroundTintList = ColorStateList.valueOf(isRootedLabel.color)
 
         mBinding.validateButton.isEnabled = false
         mBinding.note.setOnCheckedChangeListener { _, _ ->
