@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -116,7 +117,7 @@ fun ShareScreenshot(
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(start = 6.dp),
+                        .padding(horizontal = 48.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -131,7 +132,9 @@ fun ShareScreenshot(
                         style = TextStyle(
                             color = Color.White.copy(alpha = 0.65f),
                             fontSize = 5.sp
-                        )
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
