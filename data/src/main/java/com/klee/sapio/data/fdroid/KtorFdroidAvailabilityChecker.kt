@@ -1,6 +1,7 @@
-package com.klee.sapio.domain
+package com.klee.sapio.data.fdroid
 
 import android.util.Log
+import com.klee.sapio.domain.FdroidAvailabilityChecker
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpTimeout
@@ -10,7 +11,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-open class CheckFdroidAvailabilityUseCase @Inject constructor() {
+class KtorFdroidAvailabilityChecker @Inject constructor() : FdroidAvailabilityChecker {
 
     companion object {
         private const val HTTP_200_SUCCESS = 200
@@ -20,7 +21,7 @@ open class CheckFdroidAvailabilityUseCase @Inject constructor() {
         install(HttpTimeout)
     }
 
-    open suspend operator fun invoke(packageName: String): Boolean {
+    override suspend fun isAvailable(packageName: String): Boolean {
         return try {
             withContext(Dispatchers.IO) {
                 client.get(
@@ -28,7 +29,7 @@ open class CheckFdroidAvailabilityUseCase @Inject constructor() {
                 ).status.value == HTTP_200_SUCCESS
             }
         } catch (e: IOException) {
-            Log.e("CheckFdroidAvailabilityUseCase", "Failed to reach F-Droid for $packageName", e)
+            Log.e("KtorFdroidChecker", "Failed to reach F-Droid for $packageName", e)
             false
         }
     }

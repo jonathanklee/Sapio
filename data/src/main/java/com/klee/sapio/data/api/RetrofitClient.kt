@@ -2,7 +2,6 @@ package com.klee.sapio.data.api
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import com.klee.sapio.data.dto.Evaluation
@@ -12,7 +11,6 @@ import com.klee.sapio.data.dto.StrapiElement
 import com.klee.sapio.data.dto.UploadAnswer
 import com.klee.sapio.data.dto.UploadEvaluationHeader
 import com.klee.sapio.data.system.Settings
-import com.klee.sapio.domain.model.InstalledApplication
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.withTimeout
 import okhttp3.Cache
@@ -166,16 +164,18 @@ class EvaluationService @Inject constructor(
             Unit
         }
 
-    suspend fun uploadIcon(app: InstalledApplication): Result<List<IconAnswer>> {
-        val bytes = fromDrawableToByArray(app.icon)
-        val requestBody = bytes.toRequestBody(null, 0, bytes.size)
-        val image = MultipartBody.Part.createFormData(
-            "files",
-            "${app.packageName}.png",
-            requestBody
-        )
-
+    suspend fun uploadIcon(packageName: String): Result<List<IconAnswer>> {
         return runCatching {
+            val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
+            val drawable = context.packageManager.getApplicationIcon(appInfo)
+                ?: context.packageManager.defaultActivityIcon
+            val bytes = fromDrawableToByArray(drawable)
+            val requestBody = bytes.toRequestBody(null, 0, bytes.size)
+            val image = MultipartBody.Part.createFormData(
+                "files",
+                "$packageName.png",
+                requestBody
+            )
             withTimeout(UPLOAD_TIMEOUT_MS) {
                 evaluationsApi.addIcon(image)
             }
@@ -204,7 +204,7 @@ class EvaluationService @Inject constructor(
             answer.data.firstOrNull()?.attributes
         }
 
-    private fun fromDrawableToByArray(drawable: Drawable): ByteArray {
+    private fun fromDrawableToByArray(drawable: android.graphics.drawable.Drawable): ByteArray {
         val bitmap = drawable.toBitmap()
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)

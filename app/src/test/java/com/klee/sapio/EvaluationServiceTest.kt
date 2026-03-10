@@ -1,16 +1,19 @@
 package com.klee.sapio
 
+import android.app.Application
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import com.klee.sapio.data.api.EvaluationApi
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.system.Settings
+import org.robolectric.Shadows
 import com.klee.sapio.data.dto.Evaluation
 import com.klee.sapio.data.dto.IconAnswer
 import com.klee.sapio.data.dto.StrapiAnswer
 import com.klee.sapio.data.dto.StrapiElement
 import com.klee.sapio.data.dto.StrapiMeta
-import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.data.dto.UploadAnswer
 import com.klee.sapio.data.dto.UploadEvaluation
 import com.klee.sapio.data.dto.UploadEvaluationHeader
@@ -49,7 +52,14 @@ class EvaluationServiceTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        service = EvaluationService(ApplicationProvider.getApplicationContext())
+        val context = ApplicationProvider.getApplicationContext<Application>()
+        Shadows.shadowOf(context.packageManager).installPackage(
+            PackageInfo().apply {
+                packageName = "android"
+                applicationInfo = ApplicationInfo().apply { packageName = "android" }
+            }
+        )
+        service = EvaluationService(context)
         setField("settings", mockSettings)
     }
 
@@ -271,19 +281,13 @@ class EvaluationServiceTest {
 
     @Test
     fun uploadIcon_returnsResponseOnSuccess() = runBlocking {
-        val bitmap = android.graphics.Bitmap.createBitmap(8, 8, android.graphics.Bitmap.Config.ARGB_8888)
-        val drawable = android.graphics.drawable.BitmapDrawable(
-            ApplicationProvider.getApplicationContext<android.content.Context>().resources,
-            bitmap
-        )
-        val app = InstalledApplication("n", "pkg.upload", drawable)
         val api = object : EvaluationApi by failingApi() {
             override suspend fun addIcon(image: okhttp3.MultipartBody.Part): ArrayList<IconAnswer> =
                 arrayListOf(createIconAnswer())
         }
         setApi(api)
 
-        val result = service.uploadIcon(app)
+        val result = service.uploadIcon("android")
         assertEquals(1, result.getOrThrow().size)
     }
 
@@ -300,13 +304,6 @@ class EvaluationServiceTest {
 
     @Test
     fun uploadIcon_returnsNullOnIOException() = runBlocking {
-        // Force drawable -> byte array conversion without hitting network by mocking upload to throw
-        val bitmap = android.graphics.Bitmap.createBitmap(10, 10, android.graphics.Bitmap.Config.ARGB_8888)
-        val drawable = android.graphics.drawable.BitmapDrawable(
-            ApplicationProvider.getApplicationContext<android.content.Context>().resources,
-            bitmap
-        )
-        val app = InstalledApplication("n", "pkg.upload", drawable)
         val api = object : EvaluationApi by failingApi() {
             override suspend fun addIcon(image: okhttp3.MultipartBody.Part): ArrayList<IconAnswer> {
                 throw IOException("net down")
@@ -314,7 +311,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.uploadIcon(app)
+        val result = service.uploadIcon("android")
         assertTrue(result.isFailure)
     }
 

@@ -8,7 +8,8 @@ import com.klee.sapio.data.dto.IconAnswer
 import com.klee.sapio.data.local.AppDatabase
 import com.klee.sapio.data.local.EvaluationDao
 import com.klee.sapio.data.local.IconDao
-import com.klee.sapio.data.mapper.toEntity
+import com.klee.sapio.data.local.EvaluationEntity
+import com.klee.sapio.data.local.IconEntity
 import java.util.Date
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -89,7 +90,21 @@ class EvaluationRepositoryImplTest {
             publishedAt = Date(1),
             versionName = "1.0"
         )
-        evaluationDao.upsertAll(listOf(cached.toEntity(System.currentTimeMillis())))
+        evaluationDao.upsertAll(listOf(
+            EvaluationEntity(
+                name = cached.name,
+                packageName = cached.packageName,
+                iconUrl = null,
+                rating = cached.rating,
+                microg = cached.microg,
+                secure = cached.secure,
+                updatedAt = cached.updatedAt,
+                createdAt = cached.createdAt,
+                publishedAt = cached.publishedAt,
+                versionName = cached.versionName,
+                cachedAt = System.currentTimeMillis()
+            )
+        ))
         Mockito.`when`(evaluationService.listLatestEvaluations(1))
             .thenReturn(Result.failure(IllegalStateException("Network error")))
 
@@ -103,13 +118,7 @@ class EvaluationRepositoryImplTest {
     fun existingIcon_networkFirstCachesWhenSuccessful() = runTest {
         val now = System.currentTimeMillis()
         iconDao.upsertAll(
-            listOf(
-                iconAnswer(
-                    id = 12,
-                    name = "com.app.one.png",
-                    url = "/icon.png"
-                ).toEntity(now)
-            )
+            listOf(IconEntity(id = 12, name = "com.app.one.png", url = "/icon.png", cachedAt = now))
         )
         val remote = listOf(
             iconAnswer(
@@ -131,13 +140,7 @@ class EvaluationRepositoryImplTest {
     fun existingIcon_fallsBackToCacheOnFailure() = runTest {
         val cachedAt = System.currentTimeMillis() - 1000
         iconDao.upsertAll(
-            listOf(
-                iconAnswer(
-                    id = 22,
-                    name = "com.app.two.png",
-                    url = "/old.png"
-                ).toEntity(cachedAt)
-            )
+            listOf(IconEntity(id = 22, name = "com.app.two.png", url = "/old.png", cachedAt = cachedAt))
         )
         Mockito.`when`(evaluationService.existingIcon("com.app.two.png"))
             .thenReturn(Result.failure(IllegalStateException("Network error")))

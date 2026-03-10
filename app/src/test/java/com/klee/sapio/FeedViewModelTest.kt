@@ -172,7 +172,7 @@ class FeedViewModelTest {
         override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> = Result.success(Unit)
         override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<Evaluation?> = Result.success(null)
         override suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>> = Result.success(emptyList())
-        override suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>> = Result.success(emptyList())
+        override suspend fun uploadIcon(packageName: String): Result<List<Icon>> = Result.success(emptyList())
         override suspend fun existingIcon(iconName: String): Result<List<Icon>> = Result.success(emptyList())
         override suspend fun deleteIcon(id: Int): Result<Unit> = Result.success(Unit)
     }

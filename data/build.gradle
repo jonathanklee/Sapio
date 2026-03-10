@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 21
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    namespace 'com.klee.sapio.data'
+}
+
+dependencies {
+    implementation project(':domain')
+
+    implementation libs.androidx.core.ktx
+    implementation libs.kotlinx.coroutines.android
+    implementation libs.room.runtime
+    implementation libs.room.ktx
+    kapt libs.room.compiler
+
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+
+    implementation libs.rootbeer.lib
+
+    implementation libs.retrofit
+    implementation libs.converter.jackson
+    implementation libs.logging.interceptor
+    implementation libs.retrofit2.kotlin.coroutines.adapter
+
+    implementation libs.ktor.client.core
+    implementation libs.ktor.client.android
+
+    implementation libs.androidx.preference.ktx
+    implementation libs.androidx.work.runtime.ktx
+
+    testImplementation libs.junit
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.inline
+    testImplementation libs.robolectric
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.androidx.arch.core.testing
+}

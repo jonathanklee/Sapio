@@ -1,10 +1,12 @@
-package com.klee.sapio.data.work
+package com.klee.sapio.work
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -74,13 +76,26 @@ class CompatibilityNotificationManager(
         )
     }
 
+    private fun getAppIcon(packageName: String): Bitmap? {
+        return try {
+            context.packageManager.getApplicationIcon(packageName).toBitmap()
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
+    }
+
     private fun buildNotification(
         app: InstalledApplication,
         pendingIntent: PendingIntent,
         sharePendingIntent: PendingIntent
     ) = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_notification_info)
-        .setLargeIcon(app.icon.toBitmap())
+        .apply {
+            val icon = getAppIcon(app.packageName)
+            if (icon != null) {
+                setLargeIcon(icon)
+            }
+        }
         .setContentTitle(context.getString(R.string.compatibility_check_notification_title))
         .setContentText(
             context.getString(

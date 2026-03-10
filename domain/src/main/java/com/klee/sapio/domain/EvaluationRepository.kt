@@ -3,7 +3,6 @@ package com.klee.sapio.domain
 import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.domain.model.EvaluationRecord
 import com.klee.sapio.domain.model.Icon
-import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation
 
 interface EvaluationRepository {
@@ -20,7 +19,7 @@ interface EvaluationRepository {
 
     suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>>
 
-    suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>>
+    suspend fun uploadIcon(packageName: String): Result<List<Icon>>
 
     suspend fun existingIcon(iconName: String): Result<List<Icon>>
 

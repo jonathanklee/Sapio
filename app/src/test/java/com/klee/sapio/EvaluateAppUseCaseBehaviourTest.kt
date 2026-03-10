@@ -1,7 +1,5 @@
 package com.klee.sapio
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.data.system.DeviceConfiguration
@@ -31,8 +29,7 @@ class EvaluateAppUseCaseBehaviourTest {
 
     private val installedApp = InstalledApplication(
         name = "Demo",
-        packageName = "com.demo.app",
-        icon = ColorDrawable(Color.BLUE)
+        packageName = "com.demo.app"
     )
 
     @Before
@@ -93,7 +90,7 @@ class EvaluateAppUseCaseBehaviourTest {
             Result.success(null)
         override suspend fun existingEvaluations(packageName: String): Result<List<com.klee.sapio.domain.model.EvaluationRecord>> =
             Result.success(emptyList())
-        override suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>> =
+        override suspend fun uploadIcon(packageName: String): Result<List<Icon>> =
             Result.success(uploadResponse ?: emptyList())
         override suspend fun existingIcon(iconName: String): Result<List<Icon>> =
             Result.success(existingIcons)

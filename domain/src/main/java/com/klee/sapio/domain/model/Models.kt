@@ -1,6 +1,5 @@
 package com.klee.sapio.domain.model
 
-import android.graphics.drawable.Drawable
 import java.util.Date
 
 data class Evaluation(
@@ -38,6 +37,11 @@ data class EvaluationRecord(
 
 data class InstalledApplication(
     val name: String,
-    val packageName: String,
-    val icon: Drawable
+    val packageName: String
 )
+
+object EvaluationRating {
+    const val GOOD = 1
+    const val AVERAGE = 2
+    const val BAD = 3
+}

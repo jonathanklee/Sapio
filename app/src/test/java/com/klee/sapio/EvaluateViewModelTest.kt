@@ -1,7 +1,5 @@
 package com.klee.sapio
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.klee.sapio.data.repository.InstalledApplicationsRepository
@@ -48,8 +46,7 @@ class EvaluateViewModelTest {
 
     private val fakeApp = InstalledApplication(
         name = "Test App",
-        packageName = "com.test.app",
-        icon = ColorDrawable(Color.RED)
+        packageName = "com.test.app"
     )
 
     @Before
@@ -133,7 +130,7 @@ class EvaluateViewModelTest {
             override suspend fun updateEvaluation(evaluation: com.klee.sapio.domain.model.UploadEvaluation, id: Int) = Result.success(Unit)
             override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int) = Result.success(null)
             override suspend fun existingEvaluations(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.EvaluationRecord>())
-            override suspend fun uploadIcon(a: InstalledApplication) = Result.success(emptyList<com.klee.sapio.domain.model.Icon>())
+            override suspend fun uploadIcon(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Icon>())
             override suspend fun existingIcon(iconName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Icon>())
             override suspend fun deleteIcon(id: Int) = Result.success(Unit)
         }

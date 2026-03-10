@@ -3,7 +3,6 @@ package com.klee.sapio.data.repository
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import com.klee.sapio.domain.model.InstalledApplication
@@ -21,7 +20,12 @@ open class InstalledApplicationsRepository @Inject constructor() {
 
         val results: MutableList<InstalledApplication> = arrayListOf()
         for (app in apps) {
-            results.add(createInstalledApplication(context, app))
+            results.add(
+                InstalledApplication(
+                    context.packageManager.getApplicationLabel(app).toString(),
+                    app.packageName
+                )
+            )
         }
 
         return results.sortedBy { app -> app.name.lowercase() }
@@ -37,24 +41,7 @@ open class InstalledApplicationsRepository @Inject constructor() {
                 return app
             }
         }
-
         return null
-    }
-
-    private fun createInstalledApplication(
-        context: Context,
-        info: ApplicationInfo
-    ): InstalledApplication {
-        val packageManager = context.packageManager
-        return InstalledApplication(
-            packageManager.getApplicationLabel(info).toString(),
-            info.packageName,
-            fetchIcon(packageManager, info)
-        )
-    }
-
-    private fun fetchIcon(packageManager: PackageManager, info: ApplicationInfo): Drawable {
-        return packageManager.getDrawable(info.packageName, info.icon, info)!!
     }
 
     @VisibleForTesting

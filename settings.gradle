@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Sapio"
 include ':app'
+include ':domain'
+include ':data'

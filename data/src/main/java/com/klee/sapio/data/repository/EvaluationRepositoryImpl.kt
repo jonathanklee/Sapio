@@ -1,12 +1,14 @@
 package com.klee.sapio.data.repository
 
 import com.klee.sapio.data.api.EvaluationService
+import com.klee.sapio.data.dto.IconAnswer
+import com.klee.sapio.data.dto.StrapiElement
+import com.klee.sapio.data.dto.UploadEvaluation as DtoUploadEvaluation
 import com.klee.sapio.data.dto.UploadEvaluationHeader
 import com.klee.sapio.data.local.EvaluationDao
+import com.klee.sapio.data.local.EvaluationEntity
 import com.klee.sapio.data.local.IconDao
-import com.klee.sapio.data.mapper.toData
-import com.klee.sapio.data.mapper.toDomain
-import com.klee.sapio.data.mapper.toEntity
+import com.klee.sapio.data.local.IconEntity
 import com.klee.sapio.domain.EvaluationRepository
 import dagger.Binds
 import dagger.Module
@@ -20,7 +22,6 @@ import com.klee.sapio.data.dto.Evaluation as DtoEvaluation
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
 import com.klee.sapio.domain.model.Icon as DomainIcon
-import com.klee.sapio.domain.model.InstalledApplication as DomainInstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation
 
 class EvaluationRepositoryImpl @Inject constructor(
@@ -94,8 +95,8 @@ class EvaluationRepositoryImpl @Inject constructor(
             .map { evaluations -> evaluations.map { it.toDomain() } }
     }
 
-    override suspend fun uploadIcon(app: DomainInstalledApplication): Result<List<DomainIcon>> {
-        val remote = retrofitService.uploadIcon(app)
+    override suspend fun uploadIcon(packageName: String): Result<List<DomainIcon>> {
+        val remote = retrofitService.uploadIcon(packageName)
         if (remote.isSuccess) {
             val icons = remote.getOrThrow()
             val now = System.currentTimeMillis()
@@ -103,7 +104,7 @@ class EvaluationRepositoryImpl @Inject constructor(
             return Result.success(icons.map { it.toDomain() })
         }
 
-        val cached = iconDao.findByName("${app.packageName}.png")
+        val cached = iconDao.findByName("$packageName.png")
             .map { it.toDomain() }
         return if (cached.isNotEmpty()) {
             Result.success(cached)
@@ -187,3 +188,76 @@ abstract class EvaluationRepositoryModule {
         evaluationRepositoryImpl: EvaluationRepositoryImpl
     ): EvaluationRepository
 }
+
+private fun DtoEvaluation.toDomain(): DomainEvaluation = DomainEvaluation(
+    name = name,
+    packageName = packageName,
+    iconUrl = icon?.data?.attributes?.url,
+    rating = rating,
+    microg = microg,
+    secure = secure,
+    updatedAt = updatedAt,
+    createdAt = createdAt,
+    publishedAt = publishedAt,
+    versionName = versionName
+)
+
+private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = EvaluationEntity(
+    name = name,
+    packageName = packageName,
+    iconUrl = icon?.data?.attributes?.url,
+    rating = rating,
+    microg = microg,
+    secure = secure,
+    updatedAt = updatedAt,
+    createdAt = createdAt,
+    publishedAt = publishedAt,
+    versionName = versionName,
+    cachedAt = cachedAt
+)
+
+private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
+    name = name,
+    packageName = packageName,
+    iconUrl = iconUrl,
+    rating = rating,
+    microg = microg,
+    secure = secure,
+    updatedAt = updatedAt,
+    createdAt = createdAt,
+    publishedAt = publishedAt,
+    versionName = versionName
+)
+
+private fun StrapiElement.toDomain(): DomainEvaluationRecord = DomainEvaluationRecord(
+    id = id,
+    evaluation = attributes.toDomain()
+)
+
+private fun IconAnswer.toDomain(): DomainIcon = DomainIcon(
+    id = id,
+    name = name,
+    url = url
+)
+
+private fun IconAnswer.toEntity(cachedAt: Long): IconEntity = IconEntity(
+    id = id,
+    name = name,
+    url = url,
+    cachedAt = cachedAt
+)
+
+private fun IconEntity.toDomain(): DomainIcon = DomainIcon(
+    id = id,
+    name = name,
+    url = url
+)
+
+private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEvaluation(
+    name = name,
+    packageName = packageName,
+    icon = icon,
+    rating = rating,
+    microg = microg,
+    rooted = rooted
+)

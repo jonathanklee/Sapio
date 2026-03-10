@@ -103,7 +103,7 @@ class SearchViewModelTest {
             Result.success(null)
         override suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>> =
             Result.success(emptyList())
-        override suspend fun uploadIcon(app: InstalledApplication): Result<List<Icon>> =
+        override suspend fun uploadIcon(packageName: String): Result<List<Icon>> =
             Result.success(emptyList())
         override suspend fun existingIcon(iconName: String): Result<List<Icon>> =
             Result.success(emptyList())

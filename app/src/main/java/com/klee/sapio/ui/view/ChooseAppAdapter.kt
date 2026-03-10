@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,13 @@ class ChooseAppAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val binding = holder.binding
         binding.appName.text = mApps[position].name
-        binding.appIcon.setImageDrawable(mApps[position].icon)
+        try {
+            binding.appIcon.setImageDrawable(
+                binding.root.context.packageManager.getApplicationIcon(mApps[position].packageName)
+            )
+        } catch (e: PackageManager.NameNotFoundException) {
+            // leave default icon
+        }
         binding.appIcon.setOnClickListener {
             mListener.onAppClicked(mApps[position])
         }

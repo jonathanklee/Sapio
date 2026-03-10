@@ -1,6 +1,5 @@
 package com.klee.sapio.domain
 
-import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation
@@ -10,7 +9,7 @@ import javax.inject.Inject
 
 open class EvaluateAppUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository,
-    private val deviceConfiguration: DeviceConfiguration
+    private val deviceInfo: DeviceInfo
 ) {
 
     open suspend operator fun invoke(
@@ -33,7 +32,7 @@ open class EvaluateAppUseCase @Inject constructor(
     }
 
     private suspend fun uploadIcon(app: InstalledApplication): List<Icon> {
-        return evaluationRepository.uploadIcon(app).getOrDefault(emptyList())
+        return evaluationRepository.uploadIcon(app.packageName).getOrDefault(emptyList())
     }
 
     private suspend fun deleteIcon(id: Int) {
@@ -46,8 +45,8 @@ open class EvaluateAppUseCase @Inject constructor(
             app.packageName,
             iconId,
             rating,
-            deviceConfiguration.getGmsType(),
-            deviceConfiguration.isRisky()
+            deviceInfo.getGmsType(),
+            deviceInfo.isRisky()
         )
 
         return evaluationRepository.addEvaluation(newEvaluation).isSuccess
