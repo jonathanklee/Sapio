@@ -101,6 +101,7 @@
             </TableRow>
 
             <TableRow
+              android:id="@+id/microgRow"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content">
 
@@ -133,6 +134,7 @@
             </TableRow>
 
             <TableRow
+              android:id="@+id/bareAospRow"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 

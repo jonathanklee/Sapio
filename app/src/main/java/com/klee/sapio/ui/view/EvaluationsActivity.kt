@@ -164,6 +164,14 @@ class EvaluationsActivity : AppCompatActivity() {
                     renderEvaluation(mBinding.microgRoot, state.microgRoot)
                 }
 
+                if (state.isFullyLoaded) {
+                    val rootEnabled = settings.isRootConfigurationEnabled()
+                    val microgHasData = state.microgUser != null || (rootEnabled && state.microgRoot != null)
+                    val bareAospHasData = state.bareAospUser != null || (rootEnabled && state.bareAospRoot != null)
+                    mBinding.microgRow.isVisible = microgHasData
+                    mBinding.bareAospRow.isVisible = bareAospHasData
+                }
+
                 if (state.iconUrl != null && !iconReady) {
                     iconReady = true
                     if (state.iconUrl.isNotEmpty()) {
