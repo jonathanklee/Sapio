@@ -201,6 +201,7 @@ class EvaluationsFragment : Fragment() {
 
                 if (state.iconUrl != null && !iconReady) {
                     iconReady = true
+                    val needsCount = !state.isFullyLoaded
                     if (state.iconUrl.isNotEmpty()) {
                         Glide.with(requireContext().applicationContext)
                             .load(EvaluationService.BASE_URL + state.iconUrl)
@@ -212,7 +213,7 @@ class EvaluationsFragment : Fragment() {
                                     dataSource: DataSource,
                                     isFirstResource: Boolean
                                 ): Boolean {
-                                    mViewModel.onIconDisplayed()
+                                    if (needsCount) mViewModel.onIconDisplayed()
                                     return false
                                 }
 
@@ -222,13 +223,13 @@ class EvaluationsFragment : Fragment() {
                                     target: Target<Drawable>,
                                     isFirstResource: Boolean
                                 ): Boolean {
-                                    mViewModel.onIconDisplayed()
+                                    if (needsCount) mViewModel.onIconDisplayed()
                                     return false
                                 }
                             })
                             .into(mBinding.image)
                     } else {
-                        mViewModel.onIconDisplayed()
+                        if (needsCount) mViewModel.onIconDisplayed()
                     }
                 }
             }
@@ -393,6 +394,7 @@ class EvaluationsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        iconReady = false
         shareImage?.let {
             requireContext().contentResolver.delete(it, null, null)
             shareImage = null
