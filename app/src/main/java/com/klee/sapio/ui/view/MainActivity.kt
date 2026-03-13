@@ -12,15 +12,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
+import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
+    private val mEvaluationsViewModel by viewModels<AppEvaluationsViewModel>()
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
@@ -102,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         shareImmediately: Boolean = false,
         notificationId: Int = -1
     ) {
+        mEvaluationsViewModel.listEvaluations(packageName)
         val fragment = EvaluationsFragment.newInstance(packageName, appName, shareImmediately, notificationId)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)

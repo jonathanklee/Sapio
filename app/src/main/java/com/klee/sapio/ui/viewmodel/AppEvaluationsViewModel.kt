@@ -11,11 +11,11 @@ import com.klee.sapio.ui.state.AppEvaluationsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,17 +30,22 @@ class AppEvaluationsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AppEvaluationsUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var loadingJob: Job? = null
+
     companion object {
         private const val FETCHES_WITH_ROOT = 5
         private const val FETCHES_WITHOUT_ROOT = 3
     }
 
     fun listEvaluations(packageName: String) {
+        loadingJob?.cancel()
+        _uiState.value = AppEvaluationsUiState()
+
         val expectedFetches = if (settings.isRootConfigurationEnabled()) FETCHES_WITH_ROOT else FETCHES_WITHOUT_ROOT
         _uiState.update { it.copy(pendingCount = expectedFetches) }
 
-        viewModelScope.launch {
-            withContext(ioDispatcher) {
+        loadingJob = viewModelScope.launch {
+            launch(ioDispatcher) {
                 _uiState.update {
                     it.copy(
                         microgUser = fetchAppEvaluationUseCase(
@@ -52,10 +57,8 @@ class AppEvaluationsViewModel @Inject constructor(
                     )
                 }
             }
-        }
 
-        viewModelScope.launch {
-            withContext(ioDispatcher) {
+            launch(ioDispatcher) {
                 _uiState.update {
                     it.copy(
                         bareAospUser = fetchAppEvaluationUseCase(
@@ -67,12 +70,36 @@ class AppEvaluationsViewModel @Inject constructor(
                     )
                 }
             }
-        }
 
-        loadRiskyEvaluationsIfEnabled(packageName)
+            if (settings.isRootConfigurationEnabled()) {
+                launch(ioDispatcher) {
+                    _uiState.update {
+                        it.copy(
+                            microgRoot = fetchAppEvaluationUseCase(
+                                packageName,
+                                GmsType.MICROG,
+                                UserType.RISKY
+                            ).getOrNull(),
+                            pendingCount = it.pendingCount - 1
+                        )
+                    }
+                }
 
-        viewModelScope.launch {
-            withContext(ioDispatcher) {
+                launch(ioDispatcher) {
+                    _uiState.update {
+                        it.copy(
+                            bareAospRoot = fetchAppEvaluationUseCase(
+                                packageName,
+                                GmsType.BARE_AOSP,
+                                UserType.RISKY
+                            ).getOrNull(),
+                            pendingCount = it.pendingCount - 1
+                        )
+                    }
+                }
+            }
+
+            launch(ioDispatcher) {
                 _uiState.update {
                     it.copy(iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""))
                 }
@@ -82,39 +109,5 @@ class AppEvaluationsViewModel @Inject constructor(
 
     fun onIconDisplayed() {
         _uiState.update { it.copy(pendingCount = it.pendingCount - 1) }
-    }
-
-    private fun loadRiskyEvaluationsIfEnabled(packageName: String) {
-        if (!settings.isRootConfigurationEnabled()) return
-
-        viewModelScope.launch {
-            withContext(ioDispatcher) {
-                _uiState.update {
-                    it.copy(
-                        microgRoot = fetchAppEvaluationUseCase(
-                            packageName,
-                            GmsType.MICROG,
-                            UserType.RISKY
-                        ).getOrNull(),
-                        pendingCount = it.pendingCount - 1
-                    )
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            withContext(ioDispatcher) {
-                _uiState.update {
-                    it.copy(
-                        bareAospRoot = fetchAppEvaluationUseCase(
-                            packageName,
-                            GmsType.BARE_AOSP,
-                            UserType.RISKY
-                        ).getOrNull(),
-                        pendingCount = it.pendingCount - 1
-                    )
-                }
-            }
-        }
     }
 }

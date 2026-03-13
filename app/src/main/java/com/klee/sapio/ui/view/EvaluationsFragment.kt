@@ -26,7 +26,7 @@ import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -61,7 +61,7 @@ class EvaluationsFragment : Fragment() {
 
     private var _binding: FragmentEvaluationsBinding? = null
     private val mBinding get() = _binding!!
-    private val mViewModel by viewModels<AppEvaluationsViewModel>()
+    private val mViewModel by activityViewModels<AppEvaluationsViewModel>()
 
     private lateinit var shareLauncher: ActivityResultLauncher<Intent>
 
@@ -132,7 +132,6 @@ class EvaluationsFragment : Fragment() {
         }
 
         hideCard()
-        mViewModel.listEvaluations(packageName)
 
         if (shareImmediately) {
             if (notificationId != -1) {
