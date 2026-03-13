@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
@@ -43,8 +44,10 @@ class MainActivity : AppCompatActivity() {
 
         requestNotificationPermissionIfNeeded()
 
-        displayFragment(FeedFragment())
-        handleDeepLinkIntent(intent)
+        if (savedInstanceState == null) {
+            displayFragment(FeedFragment())
+            handleDeepLinkIntent(intent)
+        }
 
         handleEdgeToEdgeInsets()
 
@@ -114,6 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 
