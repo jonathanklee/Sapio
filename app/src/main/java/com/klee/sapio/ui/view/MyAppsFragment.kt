@@ -28,9 +28,15 @@ class MyAppsFragment : Fragment() {
         mBinding = FragmentMyAppsBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        mAdapter = MyAppsAdapter(requireContext()) {
-            (requireActivity() as MainActivity).navigateToContribute()
-        }
+        mAdapter = MyAppsAdapter(
+            requireContext(),
+            onAppSelected = { packageName, appName ->
+                (requireActivity() as MainActivity).navigateToEvaluations(packageName, appName)
+            },
+            onContribute = {
+                (requireActivity() as MainActivity).navigateToContribute()
+            }
+        )
         mBinding.recyclerView.adapter = mAdapter
 
         mBinding.swipeRefreshLayout.setOnRefreshListener {

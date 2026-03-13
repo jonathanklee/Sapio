@@ -1,7 +1,6 @@
 package com.klee.sapio.ui.view
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -14,7 +13,8 @@ import com.klee.sapio.databinding.SearchAppCardBinding
 import com.klee.sapio.domain.model.Evaluation
 
 class SearchAppAdapter(
-    private val mContext: Context
+    private val mContext: Context,
+    private val onAppSelected: (packageName: String, appName: String) -> Unit
 ) : ListAdapter<Evaluation, SearchAppAdapter.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -58,10 +58,7 @@ class SearchAppAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(mContext, EvaluationsActivity::class.java)
-            intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, app.packageName)
-            intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
-            mContext.startActivity(intent)
+            onAppSelected(app.packageName, app.name)
         }
     }
 

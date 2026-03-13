@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="horizontal"
-  tools:context=".ui.view.EvaluationsActivity">
+  tools:context=".ui.view.EvaluationsFragment">
 
     <FrameLayout
         android:id="@+id/bitmap_container"
@@ -259,5 +259,3 @@
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

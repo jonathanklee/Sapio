@@ -64,7 +64,9 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        mFeedAppAdapter = FeedAppAdapter(requireContext(), mSettings)
+        mFeedAppAdapter = FeedAppAdapter(requireContext(), mSettings) { packageName, appName ->
+            (requireActivity() as MainActivity).navigateToEvaluations(packageName, appName)
+        }
         mBinding.recyclerView.adapter = mFeedAppAdapter
     }
 

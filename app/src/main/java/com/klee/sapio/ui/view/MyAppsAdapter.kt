@@ -1,7 +1,6 @@
 package com.klee.sapio.ui.view
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import com.klee.sapio.ui.model.Rating
 
 class MyAppsAdapter(
     private val mContext: Context,
+    private val onAppSelected: (packageName: String, appName: String) -> Unit,
     private val onContribute: () -> Unit
 ) : ListAdapter<InstalledAppWithRating, MyAppsAdapter.ViewHolder>(DiffCallback) {
 
@@ -74,10 +74,7 @@ class MyAppsAdapter(
 
         holder.itemView.setOnClickListener {
             if (item.evaluation != null) {
-                val intent = Intent(mContext, EvaluationsActivity::class.java)
-                intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, item.installedApp.packageName)
-                intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, item.installedApp.name)
-                mContext.startActivity(intent)
+                onAppSelected(item.installedApp.packageName, item.installedApp.name)
             } else {
                 onContribute()
             }

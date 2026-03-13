@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.klee.sapio.R
 import com.klee.sapio.domain.model.InstalledApplication
-import com.klee.sapio.ui.view.EvaluationsActivity
+import com.klee.sapio.ui.view.MainActivity
 
 class CompatibilityNotificationManager(
     private val context: Context
@@ -52,12 +52,12 @@ class CompatibilityNotificationManager(
         app: InstalledApplication,
         shareImmediately: Boolean
     ): PendingIntent {
-        val intent = Intent(context, EvaluationsActivity::class.java).apply {
-            putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, app.packageName)
-            putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
+        val intent = Intent(context, MainActivity::class.java).apply {
+            putExtra(MainActivity.EXTRA_PACKAGE_NAME, app.packageName)
+            putExtra(MainActivity.EXTRA_APP_NAME, app.name)
             if (shareImmediately) {
-                putExtra(EvaluationsActivity.EXTRA_SHARE_IMMEDIATELY, true)
-                putExtra(EvaluationsActivity.EXTRA_NOTIFICATION_ID, NOTIFICATION_ID)
+                putExtra(MainActivity.EXTRA_SHARE_IMMEDIATELY, true)
+                putExtra(MainActivity.EXTRA_NOTIFICATION_ID, NOTIFICATION_ID)
             }
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }

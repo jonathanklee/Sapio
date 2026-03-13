@@ -1,6 +1,7 @@
 package com.klee.sapio.ui.view
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
@@ -25,6 +26,10 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val DONATE_URL = "https://ko-fi.com/jnthnkl"
+        const val EXTRA_PACKAGE_NAME = "packageName"
+        const val EXTRA_APP_NAME = "appName"
+        const val EXTRA_SHARE_IMMEDIATELY = "shareImmediately"
+        const val EXTRA_NOTIFICATION_ID = "notificationId"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         requestNotificationPermissionIfNeeded()
 
         displayFragment(FeedFragment())
+        handleDeepLinkIntent(intent)
 
         handleEdgeToEdgeInsets()
 
@@ -43,7 +49,9 @@ class MainActivity : AppCompatActivity() {
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (mBinding.bottomNavigation.selectedItemId != R.id.feed) {
+                    if (supportFragmentManager.backStackEntryCount > 0) {
+                        supportFragmentManager.popBackStack()
+                    } else if (mBinding.bottomNavigation.selectedItemId != R.id.feed) {
                         mBinding.bottomNavigation.selectedItemId = R.id.feed
                     } else {
                         finish()
@@ -64,8 +72,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDeepLinkIntent(intent)
+    }
+
+    private fun handleDeepLinkIntent(intent: Intent) {
+        val packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME) ?: return
+        val appName = intent.getStringExtra(EXTRA_APP_NAME).orEmpty()
+        val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
+        val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
+        navigateToEvaluations(packageName, appName, shareImmediately, notificationId)
+    }
+
     fun navigateToContribute() {
         mBinding.bottomNavigation.selectedItemId = R.id.contribute
+    }
+
+    fun navigateToEvaluations(
+        packageName: String,
+        appName: String,
+        shareImmediately: Boolean = false,
+        notificationId: Int = -1
+    ) {
+        val fragment = EvaluationsFragment.newInstance(packageName, appName, shareImmediately, notificationId)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun displayFragment(fragment: Fragment) {

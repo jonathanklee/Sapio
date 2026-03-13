@@ -1,6 +1,5 @@
 package com.klee.sapio.ui.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,11 +22,11 @@ class SuccessFragment : Fragment() {
         mBinding = FragmentSuccessBinding.inflate(inflater, container, false)
         mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
         mBinding.shareEvaluation.setOnClickListener {
-            val intent = Intent(requireContext(), EvaluationsActivity::class.java)
-            intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, packageName)
-            intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, appName)
-            intent.putExtra(EvaluationsActivity.EXTRA_SHARE_IMMEDIATELY, true)
-            requireContext().startActivity(intent)
+            (requireActivity() as MainActivity).navigateToEvaluations(
+                packageName,
+                appName,
+                shareImmediately = true
+            )
         }
 
         return mBinding.root

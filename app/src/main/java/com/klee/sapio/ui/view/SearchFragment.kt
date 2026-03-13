@@ -50,7 +50,9 @@ class SearchFragment : Fragment() {
 
         mHandler = Handler(Looper.getMainLooper())
 
-        mSearchAppAdapter = SearchAppAdapter(requireContext())
+        mSearchAppAdapter = SearchAppAdapter(requireContext()) { packageName, appName ->
+            (requireActivity() as MainActivity).navigateToEvaluations(packageName, appName)
+        }
         mBinding.recyclerView.adapter = mSearchAppAdapter
 
         mBinding.editTextSearch.addTextChangedListener { editable ->

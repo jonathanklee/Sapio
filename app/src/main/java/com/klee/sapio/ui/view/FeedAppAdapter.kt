@@ -1,7 +1,6 @@
 package com.klee.sapio.ui.view
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
@@ -25,7 +24,8 @@ import java.util.Locale
 
 class FeedAppAdapter(
     private val mContext: Context,
-    private var mSettings: Settings
+    private var mSettings: Settings,
+    private val onAppSelected: (packageName: String, appName: String) -> Unit
 ) : ListAdapter<Evaluation, FeedAppAdapter.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -93,10 +93,7 @@ class FeedAppAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(mContext, EvaluationsActivity::class.java)
-            intent.putExtra(EvaluationsActivity.EXTRA_PACKAGE_NAME, app.packageName)
-            intent.putExtra(EvaluationsActivity.EXTRA_APP_NAME, app.name)
-            mContext.startActivity(intent)
+            onAppSelected(app.packageName, app.name)
         }
     }
 

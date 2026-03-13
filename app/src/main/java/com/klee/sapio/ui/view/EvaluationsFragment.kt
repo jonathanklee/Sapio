@@ -14,19 +14,19 @@ import android.os.Environment
 import android.provider.MediaStore.Images.Media
 import android.util.Log
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
-import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
 import androidx.emoji2.widget.EmojiTextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -38,7 +38,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.system.Settings
-import com.klee.sapio.databinding.ActivityEvaluationsBinding
+import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
@@ -52,13 +52,15 @@ import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+
 @AndroidEntryPoint
-class EvaluationsActivity : AppCompatActivity() {
+class EvaluationsFragment : Fragment() {
 
     @Inject
     lateinit var settings: Settings
 
-    private lateinit var mBinding: ActivityEvaluationsBinding
+    private var _binding: FragmentEvaluationsBinding? = null
+    private val mBinding get() = _binding!!
     private val mViewModel by viewModels<AppEvaluationsViewModel>()
 
     private lateinit var shareLauncher: ActivityResultLauncher<Intent>
@@ -67,31 +69,58 @@ class EvaluationsActivity : AppCompatActivity() {
     private var iconReady = false
 
     companion object {
-        const val TAG = "EvaluationsActivity"
+        const val TAG = "EvaluationsFragment"
         const val NO_EVALUATION_CHAR = ""
         const val COMPRESSION_QUALITY = 100
-        const val EXTRA_PACKAGE_NAME = "packageName"
-        const val EXTRA_APP_NAME = "appName"
-        const val EXTRA_SHARE_IMMEDIATELY = "shareImmediately"
-        const val EXTRA_NOTIFICATION_ID = "notificationId"
         const val SCREENSHOT_WIDTH_DP = 200
         const val SCREENSHOT_HEIGHT_DP = 115
+        private const val ARG_PACKAGE_NAME = "packageName"
+        private const val ARG_APP_NAME = "appName"
+        private const val ARG_SHARE_IMMEDIATELY = "shareImmediately"
+        private const val ARG_NOTIFICATION_ID = "notificationId"
+
+        fun newInstance(
+            packageName: String,
+            appName: String,
+            shareImmediately: Boolean = false,
+            notificationId: Int = -1
+        ) = EvaluationsFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PACKAGE_NAME, packageName)
+                putString(ARG_APP_NAME, appName)
+                putBoolean(ARG_SHARE_IMMEDIATELY, shareImmediately)
+                putInt(ARG_NOTIFICATION_ID, notificationId)
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        shareLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            shareImage?.let { requireContext().contentResolver.delete(it, null, null) }
+            shareImage = null
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentEvaluationsBinding.inflate(inflater, container, false)
+        return mBinding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        mBinding = ActivityEvaluationsBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        val packageName = arguments?.getString(ARG_PACKAGE_NAME).orEmpty()
+        val appName = arguments?.getString(ARG_APP_NAME).orEmpty()
+        val shareImmediately = arguments?.getBoolean(ARG_SHARE_IMMEDIATELY) ?: false
+        val notificationId = arguments?.getInt(ARG_NOTIFICATION_ID) ?: -1
 
-        observeEvaluations()
-        observeShare()
-
-        val packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME).toString()
         mBinding.packageName.text = packageName
-
-        val appName = intent.getStringExtra(EXTRA_APP_NAME).toString()
         mBinding.applicationName.text = appName
 
         mBinding.shareButton.setOnClickListener {
@@ -99,20 +128,17 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         mBinding.infoIcon.setOnClickListener {
-            val intent = Intent(this, AboutActivity::class.java)
+            val intent = Intent(requireContext(), AboutActivity::class.java)
             startActivity(intent)
         }
 
         hideCard()
         mViewModel.listEvaluations(packageName)
 
-        val shareImmediately = intent.getBooleanExtra(EXTRA_SHARE_IMMEDIATELY, false)
         if (shareImmediately) {
-            val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
             if (notificationId != -1) {
                 val notificationManager =
-                    getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
+                    requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(notificationId)
             }
             onElementsLoaded {
@@ -125,6 +151,7 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         handleRootConfigurationSetting()
+        observeEvaluations()
     }
 
     private fun hideCard() {
@@ -141,7 +168,7 @@ class EvaluationsActivity : AppCompatActivity() {
         mViewModel.uiState
             .filter { it.isFullyLoaded }
             .onEach { callback.invoke() }
-            .launchIn(lifecycleScope)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun handleRootConfigurationSetting() {
@@ -156,7 +183,7 @@ class EvaluationsActivity : AppCompatActivity() {
     }
 
     private fun observeEvaluations() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
                 renderEvaluation(mBinding.microgUser, state.microgUser)
                 renderEvaluation(mBinding.bareAospUser, state.bareAospUser)
@@ -177,7 +204,7 @@ class EvaluationsActivity : AppCompatActivity() {
                 if (state.iconUrl != null && !iconReady) {
                     iconReady = true
                     if (state.iconUrl.isNotEmpty()) {
-                        Glide.with(this@EvaluationsActivity.applicationContext)
+                        Glide.with(requireContext().applicationContext)
                             .load(EvaluationService.BASE_URL + state.iconUrl)
                             .listener(object : RequestListener<Drawable> {
                                 override fun onResourceReady(
@@ -233,10 +260,10 @@ class EvaluationsActivity : AppCompatActivity() {
     }
 
     private fun startTakingScreenshot(appName: String, packageName: String) {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val state = mViewModel.uiState.value
             val icon = saveImageToFile(
-                this@EvaluationsActivity,
+                requireContext(),
                 EvaluationService.BASE_URL + (state.iconUrl ?: "")
             )
             val sharedEvaluation = SharedEvaluation(
@@ -251,7 +278,7 @@ class EvaluationsActivity : AppCompatActivity() {
     }
 
     private fun takeScreenshot(sharedEvaluation: SharedEvaluation): Bitmap {
-        return composeToBitmap(this@EvaluationsActivity, SCREENSHOT_WIDTH_DP, SCREENSHOT_HEIGHT_DP) {
+        return composeToBitmap(requireContext(), SCREENSHOT_WIDTH_DP, SCREENSHOT_HEIGHT_DP) {
             ShareScreenshot(sharedEvaluation)
         }
     }
@@ -273,7 +300,7 @@ class EvaluationsActivity : AppCompatActivity() {
             }
         }
 
-        Glide.with(applicationContext)
+        Glide.with(requireContext().applicationContext)
             .asBitmap()
             .load(url)
             .into(target)
@@ -308,17 +335,14 @@ class EvaluationsActivity : AppCompatActivity() {
             layoutParams = ViewGroup.LayoutParams(widthPx, heightPx)
         }
 
-        // Add to container for proper rendering context
         mBinding.bitmapContainer.addView(composeView)
 
-        // Measure and layout
         composeView.measure(
-            MeasureSpec.makeMeasureSpec(widthPx, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(heightPx, MeasureSpec.EXACTLY)
+            View.MeasureSpec.makeMeasureSpec(widthPx, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(heightPx, View.MeasureSpec.EXACTLY)
         )
         composeView.layout(0, 0, composeView.measuredWidth, composeView.measuredHeight)
 
-        // Create bitmap and draw
         val bitmap = createBitmap(
             (composeView.width * scaleFactor).toInt(),
             (composeView.height * scaleFactor).toInt()
@@ -327,17 +351,9 @@ class EvaluationsActivity : AppCompatActivity() {
         canvas.scale(scaleFactor, scaleFactor)
         composeView.draw(canvas)
 
-        // Clean up
         mBinding.bitmapContainer.removeView(composeView)
 
         return bitmap
-    }
-
-    private fun observeShare() {
-        shareLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            contentResolver.delete(shareImage!!, null, null)
-            shareImage = null
-        }
     }
 
     private fun share(bitmap: Bitmap, appName: String) {
@@ -354,11 +370,11 @@ class EvaluationsActivity : AppCompatActivity() {
         }
 
         shareImage =
-            contentResolver.insert(Media.EXTERNAL_CONTENT_URI, contentValues)
+            requireContext().contentResolver.insert(Media.EXTERNAL_CONTENT_URI, contentValues)
                 ?: return
 
         try {
-            contentResolver.openOutputStream(shareImage!!)?.use { outputStream ->
+            requireContext().contentResolver.openOutputStream(shareImage!!)?.use { outputStream ->
                 bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESSION_QUALITY, outputStream)
             }
         } catch (exception: IOException) {
@@ -377,11 +393,12 @@ class EvaluationsActivity : AppCompatActivity() {
         shareLauncher.launch(Intent.createChooser(shareIntent, "Share"))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        shareLauncher.unregister()
-        if (shareImage != null) {
-            contentResolver.delete(shareImage!!, null, null)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        shareImage?.let {
+            requireContext().contentResolver.delete(it, null, null)
+            shareImage = null
         }
+        _binding = null
     }
 }
