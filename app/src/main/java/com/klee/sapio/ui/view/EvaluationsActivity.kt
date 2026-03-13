@@ -129,9 +129,11 @@ class EvaluationsActivity : AppCompatActivity() {
 
     private fun hideCard() {
         mBinding.card.visibility = View.INVISIBLE
+        mBinding.progressBar.visibility = View.VISIBLE
     }
 
     private fun showCard() {
+        mBinding.progressBar.visibility = View.GONE
         mBinding.card.visibility = View.VISIBLE
     }
 
