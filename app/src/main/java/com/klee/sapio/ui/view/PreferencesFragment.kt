@@ -46,8 +46,7 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("about_preference")?.setOnPreferenceClickListener {
-            val intent = Intent(requireContext(), AboutActivity::class.java)
-            startActivity(intent)
+            (requireActivity() as MainActivity).navigateToAbout()
             true
         }
 

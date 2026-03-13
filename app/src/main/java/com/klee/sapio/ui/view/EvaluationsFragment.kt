@@ -128,8 +128,7 @@ class EvaluationsFragment : Fragment() {
         }
 
         mBinding.infoIcon.setOnClickListener {
-            val intent = Intent(requireContext(), AboutActivity::class.java)
-            startActivity(intent)
+            (requireActivity() as MainActivity).navigateToAbout()
         }
 
         hideCard()

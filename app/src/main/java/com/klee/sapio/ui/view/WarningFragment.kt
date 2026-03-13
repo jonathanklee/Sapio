@@ -34,7 +34,7 @@ class WarningFragment : Fragment() {
     ): View {
         mBinding = FragmentWarningBinding.inflate(inflater, container, false)
         mBinding.reportAppDescription.text = Html.fromHtml(
-            getString(R.string.warning_desc, AboutActivity.RATING_RULES),
+            getString(R.string.warning_desc, AboutFragment.RATING_RULES),
             Html.FROM_HTML_MODE_LEGACY
         )
 

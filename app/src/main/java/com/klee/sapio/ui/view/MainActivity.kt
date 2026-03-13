@@ -85,6 +85,13 @@ class MainActivity : AppCompatActivity() {
         navigateToEvaluations(packageName, appName, shareImmediately, notificationId)
     }
 
+    fun navigateToAbout() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, AboutFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
     fun navigateToContribute() {
         mBinding.bottomNavigation.selectedItemId = R.id.contribute
     }
