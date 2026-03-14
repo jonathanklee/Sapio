@@ -85,7 +85,7 @@ interface EvaluationApi {
     ): StrapiAnswer
 }
 
-class EvaluationService @Inject constructor(
+open class EvaluationService @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     companion object {
@@ -115,7 +115,7 @@ class EvaluationService @Inject constructor(
         evaluationsApi = retrofit.create(EvaluationApi::class.java)
     }
 
-    suspend fun listLatestEvaluations(pageNumber: Int): Result<List<Evaluation>> =
+    open suspend fun listLatestEvaluations(pageNumber: Int): Result<List<Evaluation>> =
         runCatching {
             val strapiAnswer = evaluationsApi.listLatestEvaluationsAsync(
                 settings.getRootConfigurationLevel(),
@@ -130,7 +130,7 @@ class EvaluationService @Inject constructor(
             }
         }
 
-    suspend fun searchEvaluation(pattern: String): Result<List<Evaluation>> =
+    open suspend fun searchEvaluation(pattern: String): Result<List<Evaluation>> =
         runCatching {
             val strapiAnswer = evaluationsApi.searchAsync(
                 pattern,
@@ -146,25 +146,25 @@ class EvaluationService @Inject constructor(
                 .distinctBy { it.packageName }
         }
 
-    suspend fun existingEvaluations(packageName: String): Result<List<StrapiElement>> =
+    open suspend fun existingEvaluations(packageName: String): Result<List<StrapiElement>> =
         runCatching {
             val strapiAnswer = evaluationsApi.existingEvaluationsAsync(packageName)
             strapiAnswer.data.toList()
         }
 
-    suspend fun addEvaluation(app: UploadEvaluationHeader): Result<Unit> =
+    open suspend fun addEvaluation(app: UploadEvaluationHeader): Result<Unit> =
         runCatching {
             evaluationsApi.addEvaluation(app)
             Unit
         }
 
-    suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int): Result<Unit> =
+    open suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int): Result<Unit> =
         runCatching {
             evaluationsApi.updateEvaluation(app, id)
             Unit
         }
 
-    suspend fun uploadIcon(packageName: String): Result<List<IconAnswer>> {
+    open suspend fun uploadIcon(packageName: String): Result<List<IconAnswer>> {
         return runCatching {
             val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
             val drawable = context.packageManager.getApplicationIcon(appInfo)
@@ -182,18 +182,18 @@ class EvaluationService @Inject constructor(
         }
     }
 
-    suspend fun existingIcon(iconName: String): Result<List<IconAnswer>> =
+    open suspend fun existingIcon(iconName: String): Result<List<IconAnswer>> =
         runCatching {
             evaluationsApi.existingIconAsync(iconName)
         }
 
-    suspend fun deleteIcon(id: Int): Result<Unit> =
+    open suspend fun deleteIcon(id: Int): Result<Unit> =
         runCatching {
             evaluationsApi.deleteIcon(id)
             Unit
         }
 
-    suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int): Result<Evaluation?> =
+    open suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int): Result<Evaluation?> =
         runCatching {
             val answer = evaluationsApi.getSingleEvaluationAsync(
                 appPackageName,
