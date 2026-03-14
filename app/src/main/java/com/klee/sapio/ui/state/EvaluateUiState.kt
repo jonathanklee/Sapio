@@ -1,7 +1,6 @@
 package com.klee.sapio.ui.state
 
 data class EvaluateUiState(
-    val isSubmitting: Boolean = false,
     val gmsType: Int,
     val userType: Int
 )

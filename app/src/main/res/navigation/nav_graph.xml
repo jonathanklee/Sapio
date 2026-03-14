@@ -31,11 +31,30 @@
             android:id="@+id/action_evaluateFragment_to_chooseAppFragment"
             app:destination="@id/chooseAppFragment" />
         <action
-            android:id="@+id/action_evaluateFragment_to_successFragment"
-            app:destination="@id/successFragment" />
+            android:id="@+id/action_evaluateFragment_to_loadingFragment"
+            app:destination="@id/loadingFragment" />
         <argument
             android:name="package"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.klee.sapio.ui.view.LoadingFragment"
+        android:label="LoadingFragment">
+        <action
+            android:id="@+id/action_loadingFragment_to_successFragment"
+            app:destination="@id/successFragment"
+            app:popUpTo="@id/navigation"
+            app:popUpToInclusive="false" />
+        <argument
+            android:name="package"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="rating"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/successFragment"
