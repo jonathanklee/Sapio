@@ -127,7 +127,7 @@ class LoadingViewModelTest {
 
         val fakeDeviceConfig = object : DeviceConfiguration(appContext) {
             override fun getGmsType() = 0
-            override fun isRisky() = 0
+            override fun isUnsafe() = 0
         }
 
         val fakeInstalledAppsRepo = object : InstalledApplicationsRepository() {

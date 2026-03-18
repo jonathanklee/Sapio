@@ -35,7 +35,7 @@ class EvaluateViewModelTest {
     private fun buildViewModel(gmsType: Int = GmsType.BARE_AOSP, userType: Int = UserType.SECURE): EvaluateViewModel {
         val fakeDeviceConfig = object : DeviceConfiguration(appContext) {
             override fun getGmsType() = gmsType
-            override fun isRisky() = userType
+            override fun isUnsafe() = userType
         }
         return EvaluateViewModel(fakeDeviceConfig)
     }

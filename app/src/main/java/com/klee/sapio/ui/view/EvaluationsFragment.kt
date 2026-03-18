@@ -177,7 +177,7 @@ class EvaluationsFragment : Fragment() {
             microgRoot.isVisible = shouldShow
             bareAospRoot.isVisible = shouldShow
             empty.isVisible = shouldShow
-            risky.isVisible = shouldShow
+            unsafe.isVisible = shouldShow
         }
     }
 

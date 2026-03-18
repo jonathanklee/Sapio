@@ -82,8 +82,8 @@ class AppEvaluationsViewModelTest {
         vm.onIconDisplayed()
 
         val state = vm.uiState.value
-        assertEquals("microg-risky", state.microgRoot?.name)
-        assertEquals("bare-risky", state.bareAospRoot?.name)
+        assertEquals("microg-unsafe", state.microgRoot?.name)
+        assertEquals("bare-unsafe", state.bareAospRoot?.name)
         assertTrue(state.isFullyLoaded)
         assertEquals(0, state.pendingCount)
     }
@@ -135,9 +135,9 @@ class AppEvaluationsViewModelTest {
                 if (returnNullEvals) return Result.success(null)
                 val name = when {
                     gmsType == GmsType.MICROG && userType == UserType.SECURE -> "microg-secure"
-                    gmsType == GmsType.MICROG && userType == UserType.RISKY -> "microg-risky"
+                    gmsType == GmsType.MICROG && userType == UserType.UNSAFE -> "microg-unsafe"
                     gmsType == GmsType.BARE_AOSP && userType == UserType.SECURE -> "bare-secure"
-                    else -> "bare-risky"
+                    else -> "bare-unsafe"
                 }
                 return Result.success(eval(name, packageName))
             }

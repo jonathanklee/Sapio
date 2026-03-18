@@ -13,7 +13,7 @@ data class Label(val text: String, val color: Int) {
         const val MICROG = GmsType.MICROG
         const val BARE_AOSP = GmsType.BARE_AOSP
         const val SECURE = UserType.SECURE
-        const val RISKY = UserType.RISKY
+        const val UNSAFE = UserType.UNSAFE
 
         @RequiresApi(Build.VERSION_CODES.M)
         fun create(context: Context, label: Int): Label {
@@ -30,8 +30,8 @@ data class Label(val text: String, val color: Int) {
                     context.getString(R.string.secure_label),
                     context.getColor(R.color.purple_200)
                 )
-                RISKY -> Label(
-                    context.getString(R.string.risky_label),
+                UNSAFE -> Label(
+                    context.getString(R.string.unsafe_label),
                     context.getColor(R.color.purple_700)
                 )
                 else -> Label(" Empty label ", context.getColor(R.color.black))

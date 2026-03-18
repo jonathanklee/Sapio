@@ -44,6 +44,6 @@ class SettingsTest {
             .commit()
 
         assertTrue(settings.isRootConfigurationEnabled())
-        assertEquals(UserType.RISKY, settings.getRootConfigurationLevel())
+        assertEquals(UserType.UNSAFE, settings.getRootConfigurationLevel())
     }
 }

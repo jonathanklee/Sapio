@@ -28,7 +28,7 @@ Evaluations in Sapio are given to the community by the community.
 
 **secure** The device is considered secured
 
-**risky** The device is considered risky
+**unsafe** The device is considered unsafe
 
 # 🔨 Build
 ## Get the sources
@@ -64,7 +64,7 @@ https://server.sapio.ovh/api
     - https://docs.strapi.io/dev-docs/api/rest#requests
     - attributes:
         - microg: 1 for microG, 2 for bareAOSP
-        - secure: 3 for secure, 4 for risky
+        - secure: 3 for secure, 4 for unsafe
         - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Get the latest 100 evaluations
 
@@ -82,7 +82,7 @@ curl -X GET "https://server.sapio.ovh/api/sapio-applications?pagination\[pageSiz
     - https://docs.strapi.io/dev-docs/api/rest#requests
     - attributes:
         - microg: 1 for microG, 2 for bareAOSP
-        - secure: 3 for secure, 4 for risky
+        - secure: 3 for secure, 4 for unsafe
         - rating: 1 for green, 2 for yellow, 3 for red
 - Example: Search evaluations for an app called ChatGPT
  ```

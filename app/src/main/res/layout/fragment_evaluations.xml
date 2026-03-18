@@ -101,7 +101,7 @@
                   android:textSize="17sp" />
 
                 <TextView
-                  android:id="@+id/risky"
+                  android:id="@+id/unsafe"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_margin="10dp"
@@ -109,7 +109,7 @@
                   android:backgroundTint="@color/purple_700"
                   android:paddingHorizontal="8dp"
                   android:paddingVertical="2dp"
-                  android:text="@string/risky_label"
+                  android:text="@string/unsafe_label"
                   android:textColor="@color/white"
                   android:textSize="17sp" />
 

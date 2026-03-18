@@ -72,15 +72,15 @@ class DomainUseCasesTest {
     }
 
     @Test
-    fun `fetch microg risky delegates to repository`() = runTest {
-        val expected = dummyEvaluation("microg.risky")
-        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.MICROG, UserType.RISKY))
+    fun `fetch microg unsafe delegates to repository`() = runTest {
+        val expected = dummyEvaluation("microg.unsafe")
+        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.MICROG, UserType.UNSAFE))
             .thenReturn(Result.success(expected))
 
-        val result = fetchEvaluationUseCase("pkg", GmsType.MICROG, UserType.RISKY)
+        val result = fetchEvaluationUseCase("pkg", GmsType.MICROG, UserType.UNSAFE)
 
         assertEquals(expected, result.getOrNull())
-        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.MICROG, UserType.RISKY)
+        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.MICROG, UserType.UNSAFE)
     }
 
     @Test
@@ -96,15 +96,15 @@ class DomainUseCasesTest {
     }
 
     @Test
-    fun `fetch bare aosp risky delegates to repository`() = runTest {
-        val expected = dummyEvaluation("bare.risky")
-        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.RISKY))
+    fun `fetch bare aosp unsafe delegates to repository`() = runTest {
+        val expected = dummyEvaluation("bare.unsafe")
+        `when`(evaluationRepository.fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.UNSAFE))
             .thenReturn(Result.success(expected))
 
-        val result = fetchEvaluationUseCase("pkg", GmsType.BARE_AOSP, UserType.RISKY)
+        val result = fetchEvaluationUseCase("pkg", GmsType.BARE_AOSP, UserType.UNSAFE)
 
         assertEquals(expected, result.getOrNull())
-        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.RISKY)
+        verify(evaluationRepository).fetchEvaluation("pkg", GmsType.BARE_AOSP, UserType.UNSAFE)
     }
 
     private fun dummyEvaluation(name: String) = Evaluation(

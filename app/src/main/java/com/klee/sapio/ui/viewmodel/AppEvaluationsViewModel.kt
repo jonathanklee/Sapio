@@ -78,7 +78,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             microgRoot = fetchAppEvaluationUseCase(
                                 packageName,
                                 GmsType.MICROG,
-                                UserType.RISKY
+                                UserType.UNSAFE
                             ).getOrNull(),
                             pendingCount = it.pendingCount - 1
                         )
@@ -91,7 +91,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             bareAospRoot = fetchAppEvaluationUseCase(
                                 packageName,
                                 GmsType.BARE_AOSP,
-                                UserType.RISKY
+                                UserType.UNSAFE
                             ).getOrNull(),
                             pendingCount = it.pendingCount - 1
                         )

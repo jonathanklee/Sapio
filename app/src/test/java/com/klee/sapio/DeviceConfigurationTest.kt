@@ -127,7 +127,7 @@ class DeviceConfigurationTest {
     }
 
     @Test
-    fun test_isRisky_withRootedAndUnlockedBootloader() {
+    fun test_isUnsafe_withRootedAndUnlockedBootloader() {
         // This test is more complex due to the private isBootloaderLocked method
         // We'll test the public behavior by mocking the RootBeer result
         val apps = listOf(fakeRegularApp)
@@ -136,10 +136,10 @@ class DeviceConfigurationTest {
 
         // For this test, we'll assume the device is rooted and bootloader is unlocked
         // Since we can't easily mock the private method, we'll test the happy path
-        val result = deviceConfiguration.isRisky()
+        val result = deviceConfiguration.isUnsafe()
         // The actual result depends on the device state, so we'll just verify it returns a valid value
-        Assert.assertTrue("Should return either RISKY or SECURE", 
-            result == UserType.RISKY || result == UserType.SECURE)
+        Assert.assertTrue("Should return either UNSAFE or SECURE", 
+            result == UserType.UNSAFE || result == UserType.SECURE)
     }
 
     @Test
@@ -151,7 +151,7 @@ class DeviceConfigurationTest {
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "ro.boot.verifiedbootstate"),
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "green")
         )
-        Assert.assertEquals(UserType.SECURE, deviceConfiguration.isRisky()) // green => locked -> secure if not rooted
+        Assert.assertEquals(UserType.SECURE, deviceConfiguration.isUnsafe()) // green => locked -> secure if not rooted
 
         ReflectionHelpers.callStaticMethod<Void>(
             Class.forName("android.os.SystemProperties"),
@@ -159,28 +159,28 @@ class DeviceConfigurationTest {
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "ro.boot.verifiedbootstate"),
             org.robolectric.util.ReflectionHelpers.ClassParameter.from(String::class.java, "red")
         )
-        val redResult = deviceConfiguration.isRisky()
-        Assert.assertTrue(redResult == UserType.RISKY || redResult == UserType.SECURE)
+        val redResult = deviceConfiguration.isUnsafe()
+        Assert.assertTrue(redResult == UserType.UNSAFE || redResult == UserType.SECURE)
     }
 
     @Test
-    fun test_isRisky_branch_with_overrides() {
+    fun test_isUnsafe_branch_with_overrides() {
         val fake = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = true
             override fun isBootloaderLocked(): Boolean = false
         }
-        Assert.assertEquals(UserType.RISKY, fake.isRisky())
+        Assert.assertEquals(UserType.UNSAFE, fake.isUnsafe())
 
         val secure = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = true
             override fun isBootloaderLocked(): Boolean = true
         }
-        Assert.assertEquals(UserType.SECURE, secure.isRisky())
+        Assert.assertEquals(UserType.SECURE, secure.isUnsafe())
 
         val clean = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = false
             override fun isBootloaderLocked(): Boolean = false
         }
-        Assert.assertEquals(UserType.SECURE, clean.isRisky())
+        Assert.assertEquals(UserType.SECURE, clean.isUnsafe())
     }
 }

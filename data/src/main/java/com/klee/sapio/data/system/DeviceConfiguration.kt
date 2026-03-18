@@ -39,9 +39,9 @@ open class DeviceConfiguration @Inject constructor(
         return type
     }
 
-    override fun isRisky(): Int {
+    override fun isUnsafe(): Int {
         return if (isRooted() && !isBootloaderLocked()) {
-            UserType.RISKY
+            UserType.UNSAFE
         } else {
             UserType.SECURE
         }

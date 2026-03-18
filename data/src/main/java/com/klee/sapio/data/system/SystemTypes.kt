@@ -8,5 +8,5 @@ object GmsType {
 
 object UserType {
     const val SECURE = 3
-    const val RISKY = 4
+    const val UNSAFE = 4
 }

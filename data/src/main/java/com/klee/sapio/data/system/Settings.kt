@@ -11,7 +11,7 @@ open class Settings @Inject constructor(
 
     open fun getRootConfigurationLevel(): Int {
         return if (isRootConfigurationEnabled()) {
-            UserType.RISKY
+            UserType.UNSAFE
         } else {
             UserType.SECURE
         }

@@ -46,7 +46,7 @@ open class EvaluateAppUseCase @Inject constructor(
             iconId,
             rating,
             deviceInfo.getGmsType(),
-            deviceInfo.isRisky()
+            deviceInfo.isUnsafe()
         )
 
         return evaluationRepository.addEvaluation(newEvaluation).isSuccess

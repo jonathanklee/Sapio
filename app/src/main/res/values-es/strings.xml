@@ -48,8 +48,8 @@
     <string name="compatibility_check_notification_share_action">Compartir ahora</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Reglas de evaluación</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">He leído y entiendo las reglas de evaluación</string>
-    <string name="show_risky">Entornos</string>
-    <string name="show_risky_environments">Mostrar entornos arriesgados</string>
+    <string name="show_unsafe">Entornos</string>
+    <string name="show_unsafe_environments">Mostrar entornos arriesgados</string>
     <string name="general">General</string>
     <string name="github_star">Dar estrella en GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>

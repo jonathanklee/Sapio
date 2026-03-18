@@ -12,7 +12,7 @@
     <string name="microg_label" translatable="false">microG</string>
     <string name="bare_aosp_label" translatable="false">bareAOSP</string>
     <string name="secure_label" translatable="false">secure</string>
-    <string name="risky_label" translatable="false">risky</string>
+    <string name="unsafe_label" translatable="false">unsafe</string>
     <string name="works_perfectly">\ It works perfectly. All features are working.</string>
     <string name="works_partially">\ It works partially. Some features do not work.</string>
     <string name="dont_work">\ It does not work at all or crashes.</string>
@@ -53,8 +53,8 @@
     <string name="compatibility_check_notification_share_action">Share now</string>
     <string name="rating_rules"><![CDATA[<a href="%1$s">Rating rules</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">I have read and I understand the rating rules</string>
-    <string name="show_risky">Environments</string>
-    <string name="show_risky_environments">Show risky environments</string>
+    <string name="show_unsafe">Environments</string>
+    <string name="show_unsafe_environments">Show unsafe environments</string>
     <string name="general">General</string>
     <string name="github_star">Star on GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>

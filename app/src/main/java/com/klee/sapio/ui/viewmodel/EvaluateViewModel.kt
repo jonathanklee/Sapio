@@ -16,7 +16,7 @@ class EvaluateViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         EvaluateUiState(
             gmsType = deviceConfiguration.getGmsType(),
-            userType = deviceConfiguration.isRisky()
+            userType = deviceConfiguration.isUnsafe()
         )
     )
     val uiState = _uiState.asStateFlow()
