@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
+import java.text.DateFormat
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -245,17 +246,19 @@ class EvaluationsFragment : Fragment() {
         } ?: NO_EVALUATION_CHAR
 
         textView.tooltipText = evaluation?.let {
-            computeTooltip(it.rating)
+            computeTooltip(it)
         }
     }
 
-    private fun computeTooltip(rating: Int): String {
-        return when (rating) {
+    private fun computeTooltip(evaluation: com.klee.sapio.domain.model.Evaluation): String {
+        val ratingText = when (evaluation.rating) {
             Rating.GOOD -> getString(R.string.good)
             Rating.AVERAGE -> getString(R.string.average)
             Rating.BAD -> getString(R.string.bad)
             else -> getString(R.string.unknown)
         }
+        val date = evaluation.updatedAt?.let { DateFormat.getDateInstance().format(it) }
+        return if (date == null) ratingText else "$date - $ratingText"
     }
 
     private fun startTakingScreenshot(appName: String, packageName: String) {
