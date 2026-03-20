@@ -55,7 +55,7 @@ class MyAppsAdapter(
         element.packageName.text = item.installedApp.packageName
         try {
             element.image.setImageDrawable(
-                holder.itemView.context.packageManager.getApplicationIcon(item.installedApp.packageName)
+                holder.itemView.context.packageManager.getApplicationInfo(item.installedApp.packageName, 0).loadUnbadgedIcon(holder.itemView.context.packageManager)
             )
         } catch (e: PackageManager.NameNotFoundException) {
             // leave default

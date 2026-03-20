@@ -43,7 +43,7 @@ class ChooseAppAdapter(
         binding.appName.text = mApps[position].name
         try {
             binding.appIcon.setImageDrawable(
-                binding.root.context.packageManager.getApplicationIcon(mApps[position].packageName)
+                binding.root.context.packageManager.getApplicationInfo(mApps[position].packageName, 0).loadUnbadgedIcon(binding.root.context.packageManager)
             )
         } catch (e: PackageManager.NameNotFoundException) {
             // leave default icon

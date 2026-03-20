@@ -167,7 +167,7 @@ open class EvaluationService @Inject constructor(
     open suspend fun uploadIcon(packageName: String): Result<List<IconAnswer>> {
         return runCatching {
             val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-            val drawable = context.packageManager.getApplicationIcon(appInfo)
+            val drawable = appInfo.loadUnbadgedIcon(context.packageManager)
                 ?: context.packageManager.defaultActivityIcon
             val bytes = fromDrawableToByArray(drawable)
             val requestBody = bytes.toRequestBody(null, 0, bytes.size)
