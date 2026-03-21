@@ -133,6 +133,7 @@ class SearchFragment : Fragment() {
 
     private fun showKeyboard() {
         mBinding.editTextSearch.post {
+            if (!isAdded) return@post
             mBinding.editTextSearch.requestFocus()
 
             val inputMethodManager =
