@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentChooseAppBinding
 import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.ui.viewmodel.ChooseAppViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +19,7 @@ class ChooseAppFragment : Fragment() {
 
     private lateinit var mBinding: FragmentChooseAppBinding
     private var mApp: InstalledApplication? = null
+    val viewModel: ChooseAppViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +42,7 @@ class ChooseAppFragment : Fragment() {
         mBinding.chooseAppButton.isEnabled = false
         mBinding.nextButton.isEnabled = false
         val dialog = ChooseAppDialog(
+            uiState = viewModel.uiState,
             onAppSelected = { chosenApp ->
                 mBinding.appName.text = chosenApp.name
                 mApp = chosenApp

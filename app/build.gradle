@@ -168,10 +168,6 @@ dependencies {
 
     // splashscreen
     implementation libs.androidx.core.splashscreen
-    // ktor
-    implementation libs.ktor.client.core
-    implementation libs.ktor.client.android
-
     // preferences
     implementation libs.androidx.preference.ktx
 

@@ -2,34 +2,33 @@ package com.klee.sapio.ui.view
 
 import android.content.pm.PackageManager
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.ChooseAppCardBinding
 import com.klee.sapio.domain.model.InstalledApplication
 
 class ChooseAppAdapter(
-    private var mApps: List<InstalledApplication>,
-    private val mListener: Listener
-) : RecyclerView.Adapter<ChooseAppAdapter.ViewHolder>() {
+    private val onAppClicked: (InstalledApplication) -> Unit
+) : ListAdapter<InstalledApplication, ChooseAppAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     inner class ViewHolder(val binding: ChooseAppCardBinding) :
-        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-
-        private var mApp: InstalledApplication? = null
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(view: View?) {
-            mApp?.let {
-                mListener.onAppClicked(mApp!!)
-            }
-        }
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(app: InstalledApplication) {
-            mApp = app
+            binding.appName.text = app.name
+            try {
+                binding.appIcon.setImageDrawable(
+                    binding.root.context.packageManager
+                        .getApplicationInfo(app.packageName, 0)
+                        .loadUnbadgedIcon(binding.root.context.packageManager)
+                )
+            } catch (e: PackageManager.NameNotFoundException) {
+                // leave default icon
+            }
+            binding.root.setOnClickListener { onAppClicked(app) }
+            binding.appIcon.setOnClickListener { onAppClicked(app) }
         }
     }
 
@@ -39,27 +38,15 @@ class ChooseAppAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val binding = holder.binding
-        binding.appName.text = mApps[position].name
-        try {
-            binding.appIcon.setImageDrawable(
-                binding.root.context.packageManager.getApplicationInfo(mApps[position].packageName, 0).loadUnbadgedIcon(binding.root.context.packageManager)
-            )
-        } catch (e: PackageManager.NameNotFoundException) {
-            // leave default icon
-        }
-        binding.appIcon.setOnClickListener {
-            mListener.onAppClicked(mApps[position])
-        }
-
-        holder.bind(mApps[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return mApps.size
-    }
-
-    fun interface Listener {
-        fun onAppClicked(app: InstalledApplication)
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<InstalledApplication>() {
+            override fun areItemsTheSame(old: InstalledApplication, new: InstalledApplication) =
+                old.packageName == new.packageName
+            override fun areContentsTheSame(old: InstalledApplication, new: InstalledApplication) =
+                old == new
+        }
     }
 }

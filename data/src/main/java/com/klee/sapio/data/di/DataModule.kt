@@ -1,6 +1,7 @@
 package com.klee.sapio.data.di
 
-import com.klee.sapio.data.fdroid.KtorFdroidAvailabilityChecker
+import com.klee.sapio.data.fdroid.CachedFdroidAvailabilityChecker
+import com.klee.sapio.data.fdroid.OkHttpFdroidAvailabilityChecker
 import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.DeviceInfo
 import com.klee.sapio.domain.FdroidAvailabilityChecker
@@ -17,7 +18,7 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindFdroidAvailabilityChecker(
-        impl: KtorFdroidAvailabilityChecker
+        impl: CachedFdroidAvailabilityChecker
     ): FdroidAvailabilityChecker
 
     @Binds

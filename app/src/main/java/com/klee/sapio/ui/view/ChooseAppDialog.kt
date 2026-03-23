@@ -8,36 +8,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.data.repository.InstalledApplicationsRepository
 import com.klee.sapio.databinding.DialogChooseAppBinding
-import com.klee.sapio.domain.CheckFdroidAvailabilityUseCase
 import com.klee.sapio.domain.model.InstalledApplication
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import com.klee.sapio.ui.state.ChooseAppUiState
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class ChooseAppDialog(
+    private val uiState: StateFlow<ChooseAppUiState>,
     private val onAppSelected: (InstalledApplication) -> Unit,
     private val onDismissed: (() -> Unit)? = null
 ) : DialogFragment() {
 
     private lateinit var mBinding: DialogChooseAppBinding
     private var hasSelection = false
-
-    @Inject lateinit var mInstalledApplicationsRepository: InstalledApplicationsRepository
-
-    @Inject lateinit var checkFdroidAvailabilityUseCase: CheckFdroidAvailabilityUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,34 +46,27 @@ class ChooseAppDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         val recyclerView = mBinding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
 
-        lifecycleScope.launch {
-            val allApps = withContext(Dispatchers.IO) {
-                mInstalledApplicationsRepository.getAppList(requireContext())
-            }
-            val filtered = filterFdroidApps(allApps)
-            mBinding.progressBar.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            recyclerView.adapter = ChooseAppAdapter(filtered) { app ->
-                hasSelection = true
-                dismiss()
-                onAppSelected(app)
-            }
+        val adapter = ChooseAppAdapter { app ->
+            hasSelection = true
+            dismiss()
+            onAppSelected(app)
         }
-    }
+        recyclerView.adapter = adapter
 
-    private suspend fun filterFdroidApps(apps: List<InstalledApplication>): List<InstalledApplication> {
-        val semaphore = Semaphore(PARALLEL_REQUESTS)
-        return coroutineScope {
-            apps.map { app ->
-                async(Dispatchers.IO) {
-                    semaphore.withPermit {
-                        if (checkFdroidAvailabilityUseCase(app.packageName)) null else app
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                uiState.collect { state ->
+                    if (state.apps.isNotEmpty()) {
+                        mBinding.progressBar.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
                     }
+                    adapter.submitList(state.apps)
                 }
-            }.awaitAll().filterNotNull()
+            }
         }
     }
 
@@ -103,7 +85,6 @@ class ChooseAppDialog(
     }
 
     companion object {
-        private const val PARALLEL_REQUESTS = 10
         private const val DIALOG_WIDTH_RATIO = 0.75
     }
 }

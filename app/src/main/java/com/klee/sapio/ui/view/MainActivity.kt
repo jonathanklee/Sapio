@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager
 import com.klee.sapio.R
 import com.klee.sapio.databinding.ActivityMainBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
+import com.klee.sapio.ui.viewmodel.ChooseAppViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
     private val mEvaluationsViewModel by viewModels<AppEvaluationsViewModel>()
+    private val mChooseAppViewModel by viewModels<ChooseAppViewModel>()
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinding.root)
 
         requestNotificationPermissionIfNeeded()
+        mChooseAppViewModel.uiState
 
         if (savedInstanceState == null) {
             displayFragment(FeedFragment())
