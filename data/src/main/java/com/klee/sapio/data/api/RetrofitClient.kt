@@ -7,7 +7,9 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.AdaptiveIconDrawable
+import android.os.Build
 import android.util.Log
+import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toBitmap
 import com.klee.sapio.data.dto.Evaluation
 import com.klee.sapio.data.dto.IconAnswer
@@ -172,8 +174,11 @@ open class EvaluationService @Inject constructor(
     open suspend fun uploadIcon(packageName: String): Result<List<IconAnswer>> {
         return runCatching {
             val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-            val drawable = appInfo.loadUnbadgedIcon(context.packageManager)
-                ?: context.packageManager.defaultActivityIcon
+            val drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                appInfo.loadUnbadgedIcon(context.packageManager)
+            } else {
+                appInfo.loadIcon(context.packageManager)
+            } ?: context.packageManager.defaultActivityIcon
             val bytes = fromDrawableToByArray(drawable)
             val requestBody = bytes.toRequestBody(null, 0, bytes.size)
             val image = MultipartBody.Part.createFormData(
@@ -210,7 +215,7 @@ open class EvaluationService @Inject constructor(
         }
 
     private fun fromDrawableToByArray(drawable: android.graphics.drawable.Drawable): ByteArray {
-        val bitmap = if (drawable is AdaptiveIconDrawable) {
+        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && drawable is AdaptiveIconDrawable) {
             drawable.toBitmap()
         } else {
             cropToCircle(drawable.toBitmap())
@@ -222,7 +227,7 @@ open class EvaluationService @Inject constructor(
 
     private fun cropToCircle(bitmap: Bitmap): Bitmap {
         val size = minOf(bitmap.width, bitmap.height)
-        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val output = createBitmap(size, size)
         val canvas = Canvas(output)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)

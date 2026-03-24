@@ -33,7 +33,7 @@
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_search"
-                android:tint="?attr/colorOnSurfaceVariant" />
+                app:tint="?attr/colorOnSurfaceVariant" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextSearch"
@@ -54,7 +54,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="12dp"
                 android:src="@drawable/ic_close"
-                android:tint="?attr/colorOnSurfaceVariant"
+                app:tint="?attr/colorOnSurfaceVariant"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -81,7 +81,7 @@
             android:layout_width="125dp"
             android:layout_height="101dp"
             android:src="@drawable/search"
-            android:tint="?attr/colorPrimary" />
+            app:tint="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/searchText"

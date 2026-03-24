@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -33,10 +34,12 @@ class WarningFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentWarningBinding.inflate(inflater, container, false)
-        mBinding.reportAppDescription.text = Html.fromHtml(
-            getString(R.string.warning_desc, AboutFragment.RATING_RULES),
-            Html.FROM_HTML_MODE_LEGACY
-        )
+        mBinding.reportAppDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(getString(R.string.warning_desc, AboutFragment.RATING_RULES), Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            @Suppress("DEPRECATION")
+            Html.fromHtml(getString(R.string.warning_desc, AboutFragment.RATING_RULES))
+        }
 
         mBinding.reportAppDescription.movementMethod = LinkMovementMethod.getInstance()
 

@@ -1,6 +1,7 @@
 package com.klee.sapio.ui.view
 
 import android.content.pm.PackageManager
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -19,11 +20,14 @@ class ChooseAppAdapter(
         fun bind(app: InstalledApplication) {
             binding.appName.text = app.name
             try {
-                binding.appIcon.setImageDrawable(
-                    binding.root.context.packageManager
-                        .getApplicationInfo(app.packageName, 0)
-                        .loadUnbadgedIcon(binding.root.context.packageManager)
-                )
+                val pm = binding.root.context.packageManager
+                val appInfo = pm.getApplicationInfo(app.packageName, 0)
+                val icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    appInfo.loadUnbadgedIcon(pm)
+                } else {
+                    appInfo.loadIcon(pm)
+                }
+                binding.appIcon.setImageDrawable(icon)
             } catch (e: PackageManager.NameNotFoundException) {
                 // leave default icon
             }

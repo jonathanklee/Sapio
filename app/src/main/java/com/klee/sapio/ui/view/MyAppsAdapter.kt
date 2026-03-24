@@ -2,6 +2,7 @@ package com.klee.sapio.ui.view
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,9 +55,14 @@ class MyAppsAdapter(
         element.appName.text = item.installedApp.name
         element.packageName.text = item.installedApp.packageName
         try {
-            element.image.setImageDrawable(
-                holder.itemView.context.packageManager.getApplicationInfo(item.installedApp.packageName, 0).loadUnbadgedIcon(holder.itemView.context.packageManager)
-            )
+            val pm = holder.itemView.context.packageManager
+            val appInfo = pm.getApplicationInfo(item.installedApp.packageName, 0)
+            val icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                appInfo.loadUnbadgedIcon(pm)
+            } else {
+                appInfo.loadIcon(pm)
+            }
+            element.image.setImageDrawable(icon)
         } catch (e: PackageManager.NameNotFoundException) {
             // leave default
         }

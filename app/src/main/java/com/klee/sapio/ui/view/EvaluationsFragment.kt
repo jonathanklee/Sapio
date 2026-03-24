@@ -245,8 +245,10 @@ class EvaluationsFragment : Fragment() {
             Rating.create(it.rating).text
         } ?: NO_EVALUATION_CHAR
 
-        textView.tooltipText = evaluation?.let {
-            computeTooltip(it)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            textView.tooltipText = evaluation?.let {
+                computeTooltip(it)
+            }
         }
     }
 

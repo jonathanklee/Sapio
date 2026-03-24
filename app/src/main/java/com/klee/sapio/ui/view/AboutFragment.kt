@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -33,10 +34,12 @@ class AboutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.version.text = "v${BuildConfig.VERSION_NAME}"
-        mBinding.ratingRules.text = Html.fromHtml(
-            getString(R.string.rating_rules, RATING_RULES),
-            Html.FROM_HTML_MODE_COMPACT
-        )
+        mBinding.ratingRules.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(getString(R.string.rating_rules, RATING_RULES), Html.FROM_HTML_MODE_COMPACT)
+        } else {
+            @Suppress("DEPRECATION")
+            Html.fromHtml(getString(R.string.rating_rules, RATING_RULES))
+        }
         mBinding.ratingRules.movementMethod = LinkMovementMethod.getInstance()
     }
 
