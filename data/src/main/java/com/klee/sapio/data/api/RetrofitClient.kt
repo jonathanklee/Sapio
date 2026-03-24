@@ -2,6 +2,11 @@ package com.klee.sapio.data.api
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
 import com.klee.sapio.data.dto.Evaluation
@@ -205,9 +210,24 @@ open class EvaluationService @Inject constructor(
         }
 
     private fun fromDrawableToByArray(drawable: android.graphics.drawable.Drawable): ByteArray {
-        val bitmap = drawable.toBitmap()
+        val bitmap = if (drawable is AdaptiveIconDrawable) {
+            drawable.toBitmap()
+        } else {
+            cropToCircle(drawable.toBitmap())
+        }
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)
         return stream.toByteArray()
+    }
+
+    private fun cropToCircle(bitmap: Bitmap): Bitmap {
+        val size = minOf(bitmap.width, bitmap.height)
+        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, ((size - bitmap.width) / 2f), ((size - bitmap.height) / 2f), paint)
+        return output
     }
 }
