@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.data.system.Settings
-import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FragmentMainBinding
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +31,6 @@ class FeedFragment : Fragment() {
     private lateinit var mFeedAppAdapter: FeedAppAdapter
     private val mViewModel by activityViewModels<FeedViewModel>()
     private var fetchJob: Job? = null
-    private var mPreviousRootVisible: Int = UserType.SECURE
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +39,6 @@ class FeedFragment : Fragment() {
     ): View {
         mBinding = FragmentMainBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
-        mPreviousRootVisible = mSettings.getRootConfigurationLevel()
         setupAdapter()
         collectFeed()
 
@@ -56,11 +53,7 @@ class FeedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        if (mPreviousRootVisible != mSettings.getRootConfigurationLevel()) {
-            mPreviousRootVisible = mSettings.getRootConfigurationLevel()
-            mViewModel.refresh()
-        }
+        mViewModel.syncUnsafeConfiguration(mSettings.getUnsafeConfigurationLevel())
     }
 
     private fun setupAdapter() {

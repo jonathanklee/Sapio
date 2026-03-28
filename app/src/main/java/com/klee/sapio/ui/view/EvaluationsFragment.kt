@@ -149,7 +149,7 @@ class EvaluationsFragment : Fragment() {
             showCard()
         }
 
-        handleRootConfigurationSetting()
+        handleUnsafeConfigurationSetting()
         observeEvaluations()
     }
 
@@ -170,8 +170,8 @@ class EvaluationsFragment : Fragment() {
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun handleRootConfigurationSetting() {
-        val shouldShow = settings.isRootConfigurationEnabled()
+    private fun handleUnsafeConfigurationSetting() {
+        val shouldShow = settings.isUnsafeConfigurationEnabled()
         with(mBinding) {
             secure.isVisible = shouldShow
             microgRoot.isVisible = shouldShow
@@ -187,15 +187,15 @@ class EvaluationsFragment : Fragment() {
                 renderEvaluation(mBinding.microgUser, state.microgUser)
                 renderEvaluation(mBinding.bareAospUser, state.bareAospUser)
 
-                if (settings.isRootConfigurationEnabled()) {
+                if (settings.isUnsafeConfigurationEnabled()) {
                     renderEvaluation(mBinding.bareAospRoot, state.bareAospRoot)
                     renderEvaluation(mBinding.microgRoot, state.microgRoot)
                 }
 
                 if (state.isFullyLoaded) {
-                    val rootEnabled = settings.isRootConfigurationEnabled()
-                    val microgHasData = state.microgUser != null || (rootEnabled && state.microgRoot != null)
-                    val bareAospHasData = state.bareAospUser != null || (rootEnabled && state.bareAospRoot != null)
+                    val unsafeEnabled = settings.isUnsafeConfigurationEnabled()
+                    val microgHasData = state.microgUser != null || (unsafeEnabled && state.microgRoot != null)
+                    val bareAospHasData = state.bareAospUser != null || (unsafeEnabled && state.bareAospRoot != null)
                     mBinding.microgRow.isVisible = microgHasData
                     mBinding.bareAospRow.isVisible = bareAospHasData
                 }

@@ -125,7 +125,7 @@ open class EvaluationService @Inject constructor(
     open suspend fun listLatestEvaluations(pageNumber: Int): Result<List<Evaluation>> =
         runCatching {
             val strapiAnswer = evaluationsApi.listLatestEvaluationsAsync(
-                settings.getRootConfigurationLevel(),
+                settings.getUnsafeConfigurationLevel(),
                 pageNumber
             )
 
@@ -142,7 +142,7 @@ open class EvaluationService @Inject constructor(
             val strapiAnswer = evaluationsApi.searchAsync(
                 pattern,
                 pattern,
-                settings.getRootConfigurationLevel()
+                settings.getUnsafeConfigurationLevel()
             )
 
             strapiAnswer.data.map { it.attributes }

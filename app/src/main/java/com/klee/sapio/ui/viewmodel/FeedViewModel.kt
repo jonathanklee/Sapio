@@ -18,12 +18,23 @@ class FeedViewModel @Inject constructor(
 
     private var currentPage = 0
     private var hasMorePages = true
+    private var lastLoadedUnsafeLevel: Int? = null
 
     private val _uiState = MutableStateFlow(FeedUiState(isLoading = true))
     val uiState = _uiState.asStateFlow()
 
     init {
         refresh()
+    }
+
+    fun syncUnsafeConfiguration(currentLevel: Int) {
+        val last = lastLoadedUnsafeLevel
+        if (last == null) {
+            lastLoadedUnsafeLevel = currentLevel
+        } else if (last != currentLevel) {
+            lastLoadedUnsafeLevel = currentLevel
+            refresh()
+        }
     }
 
     fun refresh() {

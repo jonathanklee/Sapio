@@ -33,15 +33,15 @@ class AppEvaluationsViewModel @Inject constructor(
     private var loadingJob: Job? = null
 
     companion object {
-        private const val FETCHES_WITH_ROOT = 5
-        private const val FETCHES_WITHOUT_ROOT = 3
+        private const val FETCHES_WITH_UNSAFE = 5
+        private const val FETCHES_WITHOUT_UNSAFE = 3
     }
 
     fun listEvaluations(packageName: String) {
         loadingJob?.cancel()
         _uiState.value = AppEvaluationsUiState()
 
-        val expectedFetches = if (settings.isRootConfigurationEnabled()) FETCHES_WITH_ROOT else FETCHES_WITHOUT_ROOT
+        val expectedFetches = if (settings.isUnsafeConfigurationEnabled()) FETCHES_WITH_UNSAFE else FETCHES_WITHOUT_UNSAFE
         _uiState.update { it.copy(pendingCount = expectedFetches) }
 
         loadingJob = viewModelScope.launch {
@@ -71,7 +71,7 @@ class AppEvaluationsViewModel @Inject constructor(
                 }
             }
 
-            if (settings.isRootConfigurationEnabled()) {
+            if (settings.isUnsafeConfigurationEnabled()) {
                 launch(ioDispatcher) {
                     _uiState.update {
                         it.copy(

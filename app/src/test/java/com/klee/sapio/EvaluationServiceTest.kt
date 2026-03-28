@@ -66,7 +66,7 @@ class EvaluationServiceTest {
     @Test
     fun listLatestEvaluations_returnsEmptyOnHttpException() = runBlocking {
         val errorBody = "error".toResponseBody("text/plain".toMediaTypeOrNull())
-        Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(0)
+        Mockito.`when`(mockSettings.getUnsafeConfigurationLevel()).thenReturn(0)
         val api = object : EvaluationApi by failingApi() {
             override suspend fun listLatestEvaluationsAsync(root: Int, pageNumber: Int): StrapiAnswer {
                 throw HttpException(Response.error<StrapiAnswer>(500, errorBody))
@@ -80,7 +80,7 @@ class EvaluationServiceTest {
 
     @Test
     fun listLatestEvaluations_happyPathSorted() = runBlocking {
-        Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(1)
+        Mockito.`when`(mockSettings.getUnsafeConfigurationLevel()).thenReturn(1)
         val evalNewer = StrapiElement(1, createEvaluation("AppOne", "pkg1", updatedAtOffset = 2))
         val evalOlder = StrapiElement(2, createEvaluation("AppTwo", "pkg1", updatedAtOffset = 1))
         val answer = StrapiAnswer(arrayListOf(evalOlder, evalNewer), StrapiMeta(null))
@@ -97,7 +97,7 @@ class EvaluationServiceTest {
 
     @Test
     fun listLatestEvaluations_sortsByUpdatedAtAcrossPackages() = runBlocking {
-        Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(1)
+        Mockito.`when`(mockSettings.getUnsafeConfigurationLevel()).thenReturn(1)
         val older = StrapiElement(1, createEvaluation("Old", "pkg.old", updatedAtOffset = 1))
         val newer = StrapiElement(2, createEvaluation("New", "pkg.new", updatedAtOffset = 5))
         val answer = StrapiAnswer(arrayListOf(older, newer), StrapiMeta(null))
@@ -111,7 +111,7 @@ class EvaluationServiceTest {
 
     @Test
     fun listLatestEvaluations_respectsPageNumberParameter() = runBlocking {
-        Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(1)
+        Mockito.`when`(mockSettings.getUnsafeConfigurationLevel()).thenReturn(1)
         val page1 = StrapiAnswer(arrayListOf(StrapiElement(1, createEvaluation("P1", "p1"))), StrapiMeta(null))
         val page2 = StrapiAnswer(arrayListOf(StrapiElement(2, createEvaluation("P2", "p2"))), StrapiMeta(null))
 
@@ -129,7 +129,7 @@ class EvaluationServiceTest {
 
     @Test
     fun searchEvaluation_returnsEmptyOnIOException() = runBlocking {
-        Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(0)
+        Mockito.`when`(mockSettings.getUnsafeConfigurationLevel()).thenReturn(0)
         val api = object : EvaluationApi by failingApi() {
             override suspend fun searchAsync(name: String, packageName: String, rooted: Int): StrapiAnswer {
                 throw IOException("boom")
@@ -143,7 +143,7 @@ class EvaluationServiceTest {
 
     @Test
     fun searchEvaluation_happyPathDistinctByPackage() = runBlocking {
-        Mockito.`when`(mockSettings.getRootConfigurationLevel()).thenReturn(0)
+        Mockito.`when`(mockSettings.getUnsafeConfigurationLevel()).thenReturn(0)
         val evalA = StrapiElement(1, createEvaluation("A", "pkgA"))
         val evalADuplicate = StrapiElement(2, createEvaluation("A2", "pkgA"))
         val answer = StrapiAnswer(arrayListOf(evalA, evalADuplicate), StrapiMeta(null))

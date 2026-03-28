@@ -30,20 +30,20 @@ class SettingsTest {
     }
 
     @Test
-    fun `isRootConfigurationEnabled returns false by default`() {
-        assertFalse(settings.isRootConfigurationEnabled())
-        assertEquals(UserType.SECURE, settings.getRootConfigurationLevel())
+    fun `isUnsafeConfigurationEnabled returns false by default`() {
+        assertFalse(settings.isUnsafeConfigurationEnabled())
+        assertEquals(UserType.SECURE, settings.getUnsafeConfigurationLevel())
     }
 
     @Test
-    fun `isRootConfigurationEnabled reflects stored preference`() {
+    fun `isUnsafeConfigurationEnabled reflects stored preference`() {
         val context = RuntimeEnvironment.getApplication()
         PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putBoolean("show_root", true)
             .commit()
 
-        assertTrue(settings.isRootConfigurationEnabled())
-        assertEquals(UserType.UNSAFE, settings.getRootConfigurationLevel())
+        assertTrue(settings.isUnsafeConfigurationEnabled())
+        assertEquals(UserType.UNSAFE, settings.getUnsafeConfigurationLevel())
     }
 }

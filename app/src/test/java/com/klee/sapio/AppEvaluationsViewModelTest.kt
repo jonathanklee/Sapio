@@ -56,8 +56,8 @@ class AppEvaluationsViewModelTest {
     }
 
     @Test
-    fun `listEvaluations posts only user evaluations when root disabled`() = runTest(dispatcher) {
-        val vm = buildViewModel(rootEnabled = false)
+    fun `listEvaluations posts only user evaluations when unsafe disabled`() = runTest(dispatcher) {
+        val vm = buildViewModel(unsafeEnabled = false)
 
         vm.listEvaluations("pkg")
         advanceUntilIdle()
@@ -74,8 +74,8 @@ class AppEvaluationsViewModelTest {
     }
 
     @Test
-    fun `listEvaluations posts root evaluations when root enabled`() = runTest(dispatcher) {
-        val vm = buildViewModel(rootEnabled = true)
+    fun `listEvaluations posts unsafe evaluations when unsafe enabled`() = runTest(dispatcher) {
+        val vm = buildViewModel(unsafeEnabled = true)
 
         vm.listEvaluations("pkg")
         advanceUntilIdle()
@@ -90,7 +90,7 @@ class AppEvaluationsViewModelTest {
 
     @Test
     fun `listEvaluations handles null evaluations`() = runTest(dispatcher) {
-        val vm = buildViewModel(rootEnabled = true, returnNullEvals = true, iconUrl = "")
+        val vm = buildViewModel(unsafeEnabled = true, returnNullEvals = true, iconUrl = "")
 
         vm.listEvaluations("pkg")
         advanceUntilIdle()
@@ -107,7 +107,7 @@ class AppEvaluationsViewModelTest {
     }
 
     private fun buildViewModel(
-        rootEnabled: Boolean,
+        unsafeEnabled: Boolean,
         returnNullEvals: Boolean = false,
         iconUrl: String = "https://icon"
     ): AppEvaluationsViewModel {
@@ -146,7 +146,7 @@ class AppEvaluationsViewModelTest {
             override suspend fun invoke(packageName: String): Result<String> = Result.success(iconUrl)
         }
         val settingsObj = object : Settings(appContext) {
-            override fun isRootConfigurationEnabled(): Boolean = rootEnabled
+            override fun isUnsafeConfigurationEnabled(): Boolean = unsafeEnabled
         }
 
         return AppEvaluationsViewModel(
