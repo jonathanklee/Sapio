@@ -3,6 +3,7 @@ package com.klee.sapio.data.repository
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import com.klee.sapio.domain.model.InstalledApplication
@@ -16,6 +17,10 @@ open class InstalledApplicationsRepository @Inject constructor() {
         val apps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             apps.removeIf { x -> isSystemApp(x) || isGmsRelated(x) }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            apps.removeIf { x -> !hasAdaptiveIcon(context, x) }
         }
 
         val results: MutableList<InstalledApplication> = arrayListOf()
@@ -53,5 +58,12 @@ open class InstalledApplicationsRepository @Inject constructor() {
     fun isGmsRelated(info: ApplicationInfo): Boolean {
         val pkgName = info.packageName ?: return false
         return pkgName.endsWith(".gms") || pkgName == "com.android.vending"
+    }
+
+    @VisibleForTesting
+    fun hasAdaptiveIcon(context: Context, info: ApplicationInfo): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
+        val icon = info.loadUnbadgedIcon(context.packageManager) ?: return false
+        return icon is AdaptiveIconDrawable
     }
 }
