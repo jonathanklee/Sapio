@@ -79,7 +79,7 @@ class InstalledApplicationsRepositoryTest {
         )
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
             .thenReturn(fakeListApplicationInfo)
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
@@ -156,7 +156,7 @@ class InstalledApplicationsRepositoryTest {
     @Test
     fun test_getApplicationFromPackageName_found() {
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
             .thenReturn(fakeListApplicationInfo)
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
@@ -176,7 +176,7 @@ class InstalledApplicationsRepositoryTest {
     @Test
     fun test_getApplicationFromPackageName_notFound() {
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
             .thenReturn(fakeListApplicationInfo)
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
@@ -208,7 +208,7 @@ class InstalledApplicationsRepositoryTest {
         )
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
             .thenReturn(appsWithZ)
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
@@ -233,7 +233,7 @@ class InstalledApplicationsRepositoryTest {
     @Test
     fun test_getAppList_emptyListWhenNoApps() {
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
             .thenReturn(mutableListOf())
 
         val list = repository.getAppList(mockedContext)
@@ -249,7 +249,7 @@ class InstalledApplicationsRepositoryTest {
         fakeGmsApp.packageName = "com.google.gms"
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(PackageManager.GET_META_DATA)))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
             .thenReturn(mutableListOf(fakeRegularApplicationInfo, fakeSystemApplicationInfo, fakeGmsApp))
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))

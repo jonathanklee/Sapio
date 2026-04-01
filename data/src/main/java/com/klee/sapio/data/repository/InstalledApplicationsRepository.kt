@@ -2,7 +2,6 @@ package com.klee.sapio.data.repository
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.os.Build
 import androidx.annotation.VisibleForTesting
@@ -14,7 +13,7 @@ import javax.inject.Singleton
 open class InstalledApplicationsRepository @Inject constructor() {
 
     fun getAppList(context: Context): List<InstalledApplication> {
-        val apps = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        val apps = context.packageManager.getInstalledApplications(0)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             apps.removeIf { x -> isSystemApp(x) || isGmsRelated(x) }
         }
