@@ -178,6 +178,11 @@ class EvaluationsFragment : Fragment() {
             bareAospRoot.isVisible = shouldShow
             empty.isVisible = shouldShow
             unsafe.isVisible = shouldShow
+
+            if (shouldShow) {
+                val extraPadding = resources.getDimensionPixelSize(R.dimen.card_unsafe_extra_padding)
+                cardContent.setPadding(extraPadding, 0, extraPadding, 0)
+            }
         }
     }
 
