@@ -203,6 +203,7 @@ class EvaluationsFragment : Fragment() {
                     val bareAospHasData = state.bareAospUser != null || (unsafeEnabled && state.bareAospRoot != null)
                     mBinding.microgRow.isVisible = microgHasData
                     mBinding.bareAospRow.isVisible = bareAospHasData
+                    mBinding.shareButton.isEnabled = state.microgUser != null || state.bareAospUser != null
                 }
 
                 if (state.iconUrl != null && !iconReady) {
