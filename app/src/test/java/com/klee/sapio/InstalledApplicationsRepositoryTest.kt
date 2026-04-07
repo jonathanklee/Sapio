@@ -1,8 +1,11 @@
 package com.klee.sapio
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.os.Build
 import com.klee.sapio.data.repository.InstalledApplicationsRepository
@@ -79,8 +82,8 @@ class InstalledApplicationsRepositoryTest {
         )
 
         Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
-            .thenReturn(fakeListApplicationInfo)
+        Mockito.`when`(mockedPackageManager.queryIntentActivities(any(Intent::class.java), eq(0)))
+            .thenReturn(fakeListApplicationInfo!!.map { makeResolveInfo(it) })
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
             .thenReturn("FakeApplicationOne")
@@ -90,6 +93,11 @@ class InstalledApplicationsRepositoryTest {
 
         Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
             .thenReturn(mockedDrawable)
+    }
+
+    private fun makeResolveInfo(appInfo: ApplicationInfo): ResolveInfo {
+        val activityInfo = ActivityInfo().apply { applicationInfo = appInfo }
+        return ResolveInfo().apply { this.activityInfo = activityInfo }
     }
 
     @Test
@@ -155,19 +163,6 @@ class InstalledApplicationsRepositoryTest {
 
     @Test
     fun test_getApplicationFromPackageName_found() {
-        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
-            .thenReturn(fakeListApplicationInfo)
-
-        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
-            .thenReturn("FakeApplicationOne")
-
-        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
-            .thenReturn("FakeApplicationTwo")
-
-        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
-            .thenReturn(mockedDrawable)
-
         val result = repository.getApplicationFromPackageName(mockedContext, fakeRegularApplicationInfo.packageName)
         Assert.assertNotNull("Should find the application", result)
         Assert.assertEquals("Package names should match", fakeRegularApplicationInfo.packageName, result?.packageName)
@@ -175,26 +170,12 @@ class InstalledApplicationsRepositoryTest {
 
     @Test
     fun test_getApplicationFromPackageName_notFound() {
-        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
-            .thenReturn(fakeListApplicationInfo)
-
-        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
-            .thenReturn("FakeApplicationOne")
-
-        Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeSystemApplicationInfo)))
-            .thenReturn("FakeApplicationTwo")
-
-        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
-            .thenReturn(mockedDrawable)
-
         val result = repository.getApplicationFromPackageName(mockedContext, "non.existent.package")
         Assert.assertNull("Should return null for non-existent package", result)
     }
 
     @Test
     fun test_getAppList_sorting() {
-        // Add another app to test sorting
         val fakeAppZ = ApplicationInfo().apply {
             packageName = "fake.package.name.z"
             name = "ZebraApp"
@@ -207,9 +188,8 @@ class InstalledApplicationsRepositoryTest {
             fakeAppZ
         )
 
-        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
-            .thenReturn(appsWithZ)
+        Mockito.`when`(mockedPackageManager.queryIntentActivities(any(Intent::class.java), eq(0)))
+            .thenReturn(appsWithZ.map { makeResolveInfo(it) })
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
             .thenReturn("FakeApplicationOne")
@@ -217,24 +197,17 @@ class InstalledApplicationsRepositoryTest {
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeAppZ)))
             .thenReturn("ZebraApp")
 
-        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
-            .thenReturn(mockedDrawable)
-
         val list = repository.getAppList(mockedContext)
-        
-        // Should only contain non-system apps (fakeRegularApplicationInfo and fakeAppZ)
+
         Assert.assertEquals("Should have 2 apps", 2, list.size)
-        
-        // Should be sorted alphabetically
         Assert.assertEquals("First app should be FakeApplicationOne", "fakeapplicationone", list[0].name.lowercase())
         Assert.assertEquals("Second app should be ZebraApp", "zebraapp", list[1].name.lowercase())
     }
 
     @Test
     fun test_getAppList_emptyListWhenNoApps() {
-        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
-            .thenReturn(mutableListOf())
+        Mockito.`when`(mockedPackageManager.queryIntentActivities(any(Intent::class.java), eq(0)))
+            .thenReturn(emptyList())
 
         val list = repository.getAppList(mockedContext)
 
@@ -243,14 +216,11 @@ class InstalledApplicationsRepositoryTest {
 
     @Test
     fun test_getAppList_filtersSystemAndGmsApps() {
-        // system app
         fakeSystemApplicationInfo.flags = ApplicationInfo.FLAG_SYSTEM
-        // gms app
         fakeGmsApp.packageName = "com.google.gms"
 
-        Mockito.`when`(mockedContext.packageManager).thenReturn(mockedPackageManager)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(eq(0)))
-            .thenReturn(mutableListOf(fakeRegularApplicationInfo, fakeSystemApplicationInfo, fakeGmsApp))
+        Mockito.`when`(mockedPackageManager.queryIntentActivities(any(Intent::class.java), eq(0)))
+            .thenReturn(listOf(fakeRegularApplicationInfo, fakeSystemApplicationInfo, fakeGmsApp).map { makeResolveInfo(it) })
 
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeRegularApplicationInfo)))
             .thenReturn("FakeApplicationOne")
@@ -258,12 +228,9 @@ class InstalledApplicationsRepositoryTest {
             .thenReturn("SystemApp")
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeGmsApp)))
             .thenReturn("GmsApp")
-        Mockito.`when`(mockedPackageManager.getDrawable(anyString(), anyInt(), any()))
-            .thenReturn(mockedDrawable)
 
         val list = repository.getAppList(mockedContext)
 
-        // system and gms filtered out; only regular remains
         Assert.assertEquals(1, list.size)
         Assert.assertEquals(fakeRegularApplicationInfo.packageName, list.first().packageName)
     }

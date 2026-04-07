@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.os.Build
+import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.klee.sapio.domain.model.InstalledApplication
 import javax.inject.Inject
@@ -13,21 +14,21 @@ import javax.inject.Singleton
 open class InstalledApplicationsRepository @Inject constructor() {
 
     fun getAppList(context: Context): List<InstalledApplication> {
-        val apps = context.packageManager.getInstalledApplications(0)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            apps.removeIf { x -> isSystemApp(x) || isGmsRelated(x) }
+        val pm = context.packageManager
+        val intent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            apps.removeIf { x -> !hasAdaptiveIcon(context, x) }
-        }
+        val resolveInfoList = pm.queryIntentActivities(intent, 0)
 
         val results: MutableList<InstalledApplication> = arrayListOf()
-        for (app in apps) {
+        for (resolveInfo in resolveInfoList) {
+            val appInfo = resolveInfo.activityInfo.applicationInfo
+            if (isSystemApp(appInfo) || isGmsRelated(appInfo)) continue
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !hasAdaptiveIcon(context, appInfo)) continue
             results.add(
                 InstalledApplication(
-                    context.packageManager.getApplicationLabel(app).toString(),
-                    app.packageName
+                    pm.getApplicationLabel(appInfo).toString(),
+                    appInfo.packageName
                 )
             )
         }
