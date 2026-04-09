@@ -29,6 +29,7 @@ class SuccessFragment : Fragment() {
 
         mBinding = FragmentSuccessBinding.inflate(inflater, container, false)
         mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
+        mViewModel.listEvaluations(packageName)
         mBinding.shareEvaluation.setOnClickListener {
             (requireActivity() as MainActivity).navigateToEvaluations(
                 packageName,
