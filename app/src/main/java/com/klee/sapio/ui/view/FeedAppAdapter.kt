@@ -64,7 +64,7 @@ class FeedAppAdapter(
                 app.updatedAt?.let { dateFormat.format(it) }
             )
 
-        element.emoji.text = Rating.create(app.rating).text
+        element.emoji.setImageResource(Rating.create(app.rating).drawable)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val microgLabel = Label.create(mContext, app.microg)

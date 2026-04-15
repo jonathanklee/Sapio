@@ -70,7 +70,7 @@ class MyAppsAdapter(
         val rating = item.evaluation?.rating
         element.infoIcon.visibility = View.VISIBLE
         if (rating != null) {
-            element.emoji.text = Rating.create(rating).text
+            element.emoji.setImageResource(Rating.create(rating).drawable)
             element.emoji.visibility = View.VISIBLE
             element.noRatingIcon.visibility = View.GONE
         } else {

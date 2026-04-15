@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
-import androidx.emoji2.widget.EmojiTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -71,8 +70,7 @@ class EvaluationsFragment : Fragment() {
 
     companion object {
         const val TAG = "EvaluationsFragment"
-        const val NO_EVALUATION_CHAR = ""
-        const val COMPRESSION_QUALITY = 100
+const val COMPRESSION_QUALITY = 100
         const val SCREENSHOT_WIDTH_DP = 200
         const val SCREENSHOT_HEIGHT_DP = 115
         private const val ARG_PACKAGE_NAME = "packageName"
@@ -244,15 +242,19 @@ class EvaluationsFragment : Fragment() {
     }
 
     private fun renderEvaluation(
-        textView: EmojiTextView,
+        imageView: android.widget.ImageView,
         evaluation: com.klee.sapio.domain.model.Evaluation?
     ) {
-        textView.text = evaluation?.let {
-            Rating.create(it.rating).text
-        } ?: NO_EVALUATION_CHAR
+        if (evaluation != null) {
+            imageView.setImageResource(Rating.create(evaluation.rating).drawable)
+            imageView.visibility = View.VISIBLE
+        } else {
+            imageView.setImageDrawable(null)
+            imageView.visibility = View.INVISIBLE
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            textView.tooltipText = evaluation?.let {
+            imageView.tooltipText = evaluation?.let {
                 computeTooltip(it)
             }
         }

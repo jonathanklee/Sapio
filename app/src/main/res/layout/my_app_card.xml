@@ -95,13 +95,11 @@
                     app:srcCompat="@drawable/ic_add"
                     app:tint="?attr/colorOnSurface" />
 
-                <androidx.emoji2.widget.EmojiTextView
+                <ImageView
                     android:id="@+id/emoji"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:visibility="gone"
-                    tools:text="&#x1F7E2;" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/infoIcon"

@@ -120,7 +120,8 @@
             <TableRow
               android:id="@+id/microgRow"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical">
 
                 <TextView
                   android:id="@+id/microg"
@@ -135,28 +136,25 @@
                   android:textColor="@color/white"
                   android:textSize="17sp" />
 
-                <androidx.emoji2.widget.EmojiTextView
+                <ImageView
                   android:id="@+id/microgUser"
                   android:layout_width="20dp"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:textAlignment="center"
-                  android:textSize="17sp" />
+                  android:layout_height="20dp"
+                  android:layout_margin="10dp" />
 
-                <androidx.emoji2.widget.EmojiTextView
+                <ImageView
                   android:id="@+id/microgRoot"
                   android:layout_width="20dp"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:textAlignment="center"
-                  android:textSize="17sp" />
+                  android:layout_height="20dp"
+                  android:layout_margin="10dp" />
 
             </TableRow>
 
             <TableRow
               android:id="@+id/bareAospRow"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:gravity="center_vertical">
 
                 <TextView
                   android:id="@+id/bareAosp"
@@ -173,21 +171,17 @@
                   app:layout_constraintStart_toStartOf="parent"
                   app:layout_constraintTop_toBottomOf="@+id/dividerH1" />
 
-                <androidx.emoji2.widget.EmojiTextView
+                <ImageView
                   android:id="@+id/bareAospUser"
                   android:layout_width="20dp"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:textAlignment="center"
-                  android:textSize="17sp" />
+                  android:layout_height="20dp"
+                  android:layout_margin="10dp" />
 
-                <androidx.emoji2.widget.EmojiTextView
+                <ImageView
                   android:id="@+id/bareAospRoot"
                   android:layout_width="20dp"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:textAlignment="center"
-                  android:textSize="17sp" />
+                  android:layout_height="20dp"
+                  android:layout_margin="10dp" />
 
             </TableRow>
         </TableLayout>

@@ -1,6 +1,8 @@
 package com.klee.sapio.ui.model
 
-data class Rating(val value: Int, val text: String) {
+import com.klee.sapio.R
+
+data class Rating(val value: Int, val drawable: Int, val text: String) {
 
     companion object {
 
@@ -14,10 +16,10 @@ data class Rating(val value: Int, val text: String) {
 
         fun create(rating: Int): Rating {
             return when (rating) {
-                GOOD -> Rating(GOOD, String(Character.toChars(GREEN_CIRCLE_EMOJI)))
-                AVERAGE -> Rating(AVERAGE, String(Character.toChars(YELLOW_CIRCLE_EMOJI)))
-                BAD -> Rating(BAD, String(Character.toChars(RED_CIRCLE_EMOJI)))
-                else -> Rating(BAD, String(Character.toChars(RED_CIRCLE_EMOJI)))
+                GOOD -> Rating(GOOD, R.drawable.ic_status_green, String(Character.toChars(GREEN_CIRCLE_EMOJI)))
+                AVERAGE -> Rating(AVERAGE, R.drawable.ic_status_yellow, String(Character.toChars(YELLOW_CIRCLE_EMOJI)))
+                BAD -> Rating(BAD, R.drawable.ic_status_red, String(Character.toChars(RED_CIRCLE_EMOJI)))
+                else -> Rating(BAD, R.drawable.ic_status_red, String(Character.toChars(RED_CIRCLE_EMOJI)))
             }
         }
     }

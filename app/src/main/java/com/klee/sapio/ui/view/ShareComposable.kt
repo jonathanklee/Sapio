@@ -35,9 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.klee.sapio.R
 import com.klee.sapio.ui.model.Rating
-import com.klee.sapio.ui.model.Rating.Companion.GREEN_CIRCLE_EMOJI
-import com.klee.sapio.ui.model.Rating.Companion.RED_CIRCLE_EMOJI
-import com.klee.sapio.ui.model.Rating.Companion.YELLOW_CIRCLE_EMOJI
 import com.klee.sapio.ui.model.SharedEvaluation
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -254,19 +251,16 @@ private fun RatingPill(
             textAlign = TextAlign.Start
         )
         Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            text = when (rating) {
-                Rating.GOOD -> String(Character.toChars(GREEN_CIRCLE_EMOJI))
-                Rating.AVERAGE -> String(Character.toChars(YELLOW_CIRCLE_EMOJI))
-                Rating.BAD -> String(Character.toChars(RED_CIRCLE_EMOJI))
-                else -> ""
-            },
-            style = TextStyle(
-                color = Color.Unspecified,
-                fontSize = 6.sp,
-            ),
-            modifier = Modifier.width(10.dp),
-            textAlign = TextAlign.End,
+        val circleColor = when (rating) {
+            Rating.GOOD -> Color(0xFF4CAF50)
+            Rating.AVERAGE -> Color(0xFFFFC107)
+            Rating.BAD -> Color(0xFFF44336)
+            else -> Color.Transparent
+        }
+        Box(
+            modifier = Modifier
+                .size(7.dp)
+                .background(circleColor, shape = CircleShape)
         )
     }
 }

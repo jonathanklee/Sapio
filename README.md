@@ -16,11 +16,11 @@ Evaluations in Sapio are given to the community by the community.
 
 # Rating
 
-🟢 The app works perfectly without Google Play Services
+<span style="color:#4CAF50">⬤</span> The app works perfectly without Google Play Services
 
-🟡 The app works partially: at least one feature (notifications, in-app purchases, login methods etc) does not work without Google Play Services
+<span style="color:#FFC107">⬤</span> The app works partially: at least one feature (notifications, in-app purchases, login methods etc) does not work without Google Play Services
 
-🔴 The app does not work at all or crashes without Google Play Services
+<span style="color:#F44336">⬤</span> The app does not work at all or crashes without Google Play Services
 
 **bareAOSP** The device is a bare AOSP device 
 
