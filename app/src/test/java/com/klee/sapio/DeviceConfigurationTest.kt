@@ -67,7 +67,7 @@ class DeviceConfigurationTest {
     fun test_getGmsType_withGooglePlayServices() {
         // Setup the mock behavior BEFORE creating DeviceConfiguration
         val apps = listOf(fakeGmsApp, fakeRegularApp)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(PackageManager.GET_META_DATA))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(0))
             .thenReturn(apps)
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeGmsApp)))
             .thenReturn("Google Play Services")
@@ -83,7 +83,7 @@ class DeviceConfigurationTest {
     fun test_getGmsType_withMicroG() {
         // Setup the mock behavior BEFORE creating DeviceConfiguration
         val apps = listOf(fakeMicroGApp, fakeRegularApp)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(PackageManager.GET_META_DATA))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(0))
             .thenReturn(apps)
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeMicroGApp)))
             .thenReturn("microG Services Core")
@@ -101,7 +101,7 @@ class DeviceConfigurationTest {
             packageName = DeviceConfiguration.GMS_SERVICES_PACKAGE_NAME
         }
         val apps = listOf(renamedMicroGApp, fakeRegularApp)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(PackageManager.GET_META_DATA))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(0))
             .thenReturn(apps)
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(renamedMicroGApp)))
             .thenReturn("App compatibility Services")
@@ -116,7 +116,7 @@ class DeviceConfigurationTest {
     fun test_getGmsType_withBareAosp() {
         // Setup the mock behavior BEFORE creating DeviceConfiguration
         val apps = listOf(fakeRegularApp)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(PackageManager.GET_META_DATA))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(0))
             .thenReturn(apps)
 
         // Recreate DeviceConfiguration with the properly mocked context
@@ -131,7 +131,7 @@ class DeviceConfigurationTest {
         // This test is more complex due to the private isBootloaderLocked method
         // We'll test the public behavior by mocking the RootBeer result
         val apps = listOf(fakeRegularApp)
-        Mockito.`when`(mockedPackageManager.getInstalledApplications(PackageManager.GET_META_DATA))
+        Mockito.`when`(mockedPackageManager.getInstalledApplications(0))
             .thenReturn(apps)
 
         // For this test, we'll assume the device is rooted and bootloader is unlocked

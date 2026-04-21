@@ -17,26 +17,17 @@ open class DeviceConfiguration @Inject constructor(
     }
 
     private var packageManager: PackageManager = mContext.packageManager
-    private var apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
     override fun getGmsType(): Int {
-        var type = GmsType.BARE_AOSP
+        val apps = packageManager.getInstalledApplications(0)
+        val gmsApp = apps.firstOrNull { it.packageName == GMS_SERVICES_PACKAGE_NAME }
+            ?: return GmsType.BARE_AOSP
 
-        for (app in apps) {
-            if (app.packageName != GMS_SERVICES_PACKAGE_NAME) {
-                continue
-            }
-
-            if (packageManager.getApplicationLabel(app).toString().contains("Google", true)) {
-                type = GmsType.GOOGLE_PLAY_SERVICES
-                break
-            } else {
-                type = GmsType.MICROG
-                break
-            }
+        return if (packageManager.getApplicationLabel(gmsApp).toString().contains("Google", true)) {
+            GmsType.GOOGLE_PLAY_SERVICES
+        } else {
+            GmsType.MICROG
         }
-
-        return type
     }
 
     override fun isUnsafe(): Int {
