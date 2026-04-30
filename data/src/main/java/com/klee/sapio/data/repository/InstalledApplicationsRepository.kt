@@ -18,19 +18,23 @@ open class InstalledApplicationsRepository @Inject constructor() {
         val intent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
-        val resolveInfoList = pm.queryIntentActivities(intent, 0)
+        val resolveInfoList = try {
+            pm.queryIntentActivities(intent, 0)
+        } catch (e: RuntimeException) {
+            return emptyList()
+        }
 
         val results: MutableList<InstalledApplication> = arrayListOf()
         for (resolveInfo in resolveInfoList) {
             val appInfo = resolveInfo.activityInfo.applicationInfo
             if (isSystemApp(appInfo) || isGmsRelated(appInfo)) continue
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !hasAdaptiveIcon(context, appInfo)) continue
-            results.add(
-                InstalledApplication(
-                    pm.getApplicationLabel(appInfo).toString(),
-                    appInfo.packageName
-                )
-            )
+            val label = try {
+                pm.getApplicationLabel(appInfo).toString()
+            } catch (e: RuntimeException) {
+                continue
+            }
+            results.add(InstalledApplication(label, appInfo.packageName))
         }
 
         return results.sortedBy { app -> app.name.lowercase() }
@@ -63,7 +67,11 @@ open class InstalledApplicationsRepository @Inject constructor() {
     @VisibleForTesting
     fun hasAdaptiveIcon(context: Context, info: ApplicationInfo): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
-        val icon = info.loadUnbadgedIcon(context.packageManager) ?: return false
-        return icon is AdaptiveIconDrawable
+        return try {
+            val icon = info.loadUnbadgedIcon(context.packageManager) ?: return false
+            icon is AdaptiveIconDrawable
+        } catch (e: RuntimeException) {
+            false
+        }
     }
 }

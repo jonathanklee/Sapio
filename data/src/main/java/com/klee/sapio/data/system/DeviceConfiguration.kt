@@ -18,15 +18,27 @@ open class DeviceConfiguration @Inject constructor(
 
     private var packageManager: PackageManager = mContext.packageManager
 
-    override fun getGmsType(): Int {
-        val apps = packageManager.getInstalledApplications(0)
+    override fun getGmsType(): Int = cachedGmsType
+
+    private val cachedGmsType: Int by lazy { computeGmsType() }
+
+    private fun computeGmsType(): Int {
+        val apps = try {
+            packageManager.getInstalledApplications(0)
+        } catch (e: RuntimeException) {
+            return GmsType.BARE_AOSP
+        }
         val gmsApp = apps.firstOrNull { it.packageName == GMS_SERVICES_PACKAGE_NAME }
             ?: return GmsType.BARE_AOSP
 
-        return if (packageManager.getApplicationLabel(gmsApp).toString().contains("Google", true)) {
-            GmsType.GOOGLE_PLAY_SERVICES
-        } else {
-            GmsType.MICROG
+        return try {
+            if (packageManager.getApplicationLabel(gmsApp).toString().contains("Google", true)) {
+                GmsType.GOOGLE_PLAY_SERVICES
+            } else {
+                GmsType.MICROG
+            }
+        } catch (e: RuntimeException) {
+            GmsType.BARE_AOSP
         }
     }
 
