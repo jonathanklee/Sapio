@@ -7,8 +7,8 @@ import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.klee.sapio.data.repository.InstalledApplicationsRepository
 import com.klee.sapio.domain.CheckFdroidAvailabilityUseCase
+import com.klee.sapio.domain.InstalledApplicationsDataSource
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.ui.state.ChooseAppUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseAppViewModel @Inject constructor(
-    private val installedApplicationsRepository: InstalledApplicationsRepository,
+    private val installedApplicationsDataSource: InstalledApplicationsDataSource,
     private val checkFdroidAvailabilityUseCase: CheckFdroidAvailabilityUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -62,7 +62,7 @@ class ChooseAppViewModel @Inject constructor(
     private fun loadApps() {
         viewModelScope.launch {
             val allApps = withContext(Dispatchers.IO) {
-                installedApplicationsRepository.getAppList(context)
+                installedApplicationsDataSource.listInstalledApplications()
             }
             val filtered = filterFdroidApps(allApps)
             _uiState.update { it.copy(apps = filtered, isLoading = false) }

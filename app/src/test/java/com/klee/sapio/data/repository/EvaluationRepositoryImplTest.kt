@@ -133,7 +133,7 @@ class EvaluationRepositoryImplTest {
         val result = repository.existingIcon("com.app.one.png")
 
         assertTrue(result.isSuccess)
-        assertEquals("/remote.png", result.getOrThrow().first().url)
+        assertEquals("${EvaluationService.BASE_URL}/remote.png", result.getOrThrow().first().url)
     }
 
     @Test
@@ -148,7 +148,7 @@ class EvaluationRepositoryImplTest {
         val result = repository.existingIcon("com.app.two.png")
 
         assertTrue(result.isSuccess)
-        assertEquals("/old.png", result.getOrThrow().first().url)
+        assertEquals("${EvaluationService.BASE_URL}/old.png", result.getOrThrow().first().url)
     }
 
     private fun iconAnswer(id: Int, name: String, url: String): IconAnswer {

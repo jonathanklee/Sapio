@@ -9,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.klee.sapio.data.system.Settings
 import com.klee.sapio.databinding.FragmentMainBinding
+import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -25,7 +25,7 @@ class FeedFragment : Fragment() {
     }
 
     @Inject
-    lateinit var mSettings: Settings
+    lateinit var mSettings: AppSettings
 
     private lateinit var mBinding: FragmentMainBinding
     private lateinit var mFeedAppAdapter: FeedAppAdapter

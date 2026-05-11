@@ -3,6 +3,8 @@ package com.klee.sapio.data.system
 import android.content.Context
 import android.content.pm.PackageManager
 import com.klee.sapio.domain.DeviceInfo
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

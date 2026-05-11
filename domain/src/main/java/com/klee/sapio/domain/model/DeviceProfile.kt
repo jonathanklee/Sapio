@@ -1,4 +1,4 @@
-package com.klee.sapio.data.system
+package com.klee.sapio.domain.model
 
 object GmsType {
     const val MICROG = 1

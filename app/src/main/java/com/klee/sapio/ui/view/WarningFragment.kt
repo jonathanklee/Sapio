@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
-import com.klee.sapio.data.repository.EvaluationRepositoryImpl
-import com.klee.sapio.data.system.DeviceConfiguration
-import com.klee.sapio.data.system.GmsType
 import com.klee.sapio.databinding.FragmentWarningBinding
+import com.klee.sapio.domain.DeviceInfo
+import com.klee.sapio.domain.model.GmsType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,10 +20,7 @@ import javax.inject.Inject
 class WarningFragment : Fragment() {
 
     @Inject
-    lateinit var mEvaluationRepository: EvaluationRepositoryImpl
-
-    @Inject
-    lateinit var mDeviceConfiguration: DeviceConfiguration
+    lateinit var mDeviceInfo: DeviceInfo
 
     private lateinit var mBinding: FragmentWarningBinding
 
@@ -57,6 +53,6 @@ class WarningFragment : Fragment() {
 
     private fun updateProceedButton() {
         mBinding.proceedButton.isEnabled =
-            mDeviceConfiguration.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES && mBinding.checkbox.isChecked
+            mDeviceInfo.getGmsType() != GmsType.GOOGLE_PLAY_SERVICES && mBinding.checkbox.isChecked
     }
 }

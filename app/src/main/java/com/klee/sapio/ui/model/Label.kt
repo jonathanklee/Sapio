@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.klee.sapio.R
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 
 data class Label(val text: String, val color: Int) {
 

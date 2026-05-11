@@ -3,12 +3,12 @@ package com.klee.sapio.work
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.klee.sapio.data.repository.InstalledApplicationsRepository
-import com.klee.sapio.data.system.DeviceConfiguration
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
 import com.klee.sapio.domain.EvaluationRepository
+import com.klee.sapio.domain.DeviceInfo
+import com.klee.sapio.domain.InstalledApplicationsDataSource
 import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.ui.model.Rating
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -34,7 +34,7 @@ class CompatibilityCheckWorker(
         }
 
         val installedApps = entryPoint.installedApplicationsRepository()
-            .getAppList(applicationContext)
+            .listInstalledApplications()
 
         val evaluationRepository = entryPoint.evaluationRepository()
         val userType = UserType.SECURE
@@ -87,7 +87,7 @@ class CompatibilityCheckWorker(
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface CompatibilityWorkerEntryPoint {
-    fun installedApplicationsRepository(): InstalledApplicationsRepository
+    fun installedApplicationsRepository(): InstalledApplicationsDataSource
     fun evaluationRepository(): EvaluationRepository
-    fun deviceConfiguration(): DeviceConfiguration
+    fun deviceConfiguration(): DeviceInfo
 }

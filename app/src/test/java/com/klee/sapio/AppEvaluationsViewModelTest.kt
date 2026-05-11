@@ -2,9 +2,9 @@ package com.klee.sapio
 
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.klee.sapio.data.system.GmsType
 import com.klee.sapio.data.system.Settings
-import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.FetchAppEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase

@@ -1,19 +1,23 @@
 package com.klee.sapio.data.repository
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.os.Build
-import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import com.klee.sapio.domain.InstalledApplicationsDataSource
 import com.klee.sapio.domain.model.InstalledApplication
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class InstalledApplicationsRepository @Inject constructor() {
+open class InstalledApplicationsRepository @Inject constructor(
+    @ApplicationContext private val context: Context
+) : InstalledApplicationsDataSource {
 
-    fun getAppList(context: Context): List<InstalledApplication> {
+    override fun listInstalledApplications(): List<InstalledApplication> {
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -40,11 +44,8 @@ open class InstalledApplicationsRepository @Inject constructor() {
         return results.sortedBy { app -> app.name.lowercase() }
     }
 
-    open fun getApplicationFromPackageName(
-        context: Context,
-        packageName: String
-    ): InstalledApplication? {
-        val appList = getAppList(context)
+    override fun getInstalledApplication(packageName: String): InstalledApplication? {
+        val appList = listInstalledApplications()
         for (app in appList) {
             if (app.packageName == packageName) {
                 return app

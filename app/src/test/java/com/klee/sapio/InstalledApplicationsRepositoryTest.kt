@@ -57,7 +57,7 @@ class InstalledApplicationsRepositoryTest {
 
         MockitoAnnotations.openMocks(this)
 
-        repository = InstalledApplicationsRepository()
+        repository = InstalledApplicationsRepository(mockedContext)
 
         fakeRegularApplicationInfo = ApplicationInfo().apply {
             packageName = "fake.package.name.one"
@@ -148,13 +148,13 @@ class InstalledApplicationsRepositoryTest {
 
     @Test
     fun test_listApplicationCheckListSize() {
-        val list = repository.getAppList(mockedContext)
+        val list = repository.listInstalledApplications()
         assertEquals("Wrong list size.", 1, list.size)
     }
 
     @Test
     fun test_listApplicationCheckElement() {
-        val list = repository.getAppList(mockedContext)
+        val list = repository.listInstalledApplications()
         assertEquals(
             "Package name are not the same.",
             fakeRegularApplicationInfo.packageName,
@@ -163,14 +163,14 @@ class InstalledApplicationsRepositoryTest {
 
     @Test
     fun test_getApplicationFromPackageName_found() {
-        val result = repository.getApplicationFromPackageName(mockedContext, fakeRegularApplicationInfo.packageName)
+        val result = repository.getInstalledApplication(fakeRegularApplicationInfo.packageName)
         Assert.assertNotNull("Should find the application", result)
         Assert.assertEquals("Package names should match", fakeRegularApplicationInfo.packageName, result?.packageName)
     }
 
     @Test
     fun test_getApplicationFromPackageName_notFound() {
-        val result = repository.getApplicationFromPackageName(mockedContext, "non.existent.package")
+        val result = repository.getInstalledApplication("non.existent.package")
         Assert.assertNull("Should return null for non-existent package", result)
     }
 
@@ -197,7 +197,7 @@ class InstalledApplicationsRepositoryTest {
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeAppZ)))
             .thenReturn("ZebraApp")
 
-        val list = repository.getAppList(mockedContext)
+        val list = repository.listInstalledApplications()
 
         Assert.assertEquals("Should have 2 apps", 2, list.size)
         Assert.assertEquals("First app should be FakeApplicationOne", "fakeapplicationone", list[0].name.lowercase())
@@ -209,7 +209,7 @@ class InstalledApplicationsRepositoryTest {
         Mockito.`when`(mockedPackageManager.queryIntentActivities(any(Intent::class.java), eq(0)))
             .thenReturn(emptyList())
 
-        val list = repository.getAppList(mockedContext)
+        val list = repository.listInstalledApplications()
 
         Assert.assertTrue("List should be empty when no apps are installed", list.isEmpty())
     }
@@ -229,7 +229,7 @@ class InstalledApplicationsRepositoryTest {
         Mockito.`when`(mockedPackageManager.getApplicationLabel(eq(fakeGmsApp)))
             .thenReturn("GmsApp")
 
-        val list = repository.getAppList(mockedContext)
+        val list = repository.listInstalledApplications()
 
         Assert.assertEquals(1, list.size)
         Assert.assertEquals(fakeRegularApplicationInfo.packageName, list.first().packageName)

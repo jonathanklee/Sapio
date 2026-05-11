@@ -1,12 +1,12 @@
 package com.klee.sapio
 
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
 import com.klee.sapio.domain.FetchAppEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.GmsType
 import com.klee.sapio.domain.model.Icon
+import com.klee.sapio.domain.model.UserType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

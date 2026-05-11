@@ -3,8 +3,8 @@ package com.klee.sapio
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.klee.sapio.data.system.DeviceConfiguration
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.ui.viewmodel.EvaluateViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Rule

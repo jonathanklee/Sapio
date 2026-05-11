@@ -12,11 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.klee.sapio.R
-import com.klee.sapio.data.api.EvaluationService
-import com.klee.sapio.data.system.Settings
-import com.klee.sapio.data.system.UserType
 import com.klee.sapio.databinding.FeedAppCardBinding
+import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.ui.model.Label
 import com.klee.sapio.ui.model.Rating
 import java.text.SimpleDateFormat
@@ -24,7 +23,7 @@ import java.util.Locale
 
 class FeedAppAdapter(
     private val mContext: Context,
-    private var mSettings: Settings,
+    private var mSettings: AppSettings,
     private val onAppSelected: (packageName: String, appName: String) -> Unit
 ) : ListAdapter<Evaluation, FeedAppAdapter.ViewHolder>(DiffCallback) {
 
@@ -87,7 +86,7 @@ class FeedAppAdapter(
         val iconUrl = app.iconUrl
         if (!iconUrl.isNullOrEmpty()) {
             Glide.with(mContext.applicationContext)
-                .load(EvaluationService.BASE_URL + iconUrl)
+                .load(iconUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.image)
         }

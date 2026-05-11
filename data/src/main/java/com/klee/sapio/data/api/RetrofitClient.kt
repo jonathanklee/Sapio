@@ -11,7 +11,7 @@ import com.klee.sapio.data.dto.StrapiAnswer
 import com.klee.sapio.data.dto.StrapiElement
 import com.klee.sapio.data.dto.UploadAnswer
 import com.klee.sapio.data.dto.UploadEvaluationHeader
-import com.klee.sapio.data.system.Settings
+import com.klee.sapio.domain.AppSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.withTimeout
 import okhttp3.Cache
@@ -97,7 +97,7 @@ open class EvaluationService @Inject constructor(
     }
 
     @Inject
-    lateinit var settings: Settings
+    lateinit var settings: AppSettings
     private var retrofit: Retrofit
     private var evaluationsApi: EvaluationApi
 

@@ -1,19 +1,17 @@
 package com.klee.sapio.ui.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.klee.sapio.data.local.DeviceAppDao
-import com.klee.sapio.data.local.DeviceAppEntity
-import com.klee.sapio.data.repository.InstalledApplicationsRepository
-import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.CheckFdroidAvailabilityUseCase
+import com.klee.sapio.domain.DeviceAppCacheRepository
+import com.klee.sapio.domain.DeviceInfo
 import com.klee.sapio.domain.FetchAppEvaluationUseCase
+import com.klee.sapio.domain.InstalledApplicationsDataSource
+import com.klee.sapio.domain.model.CachedDeviceApp
 import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.ui.model.InstalledAppWithRating
 import com.klee.sapio.ui.state.MyAppsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -30,12 +28,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyAppsViewModel @Inject constructor(
-    private val installedApplicationsRepository: InstalledApplicationsRepository,
+    private val installedApplicationsDataSource: InstalledApplicationsDataSource,
     private val fetchAppEvaluationUseCase: FetchAppEvaluationUseCase,
     private val checkFdroidAvailabilityUseCase: CheckFdroidAvailabilityUseCase,
-    private val deviceConfiguration: DeviceConfiguration,
-    private val deviceAppDao: DeviceAppDao,
-    @ApplicationContext private val context: Context
+    private val deviceInfo: DeviceInfo,
+    private val deviceAppCacheRepository: DeviceAppCacheRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MyAppsUiState())
@@ -58,7 +55,7 @@ class MyAppsViewModel @Inject constructor(
                 fetchFromWebAndSave()
             } else {
                 _uiState.update { it.copy(isLoading = true, progress = 0) }
-                val entities = withContext(Dispatchers.IO) { deviceAppDao.getAll() }
+                val entities = withContext(Dispatchers.IO) { deviceAppCacheRepository.getAll() }
                 val lastCachedAt = entities.maxOfOrNull { it.cachedAt }
 
                 if (entities.isNotEmpty() && isCacheValid(lastCachedAt)) {
@@ -73,10 +70,10 @@ class MyAppsViewModel @Inject constructor(
     }
 
     private suspend fun buildListFromEntities(
-        entities: List<DeviceAppEntity>
+        entities: List<CachedDeviceApp>
     ): List<InstalledAppWithRating> {
         val installedMap = withContext(Dispatchers.IO) {
-            installedApplicationsRepository.getAppList(context).associateBy { it.packageName }
+            installedApplicationsDataSource.listInstalledApplications().associateBy { it.packageName }
         }
         val total = entities.size
         val result = mutableListOf<InstalledAppWithRating>()
@@ -103,11 +100,11 @@ class MyAppsViewModel @Inject constructor(
     }
 
     private suspend fun fetchFromWebAndSave() {
-        val gmsType = deviceConfiguration.getGmsType()
-        val userType = deviceConfiguration.isUnsafe()
+        val gmsType = deviceInfo.getGmsType()
+        val userType = deviceInfo.isUnsafe()
 
         val installedApps = withContext(Dispatchers.IO) {
-            installedApplicationsRepository.getAppList(context)
+            installedApplicationsDataSource.listInstalledApplications()
         }
 
         val total = installedApps.size
@@ -140,7 +137,7 @@ class MyAppsViewModel @Inject constructor(
 
         val now = System.currentTimeMillis()
         val entities = result.map { item ->
-            DeviceAppEntity(
+            CachedDeviceApp(
                 packageName = item.installedApp.packageName,
                 rating = item.evaluation?.rating,
                 cachedAt = now
@@ -148,8 +145,7 @@ class MyAppsViewModel @Inject constructor(
         }
 
         withContext(Dispatchers.IO) {
-            deviceAppDao.deleteAll()
-            deviceAppDao.upsertAll(entities)
+            deviceAppCacheRepository.replaceAll(entities)
         }
 
         lastLoadTime = now

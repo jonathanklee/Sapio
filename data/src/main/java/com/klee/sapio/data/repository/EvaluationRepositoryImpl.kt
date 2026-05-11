@@ -170,7 +170,7 @@ class EvaluationRepositoryImpl @Inject constructor(
                     val domain = evaluation.toDomain()
                     if (domain.iconUrl == null) {
                         val fallback = retrofitService.existingIcon("${evaluation.packageName}.png")
-                        domain.copy(iconUrl = fallback.getOrNull()?.firstOrNull()?.url)
+                        domain.copy(iconUrl = fallback.getOrNull()?.firstOrNull()?.url.toAbsoluteUrl())
                     } else {
                         domain
                     }
@@ -192,7 +192,7 @@ abstract class EvaluationRepositoryModule {
 private fun DtoEvaluation.toDomain(): DomainEvaluation = DomainEvaluation(
     name = name,
     packageName = packageName,
-    iconUrl = icon?.data?.attributes?.url,
+    iconUrl = icon?.data?.attributes?.url.toAbsoluteUrl(),
     rating = rating,
     microg = microg,
     secure = secure,
@@ -219,7 +219,7 @@ private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = Evaluatio
 private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
     name = name,
     packageName = packageName,
-    iconUrl = iconUrl,
+    iconUrl = iconUrl.toAbsoluteUrl(),
     rating = rating,
     microg = microg,
     secure = secure,
@@ -237,7 +237,7 @@ private fun StrapiElement.toDomain(): DomainEvaluationRecord = DomainEvaluationR
 private fun IconAnswer.toDomain(): DomainIcon = DomainIcon(
     id = id,
     name = name,
-    url = url
+    url = url.toAbsoluteUrl().orEmpty()
 )
 
 private fun IconAnswer.toEntity(cachedAt: Long): IconEntity = IconEntity(
@@ -250,7 +250,7 @@ private fun IconAnswer.toEntity(cachedAt: Long): IconEntity = IconEntity(
 private fun IconEntity.toDomain(): DomainIcon = DomainIcon(
     id = id,
     name = name,
-    url = url
+    url = url.toAbsoluteUrl().orEmpty()
 )
 
 private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEvaluation(
@@ -261,3 +261,12 @@ private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEval
     microg = microg,
     rooted = rooted
 )
+
+private fun String?.toAbsoluteUrl(): String? {
+    val value = this ?: return null
+    return if (value.startsWith("http://") || value.startsWith("https://")) {
+        value
+    } else {
+        "${EvaluationService.BASE_URL}$value"
+    }
+}

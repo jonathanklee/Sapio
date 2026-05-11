@@ -2,9 +2,9 @@ package com.klee.sapio
 
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.klee.sapio.data.repository.InstalledApplicationsRepository
 import com.klee.sapio.data.system.DeviceConfiguration
 import com.klee.sapio.domain.EvaluateAppUseCase
+import com.klee.sapio.domain.InstalledApplicationsDataSource
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.ui.state.EvaluateEvent
 import com.klee.sapio.ui.viewmodel.LoadingViewModel
@@ -130,17 +130,20 @@ class LoadingViewModelTest {
             override fun isUnsafe() = 0
         }
 
-        val fakeInstalledAppsRepo = object : InstalledApplicationsRepository() {
-            override fun getApplicationFromPackageName(
-                context: android.content.Context,
-                packageName: String
-            ) = app
+        val fakeInstalledAppsRepo = object : InstalledApplicationsDataSource {
+            override fun listInstalledApplications(): List<InstalledApplication> {
+                return emptyList()
+            }
+
+            override fun getInstalledApplication(packageName: String): InstalledApplication? {
+                return app
+            }
         }
 
         val fakeUseCase = object : EvaluateAppUseCase(fakeRepo, fakeDeviceConfig) {
             override suspend fun invoke(a: InstalledApplication, rating: Int) = useCaseResult
         }
 
-        return LoadingViewModel(fakeInstalledAppsRepo, fakeUseCase, appContext)
+        return LoadingViewModel(fakeInstalledAppsRepo, fakeUseCase)
     }
 }

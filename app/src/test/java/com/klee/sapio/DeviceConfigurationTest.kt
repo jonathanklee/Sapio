@@ -5,9 +5,8 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import com.klee.sapio.data.system.DeviceConfiguration
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.UserType
-import com.klee.sapio.data.system.SystemPropertyReader
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

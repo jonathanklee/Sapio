@@ -35,9 +35,8 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.klee.sapio.R
-import com.klee.sapio.data.api.EvaluationService
-import com.klee.sapio.data.system.Settings
 import com.klee.sapio.databinding.FragmentEvaluationsBinding
+import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
@@ -57,7 +56,7 @@ import kotlin.coroutines.resumeWithException
 class EvaluationsFragment : Fragment() {
 
     @Inject
-    lateinit var settings: Settings
+    lateinit var settings: AppSettings
 
     private var _binding: FragmentEvaluationsBinding? = null
     private val mBinding get() = _binding!!
@@ -209,7 +208,7 @@ const val COMPRESSION_QUALITY = 100
                     val needsCount = !state.isFullyLoaded
                     if (state.iconUrl.isNotEmpty()) {
                         Glide.with(requireContext().applicationContext)
-                            .load(EvaluationService.BASE_URL + state.iconUrl)
+                            .load(state.iconUrl)
                             .listener(object : RequestListener<Drawable> {
                                 override fun onResourceReady(
                                     resource: Drawable,
@@ -276,7 +275,7 @@ const val COMPRESSION_QUALITY = 100
             val state = mViewModel.uiState.value
             val icon = saveImageToFile(
                 requireContext(),
-                EvaluationService.BASE_URL + (state.iconUrl ?: "")
+                state.iconUrl.orEmpty()
             )
             val sharedEvaluation = SharedEvaluation(
                 appName,

@@ -2,11 +2,11 @@ package com.klee.sapio.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.klee.sapio.data.system.GmsType
-import com.klee.sapio.data.system.Settings
-import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.FetchAppEvaluationUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
+import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.ui.state.AppEvaluationsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class AppEvaluationsViewModel @Inject constructor(
     private val fetchAppEvaluationUseCase: FetchAppEvaluationUseCase,
     private val fetchIconUrlUseCase: FetchIconUrlUseCase,
-    private val settings: Settings
+    private val settings: AppSettings
 ) : ViewModel() {
 
     internal var ioDispatcher: CoroutineDispatcher = Dispatchers.IO

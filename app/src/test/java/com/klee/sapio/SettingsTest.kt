@@ -3,7 +3,7 @@ package com.klee.sapio
 import android.os.Build
 import androidx.preference.PreferenceManager
 import com.klee.sapio.data.system.Settings
-import com.klee.sapio.data.system.UserType
+import com.klee.sapio.domain.model.UserType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
