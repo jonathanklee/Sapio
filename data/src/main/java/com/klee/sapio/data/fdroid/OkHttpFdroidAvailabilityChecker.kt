@@ -13,7 +13,7 @@ class OkHttpFdroidAvailabilityChecker @Inject constructor() : FdroidAvailability
 
     private val client = OkHttpClient()
 
-    override suspend fun isAvailable(packageName: String): Boolean {
+    override suspend fun isAvailable(packageName: String): Boolean? {
         val request = Request.Builder()
             .url("https://f-droid.org/api/v1/packages/$packageName")
             .build()
@@ -25,7 +25,7 @@ class OkHttpFdroidAvailabilityChecker @Inject constructor() : FdroidAvailability
             }
         } catch (e: IOException) {
             Log.e("OkHttpFdroidChecker", "Failed to reach F-Droid for $packageName", e)
-            false
+            null
         }
     }
 

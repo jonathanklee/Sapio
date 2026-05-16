@@ -22,6 +22,13 @@ class CheckFdroidAvailabilityUseCaseTest {
     }
 
     @Test
+    fun `returns false when checker reports network error`() = runTest {
+        val useCase = CheckFdroidAvailabilityUseCase(FakeFdroidChecker(available = null))
+
+        assertFalse(useCase("com.test.app"))
+    }
+
+    @Test
     fun `passes package name to checker`() = runTest {
         val checker = RecordingFdroidChecker()
         val useCase = CheckFdroidAvailabilityUseCase(checker)
@@ -31,13 +38,13 @@ class CheckFdroidAvailabilityUseCaseTest {
         assertTrue(checker.lastCheckedPackage == "org.mozilla.firefox")
     }
 
-    private class FakeFdroidChecker(private val available: Boolean) : FdroidAvailabilityChecker {
+    private class FakeFdroidChecker(private val available: Boolean?) : FdroidAvailabilityChecker {
         override suspend fun isAvailable(packageName: String) = available
     }
 
     private class RecordingFdroidChecker : FdroidAvailabilityChecker {
         var lastCheckedPackage: String = ""
-        override suspend fun isAvailable(packageName: String): Boolean {
+        override suspend fun isAvailable(packageName: String): Boolean? {
             lastCheckedPackage = packageName
             return false
         }

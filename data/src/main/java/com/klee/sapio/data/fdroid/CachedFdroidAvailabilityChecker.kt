@@ -12,13 +12,15 @@ class CachedFdroidAvailabilityChecker @Inject constructor(
 
     private val cache = ConcurrentHashMap<String, CacheEntry>()
 
-    override suspend fun isAvailable(packageName: String): Boolean {
+    override suspend fun isAvailable(packageName: String): Boolean? {
         val entry = cache[packageName]
         if (entry != null && System.currentTimeMillis() - entry.cachedAt < CACHE_VALIDITY_MS) {
             return entry.isAvailable
         }
         val result = delegate.isAvailable(packageName)
-        cache[packageName] = CacheEntry(result, System.currentTimeMillis())
+        if (result != null) {
+            cache[packageName] = CacheEntry(result, System.currentTimeMillis())
+        }
         return result
     }
 
