@@ -1,3 +1,5 @@
+¡Apps de Android que te respetan!
+
 Sapio es el anagrama de Open Source API.
 
 Sapio proporciona la compatibilidad de una aplicación Android en un dispositivo sin Google Play Services (es decir, dispositivos Android Open Source Project (AOSP) desgoogleados, con o sin microG).
