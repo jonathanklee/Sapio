@@ -284,7 +284,7 @@ const val COMPRESSION_QUALITY = 100
                 state.microgUser?.rating ?: 0,
                 state.bareAospUser?.rating ?: 0,
             )
-            share(takeScreenshot(sharedEvaluation), appName)
+            share(takeScreenshot(sharedEvaluation), sharedEvaluation)
         }
     }
 
@@ -367,10 +367,10 @@ const val COMPRESSION_QUALITY = 100
         return bitmap
     }
 
-    private fun share(bitmap: Bitmap, appName: String) {
+    private fun share(bitmap: Bitmap, sharedEvaluation: SharedEvaluation) {
         val contentValues = ContentValues().apply {
             put(Media.DISPLAY_NAME, "screenshot_${System.currentTimeMillis()}")
-            put(Media.DESCRIPTION, getString(R.string.share_android_compatibility, appName))
+            put(Media.DESCRIPTION, getString(R.string.share_android_compatibility, sharedEvaluation.name))
             put(Media.MIME_TYPE, "image/jpeg")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(
@@ -395,13 +395,41 @@ const val COMPRESSION_QUALITY = 100
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "image/*"
             putExtra(Intent.EXTRA_STREAM, shareImage)
-            putExtra(
-                Intent.EXTRA_TEXT,
-                getString(R.string.share_android_compatibility_text, appName)
-            )
+            putExtra(Intent.EXTRA_TEXT, buildShareText(sharedEvaluation))
         }
 
         shareLauncher.launch(Intent.createChooser(shareIntent, "Share"))
+    }
+
+    private fun buildShareText(sharedEvaluation: SharedEvaluation): String {
+        val header = getString(
+            R.string.share_compatibility_report,
+            sharedEvaluation.name,
+            sharedEvaluation.packageName
+        )
+        val ratingParts = buildList {
+            if (isKnownRating(sharedEvaluation.ratingMicrog)) {
+                add("${getString(R.string.microg_label)} ${ratingToSymbol(sharedEvaluation.ratingMicrog)}")
+            }
+            if (isKnownRating(sharedEvaluation.ratingBareAOSP)) {
+                add("${getString(R.string.bare_aosp_label)} ${ratingToSymbol(sharedEvaluation.ratingBareAOSP)}")
+            }
+        }
+        val ratingSuffix = if (ratingParts.isNotEmpty()) ": ${ratingParts.joinToString(", ")}" else ""
+        return "$header$ratingSuffix\n\n${getString(R.string.github_url)} #degoogle #sapio"
+    }
+
+    private fun ratingToSymbol(rating: Int): String {
+        return when (rating) {
+            Rating.GOOD -> "✓"
+            Rating.AVERAGE -> "~"
+            Rating.BAD -> "✗"
+            else -> "?"
+        }
+    }
+
+    private fun isKnownRating(rating: Int): Boolean {
+        return rating == Rating.GOOD || rating == Rating.AVERAGE || rating == Rating.BAD
     }
 
     override fun onDestroyView() {

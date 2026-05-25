@@ -41,7 +41,7 @@
     <string name="i_have_read_and_i_understand_the_rating_rules">J\'ai lu et je comprends les règles d\'évaluation</string>
     <string name="share_text">N\'hésitez pas à partager votre évaluation sur les réseaux sociaux pour sensibiliser les développeurs au respect des données personnelles.</string>
     <string name="share_android_compatibility">%1$s Compatibilité Android</string>
-    <string name="share_android_compatibility_text">%1$s Compatibilité Android https://github.com/jonathanklee/Sapio #degoogle #sapio</string>
+    <string name="share_compatibility_report">Compatibilité Android pour %1$s (%2$s)</string>
     <string name="compatibility_check_channel_name">Vérifications de compatibilité</string>
     <string name="compatibility_check_channel_description">Notifications sur les applications incompatibles avec votre configuration.</string>
     <string name="compatibility_check_notification_title">App incompatible</string>
