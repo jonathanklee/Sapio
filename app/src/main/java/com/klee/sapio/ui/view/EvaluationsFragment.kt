@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Images.Media
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -325,24 +327,21 @@ const val COMPRESSION_QUALITY = 100
         context: Context,
         widthDp: Int,
         heightDp: Int,
-        scaleFactor: Float = 2f,
+        scaleFactor: Float = 3f,
         composable: @Composable () -> Unit,
     ): Bitmap {
         val displayMetrics = context.resources.displayMetrics
-        val widthPx = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            widthDp.toFloat(),
-            displayMetrics
-        ).toInt()
-        val heightPx = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            heightDp.toFloat(),
-            displayMetrics
-        ).toInt()
+        val scaledDensity = displayMetrics.density * scaleFactor
+        val widthPx = (widthDp * scaledDensity).toInt()
+        val heightPx = (heightDp * scaledDensity).toInt()
 
         val composeView = ComposeView(context).apply {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-            setContent { composable() }
+            setContent {
+                CompositionLocalProvider(LocalDensity provides Density(scaledDensity)) {
+                    composable()
+                }
+            }
             layoutParams = ViewGroup.LayoutParams(widthPx, heightPx)
         }
 
@@ -354,12 +353,8 @@ const val COMPRESSION_QUALITY = 100
         )
         composeView.layout(0, 0, composeView.measuredWidth, composeView.measuredHeight)
 
-        val bitmap = createBitmap(
-            (composeView.width * scaleFactor).toInt(),
-            (composeView.height * scaleFactor).toInt()
-        )
+        val bitmap = createBitmap(widthPx, heightPx)
         val canvas = Canvas(bitmap)
-        canvas.scale(scaleFactor, scaleFactor)
         composeView.draw(canvas)
 
         mBinding.bitmapContainer.removeView(composeView)
@@ -371,7 +366,7 @@ const val COMPRESSION_QUALITY = 100
         val contentValues = ContentValues().apply {
             put(Media.DISPLAY_NAME, "screenshot_${System.currentTimeMillis()}")
             put(Media.DESCRIPTION, getString(R.string.share_android_compatibility, sharedEvaluation.name))
-            put(Media.MIME_TYPE, "image/jpeg")
+            put(Media.MIME_TYPE, "image/png")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(
                     Media.RELATIVE_PATH,
@@ -386,7 +381,7 @@ const val COMPRESSION_QUALITY = 100
 
         try {
             requireContext().contentResolver.openOutputStream(shareImage!!)?.use { outputStream ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESSION_QUALITY, outputStream)
+                bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, outputStream)
             }
         } catch (exception: IOException) {
             Log.e(TAG, "Failed to share matrix", exception)
