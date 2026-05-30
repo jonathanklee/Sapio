@@ -2,55 +2,61 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.view.FeedFragment">
+    android:layout_height="match_parent">
 
     <androidx.emoji2.widget.EmojiTextView
         android:id="@+id/emoji"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="\uD83C\uDF89 \uD83E\uDD73"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/appEvaluatedText"
-        app:layout_constraintEnd_toEndOf="@+id/appEvaluatedText"
-        app:layout_constraintStart_toStartOf="@+id/appEvaluatedText" />
+        android:layout_marginBottom="24dp"
+        android:text="🎉 🥳"
+        android:textSize="52sp"
+        app:layout_constraintBottom_toTopOf="@id/appEvaluatedText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.35" />
 
     <TextView
         android:id="@+id/appEvaluatedText"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:gravity="center"
-        android:layout_margin="20dp"
         android:text="@string/thank_you"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/shareText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/shareEvaluation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="@string/share"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appEvaluatedText" />
+        app:layout_constraintTop_toBottomOf="@id/emoji" />
 
     <TextView
         android:id="@+id/shareText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
+        android:lineSpacingMultiplier="1.4"
         android:text="@string/share_text"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareEvaluation" />
+        app:layout_constraintTop_toBottomOf="@id/appEvaluatedText" />
+
+    <Button
+        android:id="@+id/shareEvaluation"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="28dp"
+        android:text="@string/share"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

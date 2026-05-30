@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="horizontal"
-  tools:context=".ui.view.EvaluationsFragment">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.view.EvaluationsFragment">
 
     <FrameLayout
-        android:id="@+id/bitmap_container"
+        android:id="@+id/bitmapContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -24,354 +24,431 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-      android:backgroundTint="@color/cardview_background_color"
-      android:id="@+id/card"
-      app:cardElevation="1dp"
-      app:cardCornerRadius="30dp"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="32dp"
-      android:layout_marginBottom="16dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
+    <LinearLayout
+        android:id="@+id/card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/shareButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/cardContent"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:targetApi="m">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/imageCard"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardElevation="0dp">
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/applicationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:text="@string/application_name"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/packageName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="1"
+                android:text="@string/package_name"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- microG card -->
         <androidx.cardview.widget.CardView
-          android:id="@+id/imageCard"
-          android:layout_width="60dp"
-          android:layout_height="60dp"
-          app:cardElevation="0dp"
-          android:layout_margin="16dp"
-          android:backgroundTint="@color/cardview_background_color"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toTopOf="@id/applicationName"
-          app:layout_constraintVertical_chainStyle="packed"
-          app:layout_constraintVertical_bias="0.35">
+            android:id="@+id/microgCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="@dimen/card_elevation">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/microg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/bg_label_rounded"
+                    android:backgroundTint="@color/blue_200"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
+                    android:text="@string/microg_label"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/microgUserCell"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:id="@+id/microgSecureBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:layout_marginBottom="8dp"
+                                android:background="@drawable/bg_label_rounded"
+                                android:backgroundTint="@color/purple_200"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/secure_label"
+                                android:textColor="@color/white"
+                                android:textSize="11sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/microgUser"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/microgUserRating"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/microgUserDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="?android:attr/textColorSecondary"
+                                        android:textSize="13sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/microgRootCell"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_label_rounded"
+                                android:backgroundTint="@color/purple_700"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/unsafe_label"
+                                android:textColor="@color/white"
+                                android:textSize="11sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/microgRoot"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/microgRootRating"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/microgRootDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="?android:attr/textColorSecondary"
+                                        android:textSize="13sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <TableLayout
-          android:id="@+id/table"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="16dp"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/packageName"
-          app:layout_constraintBottom_toTopOf="@id/contributeButton">
+        <!-- bareAOSP card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bareAospCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginHorizontal="2dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="@dimen/card_elevation">
 
-            <TableRow
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
-
-                <TextView
-                  android:id="@+id/empty"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:textSize="15sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
-                  android:id="@+id/secure"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:background="@drawable/bg_label_rounded"
-                  android:backgroundTint="@color/purple_200"
-                  android:paddingHorizontal="6dp"
-                  android:paddingVertical="2dp"
-                  android:text="@string/secure_label"
-                  android:textColor="@color/white"
-                  android:textSize="13sp" />
-
-                <TextView
-                  android:id="@+id/unsafe"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:background="@drawable/bg_label_rounded"
-                  android:backgroundTint="@color/purple_700"
-                  android:paddingHorizontal="6dp"
-                  android:paddingVertical="2dp"
-                  android:text="@string/unsafe_label"
-                  android:textColor="@color/white"
-                  android:textSize="13sp" />
-
-            </TableRow>
-
-            <TableRow
-              android:id="@+id/microgRow"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical">
-
-                <TextView
-                  android:id="@+id/microg"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:background="@drawable/bg_label_rounded"
-                  android:backgroundTint="@color/blue_200"
-                  android:paddingHorizontal="6dp"
-                  android:paddingVertical="2dp"
-                  android:text="@string/microg_label"
-                  android:textColor="@color/white"
-                  android:textSize="13sp" />
+                    android:id="@+id/bareAosp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/bg_label_rounded"
+                    android:backgroundTint="@color/blue_700"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
+                    android:text="@string/bare_aosp_label"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
 
                 <LinearLayout
-                  android:id="@+id/microgUserCell"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:gravity="center_vertical"
-                  android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <ImageView
-                      android:id="@+id/microgUser"
-                      android:layout_width="20dp"
-                      android:layout_height="20dp" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/bareAospUserCell"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
 
-                    <TextView
-                      android:id="@+id/microgUserRating"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginStart="4dp"
-                      android:textSize="13sp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:id="@+id/bareAospSecureBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:layout_marginBottom="8dp"
+                                android:background="@drawable/bg_label_rounded"
+                                android:backgroundTint="@color/purple_200"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/secure_label"
+                                android:textColor="@color/white"
+                                android:textSize="11sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/bareAospUser"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/bareAospUserRating"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/bareAospUserDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="?android:attr/textColorSecondary"
+                                        android:textSize="13sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/bareAospRootCell"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_label_rounded"
+                                android:backgroundTint="@color/purple_700"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/unsafe_label"
+                                android:textColor="@color/white"
+                                android:textSize="11sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/bareAospRoot"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/bareAospRootRating"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/bareAospRootDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="?android:attr/textColorSecondary"
+                                        android:textSize="13sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
 
-                <LinearLayout
-                  android:id="@+id/microgRootCell"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:gravity="center_vertical"
-                  android:orientation="horizontal">
+            </LinearLayout>
 
-                    <ImageView
-                      android:id="@+id/microgRoot"
-                      android:layout_width="20dp"
-                      android:layout_height="20dp" />
+        </androidx.cardview.widget.CardView>
 
-                    <TextView
-                      android:id="@+id/microgRootRating"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginStart="4dp"
-                      android:textSize="13sp" />
+    </LinearLayout>
 
-                </LinearLayout>
-
-            </TableRow>
-
-            <TableRow
-              android:id="@+id/microgDateRow"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
-
-                <View
-                  android:layout_width="0dp"
-                  android:layout_height="0dp" />
-
-                <TextView
-                  android:id="@+id/microgUserDate"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="4dp"
-                  android:gravity="center"
-                  android:textColor="?android:attr/textColorSecondary"
-                  android:textSize="11sp" />
-
-                <TextView
-                  android:id="@+id/microgRootDate"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="4dp"
-                  android:gravity="center"
-                  android:textColor="?android:attr/textColorSecondary"
-                  android:textSize="11sp" />
-
-            </TableRow>
-
-            <TableRow
-              android:id="@+id/bareAospRow"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center_vertical">
-
-                <TextView
-                  android:id="@+id/bareAosp"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:background="@drawable/bg_label_rounded"
-                  android:backgroundTint="@color/blue_700"
-                  android:paddingHorizontal="6dp"
-                  android:paddingVertical="2dp"
-                  android:text="@string/bare_aosp_label"
-                  android:textColor="@color/white"
-                  android:textSize="13sp"
-                  app:layout_constraintStart_toStartOf="parent"
-                  app:layout_constraintTop_toBottomOf="@+id/dividerH1" />
-
-                <LinearLayout
-                  android:id="@+id/bareAospUserCell"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:gravity="center_vertical"
-                  android:orientation="horizontal">
-
-                    <ImageView
-                      android:id="@+id/bareAospUser"
-                      android:layout_width="20dp"
-                      android:layout_height="20dp" />
-
-                    <TextView
-                      android:id="@+id/bareAospUserRating"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginStart="4dp"
-                      android:textSize="13sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                  android:id="@+id/bareAospRootCell"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="10dp"
-                  android:gravity="center_vertical"
-                  android:orientation="horizontal">
-
-                    <ImageView
-                      android:id="@+id/bareAospRoot"
-                      android:layout_width="20dp"
-                      android:layout_height="20dp" />
-
-                    <TextView
-                      android:id="@+id/bareAospRootRating"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginStart="4dp"
-                      android:textSize="13sp" />
-
-                </LinearLayout>
-
-            </TableRow>
-
-            <TableRow
-              android:id="@+id/bareAospDateRow"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
-
-                <View
-                  android:layout_width="0dp"
-                  android:layout_height="0dp" />
-
-                <TextView
-                  android:id="@+id/bareAospUserDate"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="4dp"
-                  android:gravity="center"
-                  android:textColor="?android:attr/textColorSecondary"
-                  android:textSize="11sp" />
-
-                <TextView
-                  android:id="@+id/bareAospRootDate"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="4dp"
-                  android:gravity="center"
-                  android:textColor="?android:attr/textColorSecondary"
-                  android:textSize="11sp" />
-
-            </TableRow>
-        </TableLayout>
-
-        <TextView
-          android:id="@+id/packageName"
-          android:gravity="center_horizontal"
-          android:layout_width="200dp"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="2dp"
-          android:layout_marginBottom="8dp"
-          android:maxLines="1"
-          android:ellipsize="end"
-          android:text="@string/package_name"
-          android:textSize="12sp"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/applicationName"
-          app:layout_constraintBottom_toTopOf="@id/table" />
-
-        <TextView
-          android:id="@+id/applicationName"
-          android:textStyle="bold"
-          android:gravity="center_horizontal"
-          android:layout_width="225dp"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:layout_marginStart="16dp"
-          android:layout_marginEnd="16dp"
-          android:text="@string/application_name"
-          android:textSize="20sp"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.507"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/imageCard"
-          app:layout_constraintBottom_toTopOf="@id/packageName" />
-
-        <Button
-          android:id="@+id/contributeButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
-          android:text="@string/contribute_title"
-          app:layout_constraintBottom_toTopOf="@+id/shareButton"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/table" />
-
-        <ImageButton
-          android:id="@+id/shareButton"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          android:layout_marginTop="16dp"
-          android:layout_marginBottom="20dp"
-          android:background="?attr/selectableItemBackgroundBorderless"
-          app:tint="?android:colorPrimary"
-          app:srcCompat="@drawable/ic_share"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/contributeButton" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="28dp"
+        android:text="@string/share"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

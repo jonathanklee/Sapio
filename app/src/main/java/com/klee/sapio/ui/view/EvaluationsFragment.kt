@@ -38,6 +38,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.card.MaterialCardView
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
@@ -130,9 +131,6 @@ const val COMPRESSION_QUALITY = 100
             startTakingScreenshot(appName, packageName)
         }
 
-        mBinding.contributeButton.setOnClickListener {
-            (requireActivity() as MainActivity).navigateToContribute()
-        }
 
         hideCard()
 
@@ -156,12 +154,14 @@ const val COMPRESSION_QUALITY = 100
 
     private fun hideCard() {
         mBinding.card.visibility = View.INVISIBLE
+        mBinding.shareButton.visibility = View.INVISIBLE
         mBinding.progressBar.visibility = View.VISIBLE
     }
 
     private fun showCard() {
         mBinding.progressBar.visibility = View.GONE
         mBinding.card.visibility = View.VISIBLE
+        mBinding.shareButton.visibility = View.VISIBLE
     }
 
     private fun onElementsLoaded(callback: () -> Unit) {
@@ -174,54 +174,60 @@ const val COMPRESSION_QUALITY = 100
     private fun observeEvaluations() {
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
-                renderEvaluation(mBinding.microgUser, mBinding.microgUserRating, state.microgUser)
-                renderEvaluation(mBinding.bareAospUser, mBinding.bareAospUserRating, state.bareAospUser)
-                mBinding.microgUserDate.text = formatDateAgo(state.microgUser?.updatedAt)
-                mBinding.bareAospUserDate.text = formatDateAgo(state.bareAospUser?.updatedAt)
-
                 if (state.isFullyLoaded) {
                     val unsafeEnabled = settings.isUnsafeConfigurationEnabled()
-                    val hasSecureData = state.microgUser != null || state.bareAospUser != null
-                    val showUnsafeColumn = unsafeEnabled && (state.microgRoot != null || state.bareAospRoot != null)
-                    val showSecureHeader = hasSecureData && showUnsafeColumn
 
-                    mBinding.empty.isVisible = showSecureHeader || showUnsafeColumn
-                    mBinding.secure.isVisible = showSecureHeader
-                    mBinding.microgUserCell.isVisible = hasSecureData
-                    mBinding.microgUserDate.isVisible = hasSecureData
-                    mBinding.bareAospUserCell.isVisible = hasSecureData
-                    mBinding.bareAospUserDate.isVisible = hasSecureData
+                    mBinding.microgSecureBadge.isVisible = unsafeEnabled
+                    mBinding.bareAospSecureBadge.isVisible = unsafeEnabled
 
-                    mBinding.unsafe.isVisible = showUnsafeColumn
-                    mBinding.microgRootCell.isVisible = showUnsafeColumn
-                    mBinding.microgRootDate.isVisible = showUnsafeColumn
-                    mBinding.bareAospRootCell.isVisible = showUnsafeColumn
-                    mBinding.bareAospRootDate.isVisible = showUnsafeColumn
+                    val showMicrog = state.microgUser != null || (unsafeEnabled && state.microgRoot != null)
+                    val showBareAosp = state.bareAospUser != null || (unsafeEnabled && state.bareAospRoot != null)
 
-                    if (showUnsafeColumn) {
-                        val extraPadding = resources.getDimensionPixelSize(R.dimen.card_unsafe_extra_padding)
-                        mBinding.cardContent.setPadding(extraPadding, 0, extraPadding, 0)
-                        renderEvaluation(mBinding.microgRoot, mBinding.microgRootRating, state.microgRoot)
-                        renderEvaluation(mBinding.bareAospRoot, mBinding.bareAospRootRating, state.bareAospRoot)
-                        mBinding.microgRootDate.text = formatDateAgo(state.microgRoot?.updatedAt)
-                        mBinding.bareAospRootDate.text = formatDateAgo(state.bareAospRoot?.updatedAt)
-                    }
+                    mBinding.microgCard.isVisible = showMicrog
+                    mBinding.bareAospCard.isVisible = showBareAosp
 
-                    mBinding.microgUserDate.text = formatDateAgo(state.microgUser?.updatedAt)
-                    mBinding.bareAospUserDate.text = formatDateAgo(state.bareAospUser?.updatedAt)
+                    val showMicrogUser = state.microgUser != null
+                    val showMicrogRoot = unsafeEnabled && state.microgRoot != null
+                    val showBareAospUser = state.bareAospUser != null
+                    val showBareAospRoot = unsafeEnabled && state.bareAospRoot != null
 
-                    val showBothColumns = hasSecureData && showUnsafeColumn
-                    val nominalWidth = resources.getDimensionPixelSize(R.dimen.card_nominal_min_width)
-                    mBinding.cardContent.layoutParams = mBinding.cardContent.layoutParams.also {
-                        it.width = if (showBothColumns) ViewGroup.LayoutParams.WRAP_CONTENT else nominalWidth
-                    }
+                    mBinding.microgUserCell.isVisible = showMicrogUser
+                    mBinding.bareAospUserCell.isVisible = showBareAospUser
+                    mBinding.microgRootCell.isVisible = showMicrogRoot
+                    mBinding.bareAospRootCell.isVisible = showBareAospRoot
 
-                    val microgHasData = state.microgUser != null || (showUnsafeColumn && state.microgRoot != null)
-                    val bareAospHasData = state.bareAospUser != null || (showUnsafeColumn && state.bareAospRoot != null)
-                    mBinding.microgRow.isVisible = microgHasData
-                    mBinding.microgDateRow.isVisible = microgHasData
-                    mBinding.bareAospRow.isVisible = bareAospHasData
-                    mBinding.bareAospDateRow.isVisible = bareAospHasData
+                    adjustChipMargins(mBinding.microgUserCell, mBinding.microgRootCell, showMicrogUser, showMicrogRoot)
+                    adjustChipMargins(mBinding.bareAospUserCell, mBinding.bareAospRootCell, showBareAospUser, showBareAospRoot)
+
+                    renderChip(
+                        mBinding.microgUserCell,
+                        mBinding.microgUser,
+                        mBinding.microgUserRating,
+                        mBinding.microgUserDate,
+                        state.microgUser
+                    )
+                    renderChip(
+                        mBinding.bareAospUserCell,
+                        mBinding.bareAospUser,
+                        mBinding.bareAospUserRating,
+                        mBinding.bareAospUserDate,
+                        state.bareAospUser
+                    )
+                    renderChip(
+                        mBinding.microgRootCell,
+                        mBinding.microgRoot,
+                        mBinding.microgRootRating,
+                        mBinding.microgRootDate,
+                        state.microgRoot
+                    )
+                    renderChip(
+                        mBinding.bareAospRootCell,
+                        mBinding.bareAospRoot,
+                        mBinding.bareAospRootRating,
+                        mBinding.bareAospRootDate,
+                        state.bareAospRoot
+                    )
+
                     mBinding.shareButton.isEnabled = state.microgUser != null || state.bareAospUser != null
                 }
 
@@ -262,21 +268,42 @@ const val COMPRESSION_QUALITY = 100
         }
     }
 
-    private fun renderEvaluation(
-        imageView: ImageView,
+    private fun adjustChipMargins(
+        userCell: MaterialCardView,
+        rootCell: MaterialCardView,
+        showUser: Boolean,
+        showRoot: Boolean
+    ) {
+        val gap = resources.getDimensionPixelSize(R.dimen.chip_gap)
+        val bothVisible = showUser && showRoot
+
+        (userCell.layoutParams as? android.widget.LinearLayout.LayoutParams)?.let { params ->
+            params.marginEnd = if (bothVisible) gap else 0
+            userCell.layoutParams = params
+        }
+        (rootCell.layoutParams as? android.widget.LinearLayout.LayoutParams)?.let { params ->
+            params.marginStart = if (bothVisible) gap else 0
+            rootCell.layoutParams = params
+        }
+    }
+
+    private fun renderChip(
+        chipView: MaterialCardView,
+        iconView: ImageView,
         ratingTextView: TextView,
+        dateTextView: TextView,
         evaluation: com.klee.sapio.domain.model.Evaluation?
     ) {
         if (evaluation != null) {
-            imageView.setImageResource(Rating.create(evaluation.rating).drawable)
-            imageView.visibility = View.VISIBLE
+            iconView.setImageResource(Rating.create(evaluation.rating).drawable)
+            iconView.isVisible = true
             ratingTextView.text = getRatingShortLabel(evaluation.rating)
+            dateTextView.text = formatDateAgo(evaluation.updatedAt)
         } else {
-            imageView.setImageDrawable(null)
-            imageView.visibility = View.INVISIBLE
-            ratingTextView.text = ""
+            iconView.isVisible = false
+            ratingTextView.text = "–"
+            dateTextView.text = ""
         }
-
     }
 
     private fun getRatingShortLabel(rating: Int): String {

@@ -10,6 +10,7 @@ fun relativeDate(date: Date?, resources: Resources): String {
     }
 
     val diffMs = System.currentTimeMillis() - date.time
+    val diffMinutes = (diffMs / (1000 * 60)).toInt()
     val diffHours = (diffMs / (1000 * 60 * 60)).toInt()
     val diffDays = (diffMs / (1000 * 60 * 60 * 24)).toInt()
     val diffMonths = diffDays / 30
@@ -19,6 +20,7 @@ fun relativeDate(date: Date?, resources: Resources): String {
         diffYears >= 1 -> resources.getQuantityString(R.plurals.date_years_ago, diffYears, diffYears)
         diffMonths >= 1 -> resources.getQuantityString(R.plurals.date_months_ago, diffMonths, diffMonths)
         diffDays >= 1 -> resources.getQuantityString(R.plurals.date_days_ago, diffDays, diffDays)
-        else -> resources.getQuantityString(R.plurals.date_hours_ago, diffHours, diffHours)
+        diffHours >= 1 -> resources.getQuantityString(R.plurals.date_hours_ago, diffHours, diffHours)
+        else -> resources.getQuantityString(R.plurals.date_minutes_ago, diffMinutes, diffMinutes)
     }
 }

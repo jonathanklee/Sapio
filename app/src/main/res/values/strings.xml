@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">Sapio</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="warning_title">Before you contribute</string>
     <string name="warning_desc"><![CDATA[You are tasked with evaluating the behavior of an Android application on a deGoogled bare Android Open Source Project (AOSP) device.<br><br>Therefore, your device must not have the official Google Play Services installed<br><br>Make sure to understand properly the <a href="%1$s">rating rules</a> before contributing.]]></string>
     <string name="proceed">Proceed</string>
     <string name="select_button">Select</string>
@@ -13,6 +14,8 @@
     <string name="bare_aosp_label" translatable="false">bareAOSP</string>
     <string name="secure_label" translatable="false">secure</string>
     <string name="unsafe_label" translatable="false">unsafe</string>
+    <string name="user_label">User</string>
+    <string name="root_label" translatable="false">Root</string>
     <string name="works_perfectly">\ It works perfectly. All features are working.</string>
     <string name="works_partially">\ It works partially. Some features do not work.</string>
     <string name="dont_work">\ It does not work at all or crashes.</string>
@@ -36,11 +39,11 @@
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
     <string name="good">Works perfectly</string>
-    <string name="good_short">OK</string>
+    <string name="good_short">Perfect</string>
     <string name="average">One or more feature don\'t work</string>
     <string name="average_short">Partial</string>
     <string name="bad">Does not work at all</string>
-    <string name="bad_short" translatable="false">KO</string>
+    <string name="bad_short">Bad</string>
     <string name="unknown">Unknown</string>
     <string name="share">Share</string>
     <string name="share_text">Feel free to share your evaluation on social media to raise awareness among app developers about respecting users\' personal data.</string>
@@ -61,6 +64,10 @@
     <string name="general">General</string>
     <string name="github_star">Star on GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_minutes_ago">
+        <item quantity="one">%d minute ago</item>
+        <item quantity="other">%d minutes ago</item>
+    </plurals>
     <plurals name="date_hours_ago">
         <item quantity="one">%d hour ago</item>
         <item quantity="other">%d hours ago</item>

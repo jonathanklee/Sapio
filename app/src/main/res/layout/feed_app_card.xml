@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="30dp"
-        app:cardElevation="1dp"
+        app:cardElevation="@dimen/card_elevation"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
@@ -30,7 +30,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:backgroundTint="@color/cardview_background_color"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardElevation="0dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp">

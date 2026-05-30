@@ -1,4 +1,5 @@
 <resources>
+    <string name="warning_title">Avant de contribuer</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
     <string name="warning_desc"><![CDATA[Vous êtes sur le point d\'évaluer le fonctionnement d\'une application Android sur un appareil AOSP déGooglisé.<br><br>Par conséquent, votre appareil ne doit pas avoir les Google Play Services d\'installés.<br><br>Soyez certains de bien comprendre les <a href="%1$s">règles d\'évaluation</a> avant de contribuer.]]></string>
@@ -14,6 +15,7 @@
     <string name="upload_error">Erreur lors de l\'évaluation</string>
     <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la compatibilité d\'une application Android sur un appareil sans Google Play Services (i.e. les téléphones fonctionnant sur un Android Open Source Project (AOSP) déGooglisé, associés ou non à microG).\n\nSapio peut être utilisé comme un outil de lobbying en partageant la compatibilité sur les réseaux sociaux pour sensibiliser les développeurs d\'applications aux données personnelles des utilisateurs.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
+    <string name="user_label">Utilisateur</string>
     <string name="environment_detected">Environnement détécté</string>
     <string name="look_for_an_application">Rechercher une application</string>
     <string name="search_hint">Rechercher des applications ...</string>
@@ -32,7 +34,8 @@
     <string name="validate_button">Valider</string>
     <string name="thank_you">Merci d\'avoir évalué l\'application</string>
     <string name="good">Fonctionne parfaitement</string>
-    <string name="good_short">OK</string>
+    <string name="good_short">Parfait</string>
+    <string name="bad_short">Mauvais</string>
     <string name="average">Fonctionne partiellement</string>
     <string name="average_short">Partiel</string>
     <string name="bad">Ne fonctionne pas du tout</string>
@@ -55,6 +58,10 @@
     <string name="show_unsafe_environments">Montrer les environnements non-securisés</string>
     <string name="github_star">Étoiler sur GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_minutes_ago">
+        <item quantity="one">Il y a %d minute</item>
+        <item quantity="other">Il y a %d minutes</item>
+    </plurals>
     <plurals name="date_hours_ago">
         <item quantity="one">Il y a %d heure</item>
         <item quantity="other">Il y a %d heures</item>

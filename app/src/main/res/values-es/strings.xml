@@ -1,4 +1,5 @@
 <resources>
+    <string name="warning_title">Antes de contribuir</string>
     <string name="next">Siguiente</string>
     <string name="previous">Anterior</string>
     <string name="warning_desc"><![CDATA[Se te pide evaluar el comportamiento de una aplicación Android en un dispositivo AOSP desgoogleado (Android Open Source Project).<br><br>Por tanto, tu dispositivo no debe tener instalados los Google Play Services oficiales.<br><br>Asegúrate de entender correctamente las <a href="%1$s">reglas de evaluación</a> antes de contribuir.]]></string>
@@ -14,6 +15,7 @@
     <string name="upload_error">Error al evaluar la app</string>
     <string name="about_text">Sapio es el anagrama de Open Source API.\n\nSapio proporciona la compatibilidad de una aplicación Android en un dispositivo sin Google Play Services (es decir, dispositivos Android Open Source Project (AOSP) desgoogleados, con o sin microG).\n\nSapio puede servir como herramienta de presión compartiendo la compatibilidad en redes sociales para concienciar a los desarrolladores de apps sobre el respeto de los datos personales de los usuarios.\n\nLas evaluaciones en Sapio son dadas a la comunidad por la comunidad.</string>
     <string name="credits">Iconos de cerebro creados por Freepik - Flaticon</string>
+    <string name="user_label">Usuario</string>
     <string name="environment_detected">Entorno detectado</string>
     <string name="look_for_an_application">Buscar una aplicación</string>
     <string name="search_hint">Buscar aplicaciones…</string>
@@ -31,7 +33,8 @@
     <string name="validate_button">Validar</string>
     <string name="thank_you">Gracias por evaluar la aplicación</string>
     <string name="good">Funciona perfectamente</string>
-    <string name="good_short">OK</string>
+    <string name="good_short">Perfecto</string>
+    <string name="bad_short">Malo</string>
     <string name="average">Una o más funciones no funcionan</string>
     <string name="average_short">Parcial</string>
     <string name="bad">No funciona en absoluto</string>
@@ -55,6 +58,10 @@
     <string name="general">General</string>
     <string name="github_star">Dar estrella en GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_minutes_ago">
+        <item quantity="one">Hace %d minuto</item>
+        <item quantity="other">Hace %d minutos</item>
+    </plurals>
     <plurals name="date_hours_ago">
         <item quantity="one">Hace %d hora</item>
         <item quantity="other">Hace %d horas</item>

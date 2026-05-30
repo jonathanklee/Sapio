@@ -2,4 +2,13 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_unsafe_extra_padding">16dp</dimen>
     <dimen name="card_nominal_min_width">280dp</dimen>
+
+    <dimen name="chip_gap">4dp</dimen>
+    <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_margin_h">8dp</dimen>
+    <dimen name="card_margin_v">6dp</dimen>
+    <dimen name="card_inner_padding">12dp</dimen>
+    <dimen name="app_icon_size">56dp</dimen>
+    <dimen name="badge_corner_radius">6dp</dimen>
 </resources>

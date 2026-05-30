@@ -1,4 +1,5 @@
 <resources>
+    <string name="warning_title">Bevor Sie beitragen</string>
     <string name="next">Weiter</string>
     <string name="previous">Zurück</string>
     <string name="warning_desc"><![CDATA[Sie sollen das Verhalten einer Android-Anwendung auf einem de-gegoogelten AOSP-Gerät (Android Open Source Project) bewerten.<br><br>Daher darf auf Ihrem Gerät das offizielle Google Play Services nicht installiert sein.<br><br>Stellen Sie sicher, die <a href="%1$s">Bewertungsregeln</a> richtig zu verstehen, bevor Sie beitragen.]]></string>
@@ -14,6 +15,7 @@
     <string name="upload_error">Fehler bei der App-Bewertung</string>
     <string name="about_text">Sapio ist das Anagramm von Open Source API.\n\nSapio bietet die Kompatibilität einer Android-Anwendung auf einem Gerät ohne Google Play Services (d.h. de-gegoogelte Android Open Source Project (AOSP)-Geräte, mit oder ohne microG).\n\nSapio kann als Lobbying-Tool dienen, indem Kompatibilitätsinformationen in sozialen Medien geteilt werden, um App-Entwickler für den Schutz persönlicher Daten zu sensibilisieren.\n\nBewertungen in Sapio werden von der Community für die Community gegeben.</string>
     <string name="credits">Gehirn-Icons erstellt von Freepik - Flaticon</string>
+    <string name="user_label">Nutzer</string>
     <string name="environment_detected">Umgebung erkannt</string>
     <string name="look_for_an_application">Eine Anwendung suchen</string>
     <string name="search_hint">Anwendungen suchen…</string>
@@ -31,7 +33,8 @@
     <string name="validate_button">Bestätigen</string>
     <string name="thank_you">Vielen Dank für die Bewertung der Anwendung</string>
     <string name="good">Funktioniert perfekt</string>
-    <string name="good_short">OK</string>
+    <string name="good_short">Perfekt</string>
+    <string name="bad_short">Schlecht</string>
     <string name="average">Eine oder mehrere Funktionen funktionieren nicht</string>
     <string name="average_short">Teilweise</string>
     <string name="bad">Funktioniert überhaupt nicht</string>
@@ -55,6 +58,10 @@
     <string name="general">Allgemein</string>
     <string name="github_star">Auf GitHub bewerten</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_minutes_ago">
+        <item quantity="one">Vor %d Minute</item>
+        <item quantity="other">Vor %d Minuten</item>
+    </plurals>
     <plurals name="date_hours_ago">
         <item quantity="one">Vor %d Stunde</item>
         <item quantity="other">Vor %d Stunden</item>
