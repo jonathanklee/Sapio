@@ -18,8 +18,8 @@ import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.ui.model.Label
 import com.klee.sapio.ui.model.Rating
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.klee.sapio.ui.model.relativeDate
+import java.util.Date
 
 class FeedAppAdapter(
     private val mContext: Context,
@@ -28,8 +28,6 @@ class FeedAppAdapter(
 ) : ListAdapter<Evaluation, FeedAppAdapter.ViewHolder>(DiffCallback) {
 
     companion object {
-        const val DATE_FORMAT = "dd/MM/yyyy"
-
         private val DiffCallback = object : DiffUtil.ItemCallback<Evaluation>() {
             override fun areItemsTheSame(oldItem: Evaluation, newItem: Evaluation): Boolean {
                 return oldItem.packageName == newItem.packageName &&
@@ -56,12 +54,7 @@ class FeedAppAdapter(
         element.appName.text = app.name
         element.packageName.text = app.packageName
 
-        val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-        element.updatedDate.text =
-            mContext.getString(
-                R.string.updated_on,
-                app.updatedAt?.let { dateFormat.format(it) }
-            )
+        element.updatedDate.text = formatDateAgo(app.updatedAt)
 
         element.emoji.setImageResource(Rating.create(app.rating).drawable)
 
@@ -100,4 +93,6 @@ class FeedAppAdapter(
         super.onViewRecycled(holder)
         Glide.with(mContext.applicationContext).clear(holder.binding.image)
     }
+
+    private fun formatDateAgo(date: Date?): String = relativeDate(date, mContext.resources)
 }

@@ -16,6 +16,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -40,6 +42,7 @@ import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.ui.model.Rating
+import com.klee.sapio.ui.model.relativeDate
 import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +52,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
-import java.text.DateFormat
+import java.util.Date
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -127,8 +130,8 @@ const val COMPRESSION_QUALITY = 100
             startTakingScreenshot(appName, packageName)
         }
 
-        mBinding.infoIcon.setOnClickListener {
-            (requireActivity() as MainActivity).navigateToAbout()
+        mBinding.contributeButton.setOnClickListener {
+            (requireActivity() as MainActivity).navigateToContribute()
         }
 
         hideCard()
@@ -148,7 +151,6 @@ const val COMPRESSION_QUALITY = 100
             showCard()
         }
 
-        handleUnsafeConfigurationSetting()
         observeEvaluations()
     }
 
@@ -169,39 +171,57 @@ const val COMPRESSION_QUALITY = 100
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun handleUnsafeConfigurationSetting() {
-        val shouldShow = settings.isUnsafeConfigurationEnabled()
-        with(mBinding) {
-            secure.isVisible = shouldShow
-            microgRoot.isVisible = shouldShow
-            bareAospRoot.isVisible = shouldShow
-            empty.isVisible = shouldShow
-            unsafe.isVisible = shouldShow
-
-            if (shouldShow) {
-                val extraPadding = resources.getDimensionPixelSize(R.dimen.card_unsafe_extra_padding)
-                cardContent.setPadding(extraPadding, 0, extraPadding, 0)
-            }
-        }
-    }
-
     private fun observeEvaluations() {
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
-                renderEvaluation(mBinding.microgUser, state.microgUser)
-                renderEvaluation(mBinding.bareAospUser, state.bareAospUser)
-
-                if (settings.isUnsafeConfigurationEnabled()) {
-                    renderEvaluation(mBinding.bareAospRoot, state.bareAospRoot)
-                    renderEvaluation(mBinding.microgRoot, state.microgRoot)
-                }
+                renderEvaluation(mBinding.microgUser, mBinding.microgUserRating, state.microgUser)
+                renderEvaluation(mBinding.bareAospUser, mBinding.bareAospUserRating, state.bareAospUser)
+                mBinding.microgUserDate.text = formatDateAgo(state.microgUser?.updatedAt)
+                mBinding.bareAospUserDate.text = formatDateAgo(state.bareAospUser?.updatedAt)
 
                 if (state.isFullyLoaded) {
                     val unsafeEnabled = settings.isUnsafeConfigurationEnabled()
-                    val microgHasData = state.microgUser != null || (unsafeEnabled && state.microgRoot != null)
-                    val bareAospHasData = state.bareAospUser != null || (unsafeEnabled && state.bareAospRoot != null)
+                    val hasSecureData = state.microgUser != null || state.bareAospUser != null
+                    val showUnsafeColumn = unsafeEnabled && (state.microgRoot != null || state.bareAospRoot != null)
+                    val showSecureHeader = hasSecureData && showUnsafeColumn
+
+                    mBinding.empty.isVisible = showSecureHeader || showUnsafeColumn
+                    mBinding.secure.isVisible = showSecureHeader
+                    mBinding.microgUserCell.isVisible = hasSecureData
+                    mBinding.microgUserDate.isVisible = hasSecureData
+                    mBinding.bareAospUserCell.isVisible = hasSecureData
+                    mBinding.bareAospUserDate.isVisible = hasSecureData
+
+                    mBinding.unsafe.isVisible = showUnsafeColumn
+                    mBinding.microgRootCell.isVisible = showUnsafeColumn
+                    mBinding.microgRootDate.isVisible = showUnsafeColumn
+                    mBinding.bareAospRootCell.isVisible = showUnsafeColumn
+                    mBinding.bareAospRootDate.isVisible = showUnsafeColumn
+
+                    if (showUnsafeColumn) {
+                        val extraPadding = resources.getDimensionPixelSize(R.dimen.card_unsafe_extra_padding)
+                        mBinding.cardContent.setPadding(extraPadding, 0, extraPadding, 0)
+                        renderEvaluation(mBinding.microgRoot, mBinding.microgRootRating, state.microgRoot)
+                        renderEvaluation(mBinding.bareAospRoot, mBinding.bareAospRootRating, state.bareAospRoot)
+                        mBinding.microgRootDate.text = formatDateAgo(state.microgRoot?.updatedAt)
+                        mBinding.bareAospRootDate.text = formatDateAgo(state.bareAospRoot?.updatedAt)
+                    }
+
+                    mBinding.microgUserDate.text = formatDateAgo(state.microgUser?.updatedAt)
+                    mBinding.bareAospUserDate.text = formatDateAgo(state.bareAospUser?.updatedAt)
+
+                    val showBothColumns = hasSecureData && showUnsafeColumn
+                    val nominalWidth = resources.getDimensionPixelSize(R.dimen.card_nominal_min_width)
+                    mBinding.cardContent.layoutParams = mBinding.cardContent.layoutParams.also {
+                        it.width = if (showBothColumns) ViewGroup.LayoutParams.WRAP_CONTENT else nominalWidth
+                    }
+
+                    val microgHasData = state.microgUser != null || (showUnsafeColumn && state.microgRoot != null)
+                    val bareAospHasData = state.bareAospUser != null || (showUnsafeColumn && state.bareAospRoot != null)
                     mBinding.microgRow.isVisible = microgHasData
+                    mBinding.microgDateRow.isVisible = microgHasData
                     mBinding.bareAospRow.isVisible = bareAospHasData
+                    mBinding.bareAospDateRow.isVisible = bareAospHasData
                     mBinding.shareButton.isEnabled = state.microgUser != null || state.bareAospUser != null
                 }
 
@@ -243,34 +263,32 @@ const val COMPRESSION_QUALITY = 100
     }
 
     private fun renderEvaluation(
-        imageView: android.widget.ImageView,
+        imageView: ImageView,
+        ratingTextView: TextView,
         evaluation: com.klee.sapio.domain.model.Evaluation?
     ) {
         if (evaluation != null) {
             imageView.setImageResource(Rating.create(evaluation.rating).drawable)
             imageView.visibility = View.VISIBLE
+            ratingTextView.text = getRatingShortLabel(evaluation.rating)
         } else {
             imageView.setImageDrawable(null)
             imageView.visibility = View.INVISIBLE
+            ratingTextView.text = ""
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            imageView.tooltipText = evaluation?.let {
-                computeTooltip(it)
-            }
+    }
+
+    private fun getRatingShortLabel(rating: Int): String {
+        return when (rating) {
+            Rating.GOOD -> getString(R.string.good_short)
+            Rating.AVERAGE -> getString(R.string.average_short)
+            Rating.BAD -> getString(R.string.bad_short)
+            else -> ""
         }
     }
 
-    private fun computeTooltip(evaluation: com.klee.sapio.domain.model.Evaluation): String {
-        val ratingText = when (evaluation.rating) {
-            Rating.GOOD -> getString(R.string.good)
-            Rating.AVERAGE -> getString(R.string.average)
-            Rating.BAD -> getString(R.string.bad)
-            else -> getString(R.string.unknown)
-        }
-        val date = evaluation.updatedAt?.let { DateFormat.getDateInstance().format(it) }
-        return if (date == null) ratingText else "$date - $ratingText"
-    }
+    private fun formatDateAgo(date: Date?): String = relativeDate(date, resources)
 
     private fun startTakingScreenshot(appName: String, packageName: String) {
         viewLifecycleOwner.lifecycleScope.launch {

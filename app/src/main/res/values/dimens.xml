@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_unsafe_extra_padding">16dp</dimen>
+    <dimen name="card_nominal_min_width">280dp</dimen>
 </resources>

@@ -31,7 +31,9 @@
     <string name="validate_button">Validar</string>
     <string name="thank_you">Gracias por evaluar la aplicación</string>
     <string name="good">Funciona perfectamente</string>
+    <string name="good_short">OK</string>
     <string name="average">Una o más funciones no funcionan</string>
+    <string name="average_short">Parcial</string>
     <string name="bad">No funciona en absoluto</string>
     <string name="unknown">Desconocido</string>
     <string name="share">Compartir</string>
@@ -53,4 +55,20 @@
     <string name="general">General</string>
     <string name="github_star">Dar estrella en GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_hours_ago">
+        <item quantity="one">Hace %d hora</item>
+        <item quantity="other">Hace %d horas</item>
+    </plurals>
+    <plurals name="date_days_ago">
+        <item quantity="one">Hace %d día</item>
+        <item quantity="other">Hace %d días</item>
+    </plurals>
+    <plurals name="date_months_ago">
+        <item quantity="one">Hace %d mes</item>
+        <item quantity="other">Hace %d meses</item>
+    </plurals>
+    <plurals name="date_years_ago">
+        <item quantity="one">Hace %d año</item>
+        <item quantity="other">Hace %d años</item>
+    </plurals>
 </resources>

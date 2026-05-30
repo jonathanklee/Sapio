@@ -36,8 +36,11 @@
     <string name="validate_button">Validate</string>
     <string name="thank_you">Thank you for evaluating the application</string>
     <string name="good">Works perfectly</string>
+    <string name="good_short">OK</string>
     <string name="average">One or more feature don\'t work</string>
+    <string name="average_short">Partial</string>
     <string name="bad">Does not work at all</string>
+    <string name="bad_short" translatable="false">KO</string>
     <string name="unknown">Unknown</string>
     <string name="share">Share</string>
     <string name="share_text">Feel free to share your evaluation on social media to raise awareness among app developers about respecting users\' personal data.</string>
@@ -58,4 +61,20 @@
     <string name="general">General</string>
     <string name="github_star">Star on GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_hours_ago">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+    <plurals name="date_days_ago">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+    <plurals name="date_months_ago">
+        <item quantity="one">%d month ago</item>
+        <item quantity="other">%d months ago</item>
+    </plurals>
+    <plurals name="date_years_ago">
+        <item quantity="one">%d year ago</item>
+        <item quantity="other">%d years ago</item>
+    </plurals>
 </resources>
