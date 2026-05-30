@@ -79,7 +79,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun renderState(state: SearchUiState) {
-        mSearchAppAdapter.submitList(state.items)
+        mSearchAppAdapter.submitList(state.items) {
+            mBinding.recyclerView.scrollToPosition(0)
+        }
         showResults(state.query.isNotEmpty() && state.items.isNotEmpty())
     }
 
