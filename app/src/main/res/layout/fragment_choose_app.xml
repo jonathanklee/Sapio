@@ -48,27 +48,71 @@
         app:layout_constraintTop_toBottomOf="@id/appName"
         app:layout_constraintVertical_bias="0.0">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_add"
-                app:tint="?attr/colorPrimary" />
+            <!-- Default state: no app selected -->
+            <LinearLayout
+                android:id="@+id/defaultContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="@string/select_button"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_add"
+                    app:tint="?attr/colorPrimary" />
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/select_button"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <!-- Selected state: app chosen -->
+            <LinearLayout
+                android:id="@+id/selectedContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardElevation="0dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/selectedAppIcon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/selectedAppName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

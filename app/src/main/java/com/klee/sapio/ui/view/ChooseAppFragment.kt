@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -44,8 +45,8 @@ class ChooseAppFragment : Fragment() {
         val dialog = ChooseAppDialog(
             uiState = viewModel.uiState,
             onAppSelected = { chosenApp ->
-                mBinding.appName.text = chosenApp.name
                 mApp = chosenApp
+                showSelectedApp(chosenApp)
                 mBinding.nextButton.isEnabled = true
                 mBinding.chooseAppButton.isEnabled = true
             },
@@ -54,6 +55,19 @@ class ChooseAppFragment : Fragment() {
             }
         )
         dialog.show(parentFragmentManager, "")
+    }
+
+    private fun showSelectedApp(app: InstalledApplication) {
+        mBinding.defaultContent.isVisible = false
+        mBinding.selectedContent.isVisible = true
+        mBinding.selectedAppName.text = app.name
+        mBinding.appName.text = app.packageName
+        try {
+            val icon = requireContext().packageManager.getApplicationIcon(app.packageName)
+            mBinding.selectedAppIcon.setImageDrawable(icon)
+        } catch (e: Exception) {
+            mBinding.selectedAppIcon.setImageResource(android.R.drawable.sym_def_app_icon)
+        }
     }
 
     private fun onNextButtonClicked() {
