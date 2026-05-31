@@ -4,9 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.klee.sapio.R
@@ -35,6 +37,19 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         }
 
         setupPreferenceClickListeners()
+        setupThemePreference()
+    }
+
+    private fun setupThemePreference() {
+        findPreference<ListPreference>("theme_mode")?.setOnPreferenceChangeListener { _, newValue ->
+            val mode = when (newValue as String) {
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            AppCompatDelegate.setDefaultNightMode(mode)
+            true
+        }
     }
 
     private fun setupPreferenceClickListeners() {

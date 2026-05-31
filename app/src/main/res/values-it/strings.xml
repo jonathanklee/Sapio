@@ -56,6 +56,10 @@
     <string name="show_unsafe">Ambienti</string>
     <string name="show_unsafe_environments">Mostra ambienti rischiosi</string>
     <string name="general">Generale</string>
+    <string name="theme">Tema</string>
+    <string name="theme_light">Chiaro</string>
+    <string name="theme_dark">Scuro</string>
+    <string name="theme_system">Predefinito di sistema</string>
     <string name="github_star">Metti una stella su GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
     <plurals name="date_minutes_ago">

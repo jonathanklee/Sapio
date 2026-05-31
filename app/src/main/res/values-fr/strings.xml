@@ -55,6 +55,10 @@
     <string name="support_privacy_focused_apps">Des applications Android qui vous respectent !</string>
     <string name="show_unsafe">Environnements</string>
     <string name="general">Général</string>
+    <string name="theme">Thème</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_system">Système par défaut</string>
     <string name="show_unsafe_environments">Montrer les environnements non-securisés</string>
     <string name="github_star">Étoiler sur GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
