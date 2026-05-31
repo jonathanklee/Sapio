@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +20,6 @@ import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.ui.state.SearchUiState
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -31,9 +28,6 @@ class SearchFragment : Fragment() {
     private lateinit var mBinding: FragmentSearchBinding
     private lateinit var mSearchAppAdapter: SearchAppAdapter
     private val mViewModel by viewModels<SearchViewModel>()
-    private var searchJob: Job? = null
-
-    private lateinit var mHandler: Handler
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,8 +37,6 @@ class SearchFragment : Fragment() {
         mBinding = FragmentSearchBinding.inflate(inflater, container, false)
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
         mBinding.recyclerView.visibility = View.INVISIBLE
-
-        mHandler = Handler(Looper.getMainLooper())
 
         mSearchAppAdapter = SearchAppAdapter(requireContext()) { packageName, appName ->
             (requireActivity() as MainActivity).navigateToEvaluations(packageName, appName)
@@ -64,10 +56,7 @@ class SearchFragment : Fragment() {
 
     private fun onTextChanged(editable: Editable?) {
         val text = editable?.trim().toString()
-        searchJob?.cancel()
-        searchJob = viewLifecycleOwner.lifecycleScope.launch {
-            mViewModel.searchApplication(text, this@SearchFragment::onNetworkError)
-        }
+        mViewModel.searchApplication(text, this@SearchFragment::onNetworkError)
     }
 
     private fun collectSearch() {
