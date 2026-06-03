@@ -1,0 +1,85 @@
+<resources>
+    <string name="next">Volgende</string>
+    <string name="previous">Vorige</string>
+    <string name="warning_title">Voordat u bijdraagt</string>
+    <string name="warning_desc"><![CDATA[U hebt de taak om het gedrag van een Android-applicatie op een ge-de-Googled kaal Android Open Source Project (AOSP)-apparaat te beoordelen.<br><br>Daarom mag op uw apparaat de officiële Google Play Services niet geïnstalleerd zijn.<br><br>Zorg ervoor dat u de <a href="%1$s">beoordelingsregels</a> goed begrijpt voordat u bijdraagt.]]></string>
+    <string name="proceed">Doorgaan</string>
+    <string name="select_button">Selecteren</string>
+    <string name="select_application_text">Selecteer de te beoordelen applicatie</string>
+    <string name="select_application_error">De app heeft geen afhankelijkheden van Google Play Services</string>
+    <string name="note_application_text">U kunt de applicatie nu beoordelen</string>
+    <string name="select_evaluation_error">Selecteer een beoordeling</string>
+    <string name="user_label">Gebruiker</string>
+    <string name="works_perfectly">\ Het werkt perfect. Alle functies werken.</string>
+    <string name="works_partially">\ Het werkt gedeeltelijk. Sommige functies werken niet.</string>
+    <string name="dont_work">\ Het werkt helemaal niet of crasht.</string>
+    <string name="upload_error">Fout bij het beoordelen van de app</string>
+    <string name="about_text">Sapio is het anagram van Open Source API.\n\nSapio biedt de compatibiliteit van een Android-applicatie die draait op een apparaat zonder Google Play Services (d.w.z. ge-de-Googelde kale Android Open Source Project (AOSP)-apparaten, al dan niet gekoppeld aan microG).\n\nSapio kan dienen als lobbyinstrument door compatibiliteit op sociale media te delen om app-ontwikkelaars bewust te maken van het respecteren van de persoonlijke gegevens van gebruikers.\n\nBeoordelingen in Sapio worden door de gemeenschap aan de gemeenschap gegeven.</string>
+    <string name="credits">Hersenpictogrammen gemaakt door Freepik - Flaticon</string>
+    <string name="environment_detected">Omgeving gedetecteerd</string>
+    <string name="look_for_an_application">Een applicatie zoeken</string>
+    <string name="search_hint">Applicaties zoeken…</string>
+    <string name="updated_on">Bijgewerkt op %1$s</string>
+    <string name="android_compatibility_matrix">Android-compatibiliteit</string>
+    <string name="android_compatibility_subtitle">zonder Google Play Services</string>
+    <string name="application_name">Applicatienaam</string>
+    <string name="package_name">Pakketnaam</string>
+    <string name="feed_title">Feed</string>
+    <string name="search_title">Zoeken</string>
+    <string name="contribute_title">Bijdragen</string>
+    <string name="options_title">Opties</string>
+    <string name="device_title">Apparaat</string>
+    <string name="about">Over</string>
+    <string name="validate_button">Bevestigen</string>
+    <string name="thank_you">Bedankt voor het beoordelen van de applicatie</string>
+    <string name="good">Werkt perfect</string>
+    <string name="good_short">Perfect</string>
+    <string name="average">Een of meer functies werken niet</string>
+    <string name="average_short">Gedeeltelijk</string>
+    <string name="bad">Werkt helemaal niet</string>
+    <string name="bad_short">Slecht</string>
+    <string name="unknown">Onbekend</string>
+    <string name="share">Delen</string>
+    <string name="share_text">Deel gerust uw beoordeling op sociale media om app-ontwikkelaars bewust te maken van het respecteren van de persoonlijke gegevens van gebruikers.</string>
+    <string name="share_android_compatibility">Android-compatibiliteit van %1$s</string>
+    <string name="share_compatibility_report">Android-compatibiliteit voor %1$s (%2$s)</string>
+    <string name="support_privacy_focused_apps">Android-apps die u respecteren!</string>
+    <string name="donate">Trakteer me op een koffie</string>
+    <string name="settings">Instellingen</string>
+    <string name="compatibility_check_channel_name">Compatibiliteitscontroles</string>
+    <string name="compatibility_check_channel_description">Meldingen over apps die niet compatibel zijn met uw configuratie.</string>
+    <string name="compatibility_check_notification_title">Incompatibele app</string>
+    <string name="compatibility_check_notification_body">%1$s lijkt niet goed te werken zonder Google Play Services. Help ons om de aandacht te vestigen — deel dit en tag de ontwikkelaar om een privacyvriendelijke versie te vragen!</string>
+    <string name="compatibility_check_notification_share_action">Nu delen</string>
+    <string name="rating_rules"><![CDATA[<a href="%1$s">Beoordelingsregels</a>]]></string>
+    <string name="i_have_read_and_i_understand_the_rating_rules">Ik heb de beoordelingsregels gelezen en begrijp ze</string>
+    <string name="show_unsafe">Omgevingen</string>
+    <string name="show_unsafe_environments">Onveilige omgevingen tonen</string>
+    <string name="general">Algemeen</string>
+    <string name="theme">Thema</string>
+    <string name="theme_light">Licht</string>
+    <string name="theme_dark">Donker</string>
+    <string name="theme_system">Systeemstandaard</string>
+    <string name="github_star">Ster op GitHub</string>
+    <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <plurals name="date_minutes_ago">
+        <item quantity="one">%d minuut geleden</item>
+        <item quantity="other">%d minuten geleden</item>
+    </plurals>
+    <plurals name="date_hours_ago">
+        <item quantity="one">%d uur geleden</item>
+        <item quantity="other">%d uur geleden</item>
+    </plurals>
+    <plurals name="date_days_ago">
+        <item quantity="one">%d dag geleden</item>
+        <item quantity="other">%d dagen geleden</item>
+    </plurals>
+    <plurals name="date_months_ago">
+        <item quantity="one">%d maand geleden</item>
+        <item quantity="other">%d maanden geleden</item>
+    </plurals>
+    <plurals name="date_years_ago">
+        <item quantity="one">%d jaar geleden</item>
+        <item quantity="other">%d jaar geleden</item>
+    </plurals>
+</resources>
