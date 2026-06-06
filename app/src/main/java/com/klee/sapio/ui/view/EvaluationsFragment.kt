@@ -461,9 +461,9 @@ const val COMPRESSION_QUALITY = 100
 
     private fun ratingToSymbol(rating: Int): String {
         return when (rating) {
-            Rating.GOOD -> "✓"
-            Rating.AVERAGE -> "~"
-            Rating.BAD -> "✗"
+            Rating.GOOD -> getString(R.string.good_short)
+            Rating.AVERAGE -> getString(R.string.average_short)
+            Rating.BAD -> getString(R.string.bad_short)
             else -> "?"
         }
     }
