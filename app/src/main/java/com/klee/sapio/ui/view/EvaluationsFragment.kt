@@ -456,7 +456,7 @@ const val COMPRESSION_QUALITY = 100
             }
         }
         val ratingSuffix = if (ratingParts.isNotEmpty()) ": ${ratingParts.joinToString(", ")}" else ""
-        return "$header$ratingSuffix\n\n${getString(R.string.github_url)} #degoogle #sapio"
+        return "$header$ratingSuffix\n\n${getString(R.string.github_url)} #degoogle #privacy #android #sapio"
     }
 
     private fun ratingToSymbol(rating: Int): String {
