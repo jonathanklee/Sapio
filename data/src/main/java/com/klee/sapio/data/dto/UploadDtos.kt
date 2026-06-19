@@ -8,7 +8,8 @@ data class UploadEvaluation(
     @JsonProperty("icon") var icon: Int?,
     @JsonProperty("rating") val rating: Int,
     @JsonProperty("microg") val microg: Int,
-    @JsonProperty("rooted") val rooted: Int
+    @JsonProperty("rooted") val rooted: Int,
+    @JsonProperty("brokenFeatures") val brokenFeatures: List<String>?
 )
 
 data class UploadAnswer(

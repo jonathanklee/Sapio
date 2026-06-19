@@ -12,7 +12,8 @@ data class Evaluation(
     val updatedAt: Date?,
     val createdAt: Date?,
     val publishedAt: Date?,
-    val versionName: String?
+    val versionName: String?,
+    val brokenFeatures: List<String>?
 )
 
 data class UploadEvaluation(
@@ -21,7 +22,8 @@ data class UploadEvaluation(
     val icon: Int?,
     val rating: Int,
     val microg: Int,
-    val rooted: Int
+    val rooted: Int,
+    val brokenFeatures: List<String>?
 )
 
 data class Icon(

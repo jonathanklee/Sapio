@@ -64,8 +64,8 @@
 
     </LinearLayout>
 
-    <RadioGroup
-        android:id="@+id/note"
+    <LinearLayout
+        android:id="@+id/ratingSection"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="16dp"
@@ -77,54 +77,86 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/configRow">
 
-        <RadioButton
-            android:id="@+id/greenRadioButton"
+        <RadioGroup
+            android:id="@+id/note"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/bg_rating_option"
-            android:button="@null"
-            android:checked="false"
-            android:drawableStart="@drawable/ic_status_green"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="20dp"
-            android:text="@string/works_perfectly"
-            android:textSize="16sp" />
+            android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/orangeRadioButton"
+            <RadioButton
+                android:id="@+id/greenRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_rating_option"
+                android:button="@null"
+                android:checked="false"
+                android:drawableStart="@drawable/ic_status_green"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:text="@string/works_perfectly"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/orangeRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_rating_option"
+                android:button="@null"
+                android:checked="false"
+                android:drawableStart="@drawable/ic_status_yellow"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:text="@string/works_partially"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/redRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_rating_option"
+                android:button="@null"
+                android:checked="false"
+                android:drawableStart="@drawable/ic_status_red"
+                android:drawablePadding="16dp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:text="@string/dont_work"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/brokenFeaturesSection"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/bg_rating_option"
-            android:button="@null"
-            android:checked="false"
-            android:drawableStart="@drawable/ic_status_yellow"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="20dp"
-            android:text="@string/works_partially"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="12dp"
+            android:visibility="gone">
 
-        <RadioButton
-            android:id="@+id/redRadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_rating_option"
-            android:button="@null"
-            android:checked="false"
-            android:drawableStart="@drawable/ic_status_red"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="20dp"
-            android:text="@string/dont_work"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="4dp"
+                android:paddingBottom="8dp"
+                android:text="@string/broken_features_label"
+                android:textSize="14sp" />
 
-    </RadioGroup>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/brokenFeaturesChips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/navBar"

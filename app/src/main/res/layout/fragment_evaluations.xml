@@ -134,7 +134,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="12dp">
+                            android:paddingHorizontal="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="10dp">
 
                             <TextView
                                 android:id="@+id/microgSecureBadge"
@@ -185,6 +187,34 @@
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="4dp"
+                                android:visibility="gone">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/grey_light" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:text="@string/broken_features_not_working"
+                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textSize="11sp" />
+
+                                <com.google.android.material.chip.ChipGroup
+                                    android:id="@+id/microgUserBrokenFeatures"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
@@ -203,7 +233,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="12dp">
+                            android:paddingHorizontal="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -249,6 +281,34 @@
                                         android:textSize="13sp" />
 
                                 </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="4dp"
+                                android:visibility="gone">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/grey_light" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:text="@string/broken_features_not_working"
+                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textSize="11sp" />
+
+                                <com.google.android.material.chip.ChipGroup
+                                    android:id="@+id/microgRootBrokenFeatures"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp" />
 
                             </LinearLayout>
 
@@ -309,7 +369,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="12dp">
+                            android:paddingHorizontal="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="10dp">
 
                             <TextView
                                 android:id="@+id/bareAospSecureBadge"
@@ -360,6 +422,34 @@
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="4dp"
+                                android:visibility="gone">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/grey_light" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:text="@string/broken_features_not_working"
+                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textSize="11sp" />
+
+                                <com.google.android.material.chip.ChipGroup
+                                    android:id="@+id/bareAospUserBrokenFeatures"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
@@ -378,7 +468,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="12dp">
+                            android:paddingHorizontal="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -424,6 +516,34 @@
                                         android:textSize="13sp" />
 
                                 </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="4dp"
+                                android:visibility="gone">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/grey_light" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:text="@string/broken_features_not_working"
+                                    android:textColor="?android:attr/textColorSecondary"
+                                    android:textSize="11sp" />
+
+                                <com.google.android.material.chip.ChipGroup
+                                    android:id="@+id/bareAospRootBrokenFeatures"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp" />
 
                             </LinearLayout>
 

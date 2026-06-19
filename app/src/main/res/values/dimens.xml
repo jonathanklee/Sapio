@@ -11,4 +11,6 @@
     <dimen name="card_inner_padding">12dp</dimen>
     <dimen name="app_icon_size">56dp</dimen>
     <dimen name="badge_corner_radius">6dp</dimen>
+    <dimen name="chip_horizontal_padding">8dp</dimen>
+    <dimen name="chip_vertical_padding">4dp</dimen>
 </resources>

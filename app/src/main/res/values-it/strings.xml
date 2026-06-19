@@ -13,6 +13,14 @@
     <string name="works_partially">\ Funziona parzialmente. Alcune funzionalità non funzionano.</string>
     <string name="dont_work">\ Non funziona affatto o va in crash.</string>
     <string name="upload_error">Errore nella valutazione dell\'app</string>
+    <string name="broken_features_not_working">Non funziona</string>
+    <string name="broken_feature_notifications">Notifiche</string>
+    <string name="broken_feature_in_app_purchase">Acquisti in-app</string>
+    <string name="broken_feature_login">Accesso</string>
+    <string name="broken_feature_maps">Mappe</string>
+    <string name="broken_feature_location">Posizione</string>
+    <string name="broken_feature_payments">Pagamenti fisici</string>
+    <string name="broken_feature_cast">Trasmissione schermo</string>
     <string name="about_text">Sapio è l\'anagramma di Open Source API.\n\nSapio fornisce la compatibilità di un\'applicazione Android su un dispositivo senza Google Play Services (es. dispositivi Android Open Source Project (AOSP) de-googlizzati, con o senza microG).\n\nSapio può essere usato come strumento di lobbying condividendo la compatibilità sui social media per sensibilizzare gli sviluppatori di app sul rispetto dei dati personali degli utenti.\n\nLe valutazioni in Sapio sono date alla comunità dalla comunità.</string>
     <string name="credits">Icone cervello create da Freepik - Flaticon</string>
     <string name="user_label">Utente</string>

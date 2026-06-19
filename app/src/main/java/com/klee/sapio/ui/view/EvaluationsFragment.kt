@@ -38,7 +38,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
+import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.ChipGroup
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
@@ -204,6 +207,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgUser,
                         mBinding.microgUserRating,
                         mBinding.microgUserDate,
+                        mBinding.microgUserBrokenFeatures,
                         state.microgUser
                     )
                     renderChip(
@@ -211,6 +215,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospUser,
                         mBinding.bareAospUserRating,
                         mBinding.bareAospUserDate,
+                        mBinding.bareAospUserBrokenFeatures,
                         state.bareAospUser
                     )
                     renderChip(
@@ -218,6 +223,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgRoot,
                         mBinding.microgRootRating,
                         mBinding.microgRootDate,
+                        mBinding.microgRootBrokenFeatures,
                         state.microgRoot
                     )
                     renderChip(
@@ -225,6 +231,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospRoot,
                         mBinding.bareAospRootRating,
                         mBinding.bareAospRootDate,
+                        mBinding.bareAospRootBrokenFeatures,
                         state.bareAospRoot
                     )
 
@@ -292,6 +299,7 @@ const val COMPRESSION_QUALITY = 100
         iconView: ImageView,
         ratingTextView: TextView,
         dateTextView: TextView,
+        brokenFeaturesChipGroup: ChipGroup,
         evaluation: com.klee.sapio.domain.model.Evaluation?
     ) {
         if (evaluation != null) {
@@ -299,11 +307,56 @@ const val COMPRESSION_QUALITY = 100
             iconView.isVisible = true
             ratingTextView.text = getRatingShortLabel(evaluation.rating)
             dateTextView.text = formatDateAgo(evaluation.updatedAt)
+            renderBrokenFeatures(brokenFeaturesChipGroup, evaluation)
         } else {
             iconView.isVisible = false
             ratingTextView.text = "–"
             dateTextView.text = ""
+            (brokenFeaturesChipGroup.parent as? ViewGroup)?.isVisible = false
         }
+    }
+
+    private fun renderBrokenFeatures(
+        chipGroup: ChipGroup,
+        evaluation: com.klee.sapio.domain.model.Evaluation
+    ) {
+        val container = chipGroup.parent as? ViewGroup
+        val features = evaluation.brokenFeatures
+
+        if (evaluation.rating != Rating.AVERAGE || features.isNullOrEmpty()) {
+            container?.isVisible = false
+            return
+        }
+
+        chipGroup.removeAllViews()
+        features.forEach { key ->
+            val label = brokenFeatureLabelForKey(key) ?: return@forEach
+            val pill = TextView(requireContext()).apply {
+                text = "× $label"
+                textSize = 10f
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_label_rounded)
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.red_600)
+                )
+                val h = resources.getDimensionPixelSize(R.dimen.chip_horizontal_padding)
+                val v = resources.getDimensionPixelSize(R.dimen.chip_vertical_padding)
+                setPadding(h, v, h, v)
+            }
+            chipGroup.addView(pill)
+        }
+        container?.isVisible = true
+    }
+
+    private fun brokenFeatureLabelForKey(key: String): String? = when (key) {
+        "notifications" -> getString(R.string.broken_feature_notifications)
+        "in_app_purchase" -> getString(R.string.broken_feature_in_app_purchase)
+        "login" -> getString(R.string.broken_feature_login)
+        "maps" -> getString(R.string.broken_feature_maps)
+        "location" -> getString(R.string.broken_feature_location)
+        "payments" -> getString(R.string.broken_feature_payments)
+        "cast" -> getString(R.string.broken_feature_cast)
+        else -> null
     }
 
     private fun getRatingShortLabel(rating: Int): String {

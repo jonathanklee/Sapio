@@ -90,7 +90,8 @@ class MyAppsViewModel @Inject constructor(
                     updatedAt = null,
                     createdAt = null,
                     publishedAt = null,
-                    versionName = null
+                    versionName = null,
+                    brokenFeatures = null
                 )
             }
             result.add(InstalledAppWithRating(installedApp, evaluation))

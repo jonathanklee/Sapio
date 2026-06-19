@@ -15,5 +15,6 @@ data class Evaluation(
     @JsonProperty("updatedAt") val updatedAt: Date?,
     @JsonProperty("createdAt") val createdAt: Date?,
     @JsonProperty("publishedAt") val publishedAt: Date?,
-    @JsonProperty("versionName") val versionName: String?
+    @JsonProperty("versionName") val versionName: String?,
+    @JsonProperty("brokenFeatures") val brokenFeatures: List<String>?
 )

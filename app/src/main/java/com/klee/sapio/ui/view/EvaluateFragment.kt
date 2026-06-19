@@ -8,12 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.chip.Chip
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluateBinding
+import com.klee.sapio.domain.model.BrokenFeature
 import com.klee.sapio.ui.model.Label
 import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.viewmodel.EvaluateViewModel
@@ -50,13 +53,22 @@ class EvaluateFragment : Fragment() {
         mBinding.secureConfiguration.backgroundTintList = ColorStateList.valueOf(isRootedLabel.color)
 
         mBinding.validateButton.isEnabled = false
-        mBinding.note.setOnCheckedChangeListener { _, _ ->
+        mBinding.note.setOnCheckedChangeListener { _, checkedId ->
             updateButtonState()
+            updateBrokenFeaturesVisibility(checkedId)
         }
+
+        setupBrokenFeaturesChips()
 
         mBinding.validateButton.setOnClickListener {
             val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
-            val bundle = bundleOf("package" to packageName, "name" to appName, "rating" to rating)
+            val brokenFeatures = if (rating == Rating.AVERAGE) getSelectedBrokenFeatures() else null
+            val bundle = bundleOf(
+                "package" to packageName,
+                "name" to appName,
+                "rating" to rating,
+                "brokenFeatures" to brokenFeatures?.let { ArrayList(it) }
+            )
             findNavController().navigate(R.id.action_evaluateFragment_to_loadingFragment, bundle)
         }
 
@@ -72,6 +84,32 @@ class EvaluateFragment : Fragment() {
         mBinding.validateButton.isEnabled = radioSelected
     }
 
+    private fun updateBrokenFeaturesVisibility(checkedId: Int) {
+        val isPartial = checkedId == R.id.orangeRadioButton
+        mBinding.brokenFeaturesSection.visibility = if (isPartial) View.VISIBLE else View.GONE
+        if (!isPartial) {
+            mBinding.brokenFeaturesChips.clearCheck()
+        }
+    }
+
+    private fun setupBrokenFeaturesChips() {
+        BrokenFeature.entries.forEach { feature ->
+            val chip = Chip(requireContext()).apply {
+                text = getString(feature.labelResId())
+                isCheckable = true
+                tag = feature.key
+            }
+            mBinding.brokenFeaturesChips.addView(chip)
+        }
+    }
+
+    private fun getSelectedBrokenFeatures(): List<String> {
+        return (0 until mBinding.brokenFeaturesChips.childCount)
+            .map { mBinding.brokenFeaturesChips.getChildAt(it) as Chip }
+            .filter { it.isChecked }
+            .map { it.tag as String }
+    }
+
     private fun getRatingFromRadioId(id: Int, view: View): Int {
         val radioButton: RadioButton = view.findViewById(id)
         return when (radioButton.text) {
@@ -81,4 +119,16 @@ class EvaluateFragment : Fragment() {
             else -> 0
         }
     }
+
+    @StringRes
+    private fun BrokenFeature.labelResId(): Int = when (this) {
+        BrokenFeature.NOTIFICATIONS -> R.string.broken_feature_notifications
+        BrokenFeature.IN_APP_PURCHASE -> R.string.broken_feature_in_app_purchase
+        BrokenFeature.LOGIN -> R.string.broken_feature_login
+        BrokenFeature.MAPS -> R.string.broken_feature_maps
+        BrokenFeature.LOCATION -> R.string.broken_feature_location
+        BrokenFeature.PAYMENTS -> R.string.broken_feature_payments
+        BrokenFeature.CAST -> R.string.broken_feature_cast
+    }
+
 }

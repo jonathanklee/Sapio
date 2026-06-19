@@ -12,6 +12,7 @@
     <color name="chip_average">#FFFEF5</color>
     <color name="chip_bad">#FFF3F4</color>
     <color name="chip_neutral">#F5F5F5</color>
+    <color name="red_600">#E53935</color>
     <color name="ic_launcher_background">@color/grey</color>
     <color name="background">@color/white</color>
     <color name="cardview_background_color">@color/white</color>

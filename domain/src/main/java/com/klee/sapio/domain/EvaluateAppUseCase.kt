@@ -14,7 +14,8 @@ open class EvaluateAppUseCase @Inject constructor(
 
     open suspend operator fun invoke(
         app: InstalledApplication,
-        rating: Int
+        rating: Int,
+        brokenFeatures: List<String>?
     ): Result<Unit> {
         val existingIcons = getExistingIcons(app)
         val uploadedIcons = uploadIcon(app)
@@ -22,7 +23,7 @@ open class EvaluateAppUseCase @Inject constructor(
         return when {
             uploadedIcons.isEmpty() ->
                 Result.failure(IllegalStateException("Failed to upload icon"))
-            !submitEvaluation(app, uploadedIcons[0].id, rating) ->
+            !submitEvaluation(app, uploadedIcons[0].id, rating, brokenFeatures) ->
                 Result.failure(IllegalStateException("Failed to add evaluation"))
             else -> {
                 existingIcons.forEach { deleteIcon(it.id) }
@@ -39,14 +40,20 @@ open class EvaluateAppUseCase @Inject constructor(
         evaluationRepository.deleteIcon(id)
     }
 
-    private suspend fun submitEvaluation(app: InstalledApplication, iconId: Int, rating: Int): Boolean {
+    private suspend fun submitEvaluation(
+        app: InstalledApplication,
+        iconId: Int,
+        rating: Int,
+        brokenFeatures: List<String>?
+    ): Boolean {
         val newEvaluation = UploadEvaluation(
             app.name,
             app.packageName,
             iconId,
             rating,
             deviceInfo.getGmsType(),
-            deviceInfo.isUnsafe()
+            deviceInfo.isUnsafe(),
+            brokenFeatures
         )
 
         return evaluationRepository.addEvaluation(newEvaluation).isSuccess

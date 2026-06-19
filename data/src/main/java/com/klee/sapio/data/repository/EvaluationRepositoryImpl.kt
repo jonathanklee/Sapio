@@ -199,7 +199,8 @@ private fun DtoEvaluation.toDomain(): DomainEvaluation = DomainEvaluation(
     updatedAt = updatedAt,
     createdAt = createdAt,
     publishedAt = publishedAt,
-    versionName = versionName
+    versionName = versionName,
+    brokenFeatures = brokenFeatures
 )
 
 private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = EvaluationEntity(
@@ -213,7 +214,8 @@ private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = Evaluatio
     createdAt = createdAt,
     publishedAt = publishedAt,
     versionName = versionName,
-    cachedAt = cachedAt
+    cachedAt = cachedAt,
+    brokenFeatures = brokenFeatures?.joinToString(",")
 )
 
 private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
@@ -226,7 +228,8 @@ private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
     updatedAt = updatedAt,
     createdAt = createdAt,
     publishedAt = publishedAt,
-    versionName = versionName
+    versionName = versionName,
+    brokenFeatures = brokenFeatures?.split(",")?.filter { it.isNotEmpty() }
 )
 
 private fun StrapiElement.toDomain(): DomainEvaluationRecord = DomainEvaluationRecord(
@@ -259,7 +262,8 @@ private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEval
     icon = icon,
     rating = rating,
     microg = microg,
-    rooted = rooted
+    rooted = rooted,
+    brokenFeatures = brokenFeatures
 )
 
 private fun String?.toAbsoluteUrl(): String? {

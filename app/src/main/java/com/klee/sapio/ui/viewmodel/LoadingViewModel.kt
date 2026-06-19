@@ -20,14 +20,14 @@ class LoadingViewModel @Inject constructor(
     private val _events = MutableSharedFlow<EvaluateEvent>()
     val events = _events.asSharedFlow()
 
-    fun submit(packageName: String, appName: String, rating: Int) {
+    fun submit(packageName: String, appName: String, rating: Int, brokenFeatures: List<String>?) {
         viewModelScope.launch {
             val app = installedApplicationsDataSource.getInstalledApplication(packageName)
             if (app == null) {
                 _events.emit(EvaluateEvent.ShowError)
                 return@launch
             }
-            val result = evaluateAppUseCase(app, rating)
+            val result = evaluateAppUseCase(app, rating, brokenFeatures)
             if (result.isSuccess) {
                 _events.emit(EvaluateEvent.NavigateToSuccess(packageName, appName))
             } else {

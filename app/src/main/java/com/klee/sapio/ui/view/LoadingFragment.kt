@@ -32,8 +32,9 @@ class LoadingFragment : Fragment() {
         val packageName = arguments?.getString("package").orEmpty()
         val appName = arguments?.getString("name").orEmpty()
         val rating = arguments?.getInt("rating") ?: 0
+        val brokenFeatures = arguments?.getStringArrayList("brokenFeatures")
 
-        mViewModel.submit(packageName, appName, rating)
+        mViewModel.submit(packageName, appName, rating, brokenFeatures)
 
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.events.collect { event ->
