@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.util.Log
 import androidx.core.graphics.drawable.toBitmap
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.klee.sapio.data.dto.Evaluation
 import com.klee.sapio.data.dto.IconAnswer
 import com.klee.sapio.data.dto.StrapiAnswer
@@ -107,10 +109,13 @@ open class EvaluationService @Inject constructor(
             .cache(Cache(context.cacheDir, CACHE_MAX_SIZE))
             .build()
 
+        val objectMapper = ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
         retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl("$BASE_URL/api/")
-            .addConverterFactory(JacksonConverterFactory.create())
+            .addConverterFactory(JacksonConverterFactory.create(objectMapper))
             .build()
 
         evaluationsApi = retrofit.create(EvaluationApi::class.java)

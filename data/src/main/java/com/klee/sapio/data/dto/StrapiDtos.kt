@@ -1,7 +1,9 @@
 package com.klee.sapio.data.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class StrapiAnswer(
     @JsonProperty("data") val data: ArrayList<StrapiElement>,
     @JsonProperty("meta") val meta: StrapiMeta
