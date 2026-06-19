@@ -1,8 +1,10 @@
 package com.klee.sapio.data.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Date
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Evaluation(
     @JsonProperty("name") val name: String,
     @JsonProperty("packageName") val packageName: String,
