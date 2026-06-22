@@ -30,21 +30,9 @@ Evaluations in Sapio are given to the community by the community.
 
 **unsafe** The device is considered unsafe
 
-# 🔨 Build
-## Get the sources
+# 🔒 No email, no account, no spam
 
-```
-git clone git@github.com:jonathanklee/Sapio.git
-```
-## Build Sapio
-```
-cd Sapio
-./gradlew assembleDebug
-````
-# 📱 Install
-```
-adb install ./app/build/outputs/apk/debug/app-debug.apk
-```
+Contributing takes no email, no account and no sign-up. Sapio has no way to ever contact or spam you, and there's no user database to breach.
 
 # 🌍 Public API
 
