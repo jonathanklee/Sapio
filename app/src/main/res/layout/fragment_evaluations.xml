@@ -194,11 +194,6 @@
                                 android:layout_marginTop="4dp"
                                 android:visibility="gone">
 
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:background="@color/grey_light" />
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -292,11 +287,6 @@
                                 android:orientation="vertical"
                                 android:layout_marginTop="4dp"
                                 android:visibility="gone">
-
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:background="@color/grey_light" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -433,11 +423,6 @@
                                 android:layout_marginTop="4dp"
                                 android:visibility="gone">
 
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:background="@color/grey_light" />
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -531,11 +516,6 @@
                                 android:orientation="vertical"
                                 android:layout_marginTop="4dp"
                                 android:visibility="gone">
-
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:background="@color/grey_light" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
