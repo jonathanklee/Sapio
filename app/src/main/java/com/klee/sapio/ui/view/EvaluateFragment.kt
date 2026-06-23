@@ -129,6 +129,7 @@ class EvaluateFragment : Fragment() {
         BrokenFeature.LOCATION -> R.string.broken_feature_location
         BrokenFeature.PAYMENTS -> R.string.broken_feature_payments
         BrokenFeature.CAST -> R.string.broken_feature_cast
+        BrokenFeature.AUGMENTED_REALITY -> R.string.broken_feature_augmented_reality
     }
 
 }

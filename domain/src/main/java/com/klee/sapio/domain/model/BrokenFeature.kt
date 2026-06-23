@@ -7,5 +7,6 @@ enum class BrokenFeature(val key: String) {
     MAPS("maps"),
     LOCATION("location"),
     PAYMENTS("payments"),
-    CAST("cast")
+    CAST("cast"),
+    AUGMENTED_REALITY("augmented_reality")
 }

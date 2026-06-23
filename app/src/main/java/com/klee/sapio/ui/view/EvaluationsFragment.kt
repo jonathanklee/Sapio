@@ -356,6 +356,7 @@ const val COMPRESSION_QUALITY = 100
         "location" -> getString(R.string.broken_feature_location)
         "payments" -> getString(R.string.broken_feature_payments)
         "cast" -> getString(R.string.broken_feature_cast)
+        "augmented_reality" -> getString(R.string.broken_feature_augmented_reality)
         else -> null
     }
 
