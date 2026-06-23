@@ -263,7 +263,8 @@ private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEval
     rating = rating,
     microg = microg,
     rooted = rooted,
-    brokenFeatures = brokenFeatures
+    brokenFeatures = brokenFeatures,
+    versionName = versionName
 )
 
 private fun String?.toAbsoluteUrl(): String? {

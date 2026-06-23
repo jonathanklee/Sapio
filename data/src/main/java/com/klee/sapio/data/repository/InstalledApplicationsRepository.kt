@@ -38,7 +38,12 @@ open class InstalledApplicationsRepository @Inject constructor(
             } catch (e: RuntimeException) {
                 continue
             }
-            results.add(InstalledApplication(label, appInfo.packageName))
+            val versionName = try {
+                pm.getPackageInfo(appInfo.packageName, 0).versionName
+            } catch (e: Exception) {
+                null
+            }
+            results.add(InstalledApplication(label, appInfo.packageName, versionName))
         }
 
         return results.sortedBy { app -> app.name.lowercase() }

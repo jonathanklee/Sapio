@@ -53,7 +53,8 @@ open class EvaluateAppUseCase @Inject constructor(
             rating,
             deviceInfo.getGmsType(),
             deviceInfo.isUnsafe(),
-            brokenFeatures
+            brokenFeatures,
+            app.versionName
         )
 
         return evaluationRepository.addEvaluation(newEvaluation).isSuccess

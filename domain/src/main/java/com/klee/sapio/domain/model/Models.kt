@@ -23,7 +23,8 @@ data class UploadEvaluation(
     val rating: Int,
     val microg: Int,
     val rooted: Int,
-    val brokenFeatures: List<String>?
+    val brokenFeatures: List<String>?,
+    val versionName: String?
 )
 
 data class Icon(
@@ -39,7 +40,8 @@ data class EvaluationRecord(
 
 data class InstalledApplication(
     val name: String,
-    val packageName: String
+    val packageName: String,
+    val versionName: String?
 )
 
 object EvaluationRating {
