@@ -202,7 +202,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
                                     android:text="@string/broken_features_not_working"
                                     android:textColor="?android:attr/textColorSecondary"
                                     android:textSize="11sp" />
@@ -211,7 +212,8 @@
                                     android:id="@+id/microgUserBrokenFeatures"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp" />
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="4dp" />
 
                             </LinearLayout>
 
@@ -299,7 +301,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
                                     android:text="@string/broken_features_not_working"
                                     android:textColor="?android:attr/textColorSecondary"
                                     android:textSize="11sp" />
@@ -308,7 +311,8 @@
                                     android:id="@+id/microgRootBrokenFeatures"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp" />
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="4dp" />
 
                             </LinearLayout>
 
@@ -437,7 +441,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
                                     android:text="@string/broken_features_not_working"
                                     android:textColor="?android:attr/textColorSecondary"
                                     android:textSize="11sp" />
@@ -446,7 +451,8 @@
                                     android:id="@+id/bareAospUserBrokenFeatures"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp" />
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="4dp" />
 
                             </LinearLayout>
 
@@ -534,7 +540,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp"
                                     android:text="@string/broken_features_not_working"
                                     android:textColor="?android:attr/textColorSecondary"
                                     android:textSize="11sp" />
@@ -543,7 +550,8 @@
                                     android:id="@+id/bareAospRootBrokenFeatures"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp" />
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginBottom="4dp" />
 
                             </LinearLayout>
 
