@@ -13,6 +13,7 @@
     <string name="works_partially">\ Funciona parcialmente. Algunas funciones no funcionan.</string>
     <string name="dont_work">\ No funciona en absoluto o se bloquea.</string>
     <string name="upload_error">Error al evaluar la app</string>
+    <string name="broken_features_label">¿Qué funciones no funcionan?</string>
     <string name="broken_features_not_working">No funciona</string>
     <string name="broken_feature_notifications">Notificaciones</string>
     <string name="broken_feature_in_app_purchase">Compras integradas</string>
