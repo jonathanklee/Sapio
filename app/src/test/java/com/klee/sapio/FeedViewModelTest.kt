@@ -187,6 +187,7 @@ class FeedViewModelTest {
         updatedAt = null,
         createdAt = null,
         publishedAt = null,
-        versionName = null
+        versionName = null,
+        brokenFeatures = null
     )
 }

@@ -374,7 +374,8 @@ class EvaluationRepositoryImplTest {
         return DtoEvaluation(
             name = name, packageName = packageName, icon = icon,
             rating = rating, microg = microg, secure = secure,
-            updatedAt = null, createdAt = null, publishedAt = null, versionName = null
+            updatedAt = null, createdAt = null, publishedAt = null, versionName = null,
+            brokenFeatures = null
         )
     }
 
@@ -400,7 +401,7 @@ class EvaluationRepositoryImplTest {
         name = name, packageName = packageName, iconUrl = null,
         rating = 1, microg = microg, secure = secure,
         updatedAt = null, createdAt = null, publishedAt = null,
-        versionName = null, cachedAt = 0L
+        versionName = null, cachedAt = 0L, brokenFeatures = null
     )
 
     private fun iconEntity(
@@ -411,7 +412,7 @@ class EvaluationRepositoryImplTest {
 
     private fun domainUploadEvaluation() = com.klee.sapio.domain.model.UploadEvaluation(
         name = "Test App", packageName = "com.test.app", icon = 1,
-        rating = 1, microg = 1, rooted = 3
+        rating = 1, microg = 1, rooted = 3, brokenFeatures = null, versionName = null
     )
 
     // endregion

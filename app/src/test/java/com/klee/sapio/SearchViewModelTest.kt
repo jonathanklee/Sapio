@@ -77,7 +77,7 @@ class SearchViewModelTest {
     @Test
     fun test_search_updates_state_with_results() = runTest {
         val expected = listOf(
-            Evaluation("Name", "pkg", iconUrl = null, rating = 1, microg = 1, secure = 1, updatedAt = null, createdAt = null, publishedAt = null, versionName = null)
+            Evaluation("Name", "pkg", iconUrl = null, rating = 1, microg = 1, secure = 1, updatedAt = null, createdAt = null, publishedAt = null, versionName = null, brokenFeatures = null)
         )
         val fakeUseCase = FakeSearchUseCase(expected)
         val viewModel = SearchViewModel(fakeUseCase)

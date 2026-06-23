@@ -45,7 +45,8 @@ class EvaluateAppUseCaseTest {
 
         realInstalledApplication = InstalledApplication(
             name = "Test App",
-            packageName = "com.test.app"
+            packageName = "com.test.app",
+            versionName = null
         )
 
         fakeRepository.addEvaluationResult = Result.success(Unit)
@@ -61,7 +62,7 @@ class EvaluateAppUseCaseTest {
         fakeRepository.uploadIconResult = Result.success(emptyList())
         fakeRepository.existingIconsResult = Result.success(emptyList())
 
-        val result = evaluateAppUseCase(realInstalledApplication, 1)
+        val result = evaluateAppUseCase(realInstalledApplication, 1, brokenFeatures = null)
 
         Assert.assertTrue("Should return failure", result.isFailure)
     }
@@ -72,7 +73,7 @@ class EvaluateAppUseCaseTest {
         fakeRepository.uploadIconResult = Result.success(listOf(fakeIcon))
         fakeRepository.existingIconsResult = Result.success(emptyList())
 
-        val result = evaluateAppUseCase(realInstalledApplication, 1)
+        val result = evaluateAppUseCase(realInstalledApplication, 1, brokenFeatures = null)
 
         Assert.assertTrue("Should return success", result.isSuccess)
     }

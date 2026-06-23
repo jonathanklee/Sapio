@@ -42,7 +42,8 @@ class LoadingViewModelTest {
 
     private val fakeApp = InstalledApplication(
         name = "Test App",
-        packageName = "com.test.app"
+        packageName = "com.test.app",
+        versionName = null
     )
 
     @Before
@@ -64,7 +65,7 @@ class LoadingViewModelTest {
             vm.events.collect { events.add(it) }
         }
 
-        vm.submit("com.test.app", "Test App", rating = 1)
+        vm.submit("com.test.app", "Test App", rating = 1, brokenFeatures = null)
         advanceUntilIdle()
 
         val event = events.first()
@@ -86,7 +87,7 @@ class LoadingViewModelTest {
             vm.events.collect { events.add(it) }
         }
 
-        vm.submit("com.test.app", "Test App", rating = 1)
+        vm.submit("com.test.app", "Test App", rating = 1, brokenFeatures = null)
         advanceUntilIdle()
 
         assertTrue(events.first() is EvaluateEvent.ShowError)
@@ -102,7 +103,7 @@ class LoadingViewModelTest {
             vm.events.collect { events.add(it) }
         }
 
-        vm.submit("com.unknown.app", "Unknown", rating = 1)
+        vm.submit("com.unknown.app", "Unknown", rating = 1, brokenFeatures = null)
         advanceUntilIdle()
 
         assertTrue(events.first() is EvaluateEvent.ShowError)
@@ -141,7 +142,7 @@ class LoadingViewModelTest {
         }
 
         val fakeUseCase = object : EvaluateAppUseCase(fakeRepo, fakeDeviceConfig) {
-            override suspend fun invoke(a: InstalledApplication, rating: Int) = useCaseResult
+            override suspend fun invoke(a: InstalledApplication, rating: Int, brokenFeatures: List<String>?) = useCaseResult
         }
 
         return LoadingViewModel(fakeInstalledAppsRepo, fakeUseCase)

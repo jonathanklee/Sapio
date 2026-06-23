@@ -29,7 +29,8 @@ class EvaluateAppUseCaseBehaviourTest {
 
     private val installedApp = InstalledApplication(
         name = "Demo",
-        packageName = "com.demo.app"
+        packageName = "com.demo.app",
+        versionName = null
     )
 
     @Before
@@ -48,7 +49,7 @@ class EvaluateAppUseCaseBehaviourTest {
         )
         repository.uploadResponse = arrayListOf(iconAnswer(id = 99, url = "new"))
 
-        val result = useCase(installedApp, rating = 5)
+        val result = useCase(installedApp, rating = 5, brokenFeatures = null)
 
         assertTrue(repository.deletedIds.containsAll(listOf(10, 11)))
         assertTrue(repository.addedEvaluations.isNotEmpty())
@@ -62,7 +63,7 @@ class EvaluateAppUseCaseBehaviourTest {
         repository.existingIcons = emptyList()
         repository.uploadResponse = null
 
-        val result = useCase(installedApp, rating = 2)
+        val result = useCase(installedApp, rating = 2, brokenFeatures = null)
 
         assertTrue(result.isFailure)
         assertTrue(repository.addedEvaluations.isEmpty())

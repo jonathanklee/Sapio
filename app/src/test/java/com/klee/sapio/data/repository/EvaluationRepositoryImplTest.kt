@@ -63,7 +63,8 @@ class EvaluationRepositoryImplTest {
                 updatedAt = Date(2),
                 createdAt = Date(1),
                 publishedAt = Date(1),
-                versionName = "1.0"
+                versionName = "1.0",
+                brokenFeatures = null
             )
         )
         Mockito.`when`(evaluationService.listLatestEvaluations(1))
@@ -88,7 +89,8 @@ class EvaluationRepositoryImplTest {
             updatedAt = Date(2),
             createdAt = Date(1),
             publishedAt = Date(1),
-            versionName = "1.0"
+            versionName = "1.0",
+            brokenFeatures = null
         )
         evaluationDao.upsertAll(listOf(
             EvaluationEntity(
@@ -102,7 +104,8 @@ class EvaluationRepositoryImplTest {
                 createdAt = cached.createdAt,
                 publishedAt = cached.publishedAt,
                 versionName = cached.versionName,
-                cachedAt = System.currentTimeMillis()
+                cachedAt = System.currentTimeMillis(),
+                brokenFeatures = null
             )
         ))
         Mockito.`when`(evaluationService.listLatestEvaluations(1))

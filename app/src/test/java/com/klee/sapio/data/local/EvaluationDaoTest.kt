@@ -51,7 +51,8 @@ class EvaluationDaoTest {
             createdAt = Date(50),
             publishedAt = Date(60),
             versionName = "1.0",
-            cachedAt = 1
+            cachedAt = 1,
+            brokenFeatures = null
         )
         val newer = EvaluationEntity(
             name = "New",
@@ -64,7 +65,8 @@ class EvaluationDaoTest {
             createdAt = Date(80),
             publishedAt = Date(90),
             versionName = "1.1",
-            cachedAt = 1
+            cachedAt = 1,
+            brokenFeatures = null
         )
         evaluationDao.upsertAll(listOf(older, newer))
 
@@ -87,7 +89,8 @@ class EvaluationDaoTest {
             createdAt = Date(50),
             publishedAt = Date(60),
             versionName = "1.0",
-            cachedAt = 1
+            cachedAt = 1,
+            brokenFeatures = null
         )
         val other = EvaluationEntity(
             name = "Other",
@@ -100,7 +103,8 @@ class EvaluationDaoTest {
             createdAt = Date(50),
             publishedAt = Date(60),
             versionName = "1.0",
-            cachedAt = 1
+            cachedAt = 1,
+            brokenFeatures = null
         )
         evaluationDao.upsertAll(listOf(target, other))
 
@@ -123,7 +127,8 @@ class EvaluationDaoTest {
             createdAt = Date(50),
             publishedAt = Date(60),
             versionName = "1.0",
-            cachedAt = 1
+            cachedAt = 1,
+            brokenFeatures = null
         )
         evaluationDao.upsertAll(listOf(target))
 

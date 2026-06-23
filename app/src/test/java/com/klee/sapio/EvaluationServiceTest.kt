@@ -232,7 +232,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)))
+        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null)))
         assertTrue(result.isFailure)
     }
 
@@ -247,7 +247,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)))
+        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null)))
         assertTrue(result.isSuccess)
     }
 
@@ -260,7 +260,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)), 1)
+        val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null)), 1)
         assertTrue(result.isFailure)
     }
 
@@ -275,7 +275,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0)), 2)
+        val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null)), 2)
         assertTrue(result.isSuccess)
     }
 
@@ -367,7 +367,8 @@ class EvaluationServiceTest {
             updatedAt = date,
             createdAt = date,
             publishedAt = date,
-            versionName = "1.0"
+            versionName = "1.0",
+            brokenFeatures = null
         )
     }
 
