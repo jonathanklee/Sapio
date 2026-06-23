@@ -12,7 +12,7 @@ import org.junit.Test
 
 class EvaluateAppUseCaseTest {
 
-    private val app = InstalledApplication(name = "Test App", packageName = "com.test.app")
+    private val app = InstalledApplication(name = "Test App", packageName = "com.test.app", versionName = null)
     private val icon = Icon(id = 42, name = "com.test.app.png", url = "http://icon/test.png")
     private val existingIcon = Icon(id = 7, name = "com.test.app.png", url = "http://icon/old.png")
 
@@ -21,7 +21,7 @@ class EvaluateAppUseCaseTest {
         val repo = fakeRepo(uploadIconResult = Result.success(emptyList()))
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        val result = useCase(app, rating = 1)
+        val result = useCase(app, rating = 1, brokenFeatures = null)
 
         assertTrue(result.isFailure)
     }
@@ -31,7 +31,7 @@ class EvaluateAppUseCaseTest {
         val repo = fakeRepo(uploadIconResult = Result.failure(RuntimeException("network error")))
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        val result = useCase(app, rating = 1)
+        val result = useCase(app, rating = 1, brokenFeatures = null)
 
         assertTrue(result.isFailure)
     }
@@ -44,7 +44,7 @@ class EvaluateAppUseCaseTest {
         )
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        val result = useCase(app, rating = 1)
+        val result = useCase(app, rating = 1, brokenFeatures = null)
 
         assertTrue(result.isFailure)
     }
@@ -57,7 +57,7 @@ class EvaluateAppUseCaseTest {
         )
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        val result = useCase(app, rating = 1)
+        val result = useCase(app, rating = 1, brokenFeatures = null)
 
         assertTrue(result.isSuccess)
     }
@@ -71,7 +71,7 @@ class EvaluateAppUseCaseTest {
         )
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        useCase(app, rating = 1)
+        useCase(app, rating = 1, brokenFeatures = null)
 
         assertTrue(repo.deletedIconIds.contains(existingIcon.id))
     }
@@ -85,7 +85,7 @@ class EvaluateAppUseCaseTest {
         )
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        val result = useCase(app, rating = 1)
+        val result = useCase(app, rating = 1, brokenFeatures = null)
 
         assertTrue(result.isSuccess)
         assertTrue(repo.deletedIconIds.isEmpty())
@@ -100,7 +100,7 @@ class EvaluateAppUseCaseTest {
         )
         val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
 
-        useCase(app, rating = 1)
+        useCase(app, rating = 1, brokenFeatures = null)
 
         assertFalse(repo.deletedIconIds.contains(existingIcon.id))
     }
@@ -114,7 +114,7 @@ class EvaluateAppUseCaseTest {
         )
         val useCase = EvaluateAppUseCase(repo, deviceInfo)
 
-        useCase(app, rating = 1)
+        useCase(app, rating = 1, brokenFeatures = null)
 
         val submitted = repo.lastSubmittedEvaluation
         assertTrue(submitted?.microg == 2)

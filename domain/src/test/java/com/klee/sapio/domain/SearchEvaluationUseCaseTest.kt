@@ -85,6 +85,6 @@ class SearchEvaluationUseCaseTest {
     private fun evaluation(name: String = "App") = Evaluation(
         name = name, packageName = "com.${name.lowercase()}", iconUrl = null,
         rating = 1, microg = 1, secure = 3,
-        updatedAt = Date(), createdAt = null, publishedAt = null, versionName = null
+        updatedAt = Date(), createdAt = null, publishedAt = null, versionName = null, brokenFeatures = null
     )
 }

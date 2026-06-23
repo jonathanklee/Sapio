@@ -88,6 +88,6 @@ class ListLatestEvaluationsUseCaseTest {
     private fun evaluation(name: String = "App", packageName: String = "com.app") = Evaluation(
         name = name, packageName = packageName, iconUrl = null,
         rating = 1, microg = 1, secure = 3,
-        updatedAt = Date(), createdAt = Date(), publishedAt = null, versionName = null
+        updatedAt = Date(), createdAt = Date(), publishedAt = null, versionName = null, brokenFeatures = null
     )
 }

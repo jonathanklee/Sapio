@@ -92,6 +92,6 @@ class FetchAppEvaluationUseCaseTest {
     private fun evaluation() = Evaluation(
         name = "Test App", packageName = "com.test.app", iconUrl = null,
         rating = 1, microg = 1, secure = 3,
-        updatedAt = Date(), createdAt = Date(), publishedAt = null, versionName = null
+        updatedAt = Date(), createdAt = Date(), publishedAt = null, versionName = null, brokenFeatures = null
     )
 }
