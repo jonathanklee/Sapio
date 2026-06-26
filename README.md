@@ -32,7 +32,7 @@ Evaluations in Sapio are given to the community by the community.
 
 # 🌐 Website 
 
-**[Website](https://website.sapio.ovh)** to browse and search evaluations from your browser.
+**[Website](https://sapio.ovh)** to browse and search evaluations from your browser.
 
 # 🔒 No email, no account, no spam
 
