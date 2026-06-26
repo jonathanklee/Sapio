@@ -24,6 +24,7 @@
     <string name="broken_feature_payments">Fysieke betalingen</string>
     <string name="broken_feature_cast">Scherm casten</string>
     <string name="broken_feature_augmented_reality">Augmented reality</string>
+    <string name="feature_negation">zonder</string>
     <string name="about_text">Sapio is het anagram van Open Source API.\n\nSapio biedt de compatibiliteit van een Android-applicatie die draait op een apparaat zonder Google Play Services (d.w.z. ge-de-Googelde kale Android Open Source Project (AOSP)-apparaten, al dan niet gekoppeld aan microG).\n\nSapio kan dienen als lobbyinstrument door compatibiliteit op sociale media te delen om app-ontwikkelaars bewust te maken van het respecteren van de persoonlijke gegevens van gebruikers.\n\nBeoordelingen in Sapio worden door de gemeenschap aan de gemeenschap gegeven.</string>
     <string name="credits">Hersenpictogrammen gemaakt door Freepik - Flaticon</string>
     <string name="environment_detected">Omgeving gedetecteerd</string>

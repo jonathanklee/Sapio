@@ -23,6 +23,7 @@
     <string name="broken_feature_payments">Paiements physiques</string>
     <string name="broken_feature_cast">Diffusion d\'écran</string>
     <string name="broken_feature_augmented_reality">Réalité augmentée</string>
+    <string name="feature_negation">sans</string>
     <string name="about_text">Sapio est l\'anagramme d\'Open Source API.\n\nSapio fournit la compatibilité d\'une application Android sur un appareil sans Google Play Services (i.e. les téléphones fonctionnant sur un Android Open Source Project (AOSP) déGooglisé, associés ou non à microG).\n\nSapio peut être utilisé comme un outil de lobbying en partageant la compatibilité sur les réseaux sociaux pour sensibiliser les développeurs d\'applications aux données personnelles des utilisateurs.\n\nLes évaluations de Sapio sont fournies à la communauté par la communauté.</string>
     <string name="credits">Icone cerveau créé par Freepik - Flaticon</string>
     <string name="user_label">Utilisateur</string>

@@ -389,6 +389,8 @@ const val COMPRESSION_QUALITY = 100
                 icon,
                 state.microgUser?.rating ?: 0,
                 state.bareAospUser?.rating ?: 0,
+                state.microgUser?.brokenFeatures,
+                state.bareAospUser?.brokenFeatures,
             )
             share(takeScreenshot(sharedEvaluation), sharedEvaluation)
         }
@@ -508,21 +510,51 @@ const val COMPRESSION_QUALITY = 100
         )
         val ratingParts = buildList {
             if (isKnownRating(sharedEvaluation.ratingMicrog)) {
-                add("${getString(R.string.microg_label)} ${ratingToSymbol(sharedEvaluation.ratingMicrog)}")
+                add(
+                    formatRatingPart(
+                        R.string.microg_label,
+                        sharedEvaluation.ratingMicrog,
+                        sharedEvaluation.brokenFeaturesMicrog
+                    )
+                )
             }
             if (isKnownRating(sharedEvaluation.ratingBareAOSP)) {
-                add("${getString(R.string.bare_aosp_label)} ${ratingToSymbol(sharedEvaluation.ratingBareAOSP)}")
+                add(
+                    formatRatingPart(
+                        R.string.bare_aosp_label,
+                        sharedEvaluation.ratingBareAOSP,
+                        sharedEvaluation.brokenFeaturesBareAOSP
+                    )
+                )
             }
         }
         val ratingSuffix = if (ratingParts.isNotEmpty()) ": ${ratingParts.joinToString(", ")}" else ""
         return "$header$ratingSuffix\n\n${getString(R.string.github_url)} #degoogle #privacy #android #sapio"
     }
 
+    private fun formatRatingPart(labelRes: Int, rating: Int, brokenFeatures: List<String>?): String {
+        val base = "${getString(labelRes)} ${ratingToSymbol(rating)}"
+        val brokenSuffix = brokenFeaturesSuffix(rating, brokenFeatures)
+        return if (brokenSuffix != null) "$base $brokenSuffix" else base
+    }
+
+    private fun brokenFeaturesSuffix(rating: Int, brokenFeatures: List<String>?): String? {
+        if (rating != Rating.AVERAGE || brokenFeatures.isNullOrEmpty()) {
+            return null
+        }
+        val negation = getString(R.string.feature_negation)
+        val labels = brokenFeatures.mapNotNull { brokenFeatureLabelForKey(it)?.lowercase() }
+        if (labels.isEmpty()) {
+            return null
+        }
+        return labels.joinToString(", ") { "$negation $it" }.let { "($it)" }
+    }
+
     private fun ratingToSymbol(rating: Int): String {
         return when (rating) {
-            Rating.GOOD -> getString(R.string.good_short)
-            Rating.AVERAGE -> getString(R.string.average_short)
-            Rating.BAD -> getString(R.string.bad_short)
+            Rating.GOOD -> "✓"
+            Rating.AVERAGE -> "~"
+            Rating.BAD -> "✗"
             else -> "?"
         }
     }

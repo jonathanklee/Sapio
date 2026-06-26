@@ -7,5 +7,7 @@ data class SharedEvaluation(
     val packageName: String,
     val icon: Bitmap,
     val ratingMicrog: Int,
-    val ratingBareAOSP: Int
+    val ratingBareAOSP: Int,
+    val brokenFeaturesMicrog: List<String>? = null,
+    val brokenFeaturesBareAOSP: List<String>? = null
 )
