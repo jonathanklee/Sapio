@@ -16,19 +16,18 @@ Evaluations in Sapio are given to the community by the community.
 
 # Rating
 
-🟢 The app works perfectly without Google Play Services
+| | Label | Description |
+|-|-------|-------------|
+| 🟢 | **Perfect** | The app works fully without Google Play Services |
+| 🟡 | **Partial** | At least one feature (notifications, in-app purchases, login, etc.) does not work |
+| 🔴 | **Unusable** | The app does not work at all or crashes |
 
-🟡 The app works partially: at least one feature (notifications, in-app purchases, login methods etc) does not work without Google Play Services
-
-🔴 The app does not work at all or crashes without Google Play Services
-
-**bareAOSP** The device is a bare AOSP device 
-
-**microG** The device has microG installed
-
-**secure** The device is considered secured
-
-**unsafe** The device is considered unsafe
+| Label | Description |
+|-------|-------------|
+| **microG** | The device has microG installed |
+| **bareAOSP** | The device is a bare AOSP device |
+| **secure** | The device is considered secured |
+| **unsafe** | The device is considered unsafe |
 
 # 🌐 Website 
 
@@ -40,57 +39,62 @@ Contributing takes no email, no account and no sign-up. Sapio has no way to ever
 
 # 🌍 Public API
 
-## Base url
-```
-https://server.sapio.ovh/api
-```
+**Base URL:** `https://server.sapio.ovh/api`
+
+Pagination, filtering and sorting follow the [Strapi v4 REST API](https://docs.strapi.io/dev-docs/api/rest) conventions.
+
+## Response attributes
+
+| Field | Type | Values |
+|-------|------|--------|
+| `name` | string | App name |
+| `packageName` | string | Android package name |
+| `versionName` | string | App version evaluated |
+| `updatedAt` | string | ISO 8601 timestamp |
+| `microg` | integer | `1` = microG · `2` = bareAOSP |
+| `rooted` | integer | `3` = secure · `4` = unsafe |
+| `rating` | integer | `1` = Perfect · `2` = Partial · `3` = Unusable |
+| `brokenFeatures` | string[] \| null | Non-working features: `notifications`, `in_app_purchase`, `login`, `maps`, `location`, `payments`, `cast`, `augmented_reality` |
+
 ## Endpoints
 
 ### List evaluations
 
-- Endpoint: /sapio-applications
-- Method: GET
-- Description: List evaluations
-- Parameters: https://docs.strapi.io/dev-docs/api/rest/parameters
-- Result:
-    - https://docs.strapi.io/dev-docs/api/rest#requests
-    - attributes:
-        - microg: 1 for microG, 2 for bareAOSP
-        - rooted: 3 for secure, 4 for unsafe
-        - rating: 1 for green, 2 for yellow, 3 for red
-- Example: Get the latest 100 evaluations
-
 ```
-curl -X GET "https://server.sapio.ovh/api/sapio-applications?pagination\[pageSize\]=100&sort=updatedAt:Desc"
+GET /sapio-applications
+```
+
+**Example** — latest 100 evaluations sorted by most recent:
+
+```sh
+curl "https://server.sapio.ovh/api/sapio-applications?pagination[pageSize]=100&sort=updatedAt:Desc"
 ```
 
 ### Search evaluations
 
-- Endpoint: /sapio-applications
-- Method: GET
-- Description: Search evaluations
-- Parameters: https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication#filtering
-- Result:
-    - https://docs.strapi.io/dev-docs/api/rest#requests
-    - attributes:
-        - microg: 1 for microG, 2 for bareAOSP
-        - rooted: 3 for secure, 4 for unsafe
-        - rating: 1 for green, 2 for yellow, 3 for red
-- Example: Search evaluations for an app called ChatGPT
- ```
- curl -X GET "https://server.sapio.ovh/api/sapio-applications?filters\[name\]\[\$eq\]=ChatGPT"
- ```
+Use [Strapi filters](https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication#filtering) to narrow results by any attribute.
+
+```
+GET /sapio-applications
+```
+
+**Example** — search by app name:
+
+```sh
+curl "https://server.sapio.ovh/api/sapio-applications?filters[name][$eq]=ChatGPT"
+```
 
 ### Get icons
 
-- Endpoint: /upload/files
-- Method: GET
-- Description: Get icons
-- Parameters: https://docs.strapi.io/dev-docs/api/rest/parameters
-- Example: Get ChatGPT icon
- ```
-curl -X GET "https://server.sapio.ovh/api/upload/files?filters\[name\]\[\$eq\]=com.openai.chatgpt.png"
- ```
+```
+GET /upload/files
+```
+
+**Example** — get the ChatGPT icon:
+
+```sh
+curl "https://server.sapio.ovh/api/upload/files?filters[name][$eq]=com.openai.chatgpt.png"
+```
 # ⚠️ Disclaimer
 
 Evaluations are community-contributed and may be inaccurate, incomplete, or device-specific. Sapio and its maintainers are not responsible for any issues arising from relying on these evaluations.
