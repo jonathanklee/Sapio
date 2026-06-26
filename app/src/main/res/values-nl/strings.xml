@@ -48,7 +48,7 @@
     <string name="average">Een of meer functies werken niet</string>
     <string name="average_short">Gedeeltelijk</string>
     <string name="bad">Werkt helemaal niet</string>
-    <string name="bad_short">Slecht</string>
+    <string name="bad_short">Onbruikbaar</string>
     <string name="unknown">Onbekend</string>
     <string name="share">Delen</string>
     <string name="share_text">Deel gerust uw beoordeling op sociale media om app-ontwikkelaars bewust te maken van het respecteren van de persoonlijke gegevens van gebruikers.</string>

@@ -54,7 +54,7 @@
     <string name="average">One or more feature don\'t work</string>
     <string name="average_short">Partial</string>
     <string name="bad">Does not work at all</string>
-    <string name="bad_short">Bad</string>
+    <string name="bad_short">Unusable</string>
     <string name="unknown">Unknown</string>
     <string name="share">Share</string>
     <string name="share_text">Feel free to share your evaluation on social media to raise awareness among app developers about respecting users\' personal data.</string>

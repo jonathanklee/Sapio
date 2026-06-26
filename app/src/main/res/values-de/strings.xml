@@ -45,7 +45,7 @@
     <string name="thank_you">Vielen Dank für die Bewertung der Anwendung</string>
     <string name="good">Funktioniert perfekt</string>
     <string name="good_short">Perfekt</string>
-    <string name="bad_short">Schlecht</string>
+    <string name="bad_short">Unbrauchbar</string>
     <string name="average">Eine oder mehrere Funktionen funktionieren nicht</string>
     <string name="average_short">Teilweise</string>
     <string name="bad">Funktioniert überhaupt nicht</string>
