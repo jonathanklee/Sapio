@@ -6,10 +6,11 @@
 set -e
 export PATH=/usr/local/bin:/usr/bin:/bin
 
-cd "$HOME/sapio-website"
+cd "$HOME/Sapio/website"
 
 node tools/generate.mjs
 rsync -az --delete app/ raspi:/var/www/sapio-website/app/
 rsync -az sitemap.xml robots.txt stats.json raspi:/var/www/sapio-website/
+rsync -az index.html app.html core.js app.js app-page.js i18n.js style.css raspi:/var/www/sapio-website/
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') regenerate + deploy OK"
