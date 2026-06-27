@@ -8,3 +8,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Website — generated per-app pages (build artifact)
+website/app/

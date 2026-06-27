@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App compatibility — Sapio</title>
+    <meta name="description" content="Community compatibility evaluation for an Android app running without Google Play Services, on microG and bare AOSP devices.">
+
+    <link rel="canonical" href="https://sapio.ovh/app.html">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sapio">
+    <meta property="og:title" content="App compatibility — Sapio">
+    <meta property="og:description" content="Does this Android app work without Google Play Services? Community evaluations for microG and bare AOSP.">
+    <meta property="og:image" content="https://sapio.ovh/icon.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://sapio.ovh/icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <header class="header">
+        <nav class="nav container">
+            <a href="/index.html" class="nav-logo">
+                <img src="/icon.png" alt="Sapio" class="nav-icon">
+                <span>Sapio</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html#about" data-i18n="nav_about">About</a></li>
+                <li><a href="https://github.com/jonathanklee/Sapio" target="_blank" rel="noopener">GitHub</a></li>
+                <li><select id="lang-select" class="lang-select" aria-label="Language"></select></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="app-page container">
+        <a href="/index.html" class="back-link" data-i18n="back_all">← All evaluations</a>
+
+        <div id="app-toolbar" class="app-toolbar" hidden>
+            <label class="unsafe-label">
+                <input type="checkbox" id="unsafe-toggle">
+                <span data-i18n="show_unsafe">Show unsafe environments</span>
+            </label>
+        </div>
+
+        <div id="app-detail" class="app-detail" aria-busy="true">
+            <div class="skeleton-card"></div>
+        </div>
+
+        <div id="app-error" class="state-box state-error" hidden>
+            <p class="state-title" data-i18n="app_not_found_title">App not found</p>
+            <p class="state-hint"><span data-i18n="app_not_found_hint">We couldn't find an evaluation for this app.</span> <a href="/index.html" data-i18n="browse_all">Browse all evaluations</a>.</p>
+        </div>
+    </main>
+
+    <section class="contribute-section">
+        <div class="container contribute-inner">
+            <h2 class="contribute-title" data-i18n="contribute_title">Want to contribute?</h2>
+            <p class="contribute-text" data-i18n="contribute_text">
+                Evaluations come from the community, through the app. Install Sapio on your
+                deGoogled device to rate apps and share their compatibility with everyone.
+            </p>
+            <div class="contribute-actions">
+                <a href="https://f-droid.org/packages/com.klee.sapio/" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="contribute_fdroid">
+                    Get it on F-Droid
+                </a>
+                <a href="https://github.com/jonathanklee/Sapio/releases" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="contribute_github">
+                    GitHub releases
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <p class="footer-disclaimer">
+                <strong data-i18n="disclaimer_label">Disclaimer</strong> — <span data-i18n="disclaimer_text">Evaluations are community-contributed and may be inaccurate, incomplete, or device-specific. Sapio and its maintainers are not responsible for any issues arising from relying on these evaluations.</span>
+            </p>
+            <p class="footer-credits"><span data-i18n="footer_credits_by">Brain icons by</span> <a href="https://www.flaticon.com/authors/freepik" target="_blank" rel="noopener">Freepik</a> — Flaticon</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/app-page.js"></script>
+
+</body>
+</html>

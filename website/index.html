@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapio — Android Compatibility Without Google Play Services</title>
+    <meta name="description" content="Sapio helps you know if an Android app works on a deGoogled device. Community-driven compatibility evaluations for AOSP and microG users.">
+
+    <link rel="canonical" href="https://sapio.ovh/">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sapio">
+    <meta property="og:title" content="Sapio — Android compatibility without Google Play Services">
+    <meta property="og:description" content="Search whether your Android apps work on deGoogled devices — microG and bare AOSP. Community-driven compatibility evaluations.">
+    <meta property="og:url" content="https://sapio.ovh/">
+    <meta property="og:image" content="https://sapio.ovh/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sapio — Android compatibility without Google Play Services">
+    <meta name="twitter:description" content="Search whether your Android apps work on deGoogled devices — microG and bare AOSP.">
+    <meta name="twitter:image" content="https://sapio.ovh/og-image.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <nav class="nav container">
+            <a href="#" class="nav-logo">
+                <img src="icon.png" alt="Sapio" class="nav-icon">
+                <span>Sapio</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about" data-i18n="nav_about">About</a></li>
+                <li><a href="https://github.com/jonathanklee/Sapio" target="_blank" rel="noopener">GitHub</a></li>
+                <li><select id="lang-select" class="lang-select" aria-label="Language"></select></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <div class="container hero-inner">
+                <img src="icon.png" alt="Sapio" class="hero-icon">
+                <span class="hero-eyebrow" data-i18n="hero_eyebrow">Android apps that respect you!</span>
+                <h1 class="hero-title" data-i18n="hero_title">Will your apps work without Google Play Services?</h1>
+                <p class="hero-subtitle" data-i18n="hero_subtitle">Community compatibility for deGoogled Android — microG and bare AOSP.</p>
+
+                <div class="search-bar">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input
+                        type="text"
+                        id="search-input"
+                        class="search-input"
+                        placeholder="Search an app, e.g. Netflix or com.netflix.mediaclient"
+                        data-i18n-placeholder="search_placeholder"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <button class="search-clear" id="search-clear" aria-label="Clear" hidden>✕</button>
+                </div>
+
+                <div class="hero-examples" id="hero-examples">
+                    <span class="hero-examples-label" data-i18n="examples_try">Try</span>
+                    <button class="example-chip" data-query="Netflix">Netflix</button>
+                    <button class="example-chip" data-query="WhatsApp">WhatsApp</button>
+                    <button class="example-chip" data-query="Revolut">Revolut</button>
+                    <button class="example-chip" data-query="Signal">Signal</button>
+                </div>
+
+                <div class="hero-stats" id="hero-stats" hidden>
+                    <span class="hero-stat"><strong id="stat-apps">—</strong> <span data-i18n="stat_apps">apps</span></span>
+                    <span class="hero-stat"><strong id="stat-evaluations">—</strong> <span data-i18n="stat_evaluations">evaluations</span></span>
+                    <span class="hero-stat" data-i18n="stat_community">community-driven</span>
+                </div>
+
+                <ul class="trust-strip">
+                    <li data-i18n="trust_no_account">No account</li>
+                    <li data-i18n="trust_no_tracking">No tracking</li>
+                    <li data-i18n="trust_open_source">Open source</li>
+                    <li><a href="https://github.com/jonathanklee/Sapio#-public-api" target="_blank" rel="noopener" data-i18n="trust_public_api">Public API</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="results-section container">
+            <div class="results-header">
+                <h2 id="results-title" data-i18n="results_latest">Latest evaluations</h2>
+                <span id="results-count" class="results-count"></span>
+                <label class="unsafe-label">
+                    <input type="checkbox" id="unsafe-toggle">
+                    <span data-i18n="show_unsafe">Show unsafe environments</span>
+                </label>
+            </div>
+
+            <div class="rating-legend">
+                <span class="legend-item"><span class="status-dot good"></span><span data-i18n="legend_works">Works</span></span>
+                <span class="legend-item"><span class="status-dot average"></span><span data-i18n="legend_partial">Partial</span></span>
+                <span class="legend-item"><span class="status-dot bad"></span><span data-i18n="legend_broken">Broken</span></span>
+            </div>
+
+            <div id="results-grid" class="results-list"></div>
+
+            <div id="results-empty" class="state-box" hidden>
+                <p class="state-title" data-i18n="empty_title">No results</p>
+                <p class="state-hint" data-i18n="empty_hint">Try searching by app name or package name (e.g. com.netflix.mediaclient).</p>
+            </div>
+
+            <div id="results-error" class="state-box state-error" hidden>
+                <p class="state-title" data-i18n="error_title">Could not reach the server</p>
+                <p class="state-hint" data-i18n="error_hint">Please try again later.</p>
+            </div>
+        </section>
+
+        <section class="contribute-section">
+            <div class="container contribute-inner">
+                <h2 class="contribute-title" data-i18n="contribute_title">Want to contribute?</h2>
+                <p class="contribute-text" data-i18n="contribute_text">
+                    Evaluations come from the community, through the app. Install Sapio on your
+                    deGoogled device to rate apps and share their compatibility with everyone.
+                </p>
+                <div class="contribute-actions">
+                    <a href="https://f-droid.org/packages/com.klee.sapio/" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="contribute_fdroid">
+                        Get it on F-Droid
+                    </a>
+                    <a href="https://github.com/jonathanklee/Sapio/releases" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="contribute_github">
+                        GitHub releases
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section" id="about">
+            <div class="container about-inner">
+                <div class="about-text">
+                    <h2 data-i18n="about_title">What is Sapio?</h2>
+                    <p data-i18n="about_p1">
+                        Sapio is the anagram of Open Source API. It provides the compatibility of an Android application
+                        running on a device without Google Play Services — i.e. deGoogled bare AOSP devices,
+                        coupled or not with microG.
+                    </p>
+                    <p data-i18n="about_p2">
+                        Evaluations in Sapio are given to the community by the community.
+                        Sapio can serve as a lobbying tool by sharing compatibility on social media to raise
+                        awareness among app developers about respecting users' personal data.
+                    </p>
+                    <div class="about-actions">
+                        <a href="https://github.com/jonathanklee/Sapio" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="about_star">
+                            ⭐ Star on GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <p class="footer-disclaimer">
+                <strong data-i18n="disclaimer_label">Disclaimer</strong> — <span data-i18n="disclaimer_text">Evaluations are community-contributed and may be inaccurate, incomplete, or device-specific. Sapio and its maintainers are not responsible for any issues arising from relying on these evaluations.</span>
+            </p>
+            <p class="footer-credits"><span data-i18n="footer_credits_by">Brain icons by</span> <a href="https://www.flaticon.com/authors/freepik" target="_blank" rel="noopener">Freepik</a> — Flaticon</p>
+        </div>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+
+</body>
+</html>
