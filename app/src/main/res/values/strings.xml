@@ -79,6 +79,7 @@
     <string name="theme_system">System default</string>
     <string name="github_star">Star on GitHub</string>
     <string name="github_url">https://github.com/jonathanklee/Sapio</string>
+    <string name="website_url">https://sapio.ovh</string>
     <plurals name="date_minutes_ago">
         <item quantity="one">%d minute ago</item>
         <item quantity="other">%d minutes ago</item>

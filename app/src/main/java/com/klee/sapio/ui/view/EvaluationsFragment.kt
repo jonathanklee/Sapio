@@ -529,7 +529,7 @@ const val COMPRESSION_QUALITY = 100
             }
         }
         val ratingSuffix = if (ratingParts.isNotEmpty()) ": ${ratingParts.joinToString(", ")}" else ""
-        return "$header$ratingSuffix\n\n${getString(R.string.github_url)} #degoogle #privacy #android #sapio"
+        return "$header$ratingSuffix\n\n${getString(R.string.website_url)} #degoogle #privacy #android #sapio"
     }
 
     private fun formatRatingPart(labelRes: Int, rating: Int, brokenFeatures: List<String>?): String {
