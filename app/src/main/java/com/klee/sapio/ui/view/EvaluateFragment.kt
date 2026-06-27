@@ -59,6 +59,7 @@ class EvaluateFragment : Fragment() {
         }
 
         setupBrokenFeaturesChips()
+        mBinding.brokenFeaturesChips.setOnCheckedStateChangeListener { _, _ -> updateButtonState() }
 
         mBinding.validateButton.setOnClickListener {
             val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
@@ -80,8 +81,11 @@ class EvaluateFragment : Fragment() {
     }
 
     private fun updateButtonState() {
-        val radioSelected = mBinding.note.checkedRadioButtonId != -1
-        mBinding.validateButton.isEnabled = radioSelected
+        val checkedId = mBinding.note.checkedRadioButtonId
+        val radioSelected = checkedId != -1
+        val isPartial = checkedId == R.id.orangeRadioButton
+        val brokenFeatureSelected = mBinding.brokenFeaturesChips.checkedChipIds.isNotEmpty()
+        mBinding.validateButton.isEnabled = radioSelected && (!isPartial || brokenFeatureSelected)
     }
 
     private fun updateBrokenFeaturesVisibility(checkedId: Int) {
