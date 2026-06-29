@@ -64,7 +64,15 @@ const TRANSLATIONS = {
     footer_credits_by:{ en: 'Brain icons by', fr: 'Icônes de cerveau par', de: 'Gehirn-Icons von', it: 'Icone del cervello di', es: 'Iconos de cerebro por' },
 
     // ─── App detail page ──────────────────────────────────────────────────────
-    back_all:         { en: '← All evaluations', fr: '← Toutes les évaluations', de: '← Alle Bewertungen', it: '← Tutte le valutazioni', es: '← Todas las evaluaciones' },
+    card_title:           { en: 'Android Compatibility', fr: 'Compatibilité Android', de: 'Android-Kompatibilität', it: 'Compatibilità Android', es: 'Compatibilidad Android' },
+    card_subtitle:        { en: 'without Google Play Services', fr: 'sans Google Play Services', de: 'ohne Google Play Services', it: 'senza Google Play Services', es: 'sin Google Play Services' },
+    share_title:          { en: 'Help make noise!', fr: 'Faites du bruit !', de: 'Macht Lärm!', it: 'Fate rumore!', es: '¡Haz ruido!' },
+    share_cta:            { en: 'Feel free to share this evaluation on social media to raise awareness among app developers about respecting users\' personal data.', fr: 'N\'hésitez pas à partager cette évaluation sur les réseaux sociaux pour sensibiliser les développeurs au respect des données personnelles.', de: 'Teile diese Bewertung in sozialen Medien, um App-Entwickler für den Schutz persönlicher Daten zu sensibilisieren.', it: 'Condividi questa valutazione sui social media per sensibilizzare gli sviluppatori sul rispetto dei dati personali.', es: 'Comparte esta evaluación en redes sociales para concienciar a los desarrolladores sobre el respeto de los datos personales.' },
+    share:                { en: 'Share', fr: 'Partager', de: 'Teilen', it: 'Condividi', es: 'Compartir' },
+    share_download:       { en: 'Download image', fr: 'Télécharger l\'image', de: 'Bild herunterladen', it: 'Scarica immagine', es: 'Descargar imagen' },
+    share_copy:           { en: 'Copy text', fr: 'Copier le texte', de: 'Text kopieren', it: 'Copia testo', es: 'Copiar texto' },
+    copied_to_clipboard:  { en: 'Copied!', fr: 'Copié !', de: 'Kopiert !', it: 'Copiato !', es: '¡Copiado !' },
+    back_all:             { en: '← All evaluations', fr: '← Toutes les évaluations', de: '← Alle Bewertungen', it: '← Tutte le valutazioni', es: '← Todas las evaluaciones' },
     app_not_found_title: { en: 'App not found', fr: 'Application introuvable', de: 'App nicht gefunden', it: 'App non trovata', es: 'App no encontrada' },
     app_not_found_hint:  { en: 'We couldn\'t find an evaluation for this app.', fr: 'Aucune évaluation trouvée pour cette application.', de: 'Für diese App wurde keine Bewertung gefunden.', it: 'Nessuna valutazione trovata per questa app.', es: 'No encontramos ninguna evaluación para esta app.' },
     browse_all:       { en: 'Browse all evaluations', fr: 'Parcourir toutes les évaluations', de: 'Alle Bewertungen ansehen', it: 'Sfoglia tutte le valutazioni', es: 'Ver todas las evaluaciones' },
