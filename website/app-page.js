@@ -336,7 +336,7 @@ function buildShareText(app) {
     const header = `Android compatibility for ${app.name} (${app.packageName})`;
     const ratingSuffix = parts.length > 0 ? `: ${parts.join(', ')}` : '';
 
-    return `${header}${ratingSuffix}\n\nhttps://sapio.ovh #degoogle #privacy #android #sapio`;
+    return `${header}${ratingSuffix}\n\nhttps://sapio.ovh/app/${encodeURIComponent(app.packageName)} #degoogle #privacy #android #sapio`;
 }
 
 function ratingSymbol(rating) {
