@@ -333,7 +333,7 @@ function buildShareText(app) {
     if (microg) { parts.push(`microG ${ratingSymbol(microg.rating)}${brokenPartSuffix(microg)}`); }
     if (bareAosp) { parts.push(`bareAOSP ${ratingSymbol(bareAosp.rating)}${brokenPartSuffix(bareAosp)}`); }
 
-    const header = `Android compatibility for ${app.name} (${app.packageName})`;
+    const header = `Android compatibility for ${app.name}`;
     const ratingSuffix = parts.length > 0 ? `: ${parts.join(', ')}` : '';
 
     return `${header}${ratingSuffix}\n\nhttps://sapio.ovh/app/${encodeURIComponent(app.packageName)} #degoogle #privacy #android #sapio`;

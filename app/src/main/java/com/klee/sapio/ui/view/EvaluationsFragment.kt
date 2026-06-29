@@ -505,8 +505,7 @@ const val COMPRESSION_QUALITY = 100
     private fun buildShareText(sharedEvaluation: SharedEvaluation): String {
         val header = getString(
             R.string.share_compatibility_report,
-            sharedEvaluation.name,
-            sharedEvaluation.packageName
+            sharedEvaluation.name
         )
         val ratingParts = buildList {
             if (isKnownRating(sharedEvaluation.ratingMicrog)) {

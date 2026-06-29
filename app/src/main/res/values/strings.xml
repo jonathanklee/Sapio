@@ -59,7 +59,7 @@
     <string name="share">Share</string>
     <string name="share_text">Feel free to share your evaluation on social media to raise awareness among app developers about respecting users\' personal data.</string>
     <string name="share_android_compatibility">%1$s Android Compatibility</string>
-    <string name="share_compatibility_report">Android compatibility for %1$s (%2$s)</string>
+    <string name="share_compatibility_report">Android compatibility for %1$s</string>
     <string name="support_privacy_focused_apps">Android apps that respect you!</string>
     <string name="donate">Buy me a coffee</string>
     <string name="settings">Settings</string>
