@@ -1,16 +1,14 @@
 #!/bin/sh
 #
-# Regenerate the static Sapio per-app pages + sitemap and sync them to the Pi.
-# Runs on this machine (Node 20); the Pi only serves the files.
+# Sapio website refresh — runs on the Pi via cron.
+# Pulls latest source from git, regenerates per-app pages,
+# sitemap, stats, and deploys everything to the web root.
 
 set -e
-export PATH=/usr/local/bin:/usr/bin:/bin
 
-cd "$HOME/Sapio/website"
+REPO="$HOME/Sapio"
 
-node tools/generate.mjs
-rsync -az --delete app/ raspi:/var/www/sapio-website/app/
-rsync -az sitemap.xml robots.txt stats.json raspi:/var/www/sapio-website/
-rsync -az index.html app.html core.js app.js app-page.js i18n.js style.css raspi:/var/www/sapio-website/
+git -C "$REPO" pull -q
+python3 "$REPO/website/tools/refresh.py"
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') regenerate + deploy OK"
+echo "$(date '+%Y-%m-%d %H:%M:%S') refresh OK"
