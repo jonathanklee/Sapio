@@ -87,6 +87,7 @@ function renderApp() {
     card.appendChild(renderSummary(currentApp, showUnsafe));
     card.appendChild(renderSections(currentApp, showUnsafe));
 
+    detail.appendChild(renderLegend());
     detail.appendChild(card);
 
     const shareSection = renderShareButton(currentApp);
@@ -97,6 +98,35 @@ function renderApp() {
     } else {
         shareBanner.hidden = true;
     }
+}
+
+function renderLegend() {
+    const legend = document.createElement('div');
+    legend.className = 'rating-legend';
+
+    const items = [
+        { cls: 'good',    key: 'legend_works' },
+        { cls: 'average', key: 'legend_partial' },
+        { cls: 'bad',     key: 'legend_broken' },
+    ];
+
+    for (const item of items) {
+        const span = document.createElement('span');
+        span.className = 'legend-item';
+
+        const dot = document.createElement('span');
+        dot.className = `status-dot ${item.cls}`;
+
+        const label = document.createElement('span');
+        label.textContent = t(item.key);
+
+        span.appendChild(dot);
+        span.appendChild(label);
+        legend.appendChild(span);
+    }
+
+    return legend;
+
 }
 
 function renderSections(app, withUnsafe) {
