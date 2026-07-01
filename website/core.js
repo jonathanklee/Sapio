@@ -17,7 +17,7 @@ const BROKEN_FEATURE_LABELS = {
     login:              'Login',
     maps:               'Maps',
     location:           'Location',
-    payments:           'Physical payments',
+    payments:           'Contactless payment',
     cast:               'Screen casting',
     augmented_reality:  'Augmented reality',
 };

@@ -42,7 +42,7 @@ const TRANSLATIONS = {
     feat_login:           { en: 'Login', fr: 'Connexion', de: 'Anmeldung', it: 'Accesso', es: 'Inicio de sesión' },
     feat_maps:            { en: 'Maps', fr: 'Cartes', de: 'Karten', it: 'Mappe', es: 'Mapas' },
     feat_location:        { en: 'Location', fr: 'Localisation', de: 'Standort', it: 'Posizione', es: 'Ubicación' },
-    feat_payments:        { en: 'Physical payments', fr: 'Paiements physiques', de: 'Physische Zahlungen', it: 'Pagamenti fisici', es: 'Pagos físicos' },
+    feat_payments:        { en: 'Contactless payment', fr: 'Paiement sans contact', de: 'Kontaktloses Zahlen', it: 'Pagamento contactless', es: 'Pago sin contacto' },
     feat_cast:            { en: 'Screen casting', fr: 'Diffusion d\'écran', de: 'Bildschirmübertragung', it: 'Trasmissione schermo', es: 'Proyección de pantalla' },
     feat_augmented_reality:{ en: 'Augmented reality', fr: 'Réalité augmentée', de: 'Augmented Reality', it: 'Realtà aumentata', es: 'Realidad aumentada' },
 

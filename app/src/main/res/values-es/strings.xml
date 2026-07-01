@@ -20,7 +20,7 @@
     <string name="broken_feature_login">Inicio de sesión</string>
     <string name="broken_feature_maps">Mapas</string>
     <string name="broken_feature_location">Ubicación</string>
-    <string name="broken_feature_payments">Pagos físicos</string>
+    <string name="broken_feature_payments">Pago sin contacto</string>
     <string name="broken_feature_cast">Proyección de pantalla</string>
     <string name="broken_feature_augmented_reality">Realidad aumentada</string>
     <string name="feature_negation">sin</string>

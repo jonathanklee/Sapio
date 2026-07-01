@@ -26,7 +26,7 @@
     <string name="broken_feature_login">Login</string>
     <string name="broken_feature_maps">Maps</string>
     <string name="broken_feature_location">Location</string>
-    <string name="broken_feature_payments">Physical payments</string>
+    <string name="broken_feature_payments">Contactless payment</string>
     <string name="broken_feature_cast">Screen casting</string>
     <string name="broken_feature_augmented_reality">Augmented reality</string>
     <string name="feature_negation">no</string>

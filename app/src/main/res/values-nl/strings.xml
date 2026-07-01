@@ -21,7 +21,7 @@
     <string name="broken_feature_login">Inloggen</string>
     <string name="broken_feature_maps">Kaarten</string>
     <string name="broken_feature_location">Locatie</string>
-    <string name="broken_feature_payments">Fysieke betalingen</string>
+    <string name="broken_feature_payments">Contactloos betalen</string>
     <string name="broken_feature_cast">Scherm casten</string>
     <string name="broken_feature_augmented_reality">Augmented reality</string>
     <string name="feature_negation">zonder</string>

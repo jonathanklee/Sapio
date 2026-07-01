@@ -20,7 +20,7 @@
     <string name="broken_feature_login">Accesso</string>
     <string name="broken_feature_maps">Mappe</string>
     <string name="broken_feature_location">Posizione</string>
-    <string name="broken_feature_payments">Pagamenti fisici</string>
+    <string name="broken_feature_payments">Pagamento contactless</string>
     <string name="broken_feature_cast">Trasmissione schermo</string>
     <string name="broken_feature_augmented_reality">Realtà aumentata</string>
     <string name="feature_negation">senza</string>

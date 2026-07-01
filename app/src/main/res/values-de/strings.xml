@@ -20,7 +20,7 @@
     <string name="broken_feature_login">Anmeldung</string>
     <string name="broken_feature_maps">Karten</string>
     <string name="broken_feature_location">Standort</string>
-    <string name="broken_feature_payments">Physische Zahlungen</string>
+    <string name="broken_feature_payments">Kontaktloses Zahlen</string>
     <string name="broken_feature_cast">Bildschirmübertragung</string>
     <string name="broken_feature_augmented_reality">Augmented Reality</string>
     <string name="feature_negation">ohne</string>
