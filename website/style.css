@@ -434,12 +434,6 @@ body {
 .app-card--link {
     text-decoration: none;
     color: inherit;
-    transition: box-shadow .15s, transform .15s;
-}
-
-.app-card--link:hover {
-    box-shadow: 0 4px 14px rgba(0,0,0,.14), 0 2px 4px rgba(0,0,0,.08);
-    transform: translateY(-1px);
 }
 
 .app-card {
