@@ -7,11 +7,9 @@ Fetches all evaluations from the API and writes to WEB_DIR:
   - sitemap.xml
   - stats.json
   - robots.txt
-  - website source files (copied from the git repo)
 """
 
 import json
-import os
 import re
 import shutil
 import urllib.request
@@ -22,13 +20,6 @@ SITE_ORIGIN = "https://sapio.ovh"
 WEBSITE_DIR = Path(__file__).resolve().parent.parent
 WEB_DIR = Path("/var/www/sapio-website")
 PAGE_SIZE = 100
-
-SOURCE_FILES = [
-    "index.html", "app.html", "app.js", "app-page.js",
-    "core.js", "i18n.js", "style.css",
-    "favicon.ico", "favicon-16x16.png", "favicon-32x32.png",
-    "apple-touch-icon.png", "icon.png", "og-image.png",
-]
 
 RATING_LABEL = {1: "Perfect", 2: "Partial", 3: "Unusable"}
 BROKEN_FEATURE_LABELS = {
@@ -66,7 +57,6 @@ def main():
     write_sitemap(pages)
     write_robots()
     write_stats(len(all_apps), len(evaluations))
-    deploy_source_files()
 
     print(f"Done — {len(pages)} app pages, {len(all_apps)} apps, {len(evaluations)} evaluations.")
 
@@ -279,13 +269,6 @@ def write_stats(apps, evaluations):
         json.dumps({"apps": apps, "evaluations": evaluations}),
         encoding="utf-8",
     )
-
-
-def deploy_source_files():
-    for filename in SOURCE_FILES:
-        src = WEBSITE_DIR / filename
-        if src.exists():
-            shutil.copy2(src, WEB_DIR / filename)
 
 
 if __name__ == "__main__":
