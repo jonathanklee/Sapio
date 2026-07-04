@@ -15,8 +15,8 @@ android {
         applicationId "com.klee.sapio"
         minSdk 21
         targetSdk 35
-        versionCode 92
-        versionName "2.6.1"
+        versionCode 93
+        versionName "2.6.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
