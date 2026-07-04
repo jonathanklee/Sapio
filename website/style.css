@@ -192,7 +192,7 @@ body {
     font-weight: 700;
     color: var(--color-primary-text);
     letter-spacing: -.02em;
-    max-width: 540px;
+    max-width: 620px;
     line-height: 1.2;
     text-wrap: balance;
 }
