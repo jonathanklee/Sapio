@@ -38,7 +38,7 @@
     --cell-radius:   12px;
     --badge-radius:  6px;
     --card-shadow:   0 2px 8px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
-    --font:          'Roboto', sans-serif;
+    --font:          'Inter', sans-serif;
     --max-width:     960px;
 }
 
