@@ -35,7 +35,7 @@ Evaluations in Sapio are given to the community by the community.
 
 # 🔒 No email, no account, no spam
 
-Contributing takes no email, no account and no sign-up. Sapio has no way to ever contact or spam you, and there's no user database to breach.
+Contributing takes no email, no account and no sign-up. Sapio has no way to ever contact or spam you, there's no user database to breach, and the server does not log requests — your IP never touches a log file.
 
 # 🌍 Public API
 
