@@ -981,4 +981,7 @@ body {
     .cells-row { grid-template-columns: 1fr; }
 
     .about-inner { max-width: 100%; }
+
+    .nav-about { display: none; }
+
 }
