@@ -99,12 +99,26 @@ function showError() {
 
 // ─── Data loading ─────────────────────────────────────────────────────────────
 
+function filterToLatestSection(app) {
+    if (app.entries.length <= 1) {
+        return app;
+    }
+
+    const maxTime = Math.max(...app.entries.map(e => new Date(e.updatedAt).getTime()));
+    const ONE_HOUR_MS = 60 * 60 * 1000;
+
+    return {
+        ...app,
+        entries: app.entries.filter(e => maxTime - new Date(e.updatedAt).getTime() <= ONE_HOUR_MS),
+    };
+}
+
 async function loadLatest() {
     showSkeletons();
     resultsTitle.textContent = t('results_latest');
     try {
         const raw = await fetchLatest();
-        const apps = groupByPackage(raw).slice(0, 20);
+        const apps = groupByPackage(raw).map(filterToLatestSection).slice(0, 20);
         renderResults(apps);
     } catch {
         showError();
