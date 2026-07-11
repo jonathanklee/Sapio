@@ -332,7 +332,7 @@ const val COMPRESSION_QUALITY = 100
         features.forEach { key ->
             val label = brokenFeatureLabelForKey(key) ?: return@forEach
             val pill = TextView(requireContext()).apply {
-                text = "× $label"
+                text = label
                 textSize = 10f
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_label_rounded)

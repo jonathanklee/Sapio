@@ -654,11 +654,11 @@ body {
 
 .broken-chip {
     font-size: 10px;
-    font-weight: 500;
-    color: #fff;
-    background: #E53935;
+    font-weight: 600;
+    color: #B71C1C;
+    background: #FFEBEE;
     border-radius: var(--badge-radius);
-    padding: 2px 6px;
+    padding: 2px 8px;
     white-space: nowrap;
 }
 

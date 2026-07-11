@@ -396,7 +396,7 @@ function renderBrokenFeatures(features) {
 
         const chip = document.createElement('span');
         chip.className = 'broken-chip';
-        chip.textContent = `× ${t(`feat_${key}`)}`;
+        chip.textContent = t(`feat_${key}`);
         chips.appendChild(chip);
     }
 
