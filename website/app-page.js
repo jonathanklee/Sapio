@@ -17,8 +17,6 @@ const SITE_ICON = `${SITE_ORIGIN}/icon.png`;
 
 const detail = document.getElementById('app-detail');
 const errorBox = document.getElementById('app-error');
-const toolbar = document.getElementById('app-toolbar');
-const unsafeToggle = document.getElementById('unsafe-toggle');
 const shareBanner = document.getElementById('share-banner');
 
 let currentApp = null;
@@ -54,9 +52,10 @@ async function loadApp() {
 }
 
 function enableUnsafeToggle() {
-    toolbar.hidden = false;
-    unsafeToggle.addEventListener('change', () => {
-        showUnsafe = unsafeToggle.checked;
+    detail.addEventListener('change', (e) => {
+        if (e.target.id !== 'unsafe-toggle') { return; }
+
+        showUnsafe = e.target.checked;
         renderApp();
     });
 }
@@ -124,6 +123,21 @@ function renderLegend() {
         span.appendChild(label);
         legend.appendChild(span);
     }
+
+    const toggleLabel = document.createElement('label');
+    toggleLabel.className = 'unsafe-label';
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = 'unsafe-toggle';
+    input.checked = showUnsafe;
+
+    const toggleSpan = document.createElement('span');
+    toggleSpan.textContent = t('show_unsafe');
+
+    toggleLabel.appendChild(input);
+    toggleLabel.appendChild(toggleSpan);
+    legend.appendChild(toggleLabel);
 
     return legend;
 

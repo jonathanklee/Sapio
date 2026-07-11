@@ -400,21 +400,30 @@ body {
 }
 
 .unsafe-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--color-secondary-text);
-    cursor: pointer;
     margin-left: auto;
+    cursor: pointer;
     user-select: none;
 }
 
 .unsafe-label input[type="checkbox"] {
-    accent-color: var(--root-badge-bg);
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
+    display: none;
+}
+
+.unsafe-label span {
+    font-size: 11px;
+    color: var(--color-secondary-text);
+    opacity: 0.55;
+    transition: opacity .15s, color .15s;
+}
+
+.unsafe-label:hover span {
+    opacity: 1;
+}
+
+.unsafe-label:has(input:checked) span {
+    opacity: 1;
+    color: var(--color-primary-text);
+    font-weight: 600;
 }
 
 .rating-legend {
