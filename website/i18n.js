@@ -177,19 +177,17 @@ function applyStaticTranslations(root = document) {
 }
 
 function initLanguageSwitcher() {
-    const select = document.getElementById('lang-select');
-    if (!select) { return; }
+    const container = document.getElementById('lang-switcher');
+    if (!container) { return; }
 
-    select.innerHTML = '';
     for (const lang of LANGS) {
-        const option = document.createElement('option');
-        option.value = lang;
-        option.textContent = LANG_NAMES[lang];
-        option.selected = lang === currentLang;
-        select.appendChild(option);
+        const btn = document.createElement('button');
+        btn.className = 'lang-btn' + (lang === currentLang ? ' active' : '');
+        btn.textContent = lang.toUpperCase();
+        btn.setAttribute('aria-label', LANG_NAMES[lang]);
+        btn.addEventListener('click', () => setLang(lang));
+        container.appendChild(btn);
     }
-
-    select.addEventListener('change', () => setLang(select.value));
 }
 
 function setupI18n() {

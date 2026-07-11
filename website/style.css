@@ -141,16 +141,33 @@ body {
 
 .nav-links a:hover { color: var(--color-primary-text); }
 
-.lang-select {
+.lang-switcher {
+    display: flex;
+    gap: 2px;
+}
+
+.lang-btn {
     font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--color-secondary-text);
-    background: var(--color-bg);
-    border: 1px solid var(--color-divider);
-    border-radius: 8px;
-    padding: 4px 8px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 6px;
     cursor: pointer;
+    letter-spacing: .03em;
+    transition: color .15s, background .15s;
+}
+
+.lang-btn:hover {
+    color: var(--color-primary-text);
+    background: var(--color-bg);
+}
+
+.lang-btn.active {
+    color: #1976D2;
+    font-weight: 700;
 }
 
 /* ─── Hero ────────────────────────────────────────────────────────────────── */
