@@ -852,13 +852,13 @@ body {
 
 .app-page {
     max-width: 680px;
-    padding-top: 28px;
+    padding-top: 48px;
     padding-bottom: 44px;
 }
 
 .back-link {
     display: inline-block;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     font-size: 14px;
     font-weight: 500;
     color: var(--color-secondary-text);
@@ -876,7 +876,8 @@ body {
 }
 
 .app-detail-card {
-    gap: 16px;
+    padding: 24px;
+    gap: 22px;
 }
 
 .app-summary {
