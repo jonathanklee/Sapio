@@ -92,7 +92,7 @@ open class EvaluationService @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     companion object {
-        const val BASE_URL = "https://server.sapio.ovh"
+        const val BASE_URL = "https://server.checksap.io"
         const val COMPRESSION_QUALITY = 100
         const val UPLOAD_TIMEOUT_MS: Long = 10000
         const val CACHE_MAX_SIZE = 10 * 1024 * 1024L
