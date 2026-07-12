@@ -15,8 +15,8 @@ import shutil
 import urllib.request
 from pathlib import Path
 
-API_BASE = "https://server.sapio.ovh/api"
-SITE_ORIGIN = "https://sapio.ovh"
+API_BASE = "https://server.checksap.io/api"
+SITE_ORIGIN = "https://checksap.io"
 WEBSITE_DIR = Path(__file__).resolve().parent.parent
 WEB_DIR = Path("/var/www/sapio-website")
 PAGE_SIZE = 100

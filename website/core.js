@@ -1,6 +1,6 @@
 import { t, format, relativeDate } from './i18n.js';
 
-const API_BASE = 'https://server.sapio.ovh/api';
+const API_BASE = 'https://server.checksap.io/api';
 
 const RATING = {
     1: { cls: 'good'    },
@@ -143,7 +143,7 @@ function appBucketFor(appMap, ev) {
 
 function adoptIcon(app, ev) {
     if (!app.iconUrl && ev.icon?.data?.attributes?.url) {
-        app.iconUrl = `https://server.sapio.ovh${ev.icon.data.attributes.url}`;
+        app.iconUrl = `https://server.checksap.io${ev.icon.data.attributes.url}`;
     }
 }
 

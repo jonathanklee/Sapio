@@ -12,7 +12,7 @@ import {
 } from './core.js';
 import { setupI18n, t } from './i18n.js';
 
-const SITE_ORIGIN = 'https://sapio.ovh';
+const SITE_ORIGIN = 'https://checksap.io';
 const SITE_ICON = `${SITE_ORIGIN}/icon.png`;
 
 const detail = document.getElementById('app-detail');
@@ -380,7 +380,7 @@ function buildShareText(app) {
     const header = `Android compatibility for ${app.name}`;
     const ratingSuffix = parts.length > 0 ? `: ${parts.join(', ')}` : '';
 
-    return `${header}${ratingSuffix}\n\nhttps://sapio.ovh/app/${encodeURIComponent(app.packageName)} #degoogle #privacy #android #sapio`;
+    return `${header}${ratingSuffix}\n\nhttps://checksap.io/app/${encodeURIComponent(app.packageName)} #degoogle #privacy #android #sapio`;
 }
 
 function ratingSymbol(rating) {
