@@ -90,6 +90,7 @@ const TRANSLATIONS = {
     results_for:      { en: 'Results for "%s"', fr: 'Résultats pour « %s »', de: 'Ergebnisse für „%s"', it: 'Risultati per "%s"', es: 'Resultados para «%s»' },
     count_apps_one:   { en: '%n app', fr: '%n application', de: '%n App', it: '%n app', es: '%n app' },
     count_apps_other: { en: '%n apps', fr: '%n applications', de: '%n Apps', it: '%n app', es: '%n apps' },
+    show_more:        { en: 'Show more', fr: 'Voir plus', de: 'Mehr anzeigen', it: 'Mostra altro', es: 'Ver más' },
     language_label:   { en: 'Language', fr: 'Langue', de: 'Sprache', it: 'Lingua', es: 'Idioma' },
     summary_frame:    { en: '%name without Google Play Services — %parts.', fr: '%name sans Google Play Services — %parts.', de: '%name ohne Google Play Services — %parts.', it: '%name senza Google Play Services — %parts.', es: '%name sin Google Play Services — %parts.' },
     summary_none:     { en: 'No evaluation yet for %name without Google Play Services.', fr: 'Pas encore d\'évaluation pour %name sans Google Play Services.', de: 'Noch keine Bewertung für %name ohne Google Play Services.', it: 'Ancora nessuna valutazione per %name senza Google Play Services.', es: 'Aún no hay evaluación para %name sin Google Play Services.' },

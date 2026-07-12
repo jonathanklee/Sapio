@@ -373,7 +373,7 @@ body {
 /* ─── Results ─────────────────────────────────────────────────────────────── */
 
 .results-section {
-    padding: 28px 16px 64px;
+    padding: 28px 16px 36px;
 }
 
 .results-header {
@@ -453,6 +453,12 @@ body {
     gap: 6px;
     max-width: 680px;
     margin: 0 auto;
+}
+
+.show-more-wrap {
+    display: none;
+    justify-content: center;
+    margin-top: 16px;
 }
 
 /* ─── App card ────────────────────────────────────────────────────────────── */

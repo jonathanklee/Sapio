@@ -1,7 +1,7 @@
 import {
     SECTIONS,
     ENVS,
-    fetchLatest,
+    fetchLatestPage,
     fetchSearch,
     groupByPackage,
     entryFor,
@@ -11,9 +11,18 @@ import {
 import { setupI18n, t, format, getLang } from './i18n.js';
 
 const DEBOUNCE_MS = 300;
+const INITIAL_LATEST_COUNT = 3;
+const LATEST_PAGE_SIZE = 10;
+const API_FETCH_SIZE = 100;
 
 let showUnsafe = false;
+let isLatestMode = false;
 let currentApps = [];
+let latestApps = [];
+let visibleLatestCount = INITIAL_LATEST_COUNT;
+let rawLatestEvaluations = [];
+let latestApiPage = 0;
+let latestApiDone = false;
 
 // ─── DOM refs ────────────────────────────────────────────────────────────────
 
@@ -25,6 +34,12 @@ const resultsCount   = document.getElementById('results-count');
 const resultsEmpty   = document.getElementById('results-empty');
 const resultsError   = document.getElementById('results-error');
 const unsafeToggle   = document.getElementById('unsafe-toggle');
+const showMoreWrap   = document.getElementById('show-more-wrap');
+const showMoreBtn    = document.getElementById('show-more-btn');
+
+function setShowMore(visible) {
+    showMoreWrap.style.display = visible ? 'flex' : 'none';
+}
 
 // ─── Rendering ───────────────────────────────────────────────────────────────
 
@@ -56,17 +71,19 @@ function renderAppCard(app) {
 // ─── State management ─────────────────────────────────────────────────────────
 
 function showSkeletons() {
-    resultsGrid.innerHTML = Array(5).fill('<div class="skeleton-card"></div>').join('');
+    resultsGrid.innerHTML = Array(3).fill('<div class="skeleton-card"></div>').join('');
     resultsGrid.hidden = false;
     resultsEmpty.hidden = true;
     resultsError.hidden = true;
     resultsCount.textContent = '';
+    setShowMore(false);
 }
 
 function renderResults(apps) {
     currentApps = apps;
     resultsGrid.innerHTML = '';
     resultsError.hidden = true;
+    setShowMore(false);
 
     const cards = apps
         .map(renderAppCard)
@@ -87,6 +104,9 @@ function renderResults(apps) {
 
 function rerenderCurrentResults() {
     renderResults(currentApps);
+    if (isLatestMode) {
+        setShowMore(visibleLatestCount < latestApps.length || !latestApiDone);
+    }
 }
 
 function showError() {
@@ -113,19 +133,44 @@ function filterToLatestSection(app) {
     };
 }
 
+async function ensureEnoughApps(needed) {
+    while (latestApps.length < needed && !latestApiDone) {
+        latestApiPage++;
+        const batch = await fetchLatestPage(latestApiPage, API_FETCH_SIZE);
+        rawLatestEvaluations.push(...batch);
+        latestApps = groupByPackage(rawLatestEvaluations).map(filterToLatestSection);
+
+        if (batch.length < API_FETCH_SIZE) {
+            latestApiDone = true;
+        }
+    }
+}
+
 async function loadLatest() {
+    isLatestMode = true;
     showSkeletons();
     resultsTitle.textContent = t('results_latest');
+    rawLatestEvaluations = [];
+    latestApps = [];
+    latestApiPage = 0;
+    latestApiDone = false;
+    visibleLatestCount = INITIAL_LATEST_COUNT;
+
     try {
-        const raw = await fetchLatest();
-        const apps = groupByPackage(raw).map(filterToLatestSection).slice(0, 20);
-        renderResults(apps);
+        await ensureEnoughApps(INITIAL_LATEST_COUNT);
+        if (!isLatestMode) {
+            return;
+        }
+
+        renderResults(latestApps.slice(0, visibleLatestCount));
+        setShowMore(latestApps.length > visibleLatestCount || !latestApiDone);
     } catch {
         showError();
     }
 }
 
 async function runSearch(query) {
+    isLatestMode = false;
     showSkeletons();
     resultsTitle.textContent = format('results_for', { '%s': query });
     try {
@@ -160,6 +205,28 @@ searchClear.addEventListener('click', () => {
     searchClear.hidden = true;
     loadLatest();
     searchInput.focus();
+});
+
+showMoreBtn.addEventListener('click', async () => {
+    const nextCount = visibleLatestCount <= INITIAL_LATEST_COUNT
+        ? LATEST_PAGE_SIZE
+        : visibleLatestCount + LATEST_PAGE_SIZE;
+
+    showMoreBtn.disabled = true;
+
+    try {
+        await ensureEnoughApps(nextCount);
+    } finally {
+        showMoreBtn.disabled = false;
+    }
+
+    if (!isLatestMode) {
+        return;
+    }
+
+    visibleLatestCount = Math.min(nextCount, latestApps.length);
+    renderResults(latestApps.slice(0, visibleLatestCount));
+    setShowMore(visibleLatestCount < latestApps.length || !latestApiDone);
 });
 
 unsafeToggle.addEventListener('change', () => {

@@ -75,6 +75,17 @@ async function fetchApplications(params) {
     return json.data.map(item => item.attributes);
 }
 
+async function fetchLatestPage(page, pageSize) {
+    const params = new URLSearchParams({
+        'pagination[page]': String(page),
+        'pagination[pageSize]': String(pageSize),
+        'sort': 'updatedAt:Desc',
+        'populate[icon][fields][0]': 'url',
+    });
+
+    return fetchApplications(params);
+}
+
 async function fetchAll() {
     const pageSize = 100;
     const evaluations = [];
@@ -418,6 +429,7 @@ export {
     SECTIONS,
     ENVS,
     fetchLatest,
+    fetchLatestPage,
     fetchSearch,
     fetchByPackage,
     fetchAll,
