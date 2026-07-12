@@ -49,7 +49,7 @@ def main():
     ]
 
     print(f"Generating {len(pages)} app pages…")
-    template = (WEBSITE_DIR / "app.html").read_text(encoding="utf-8")
+    template = (WEB_DIR / "app.html").read_text(encoding="utf-8")
     reset_app_dir()
     for app in pages:
         write_app_page(app, template)

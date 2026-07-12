@@ -194,5 +194,9 @@ async function loadStats() {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 setupI18n();
-loadLatest();
+loadLatest().then(() => {
+    if (location.hash) {
+        document.querySelector(location.hash)?.scrollIntoView();
+    }
+});
 loadStats();

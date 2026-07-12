@@ -786,34 +786,66 @@ body {
 
 .footer {
     border-top: 1px solid var(--color-divider);
-    padding: 24px 0;
-    background: var(--color-surface);
+    padding: 48px 0 32px;
+    background: #1a1a2e;
 }
 
-.footer-inner {
-    text-align: center;
+.footer-cols {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
 }
 
-.footer-disclaimer {
-    max-width: 680px;
-    margin: 0 auto 14px;
+.footer-col {
+    flex: 1;
+    min-width: 160px;
+}
+
+.footer-col-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: rgba(255,255,255,.4);
+    margin-bottom: 14px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+    text-decoration: none;
+    transition: color .15s;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.footer-disclaimer-inline {
     font-size: 11px;
     line-height: 1.6;
-    color: var(--color-secondary-text);
+    color: rgba(255,255,255,.35);
 }
 
-.footer-disclaimer strong {
-    font-size: 12px;
-    color: var(--color-primary-text);
+.footer-disclaimer-inline strong {
+    color: rgba(255,255,255,.5);
 }
 
 .footer-credits {
-    font-size: 12px;
-    color: var(--color-secondary-text);
+    font-size: 11px;
+    color: rgba(255,255,255,.35);
 }
 
 .footer-credits a {
-    color: var(--color-secondary-text);
+    color: rgba(255,255,255,.35);
 }
 
 /* ─── App detail page ─────────────────────────────────────────────────────── */

@@ -33,4 +33,6 @@ for f in $SOURCE_FILES; do
 
 done
 
+scp -q "$WEBSITE_DIR/tools/refresh.py" "$PI:~/Sapio/website/tools/refresh.py"
+
 echo "Deploy OK"
