@@ -103,9 +103,12 @@ function renderResults(apps) {
 }
 
 function rerenderCurrentResults() {
-    renderResults(currentApps);
     if (isLatestMode) {
-        setShowMore(visibleLatestCount < latestApps.length || !latestApiDone);
+        const renderable = renderableLatestApps();
+        renderResults(renderable.slice(0, visibleLatestCount));
+        setShowMore(visibleLatestCount < renderable.length || !latestApiDone);
+    } else {
+        renderResults(currentApps);
     }
 }
 
@@ -133,8 +136,16 @@ function filterToLatestSection(app) {
     };
 }
 
+function renderableLatestApps() {
+    const secureRotedValue = ENVS.find(e => e.cls === 'secure').rooted;
+
+    return latestApps.filter(app =>
+        showUnsafe || app.entries.some(e => e.rooted === secureRotedValue)
+    );
+}
+
 async function ensureEnoughApps(needed) {
-    while (latestApps.length < needed && !latestApiDone) {
+    while (renderableLatestApps().length < needed && !latestApiDone) {
         latestApiPage++;
         const batch = await fetchLatestPage(latestApiPage, API_FETCH_SIZE);
         rawLatestEvaluations.push(...batch);
@@ -162,8 +173,9 @@ async function loadLatest() {
             return;
         }
 
-        renderResults(latestApps.slice(0, visibleLatestCount));
-        setShowMore(latestApps.length > visibleLatestCount || !latestApiDone);
+        const renderable = renderableLatestApps();
+        renderResults(renderable.slice(0, visibleLatestCount));
+        setShowMore(renderable.length > visibleLatestCount || !latestApiDone);
     } catch {
         showError();
     }
@@ -224,9 +236,10 @@ showMoreBtn.addEventListener('click', async () => {
         return;
     }
 
-    visibleLatestCount = Math.min(nextCount, latestApps.length);
-    renderResults(latestApps.slice(0, visibleLatestCount));
-    setShowMore(visibleLatestCount < latestApps.length || !latestApiDone);
+    const renderable = renderableLatestApps();
+    visibleLatestCount = Math.min(nextCount, renderable.length);
+    renderResults(renderable.slice(0, visibleLatestCount));
+    setShowMore(visibleLatestCount < renderable.length || !latestApiDone);
 });
 
 unsafeToggle.addEventListener('change', () => {
