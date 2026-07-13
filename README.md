@@ -31,7 +31,7 @@ Evaluations in Sapio are given to the community by the community.
 
 # 🌐 Website 
 
-**[Website](https://sapio.ovh)** to browse and search evaluations from your browser.
+**[Website](https://checksap.io)** to browse and search evaluations from your browser.
 
 # 🔒 No email, no account, no spam
 
@@ -39,7 +39,7 @@ Contributing takes no email, no account and no sign-up. Sapio has no way to ever
 
 # 🌍 Public API
 
-**Base URL:** `https://server.sapio.ovh/api`
+**Base URL:** `https://server.checksap.io/api`
 
 Pagination, filtering and sorting follow the [Strapi v4 REST API](https://docs.strapi.io/dev-docs/api/rest) conventions.
 
@@ -67,7 +67,7 @@ GET /sapio-applications
 **Example** — latest 100 evaluations sorted by most recent:
 
 ```sh
-curl "https://server.sapio.ovh/api/sapio-applications?pagination[pageSize]=100&sort=updatedAt:Desc"
+curl "https://server.checksap.io/api/sapio-applications?pagination[pageSize]=100&sort=updatedAt:Desc"
 ```
 
 ### Search evaluations
@@ -81,7 +81,7 @@ GET /sapio-applications
 **Example** — search by app name:
 
 ```sh
-curl "https://server.sapio.ovh/api/sapio-applications?filters[name][$eq]=ChatGPT"
+curl "https://server.checksap.io/api/sapio-applications?filters[name][$eq]=ChatGPT"
 ```
 
 ### Get icons
@@ -93,7 +93,7 @@ GET /upload/files
 **Example** — get the ChatGPT icon:
 
 ```sh
-curl "https://server.sapio.ovh/api/upload/files?filters[name][$eq]=com.openai.chatgpt.png"
+curl "https://server.checksap.io/api/upload/files?filters[name][$eq]=com.openai.chatgpt.png"
 ```
 # ⚠️ Disclaimer
 
