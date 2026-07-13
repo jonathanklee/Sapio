@@ -3,7 +3,9 @@ package com.klee.sapio.data.api
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.AdaptiveIconDrawable
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.toBitmap
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -170,6 +172,7 @@ open class EvaluationService @Inject constructor(
             Unit
         }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     open suspend fun uploadIcon(packageName: String): Result<List<IconAnswer>> {
         return runCatching {
             val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
@@ -209,6 +212,7 @@ open class EvaluationService @Inject constructor(
             answer.data.firstOrNull()?.attributes
         }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun fromDrawableToByArray(drawable: AdaptiveIconDrawable): ByteArray {
         val bitmap = drawable.toBitmap()
         val stream = ByteArrayOutputStream()

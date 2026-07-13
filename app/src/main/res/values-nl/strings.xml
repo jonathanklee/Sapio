@@ -53,7 +53,7 @@
     <string name="share">Delen</string>
     <string name="share_text">Deel gerust uw beoordeling op sociale media om app-ontwikkelaars bewust te maken van het respecteren van de persoonlijke gegevens van gebruikers.</string>
     <string name="share_android_compatibility">Android-compatibiliteit van %1$s</string>
-    <string name="share_compatibility_report">Android-compatibiliteit voor %1$s (%2$s)</string>
+    <string name="share_compatibility_report">Android-compatibiliteit voor %1$s</string>
     <string name="support_privacy_focused_apps">Android-apps die u respecteren!</string>
     <string name="donate">Trakteer me op een koffie</string>
     <string name="settings">Instellingen</string>
