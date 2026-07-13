@@ -15,7 +15,9 @@ const INITIAL_LATEST_COUNT = 3;
 const LATEST_PAGE_SIZE = 10;
 const API_FETCH_SIZE = 100;
 
-let showUnsafe = false;
+const UNSAFE_STORAGE_KEY = 'sapio:showUnsafe';
+
+let showUnsafe = localStorage.getItem(UNSAFE_STORAGE_KEY) === 'true';
 let isLatestMode = false;
 let currentApps = [];
 let latestApps = [];
@@ -36,6 +38,8 @@ const resultsError   = document.getElementById('results-error');
 const unsafeToggle   = document.getElementById('unsafe-toggle');
 const showMoreWrap   = document.getElementById('show-more-wrap');
 const showMoreBtn    = document.getElementById('show-more-btn');
+
+unsafeToggle.checked = showUnsafe;
 
 function setShowMore(visible) {
     showMoreWrap.style.display = visible ? 'flex' : 'none';
@@ -244,6 +248,7 @@ showMoreBtn.addEventListener('click', async () => {
 
 unsafeToggle.addEventListener('change', () => {
     showUnsafe = unsafeToggle.checked;
+    localStorage.setItem(UNSAFE_STORAGE_KEY, showUnsafe);
     rerenderCurrentResults();
 });
 

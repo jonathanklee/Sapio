@@ -19,8 +19,10 @@ const detail = document.getElementById('app-detail');
 const errorBox = document.getElementById('app-error');
 const shareBanner = document.getElementById('share-banner');
 
+const UNSAFE_STORAGE_KEY = 'sapio:showUnsafe';
+
 let currentApp = null;
-let showUnsafe = false;
+let showUnsafe = localStorage.getItem(UNSAFE_STORAGE_KEY) === 'true';
 
 // ─── Entry point ───────────────────────────────────────────────────────────────
 
@@ -56,6 +58,7 @@ function enableUnsafeToggle() {
         if (e.target.id !== 'unsafe-toggle') { return; }
 
         showUnsafe = e.target.checked;
+        localStorage.setItem(UNSAFE_STORAGE_KEY, showUnsafe);
         renderApp();
     });
 }
