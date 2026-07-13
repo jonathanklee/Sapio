@@ -6,20 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentLoadingBinding
 import com.klee.sapio.ui.state.EvaluateEvent
+import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import com.klee.sapio.ui.viewmodel.LoadingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoadingFragment : Fragment() {
 
     private val mViewModel by viewModels<LoadingViewModel>()
+    private val mEvaluationsViewModel by activityViewModels<AppEvaluationsViewModel>()
     private lateinit var mBinding: FragmentLoadingBinding
 
     override fun onCreateView(
@@ -35,11 +39,13 @@ class LoadingFragment : Fragment() {
         val brokenFeatures = arguments?.getStringArrayList("brokenFeatures")
 
         mViewModel.submit(packageName, appName, rating, brokenFeatures)
+        mEvaluationsViewModel.listEvaluations(packageName)
 
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.events.collect { event ->
                 when (event) {
                     is EvaluateEvent.NavigateToSuccess -> {
+                        mEvaluationsViewModel.uiState.first { it.evaluationsLoaded }
                         val bundle = Bundle().apply {
                             putString("package", event.packageName)
                             putString("name", event.appName)

@@ -29,7 +29,6 @@ class SuccessFragment : Fragment() {
 
         mBinding = FragmentSuccessBinding.inflate(inflater, container, false)
         mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
-        mViewModel.listEvaluations(packageName)
         mBinding.shareEvaluation.setOnClickListener {
             (requireActivity() as MainActivity).navigateToEvaluations(
                 packageName,
@@ -39,7 +38,9 @@ class SuccessFragment : Fragment() {
         }
 
         mViewModel.uiState.onEach { state ->
+            if (!state.evaluationsLoaded) return@onEach
             mBinding.shareEvaluation.isEnabled = state.microgUser != null || state.bareAospUser != null
+            mBinding.shareEvaluation.visibility = View.VISIBLE
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         return mBinding.root

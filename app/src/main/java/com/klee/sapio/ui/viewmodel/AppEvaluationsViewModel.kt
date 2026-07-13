@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,57 +46,59 @@ class AppEvaluationsViewModel @Inject constructor(
         _uiState.update { it.copy(pendingCount = expectedFetches) }
 
         loadingJob = viewModelScope.launch {
-            launch(ioDispatcher) {
-                _uiState.update {
-                    it.copy(
-                        microgUser = fetchAppEvaluationUseCase(
-                            packageName,
-                            GmsType.MICROG,
-                            UserType.SECURE
-                        ).getOrNull(),
-                        pendingCount = it.pendingCount - 1
-                    )
-                }
-            }
-
-            launch(ioDispatcher) {
-                _uiState.update {
-                    it.copy(
-                        bareAospUser = fetchAppEvaluationUseCase(
-                            packageName,
-                            GmsType.BARE_AOSP,
-                            UserType.SECURE
-                        ).getOrNull(),
-                        pendingCount = it.pendingCount - 1
-                    )
-                }
-            }
-
-            if (settings.isUnsafeConfigurationEnabled()) {
-                launch(ioDispatcher) {
+            val evalJobs = buildList {
+                add(launch(ioDispatcher) {
                     _uiState.update {
                         it.copy(
-                            microgRoot = fetchAppEvaluationUseCase(
+                            microgUser = fetchAppEvaluationUseCase(
                                 packageName,
                                 GmsType.MICROG,
-                                UserType.UNSAFE
+                                UserType.SECURE
                             ).getOrNull(),
                             pendingCount = it.pendingCount - 1
                         )
                     }
-                }
+                })
 
-                launch(ioDispatcher) {
+                add(launch(ioDispatcher) {
                     _uiState.update {
                         it.copy(
-                            bareAospRoot = fetchAppEvaluationUseCase(
+                            bareAospUser = fetchAppEvaluationUseCase(
                                 packageName,
                                 GmsType.BARE_AOSP,
-                                UserType.UNSAFE
+                                UserType.SECURE
                             ).getOrNull(),
                             pendingCount = it.pendingCount - 1
                         )
                     }
+                })
+
+                if (settings.isUnsafeConfigurationEnabled()) {
+                    add(launch(ioDispatcher) {
+                        _uiState.update {
+                            it.copy(
+                                microgRoot = fetchAppEvaluationUseCase(
+                                    packageName,
+                                    GmsType.MICROG,
+                                    UserType.UNSAFE
+                                ).getOrNull(),
+                                pendingCount = it.pendingCount - 1
+                            )
+                        }
+                    })
+
+                    add(launch(ioDispatcher) {
+                        _uiState.update {
+                            it.copy(
+                                bareAospRoot = fetchAppEvaluationUseCase(
+                                    packageName,
+                                    GmsType.BARE_AOSP,
+                                    UserType.UNSAFE
+                                ).getOrNull(),
+                                pendingCount = it.pendingCount - 1
+                            )
+                        }
+                    })
                 }
             }
 
@@ -104,6 +107,9 @@ class AppEvaluationsViewModel @Inject constructor(
                     it.copy(iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""))
                 }
             }
+
+            evalJobs.joinAll()
+            _uiState.update { it.copy(evaluationsLoaded = true) }
         }
     }
 

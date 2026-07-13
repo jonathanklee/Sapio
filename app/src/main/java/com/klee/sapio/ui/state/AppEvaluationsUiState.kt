@@ -9,6 +9,7 @@ data class AppEvaluationsUiState(
     val bareAospRoot: Evaluation? = null,
     val iconUrl: String? = null,
     val pendingCount: Int = 0,
+    val evaluationsLoaded: Boolean = false,
     val hasError: Boolean = false
 ) {
     val isFullyLoaded: Boolean get() = pendingCount == 0
