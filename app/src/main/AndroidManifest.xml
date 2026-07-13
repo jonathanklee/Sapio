@@ -17,7 +17,6 @@
         <activity
             android:name=".ui.view.SplashActivity"
             android:theme="@style/Theme.Sapio.NoActionBar"
-            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +26,6 @@
         </activity>
         <activity
             android:name=".ui.view.MainActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.Sapio.NoActionBar"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
