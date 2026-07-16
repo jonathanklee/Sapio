@@ -21,7 +21,7 @@ const TRANSLATIONS = {
 
     // ─── Results ──────────────────────────────────────────────────────────────
     results_latest:   { en: 'Latest evaluations', fr: 'Dernières évaluations', de: 'Neueste Bewertungen', it: 'Ultime valutazioni', es: 'Últimas evaluaciones' },
-    show_unsafe:      { en: 'Show unsafe environments', fr: 'Montrer les environnements non sécurisés', de: 'Unsichere Umgebungen anzeigen', it: 'Mostra ambienti non sicuri', es: 'Mostrar entornos no seguros' },
+    show_permissive:  { en: 'Show permissive environments', fr: 'Montrer les environnements permissifs', de: 'Permissive Umgebungen anzeigen', it: 'Mostra ambienti permissivi', es: 'Mostrar entornos permisivos' },
     legend_works:     { en: 'Perfect', fr: 'Parfait', de: 'Perfekt', it: 'Perfetto', es: 'Perfecto' },
     legend_partial:   { en: 'Partial', fr: 'Partiel', de: 'Teilweise', it: 'Parziale', es: 'Parcial' },
     legend_broken:    { en: 'Unusable', fr: 'Inutilisable', de: 'Unbrauchbar', it: 'Inutilizzabile', es: 'Inutilizable' },
@@ -34,8 +34,8 @@ const TRANSLATIONS = {
     rating_1:         { en: 'Perfect', fr: 'Parfait', de: 'Perfekt', it: 'Perfetto', es: 'Perfecto' },
     rating_2:         { en: 'Partial', fr: 'Partiel', de: 'Teilweise', it: 'Parziale', es: 'Parcial' },
     rating_3:         { en: 'Unusable', fr: 'Inutilisable', de: 'Unbrauchbar', it: 'Inutilizzabile', es: 'Inutilizable' },
-    env_secure:       { en: 'secure', fr: 'sécurisé', de: 'sicher', it: 'sicuro', es: 'seguro' },
-    env_unsafe:       { en: 'unsafe', fr: 'non sécurisé', de: 'unsicher', it: 'non sicuro', es: 'no seguro' },
+    env_standard:     { en: 'standard', fr: 'standard', de: 'standard', it: 'standard', es: 'estándar' },
+    env_permissive:   { en: 'permissive', fr: 'permissif', de: 'permissiv', it: 'permissivo', es: 'permisivo' },
     doesnt_work:      { en: "Doesn't work", fr: 'Ne fonctionne pas', de: 'Funktioniert nicht', it: 'Non funziona', es: 'No funciona' },
     feat_notifications:   { en: 'Notifications', fr: 'Notifications', de: 'Benachrichtigungen', it: 'Notifiche', es: 'Notificaciones' },
     feat_in_app_purchase: { en: 'In-app purchases', fr: 'Achats intégrés', de: 'In-App-Käufe', it: 'Acquisti in-app', es: 'Compras integradas' },
@@ -84,7 +84,7 @@ const TRANSLATIONS = {
     app_not_found_title: { en: 'App not found', fr: 'Application introuvable', de: 'App nicht gefunden', it: 'App non trovata', es: 'App no encontrada' },
     app_not_found_hint:  { en: 'We couldn\'t find an evaluation for this app.', fr: 'Aucune évaluation trouvée pour cette application.', de: 'Für diese App wurde keine Bewertung gefunden.', it: 'Nessuna valutazione trovata per questa app.', es: 'No encontramos ninguna evaluación para esta app.' },
     browse_all:       { en: 'Browse all evaluations', fr: 'Parcourir toutes les évaluations', de: 'Alle Bewertungen ansehen', it: 'Sfoglia tutte le valutazioni', es: 'Ver todas las evaluaciones' },
-    unsafe_only_hint: { en: 'Only unsafe-environment evaluations exist for this app. Enable "Show unsafe environments" to see them.', fr: 'Seules des évaluations en environnement non sécurisé existent pour cette application. Activez « Montrer les environnements non sécurisés » pour les voir.', de: 'Für diese App gibt es nur Bewertungen in unsicheren Umgebungen. Aktiviere „Unsichere Umgebungen anzeigen", um sie zu sehen.', it: 'Per questa app esistono solo valutazioni in ambienti non sicuri. Attiva "Mostra ambienti non sicuri" per vederle.', es: 'Para esta app solo existen evaluaciones en entornos no seguros. Activa «Mostrar entornos no seguros» para verlas.' },
+    permissive_only_hint: { en: 'Only permissive-environment evaluations exist for this app. Enable "Show permissive environments" to see them.', fr: 'Seules des évaluations en environnement permissif existent pour cette application. Activez « Montrer les environnements permissifs » pour les voir.', de: 'Für diese App gibt es nur Bewertungen in permissiven Umgebungen. Aktiviere „Permissive Umgebungen anzeigen", um sie zu sehen.', it: 'Per questa app esistono solo valutazioni in ambienti permissivi. Attiva "Mostra ambienti permissivi" per vederle.', es: 'Para esta app solo existen evaluaciones en entornos permisivos. Activa «Mostrar entornos permisivos» para verlas.' },
 
     // ─── Dynamic phrases ──────────────────────────────────────────────────────
     results_for:      { en: 'Results for "%s"', fr: 'Résultats pour « %s »', de: 'Ergebnisse für „%s"', it: 'Risultati per "%s"', es: 'Resultados para «%s»' },

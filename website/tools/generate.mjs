@@ -21,7 +21,7 @@ async function main() {
     const evaluations = await fetchAll();
     const allApps = groupByPackage(evaluations);
     const pages = allApps
-        .filter(hasSecureEvaluation)
+        .filter(hasStandardEvaluation)
         .filter(hasSafePackageName);
 
     await resetAppDir();
@@ -37,7 +37,7 @@ async function writeStats(apps, evaluations) {
     await writeFile(join(ROOT, 'stats.json'), JSON.stringify({ apps, evaluations }), 'utf8');
 }
 
-function hasSecureEvaluation(app) {
+function hasStandardEvaluation(app) {
     return evaluationLines(app, false).length > 0;
 }
 
@@ -112,9 +112,9 @@ function renderPage(app) {
         <a href="/index.html" class="back-link" data-i18n="back_all">← All evaluations</a>
 
         <div id="app-toolbar" class="app-toolbar" hidden>
-            <label class="unsafe-label">
-                <input type="checkbox" id="unsafe-toggle">
-                <span data-i18n="show_unsafe">Show unsafe environments</span>
+            <label class="permissive-label">
+                <input type="checkbox" id="permissive-toggle">
+                <span data-i18n="show_permissive">Show permissive environments</span>
             </label>
         </div>
 

@@ -19,10 +19,10 @@ const detail = document.getElementById('app-detail');
 const errorBox = document.getElementById('app-error');
 const shareBanner = document.getElementById('share-banner');
 
-const UNSAFE_STORAGE_KEY = 'sapio:showUnsafe';
+const PERMISSIVE_STORAGE_KEY = 'sapio:showPermissive';
 
 let currentApp = null;
-let showUnsafe = localStorage.getItem(UNSAFE_STORAGE_KEY) === 'true';
+let showPermissive = localStorage.getItem(PERMISSIVE_STORAGE_KEY) === 'true';
 
 // ─── Entry point ───────────────────────────────────────────────────────────────
 
@@ -45,7 +45,7 @@ async function loadApp() {
         }
 
         currentApp = app;
-        enableUnsafeToggle();
+        enablePermissiveToggle();
         renderApp();
         applySeo(app);
     } catch {
@@ -53,12 +53,12 @@ async function loadApp() {
     }
 }
 
-function enableUnsafeToggle() {
+function enablePermissiveToggle() {
     detail.addEventListener('change', (e) => {
-        if (e.target.id !== 'unsafe-toggle') { return; }
+        if (e.target.id !== 'permissive-toggle') { return; }
 
-        showUnsafe = e.target.checked;
-        localStorage.setItem(UNSAFE_STORAGE_KEY, showUnsafe);
+        showPermissive = e.target.checked;
+        localStorage.setItem(PERMISSIVE_STORAGE_KEY, showPermissive);
         renderApp();
     });
 }
@@ -86,8 +86,8 @@ function renderApp() {
     const card = document.createElement('article');
     card.className = 'app-card app-detail-card';
     card.appendChild(renderCardHeader(currentApp));
-    card.appendChild(renderSummary(currentApp, showUnsafe));
-    card.appendChild(renderSections(currentApp, showUnsafe));
+    card.appendChild(renderSummary(currentApp, showPermissive));
+    card.appendChild(renderSections(currentApp, showPermissive));
 
     detail.appendChild(renderLegend());
     detail.appendChild(card);
@@ -128,15 +128,15 @@ function renderLegend() {
     }
 
     const toggleLabel = document.createElement('label');
-    toggleLabel.className = 'unsafe-label';
+    toggleLabel.className = 'permissive-label';
 
     const input = document.createElement('input');
     input.type = 'checkbox';
-    input.id = 'unsafe-toggle';
-    input.checked = showUnsafe;
+    input.id = 'permissive-toggle';
+    input.checked = showPermissive;
 
     const toggleSpan = document.createElement('span');
-    toggleSpan.textContent = t('show_unsafe');
+    toggleSpan.textContent = t('show_permissive');
 
     toggleLabel.appendChild(input);
     toggleLabel.appendChild(toggleSpan);
@@ -159,16 +159,16 @@ function renderSections(app, withUnsafe) {
     }
 
     if (sectionsRow.children.length === 0) {
-        return unsafeOnlyHint();
+        return permissiveOnlyHint();
     }
 
     return sectionsRow;
 }
 
-function unsafeOnlyHint() {
+function permissiveOnlyHint() {
     const hint = document.createElement('p');
     hint.className = 'app-summary';
-    hint.textContent = t('unsafe_only_hint');
+    hint.textContent = t('permissive_only_hint');
 
     return hint;
 }
@@ -186,7 +186,7 @@ function renderSummary(app, withUnsafe) {
 function applySeo(app) {
     const url = `${SITE_ORIGIN}/app/${encodeURIComponent(app.packageName)}`;
     const title = `${app.name} without Google Play Services — Sapio`;
-    const description = clamp(humanSummary(app, /* withUnsafe */ false), 300);
+    const description = clamp(humanSummary(app, /* withPermissive */ false), 300);
     const image = app.iconUrl || SITE_ICON;
 
     document.title = title;

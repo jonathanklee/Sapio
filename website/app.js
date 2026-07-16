@@ -15,9 +15,9 @@ const INITIAL_LATEST_COUNT = 3;
 const LATEST_PAGE_SIZE = 10;
 const API_FETCH_SIZE = 100;
 
-const UNSAFE_STORAGE_KEY = 'sapio:showUnsafe';
+const PERMISSIVE_STORAGE_KEY = 'sapio:showPermissive';
 
-let showUnsafe = localStorage.getItem(UNSAFE_STORAGE_KEY) === 'true';
+let showPermissive = localStorage.getItem(PERMISSIVE_STORAGE_KEY) === 'true';
 let isLatestMode = false;
 let currentApps = [];
 let latestApps = [];
@@ -35,11 +35,11 @@ const resultsTitle   = document.getElementById('results-title');
 const resultsCount   = document.getElementById('results-count');
 const resultsEmpty   = document.getElementById('results-empty');
 const resultsError   = document.getElementById('results-error');
-const unsafeToggle   = document.getElementById('unsafe-toggle');
+const permissiveToggle = document.getElementById('permissive-toggle');
 const showMoreWrap   = document.getElementById('show-more-wrap');
 const showMoreBtn    = document.getElementById('show-more-btn');
 
-unsafeToggle.checked = showUnsafe;
+permissiveToggle.checked = showPermissive;
 
 function setShowMore(visible) {
     showMoreWrap.style.display = visible ? 'flex' : 'none';
@@ -53,7 +53,7 @@ function renderAppCard(app) {
 
     for (const section of SECTIONS) {
         const cells = ENVS.map(env => entryFor(app.entries, section.microg, env.rooted));
-        const rendered = renderSection(section, cells, showUnsafe);
+        const rendered = renderSection(section, cells, showPermissive);
         if (rendered) {
             sectionsRow.appendChild(rendered);
         }
@@ -141,10 +141,10 @@ function filterToLatestSection(app) {
 }
 
 function renderableLatestApps() {
-    const secureRotedValue = ENVS.find(e => e.cls === 'secure').rooted;
+    const standardRotedValue = ENVS.find(e => e.cls === 'standard').rooted;
 
     return latestApps.filter(app =>
-        showUnsafe || app.entries.some(e => e.rooted === secureRotedValue)
+        showPermissive || app.entries.some(e => e.rooted === standardRotedValue)
     );
 }
 
@@ -246,9 +246,9 @@ showMoreBtn.addEventListener('click', async () => {
     setShowMore(visibleLatestCount < renderable.length || !latestApiDone);
 });
 
-unsafeToggle.addEventListener('change', () => {
-    showUnsafe = unsafeToggle.checked;
-    localStorage.setItem(UNSAFE_STORAGE_KEY, showUnsafe);
+permissiveToggle.addEventListener('change', () => {
+    showPermissive = permissiveToggle.checked;
+    localStorage.setItem(PERMISSIVE_STORAGE_KEY, showPermissive);
     rerenderCurrentResults();
 });
 

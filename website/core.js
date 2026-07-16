@@ -28,8 +28,8 @@ const SECTIONS = [
 ];
 
 const ENVS = [
-    { rooted: 3, label: 'secure', cls: 'secure', labelKey: 'env_secure' },
-    { rooted: 4, label: 'unsafe', cls: 'unsafe', labelKey: 'env_unsafe' },
+    { rooted: 3, label: 'standard',   cls: 'standard',   labelKey: 'env_standard' },
+    { rooted: 4, label: 'permissive', cls: 'permissive', labelKey: 'env_permissive' },
 ];
 
 // ─── API ─────────────────────────────────────────────────────────────────────
@@ -186,7 +186,7 @@ function escapeHtml(str) {
 // ─── Summary text (shared by the page body, meta tags and the generator) ────────
 
 function evaluationLines(app, withUnsafe) {
-    const envs = withUnsafe ? ENVS : ENVS.filter(env => env.cls === 'secure');
+    const envs = withUnsafe ? ENVS : ENVS.filter(env => env.cls === 'standard');
     const lines = [];
 
     for (const section of SECTIONS) {
@@ -230,7 +230,7 @@ function humanSummary(app, withUnsafe) {
 
 // Localized counterpart of humanSummary — for the visible summary on the page.
 function localizedSummary(app, withUnsafe) {
-    const envs = withUnsafe ? ENVS : ENVS.filter(env => env.cls === 'secure');
+    const envs = withUnsafe ? ENVS : ENVS.filter(env => env.cls === 'standard');
     const parts = [];
 
     for (const section of SECTIONS) {
@@ -321,7 +321,7 @@ function renderSection(section, cells, showUnsafe) {
 }
 
 function visibleCellsFor(cells, showUnsafe) {
-    const visibleEnvs = showUnsafe ? ENVS : ENVS.filter(e => e.cls === 'secure');
+    const visibleEnvs = showUnsafe ? ENVS : ENVS.filter(e => e.cls === 'standard');
 
     return visibleEnvs
         .map((env, i) => ({ env, entry: cells[i] }))

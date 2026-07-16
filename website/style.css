@@ -399,28 +399,28 @@ body {
     flex: 1;
 }
 
-.unsafe-label {
+.permissive-label {
     margin-left: auto;
     cursor: pointer;
     user-select: none;
 }
 
-.unsafe-label input[type="checkbox"] {
+.permissive-label input[type="checkbox"] {
     display: none;
 }
 
-.unsafe-label span {
+.permissive-label span {
     font-size: 11px;
     color: var(--color-secondary-text);
     opacity: 0.55;
     transition: opacity .15s, color .15s;
 }
 
-.unsafe-label:hover span {
+.permissive-label:hover span {
     opacity: 1;
 }
 
-.unsafe-label:has(input:checked) span {
+.permissive-label:has(input:checked) span {
     opacity: 1;
     color: var(--color-primary-text);
     font-weight: 600;
@@ -599,8 +599,8 @@ body {
     letter-spacing: .02em;
 }
 
-.cell-env-badge.secure { background: var(--user-badge-bg); }
-.cell-env-badge.unsafe { background: var(--root-badge-bg); }
+.cell-env-badge.standard   { background: var(--user-badge-bg); }
+.cell-env-badge.permissive { background: var(--root-badge-bg); }
 .cell-env-badge.env-badge--hidden { display: none; }
 
 /* Rating row: dot + text */
