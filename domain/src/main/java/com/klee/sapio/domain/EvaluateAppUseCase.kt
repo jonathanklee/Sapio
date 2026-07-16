@@ -52,7 +52,7 @@ open class EvaluateAppUseCase @Inject constructor(
             iconId,
             rating,
             deviceInfo.getGmsType(),
-            deviceInfo.isUnsafe(),
+            deviceInfo.isPermissive(),
             brokenFeatures,
             app.versionName
         )

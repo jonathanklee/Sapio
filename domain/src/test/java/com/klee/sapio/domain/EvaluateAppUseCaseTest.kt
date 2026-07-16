@@ -161,6 +161,6 @@ class EvaluateAppUseCaseTest {
         private val userType: Int = 3
     ) : DeviceInfo {
         override fun getGmsType() = gmsType
-        override fun isUnsafe() = userType
+        override fun isPermissive() = userType
     }
 }

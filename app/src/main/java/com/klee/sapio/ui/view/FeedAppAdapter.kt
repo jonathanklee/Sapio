@@ -68,7 +68,7 @@ class FeedAppAdapter(
             element.secure.text = secureLabel.text
             element.secure.backgroundTintList = ColorStateList.valueOf(secureLabel.color)
 
-            if (mSettings.getUnsafeConfigurationLevel() == UserType.UNSAFE) {
+            if (mSettings.getUnsafeConfigurationLevel() == UserType.PERMISSIVE) {
                 element.secure.visibility = View.VISIBLE
             } else {
                 element.secure.visibility = View.GONE

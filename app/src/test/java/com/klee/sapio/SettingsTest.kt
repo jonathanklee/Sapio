@@ -32,7 +32,7 @@ class SettingsTest {
     @Test
     fun `isUnsafeConfigurationEnabled returns false by default`() {
         assertFalse(settings.isUnsafeConfigurationEnabled())
-        assertEquals(UserType.SECURE, settings.getUnsafeConfigurationLevel())
+        assertEquals(UserType.STANDARD, settings.getUnsafeConfigurationLevel())
     }
 
     @Test
@@ -44,6 +44,6 @@ class SettingsTest {
             .commit()
 
         assertTrue(settings.isUnsafeConfigurationEnabled())
-        assertEquals(UserType.UNSAFE, settings.getUnsafeConfigurationLevel())
+        assertEquals(UserType.PERMISSIVE, settings.getUnsafeConfigurationLevel())
     }
 }

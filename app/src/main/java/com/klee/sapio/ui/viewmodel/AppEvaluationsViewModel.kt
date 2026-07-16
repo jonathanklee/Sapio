@@ -34,15 +34,15 @@ class AppEvaluationsViewModel @Inject constructor(
     private var loadingJob: Job? = null
 
     companion object {
-        private const val FETCHES_WITH_UNSAFE = 5
-        private const val FETCHES_WITHOUT_UNSAFE = 3
+        private const val FETCHES_WITH_PERMISSIVE = 5
+        private const val FETCHES_WITHOUT_PERMISSIVE = 3
     }
 
     fun listEvaluations(packageName: String) {
         loadingJob?.cancel()
         _uiState.value = AppEvaluationsUiState()
 
-        val expectedFetches = if (settings.isUnsafeConfigurationEnabled()) FETCHES_WITH_UNSAFE else FETCHES_WITHOUT_UNSAFE
+        val expectedFetches = if (settings.isUnsafeConfigurationEnabled()) FETCHES_WITH_PERMISSIVE else FETCHES_WITHOUT_PERMISSIVE
         _uiState.update { it.copy(pendingCount = expectedFetches) }
 
         loadingJob = viewModelScope.launch {
@@ -53,7 +53,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             microgUser = fetchAppEvaluationUseCase(
                                 packageName,
                                 GmsType.MICROG,
-                                UserType.SECURE
+                                UserType.STANDARD
                             ).getOrNull(),
                             pendingCount = it.pendingCount - 1
                         )
@@ -66,7 +66,7 @@ class AppEvaluationsViewModel @Inject constructor(
                             bareAospUser = fetchAppEvaluationUseCase(
                                 packageName,
                                 GmsType.BARE_AOSP,
-                                UserType.SECURE
+                                UserType.STANDARD
                             ).getOrNull(),
                             pendingCount = it.pendingCount - 1
                         )
@@ -80,7 +80,7 @@ class AppEvaluationsViewModel @Inject constructor(
                                 microgRoot = fetchAppEvaluationUseCase(
                                     packageName,
                                     GmsType.MICROG,
-                                    UserType.UNSAFE
+                                    UserType.PERMISSIVE
                                 ).getOrNull(),
                                 pendingCount = it.pendingCount - 1
                             )
@@ -93,7 +93,7 @@ class AppEvaluationsViewModel @Inject constructor(
                                 bareAospRoot = fetchAppEvaluationUseCase(
                                     packageName,
                                     GmsType.BARE_AOSP,
-                                    UserType.UNSAFE
+                                    UserType.PERMISSIVE
                                 ).getOrNull(),
                                 pendingCount = it.pendingCount - 1
                             )

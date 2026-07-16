@@ -37,7 +37,7 @@ class CompatibilityCheckWorker(
             .listInstalledApplications()
 
         val evaluationRepository = entryPoint.evaluationRepository()
-        val userType = UserType.SECURE
+        val userType = UserType.STANDARD
 
         val badApps = mutableListOf<InstalledApplication>()
         val averageApps = mutableListOf<InstalledApplication>()

@@ -148,7 +148,7 @@
                                 android:backgroundTint="@color/purple_200"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="2dp"
-                                android:text="@string/secure_label"
+                                android:text="@string/standard_label"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
 
@@ -241,7 +241,7 @@
                                 android:backgroundTint="@color/purple_700"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="2dp"
-                                android:text="@string/unsafe_label"
+                                android:text="@string/permissive_label"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
 
@@ -377,7 +377,7 @@
                                 android:backgroundTint="@color/purple_200"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="2dp"
-                                android:text="@string/secure_label"
+                                android:text="@string/standard_label"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
 
@@ -470,7 +470,7 @@
                                 android:backgroundTint="@color/purple_700"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="2dp"
-                                android:text="@string/unsafe_label"
+                                android:text="@string/permissive_label"
                                 android:textColor="@color/white"
                                 android:textSize="11sp" />
 

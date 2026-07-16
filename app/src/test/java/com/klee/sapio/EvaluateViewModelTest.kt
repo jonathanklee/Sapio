@@ -26,16 +26,16 @@ class EvaluateViewModelTest {
 
     @Test
     fun `uiState initializes with device gmsType and userType`() {
-        val vm = buildViewModel(gmsType = GmsType.MICROG, userType = UserType.SECURE)
+        val vm = buildViewModel(gmsType = GmsType.MICROG, userType = UserType.STANDARD)
 
         assertEquals(GmsType.MICROG, vm.uiState.value.gmsType)
-        assertEquals(UserType.SECURE, vm.uiState.value.userType)
+        assertEquals(UserType.STANDARD, vm.uiState.value.userType)
     }
 
-    private fun buildViewModel(gmsType: Int = GmsType.BARE_AOSP, userType: Int = UserType.SECURE): EvaluateViewModel {
+    private fun buildViewModel(gmsType: Int = GmsType.BARE_AOSP, userType: Int = UserType.STANDARD): EvaluateViewModel {
         val fakeDeviceConfig = object : DeviceConfiguration(appContext) {
             override fun getGmsType() = gmsType
-            override fun isUnsafe() = userType
+            override fun isPermissive() = userType
         }
         return EvaluateViewModel(fakeDeviceConfig)
     }

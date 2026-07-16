@@ -125,7 +125,7 @@ class DeviceConfigurationTest {
     }
 
     @Test
-    fun test_isUnsafe_withRootedAndUnlockedBootloader() {
+    fun test_isPermissive_withRootedAndUnlockedBootloader() {
         // This test is more complex due to the private isBootloaderLocked method
         // We'll test the public behavior by mocking the RootBeer result
         val apps = listOf(fakeRegularApp)
@@ -134,30 +134,30 @@ class DeviceConfigurationTest {
 
         // For this test, we'll assume the device is rooted and bootloader is unlocked
         // Since we can't easily mock the private method, we'll test the happy path
-        val result = deviceConfiguration.isUnsafe()
+        val result = deviceConfiguration.isPermissive()
         // The actual result depends on the device state, so we'll just verify it returns a valid value
-        Assert.assertTrue("Should return either UNSAFE or SECURE", 
-            result == UserType.UNSAFE || result == UserType.SECURE)
+        Assert.assertTrue("Should return either VULNERABLE or SECURE",
+            result == UserType.PERMISSIVE || result == UserType.STANDARD)
     }
 
     @Test
-    fun test_isUnsafe_branch_with_overrides() {
+    fun test_isPermissive_branch_with_overrides() {
         val fake = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = true
             override fun isBootloaderLocked(): Boolean = false
         }
-        Assert.assertEquals(UserType.UNSAFE, fake.isUnsafe())
+        Assert.assertEquals(UserType.PERMISSIVE, fake.isPermissive())
 
         val secure = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = true
             override fun isBootloaderLocked(): Boolean = true
         }
-        Assert.assertEquals(UserType.SECURE, secure.isUnsafe())
+        Assert.assertEquals(UserType.STANDARD, secure.isPermissive())
 
         val clean = object : DeviceConfiguration(mockedContext) {
             override fun isRooted(): Boolean = false
             override fun isBootloaderLocked(): Boolean = false
         }
-        Assert.assertEquals(UserType.SECURE, clean.isUnsafe())
+        Assert.assertEquals(UserType.STANDARD, clean.isPermissive())
     }
 }

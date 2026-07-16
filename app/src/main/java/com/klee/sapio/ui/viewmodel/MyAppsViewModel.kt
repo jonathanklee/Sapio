@@ -102,7 +102,7 @@ class MyAppsViewModel @Inject constructor(
 
     private suspend fun fetchFromWebAndSave() {
         val gmsType = deviceInfo.getGmsType()
-        val userType = deviceInfo.isUnsafe()
+        val userType = deviceInfo.isPermissive()
 
         val installedApps = withContext(Dispatchers.IO) {
             installedApplicationsDataSource.listInstalledApplications()

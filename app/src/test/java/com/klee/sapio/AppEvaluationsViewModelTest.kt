@@ -134,9 +134,9 @@ class AppEvaluationsViewModelTest {
             override suspend fun invoke(packageName: String, gmsType: Int, userType: Int): Result<Evaluation?> {
                 if (returnNullEvals) return Result.success(null)
                 val name = when {
-                    gmsType == GmsType.MICROG && userType == UserType.SECURE -> "microg-secure"
-                    gmsType == GmsType.MICROG && userType == UserType.UNSAFE -> "microg-unsafe"
-                    gmsType == GmsType.BARE_AOSP && userType == UserType.SECURE -> "bare-secure"
+                    gmsType == GmsType.MICROG && userType == UserType.STANDARD -> "microg-secure"
+                    gmsType == GmsType.MICROG && userType == UserType.PERMISSIVE -> "microg-unsafe"
+                    gmsType == GmsType.BARE_AOSP && userType == UserType.STANDARD -> "bare-secure"
                     else -> "bare-unsafe"
                 }
                 return Result.success(eval(name, packageName))

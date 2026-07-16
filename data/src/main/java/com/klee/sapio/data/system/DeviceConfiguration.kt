@@ -51,11 +51,11 @@ open class DeviceConfiguration @Inject constructor(
         }
     }
 
-    override fun isUnsafe(): Int {
+    override fun isPermissive(): Int {
         return if (isRooted() && !isBootloaderLocked()) {
-            UserType.UNSAFE
+            UserType.PERMISSIVE
         } else {
-            UserType.SECURE
+            UserType.STANDARD
         }
     }
 

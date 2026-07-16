@@ -7,6 +7,6 @@ object GmsType {
 }
 
 object UserType {
-    const val SECURE = 3
-    const val UNSAFE = 4
+    const val STANDARD = 3
+    const val PERMISSIVE = 4
 }

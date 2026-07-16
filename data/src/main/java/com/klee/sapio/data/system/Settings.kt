@@ -13,9 +13,9 @@ open class Settings @Inject constructor(
 
     override fun getUnsafeConfigurationLevel(): Int {
         return if (isUnsafeConfigurationEnabled()) {
-            UserType.UNSAFE
+            UserType.PERMISSIVE
         } else {
-            UserType.SECURE
+            UserType.STANDARD
         }
     }
 

@@ -65,7 +65,7 @@
     <string name="rating_rules"><![CDATA[<a href="%1$s">Beoordelingsregels</a>]]></string>
     <string name="i_have_read_and_i_understand_the_rating_rules">Ik heb de beoordelingsregels gelezen en begrijp ze</string>
     <string name="show_unsafe">Omgevingen</string>
-    <string name="show_unsafe_environments">Onveilige omgevingen tonen</string>
+    <string name="show_unsafe_environments">Permissieve omgevingen tonen</string>
     <string name="general">Algemeen</string>
     <string name="theme">Thema</string>
     <string name="theme_light">Licht</string>
