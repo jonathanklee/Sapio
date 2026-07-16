@@ -39,12 +39,12 @@ class LoadingFragment : Fragment() {
         val brokenFeatures = arguments?.getStringArrayList("brokenFeatures")
 
         mViewModel.submit(packageName, appName, rating, brokenFeatures)
-        mEvaluationsViewModel.listEvaluations(packageName)
 
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.events.collect { event ->
                 when (event) {
                     is EvaluateEvent.NavigateToSuccess -> {
+                        mEvaluationsViewModel.listEvaluations(packageName)
                         mEvaluationsViewModel.uiState.first { it.evaluationsLoaded }
                         val bundle = Bundle().apply {
                             putString("package", event.packageName)
