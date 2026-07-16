@@ -2,9 +2,11 @@ package com.klee.sapio.data.system
 
 import android.content.Context
 import android.content.pm.PackageManager
+import com.klee.sapio.data.attestation.HardwareAttestationClient
 import com.klee.sapio.domain.DeviceInfo
 import com.klee.sapio.domain.model.GmsType
 import com.klee.sapio.domain.model.UserType
+import com.klee.sapio.domain.model.VerifiedBootState
 import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -12,7 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 open class DeviceConfiguration @Inject constructor(
-    @ApplicationContext private val mContext: Context
+    @ApplicationContext private val mContext: Context,
+    private val attestationClient: HardwareAttestationClient = HardwareAttestationClient()
 ) : DeviceInfo {
     companion object {
         const val GMS_SERVICES_PACKAGE_NAME = "com.google.android.gms"
@@ -23,6 +26,10 @@ open class DeviceConfiguration @Inject constructor(
     override fun getGmsType(): Int = cachedGmsType
 
     private val cachedGmsType: Int by lazy { computeGmsType() }
+
+    private val cachedBootloaderState: VerifiedBootState by lazy {
+        attestationClient.readVerifiedBootState()
+    }
 
     private fun computeGmsType(): Int {
         val apps = try {
@@ -55,7 +62,7 @@ open class DeviceConfiguration @Inject constructor(
     protected open fun isRooted(): Boolean = RootBeer(mContext).isRooted
 
     protected open fun isBootloaderLocked(): Boolean {
-        val verifiedBootState = SystemPropertyReader().read("ro.boot.verifiedbootstate")
-        return verifiedBootState == "yellow" || verifiedBootState == "green"
+        return cachedBootloaderState == VerifiedBootState.GREEN ||
+            cachedBootloaderState == VerifiedBootState.YELLOW
     }
 }

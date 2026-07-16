@@ -44,6 +44,12 @@ android {
         compose = true
     }
     namespace 'com.klee.sapio'
+
+    packaging {
+        resources {
+            excludes += ['META-INF/versions/9/OSGI-INF/MANIFEST.MF']
+        }
+    }
 }
 
 jacoco {

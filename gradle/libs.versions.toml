@@ -37,6 +37,7 @@ swiperefreshlayout = "1.1.0"
 lottie = "6.4.0"
 material3AndroidVersion = "1.4.0"
 archCoreTesting = "2.2.0"
+bouncyCastle = "1.78.1"
 room = "2.7.0-rc01"
 work = "2.9.0"
 
@@ -91,6 +92,7 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+bouncycastle-bcprov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncyCastle" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
