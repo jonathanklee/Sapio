@@ -26,9 +26,11 @@ class HardwareAttestationClient @Inject constructor() {
 
     fun readVerifiedBootState(): VerifiedBootState {
         val alias = "sapio_attestation_${UUID.randomUUID()}"
-        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
+        var keyStore: KeyStore? = null
         return try {
-            val attestationCert = generateKeyAndReturnLeaf(alias, keyStore)
+            val ks = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
+            keyStore = ks
+            val attestationCert = generateKeyAndReturnLeaf(alias, ks)
             parseVerifiedBootState(attestationCert) ?: VerifiedBootState.UNKNOWN
         } catch (e: GeneralSecurityException) {
             VerifiedBootState.UNKNOWN
@@ -37,7 +39,7 @@ class HardwareAttestationClient @Inject constructor() {
         } catch (e: IllegalArgumentException) {
             VerifiedBootState.UNKNOWN
         } finally {
-            runCatching { keyStore.deleteEntry(alias) }
+            runCatching { keyStore?.deleteEntry(alias) }
         }
     }
 
