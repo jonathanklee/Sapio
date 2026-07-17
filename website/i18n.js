@@ -164,9 +164,8 @@ function relativeDate(isoString) {
     ];
 
     for (const [unit, ms] of units) {
-        const value = Math.round(diffMs / ms);
-        if (Math.abs(value) >= 1 || unit === 'minute') {
-            return rtf.format(value, unit);
+        if (Math.abs(diffMs / ms) >= 1 || unit === 'minute') {
+            return rtf.format(Math.round(diffMs / ms), unit);
         }
     }
 
