@@ -27,7 +27,7 @@ Evaluations in Sapio are given to the community by the community.
 | **microG** | The device has microG installed |
 | **bareAOSP** | The device is a bare AOSP device |
 | **standard** | The device is considered standard |
-| **permissive** | The device is considered permissive |
+| **permissive** | The device is considered permissive (unlocked bootloader or rooted) |
 
 # 🌐 Website 
 
