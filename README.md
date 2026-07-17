@@ -26,8 +26,8 @@ Evaluations in Sapio are given to the community by the community.
 |-------|-------------|
 | **microG** | The device has microG installed |
 | **bareAOSP** | The device is a bare AOSP device |
-| **secure** | The device is considered secured |
-| **unsafe** | The device is considered unsafe |
+| **standard** | The device is considered standard |
+| **permissive** | The device is considered permissive |
 
 # 🌐 Website 
 
@@ -52,7 +52,7 @@ Pagination, filtering and sorting follow the [Strapi v4 REST API](https://docs.s
 | `versionName` | string | App version evaluated |
 | `updatedAt` | string | ISO 8601 timestamp |
 | `microg` | integer | `1` = microG · `2` = bareAOSP |
-| `rooted` | integer | `3` = secure · `4` = unsafe |
+| `rooted` | integer | `3` = standard · `4` = permissive |
 | `rating` | integer | `1` = Perfect · `2` = Partial · `3` = Unusable |
 | `brokenFeatures` | string[] \| null | Non-working features: `notifications`, `in_app_purchase`, `login`, `maps`, `location`, `payments`, `cast`, `augmented_reality` |
 
