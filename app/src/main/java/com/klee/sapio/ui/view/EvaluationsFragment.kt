@@ -56,7 +56,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
-import java.util.Date
+
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -206,6 +206,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgUserCell,
                         mBinding.microgUser,
                         mBinding.microgUserRating,
+                        mBinding.microgUserVersion,
                         mBinding.microgUserDate,
                         mBinding.microgUserBrokenFeatures,
                         state.microgUser
@@ -214,6 +215,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospUserCell,
                         mBinding.bareAospUser,
                         mBinding.bareAospUserRating,
+                        mBinding.bareAospUserVersion,
                         mBinding.bareAospUserDate,
                         mBinding.bareAospUserBrokenFeatures,
                         state.bareAospUser
@@ -222,6 +224,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgRootCell,
                         mBinding.microgRoot,
                         mBinding.microgRootRating,
+                        mBinding.microgRootVersion,
                         mBinding.microgRootDate,
                         mBinding.microgRootBrokenFeatures,
                         state.microgRoot
@@ -230,6 +233,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospRootCell,
                         mBinding.bareAospRoot,
                         mBinding.bareAospRootRating,
+                        mBinding.bareAospRootVersion,
                         mBinding.bareAospRootDate,
                         mBinding.bareAospRootBrokenFeatures,
                         state.bareAospRoot
@@ -298,6 +302,7 @@ const val COMPRESSION_QUALITY = 100
         chipView: MaterialCardView,
         iconView: ImageView,
         ratingTextView: TextView,
+        versionTextView: TextView,
         dateTextView: TextView,
         brokenFeaturesChipGroup: ChipGroup,
         evaluation: com.klee.sapio.domain.model.Evaluation?
@@ -306,11 +311,20 @@ const val COMPRESSION_QUALITY = 100
             iconView.setImageResource(Rating.create(evaluation.rating).drawable)
             iconView.isVisible = true
             ratingTextView.text = getRatingShortLabel(evaluation.rating)
-            dateTextView.text = formatVersionAndDate(evaluation.versionName, evaluation.updatedAt)
+
+            if (evaluation.versionName != null) {
+                versionTextView.visibility = View.VISIBLE
+                versionTextView.text = "v${evaluation.versionName}"
+            } else {
+                versionTextView.visibility = View.GONE
+            }
+
+            dateTextView.text = relativeDate(evaluation.updatedAt, resources)
             renderBrokenFeatures(brokenFeaturesChipGroup, evaluation)
         } else {
             iconView.isVisible = false
             ratingTextView.text = "–"
+            versionTextView.visibility = View.GONE
             dateTextView.text = ""
             (brokenFeaturesChipGroup.parent as? ViewGroup)?.isVisible = false
         }
@@ -368,13 +382,6 @@ const val COMPRESSION_QUALITY = 100
             else -> ""
         }
     }
-
-    private fun formatVersionAndDate(versionName: String?, date: Date?): String {
-        val dateStr = relativeDate(date, resources)
-        return if (versionName != null) "v$versionName · $dateStr" else dateStr
-    }
-
-    private fun formatDateAgo(date: Date?): String = relativeDate(date, resources)
 
     private fun startTakingScreenshot(appName: String, packageName: String) {
         viewLifecycleOwner.lifecycleScope.launch {
