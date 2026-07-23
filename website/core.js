@@ -171,10 +171,6 @@ function entryFor(entries, microg, rooted) {
     return entries.find(e => e.microg === microg && e.rooted === rooted) ?? null;
 }
 
-function formatVersionAndDate(versionName, updatedAt) {
-    const dateStr = relativeDate(updatedAt) ?? '';
-    return versionName ? `v${versionName} · ${dateStr}` : dateStr;
-}
 
 function escapeHtml(str) {
     return String(str)
@@ -378,12 +374,24 @@ function ratingRow(entry) {
     label.className = `rating-label ${cls}`;
     label.textContent = RATING[entry.rating] ? t(`rating_${entry.rating}`) : '—';
 
-    const date = document.createElement('span');
-    date.className = 'rating-date';
-    date.textContent = formatVersionAndDate(entry.versionName, entry.updatedAt);
-
     textCol.appendChild(label);
-    textCol.appendChild(date);
+
+    if (entry.versionName) {
+        const version = document.createElement('span');
+        version.className = 'rating-date';
+        version.textContent = `v${entry.versionName}`;
+        textCol.appendChild(version);
+    }
+
+    const dateStr = relativeDate(entry.updatedAt);
+
+    if (dateStr) {
+        const date = document.createElement('span');
+        date.className = 'rating-date';
+        date.textContent = dateStr;
+        textCol.appendChild(date);
+    }
+
     row.appendChild(dot);
     row.appendChild(textCol);
 
@@ -436,7 +444,7 @@ export {
     groupByPackage,
     entryFor,
     relativeDate,
-    formatVersionAndDate,
+
     escapeHtml,
     evaluationLines,
     humanSummary,
