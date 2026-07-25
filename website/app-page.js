@@ -420,12 +420,13 @@ function showToast(message) {
 // ─── Share card canvas ────────────────────────────────────────────────────────
 
 const CARD_SCALE = 3;
+const CARD_FONT = 'Roboto, sans-serif';
 
 async function drawShareCard(app) {
     const W = 200 * CARD_SCALE;
     const H = 115 * CARD_SCALE;
 
-    await document.fonts.ready;
+    await loadCardFont();
 
     const canvas = document.createElement('canvas');
     canvas.width = W;
@@ -453,25 +454,45 @@ async function drawShareCard(app) {
     return canvas;
 }
 
+// Canvas ctx.font does not trigger webfont fetching, so Roboto must be loaded explicitly.
+async function loadCardFont() {
+    try {
+        await document.fonts.load(`400 ${9 * CARD_SCALE}px Roboto`);
+    } catch {
+        // Fall back to the system sans-serif.
+    }
+}
+
 function paintCardHeader(ctx, y, W, padX, cW, sapioImg) {
     const sapioSz = 18 * CARD_SCALE;
 
     if (sapioImg) {
-        ctx.drawImage(sapioImg, padX + cW - sapioSz, y, sapioSz, sapioSz);
+        paintSapioIcon(ctx, sapioImg, padX + cW - sapioSz, y, sapioSz);
     }
 
     ctx.textBaseline = 'top';
     ctx.textAlign = 'center';
 
     ctx.fillStyle = 'rgba(255,255,255,1)';
-    ctx.font = `500 ${Math.round(8.5 * CARD_SCALE)}px Roboto, sans-serif`;
+    ctx.font = `400 ${Math.round(8.5 * CARD_SCALE)}px ${CARD_FONT}`;
     ctx.fillText(t('card_title'), W / 2, y + 2);
 
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.font = `${Math.round(5 * CARD_SCALE)}px Roboto, sans-serif`;
+    ctx.font = `${Math.round(5 * CARD_SCALE)}px ${CARD_FONT}`;
     ctx.fillText(t('card_subtitle'), W / 2, y + Math.round(8.5 * CARD_SCALE) + 6);
 
     return y + sapioSz + 8 * CARD_SCALE;
+}
+
+// The Android card draws the adaptive-icon foreground, whose artwork covers 58.35%
+// of its box. icon.png is full-bleed, so it is inset to the same visible size.
+const SAPIO_ARTWORK_RATIO = 0.5835;
+
+function paintSapioIcon(ctx, img, boxX, boxY, boxSz) {
+    const artworkSz = boxSz * SAPIO_ARTWORK_RATIO;
+    const inset = (boxSz - artworkSz) / 2;
+
+    ctx.drawImage(img, boxX + inset, boxY + inset, artworkSz, artworkSz);
 }
 
 function paintCardContent(ctx, y, W, padX, cW, app, appImg) {
@@ -506,12 +527,12 @@ function paintCardContent(ctx, y, W, padX, cW, app, appImg) {
     let cy = y + (mainH - colH) / 2;
 
     ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.font = `500 ${nameH}px Roboto, sans-serif`;
+    ctx.font = `400 ${nameH}px ${CARD_FONT}`;
     ctx.fillText(truncateText(ctx, app.name, colW), colMidX, cy);
     cy += nameH;
 
     ctx.fillStyle = 'rgba(255,255,255,0.65)';
-    ctx.font = `${pkgH}px Roboto, sans-serif`;
+    ctx.font = `${pkgH}px ${CARD_FONT}`;
     ctx.fillText(truncateText(ctx, app.packageName, colW), colMidX, cy);
     cy += pkgH;
 
@@ -575,7 +596,7 @@ function paintRatingPill(ctx, label, rating, centerX, y, pillH, colW) {
     ctx.fill();
 
     ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.font = `${6 * CARD_SCALE}px Roboto, sans-serif`;
+    ctx.font = `${6 * CARD_SCALE}px ${CARD_FONT}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText(label, pillX + padH, dotY);
@@ -589,7 +610,7 @@ function paintCardFooter(ctx, W, H, padX, cW, padBot) {
     const footerY = H - padBot - sapioLabelH - botPad - botLineH;
 
     ctx.fillStyle = 'rgba(255,255,255,1)';
-    ctx.font = `500 ${sapioLabelH}px Roboto, sans-serif`;
+    ctx.font = `400 ${sapioLabelH}px ${CARD_FONT}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText('Sapio', W / 2, footerY);
@@ -597,7 +618,7 @@ function paintCardFooter(ctx, W, H, padX, cW, padBot) {
     const botY = footerY + sapioLabelH + botPad;
 
     ctx.fillStyle = 'rgba(255,255,255,0.8)';
-    ctx.font = `${Math.round(4 * CARD_SCALE)}px Roboto, sans-serif`;
+    ctx.font = `${Math.round(4 * CARD_SCALE)}px ${CARD_FONT}`;
     ctx.textAlign = 'center';
     ctx.fillText(t('hero_eyebrow'), W / 2, botY);
 
@@ -606,7 +627,7 @@ function paintCardFooter(ctx, W, H, padX, cW, padBot) {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
 
-    ctx.font = `${Math.round(5 * CARD_SCALE)}px Roboto, sans-serif`;
+    ctx.font = `${Math.round(5 * CARD_SCALE)}px ${CARD_FONT}`;
     ctx.textAlign = 'right';
     ctx.fillText(`${dd}/${mm}/${yyyy}`, padX + cW, botY);
 }
