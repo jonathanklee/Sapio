@@ -101,9 +101,7 @@ function renderResults(apps) {
     resultsEmpty.hidden = hasResults;
     resultsGrid.hidden = !hasResults;
 
-    resultsCount.textContent = hasResults
-        ? format(cards.length === 1 ? 'count_apps_one' : 'count_apps_other', { '%n': cards.length })
-        : '';
+    resultsCount.textContent = '';
 }
 
 function rerenderCurrentResults() {
