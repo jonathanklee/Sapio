@@ -13,6 +13,7 @@ import java.io.IOException
 import java.security.GeneralSecurityException
 import java.security.KeyPairGenerator
 import java.security.KeyStore
+import java.security.ProviderException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.UUID
@@ -37,6 +38,9 @@ class HardwareAttestationClient @Inject constructor() {
         } catch (e: IOException) {
             VerifiedBootState.UNKNOWN
         } catch (e: IllegalArgumentException) {
+            VerifiedBootState.UNKNOWN
+        } catch (e: ProviderException) {
+            // Devices without provisioned attestation keys fail to generate the key pair.
             VerifiedBootState.UNKNOWN
         } finally {
             runCatching { keyStore?.deleteEntry(alias) }
