@@ -2,7 +2,6 @@ package com.klee.sapio.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.klee.sapio.domain.CheckFdroidAvailabilityUseCase
 import com.klee.sapio.domain.DeviceAppCacheRepository
 import com.klee.sapio.domain.DeviceInfo
 import com.klee.sapio.domain.FetchAppEvaluationUseCase
@@ -30,7 +29,6 @@ import javax.inject.Inject
 class MyAppsViewModel @Inject constructor(
     private val installedApplicationsDataSource: InstalledApplicationsDataSource,
     private val fetchAppEvaluationUseCase: FetchAppEvaluationUseCase,
-    private val checkFdroidAvailabilityUseCase: CheckFdroidAvailabilityUseCase,
     private val deviceInfo: DeviceInfo,
     private val deviceAppCacheRepository: DeviceAppCacheRepository
 ) : ViewModel() {
@@ -116,24 +114,18 @@ class MyAppsViewModel @Inject constructor(
             installedApps.map { app ->
                 async(Dispatchers.IO) {
                     semaphore.withPermit {
-                        val isFdroid = checkFdroidAvailabilityUseCase(app.packageName)
-                        val item = if (!isFdroid) {
-                            val evaluation = fetchAppEvaluationUseCase(
-                                app.packageName,
-                                gmsType,
-                                userType
-                            ).getOrNull()
-                            InstalledAppWithRating(app, evaluation)
-                        } else {
-                            null
-                        }
+                        val evaluation = fetchAppEvaluationUseCase(
+                            app.packageName,
+                            gmsType,
+                            userType
+                        ).getOrNull()
                         _uiState.update { state ->
                             state.copy(progress = (completed.incrementAndGet() * 100) / total)
                         }
-                        item
+                        InstalledAppWithRating(app, evaluation)
                     }
                 }
-            }.awaitAll().filterNotNull()
+            }.awaitAll()
         }
 
         val now = System.currentTimeMillis()
