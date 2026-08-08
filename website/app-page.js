@@ -47,7 +47,13 @@ async function loadApp() {
         currentApp = app;
         enablePermissiveToggle();
         renderApp();
-        applySeo(app);
+
+        // Pre-rendered pages already carry localised metadata, a canonical
+        // pointing at their own language and their JSON-LD. Rewriting it here
+        // would replace all of that with the English variant.
+        if (!document.body.dataset.package) {
+            applySeo(app);
+        }
     } catch {
         showError();
     }

@@ -15,10 +15,13 @@ import shutil
 import urllib.request
 from pathlib import Path
 
+from i18n_extract import LANGS, load_translations, translator
+
 API_BASE = "https://server.checksap.io/api"
 SITE_ORIGIN = "https://checksap.io"
 WEBSITE_DIR = Path(__file__).resolve().parent.parent
 WEB_DIR = Path("/var/www/sapio-website")
+DEFAULT_LANG = "en"
 PAGE_SIZE = 100
 
 RATING_LABEL = {1: "Perfect", 2: "Partial", 3: "Unusable"}
@@ -48,11 +51,15 @@ def main():
         if has_secure_evaluation(app) and has_safe_package_name(app)
     ]
 
-    print(f"Generating {len(pages)} app pages…")
+    translations = load_translations(WEB_DIR / "i18n.js")
+
+    print(f"Generating {len(pages)} app pages in {len(LANGS)} languages…")
     template = (WEB_DIR / "app.html").read_text(encoding="utf-8")
     reset_app_dir()
     for app in pages:
-        write_app_page(app, template)
+        write_app_page(app, template, translations)
+
+    write_home_pages(translations)
 
     write_sitemap(pages)
     write_robots()
@@ -176,6 +183,70 @@ def attr(text):
 
 
 
+# ─── Localisation ──────────────────────────────────────────────────────────────
+
+def lang_prefix(lang):
+    """English lives at the root; the others get a /xx prefix."""
+    return "" if lang == DEFAULT_LANG else f"/{lang}"
+
+
+def app_url(pkg, lang):
+    return f"{SITE_ORIGIN}{lang_prefix(lang)}/app/{pkg}"
+
+
+def home_url(lang):
+    return f"{SITE_ORIGIN}{lang_prefix(lang)}/"
+
+
+def hreflang_block(url_for):
+    """The reciprocal cluster Google needs, plus x-default on English."""
+    links = [
+        f'    <link rel="alternate" hreflang="{lang}" href="{attr(url_for(lang))}">'
+        for lang in LANGS
+    ]
+    links.append(
+        f'    <link rel="alternate" hreflang="x-default" href="{attr(url_for(DEFAULT_LANG))}">'
+    )
+    return "\n".join(links)
+
+
+def apply_static_translations(page, t):
+    """Server-side equivalent of applyStaticTranslations() in i18n.js."""
+    page = re.sub(
+        r'(<([a-z0-9]+)[^>]*\bdata-i18n="([a-z_0-9]+)"[^>]*>)(.*?)(</\2>)',
+        lambda m: m.group(1) + escape_html(t(m.group(3))) + m.group(5),
+        page,
+        flags=re.S,
+    )
+    return re.sub(
+        r'(data-i18n-placeholder="([a-z_0-9]+)"[^>]*?placeholder=")[^"]*(")',
+        lambda m: m.group(1) + attr(t(m.group(2))) + m.group(3),
+        page,
+    )
+
+
+def localized_summary(app, t):
+    parts = []
+
+    for section in SECTIONS:
+        entry = entry_for(app["entries"], section["microg"], 3)
+        if not entry:
+            continue
+
+        rating = t(f"rating_{entry['rating']}")
+        broken = [t(f"feat_{k}") for k in entry["brokenFeatures"]
+                  if k in BROKEN_FEATURE_LABELS]
+        suffix = ""
+        if broken:
+            suffix = f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in broken)})"
+        parts.append(f"{section['label']}: {rating}{suffix}")
+
+    if not parts:
+        return t("summary_none").replace("%name", app["name"])
+
+    return t("summary_frame").replace("%name", app["name"]).replace("%parts", " · ".join(parts))
+
+
 # ─── Server-rendered card ──────────────────────────────────────────────────────
 #
 # app.html ships an empty shell that app-page.js fills from the API. That is
@@ -184,21 +255,22 @@ def attr(text):
 # expects. app-page.js replaces it wholesale once it runs.
 
 RATING_CLASS = {1: "good", 2: "average", 3: "bad"}
-ENV_LABELS = [(3, "standard"), (4, "permissive")]
+ENV_LABELS = [(3, "standard", "env_standard"), (4, "permissive", "env_permissive")]
 
 
-def render_legend():
+def render_legend(t):
     items = "".join(
         f'<span class="legend-item"><span class="status-dot {cls}"></span>'
-        f"<span>{label}</span></span>"
-        for cls, label in (("good", "Perfect"), ("average", "Partial"), ("bad", "Unusable"))
+        f"<span>{escape_html(t(key))}</span></span>"
+        for cls, key in (("good", "legend_works"), ("average", "legend_partial"),
+                         ("bad", "legend_broken"))
     )
     return f'<div class="rating-legend">{items}</div>'
 
 
-def render_cell(env_label, entry):
+def render_cell(env_label, env_key, entry, t):
     cls = RATING_CLASS.get(entry["rating"], "unknown")
-    label = RATING_LABEL.get(entry["rating"], "—")
+    label = t(f"rating_{entry['rating']}")
 
     version = ""
     if entry.get("versionName"):
@@ -207,19 +279,19 @@ def render_cell(env_label, entry):
     broken = ""
     if entry["rating"] == 2 and entry["brokenFeatures"]:
         chips = "".join(
-            f'<span class="broken-chip">{escape_html(lbl)}</span>'
-            for lbl in broken_labels(entry)
+            f'<span class="broken-chip">{escape_html(t("feat_" + k))}</span>'
+            for k in entry["brokenFeatures"] if k in BROKEN_FEATURE_LABELS
         )
         if chips:
             broken = (
                 '<div class="broken-features">'
-                '<span class="broken-features-title">Doesn\'t work</span>'
+                f'<span class="broken-features-title">{escape_html(t("doesnt_work"))}</span>'
                 f'<div class="broken-chips">{chips}</div></div>'
             )
 
     return (
         '<div class="eval-cell">'
-        f'<span class="cell-env-badge {env_label}">{env_label}</span>'
+        f'<span class="cell-env-badge {env_label}">{escape_html(t(env_key))}</span>'
         '<div class="rating-row">'
         f'<span class="status-dot {cls}"></span>'
         '<div class="rating-text-col">'
@@ -229,13 +301,13 @@ def render_cell(env_label, entry):
     )
 
 
-def render_sections(app):
+def render_sections(app, t):
     blocks = []
 
     for section in SECTIONS:
         cells = [
-            render_cell(env_label, entry)
-            for rooted, env_label in ENV_LABELS
+            render_cell(env_label, env_key, entry, t)
+            for rooted, env_label, env_key in ENV_LABELS
             if (entry := entry_for(app["entries"], section["microg"], rooted))
         ]
         if not cells:
@@ -252,9 +324,9 @@ def render_sections(app):
     return f'<div class="sections-row">{"".join(blocks)}</div>'
 
 
-def render_card(app):
+def render_card(app, t):
     return (
-        f"{render_legend()}"
+        f"{render_legend(t)}"
         '<article class="app-card app-detail-card">'
         '<div class="card-header">'
         '<div class="app-icon app-icon-placeholder">?</div>'
@@ -262,17 +334,17 @@ def render_card(app):
         f'<span class="app-name">{escape_html(app["name"])}</span>'
         f'<span class="app-package">{escape_html(app["packageName"])}</span>'
         "</div></div>"
-        f'<p class="app-summary">{escape_html(human_summary(app))}</p>'
-        f"{render_sections(app)}"
+        f'<p class="app-summary">{escape_html(localized_summary(app, t))}</p>'
+        f"{render_sections(app, t)}"
         "</article>"
     )
 
-def render_page(app, template):
+def render_page(app, template, lang, t):
     pkg = app["packageName"]
     name = app["name"]
-    url = f"{SITE_ORIGIN}/app/{pkg}"
-    title = f"{name} without Google Play Services — Sapio"
-    description = human_summary(app)[:300]
+    url = app_url(pkg, lang)
+    title = f"{name} {t('card_subtitle')} — Sapio"
+    description = localized_summary(app, t)[:300]
 
     json_ld = json.dumps({
         "@context": "https://schema.org",
@@ -315,12 +387,19 @@ def render_page(app, template):
         f'    <script type="application/ld+json">{json_ld}</script>\n'
         "</head>",
     )
-    page = page.replace("<body>", f'<body data-package="{attr(pkg)}">')
+    page = page.replace('<html lang="en">', f'<html lang="{lang}">', 1)
+    page = apply_static_translations(page, t)
+    page = page.replace(
+        "</head>",
+        hreflang_block(lambda l: app_url(pkg, l)) + "\n</head>",
+        1,
+    )
+    page = page.replace("<body>", f'<body data-package="{attr(pkg)}" data-lang="{lang}">')
 
     # Fill the shell so crawlers without JS get the actual evaluation.
     page = re.sub(
         r'(<div id="app-detail"[^>]*>).*?(</div>\s*\n\s*<div id="app-error")',
-        lambda m: m.group(1) + render_card(app) + "\n        " + m.group(2),
+        lambda m: m.group(1) + render_card(app, t) + "\n        " + m.group(2),
         page,
         flags=re.S,
     )
@@ -330,26 +409,62 @@ def render_page(app, template):
 
 
 def reset_app_dir():
-    app_dir = WEB_DIR / "app"
-    shutil.rmtree(app_dir, ignore_errors=True)
-    app_dir.mkdir(parents=True, exist_ok=True)
+    """Clear every language tree, so apps that disappear do not linger."""
+    for lang in LANGS:
+        base = WEB_DIR / lang if lang != DEFAULT_LANG else WEB_DIR
+        shutil.rmtree(base / "app", ignore_errors=True)
+        (base / "app").mkdir(parents=True, exist_ok=True)
 
 
-def write_app_page(app, template):
-    out_dir = WEB_DIR / "app" / app["packageName"]
-    out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "index.html").write_text(render_page(app, template), encoding="utf-8")
+def write_app_page(app, template, translations):
+    for lang in LANGS:
+        t = translator(translations, lang)
+        prefix = WEB_DIR / lang if lang != DEFAULT_LANG else WEB_DIR
+        out_dir = prefix / "app" / app["packageName"]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "index.html").write_text(
+            render_page(app, template, lang, t), encoding="utf-8"
+        )
+
+
+def write_home_pages(translations):
+    """English index.html is deployed as-is; the others are generated beside it."""
+    template = (WEB_DIR / "index.html").read_text(encoding="utf-8")
+
+    for lang in LANGS:
+        t = translator(translations, lang)
+        page = template.replace('<html lang="en">', f'<html lang="{lang}">', 1)
+        page = apply_static_translations(page, t)
+        page = re.sub(
+            r'(<link rel="canonical" href=")[^"]*(")',
+            f"\\g<1>{attr(home_url(lang))}\\g<2>",
+            page,
+        )
+        page = page.replace("</head>", hreflang_block(home_url) + "\n</head>", 1)
+        page = page.replace("<body>", f'<body data-lang="{lang}">', 1)
+
+        # Assets are referenced relatively, so prefixed pages need absolute paths.
+        if lang != DEFAULT_LANG:
+            for asset in ("style.css", "fonts.css", "app.js", "icon.png", "favicon.ico"):
+                page = page.replace(f'"{asset}"', f'"/{asset}"')
+            out = WEB_DIR / lang / "index.html"
+            out.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            out = WEB_DIR / "index.html"
+
+        out.write_text(page, encoding="utf-8")
 
 
 def write_sitemap(pages):
-    entries = [f"  <url><loc>{SITE_ORIGIN}/</loc></url>"]
+    entries = [f"  <url><loc>{home_url(lang)}</loc></url>" for lang in LANGS]
 
     for app in pages:
         lastmod = last_modified(app)
         lastmod_tag = f"<lastmod>{lastmod}</lastmod>" if lastmod else ""
-        entries.append(
-            f"  <url><loc>{SITE_ORIGIN}/app/{app['packageName']}</loc>{lastmod_tag}</url>"
-        )
+        for lang in LANGS:
+            entries.append(
+                f"  <url><loc>{app_url(app['packageName'], lang)}</loc>{lastmod_tag}</url>"
+            )
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'

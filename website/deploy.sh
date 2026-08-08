@@ -39,5 +39,6 @@ ssh "$PI" "mkdir -p $WEB_DIR/fonts"
 scp -q "$WEBSITE_DIR"/fonts/*.woff2 "$PI:$WEB_DIR/fonts/"
 
 scp -q "$WEBSITE_DIR/tools/refresh.py" "$PI:~/Sapio/website/tools/refresh.py"
+scp -q "$WEBSITE_DIR/tools/i18n_extract.py" "$PI:~/Sapio/website/tools/i18n_extract.py"
 
 echo "Deploy OK"

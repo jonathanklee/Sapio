@@ -1,4 +1,5 @@
 const LANGS = ['en', 'fr', 'de', 'it', 'es'];
+const DEFAULT_LANG = 'en';
 const STORAGE_KEY = 'sapio_lang';
 
 const TRANSLATIONS = {
@@ -101,7 +102,26 @@ const LANG_NAMES = { en: 'English', fr: 'Français', de: 'Deutsch', it: 'Italian
 
 let currentLang = detectLanguage();
 
+// Pages are also generated per language under /fr, /de, /it and /es. When the
+// URL says which language it is, it wins: the served HTML is already in that
+// language, and re-rendering it in another one would contradict the canonical.
+function langFromPath() {
+    const match = location.pathname.match(/^\/([a-z]{2})(?:\/|$)/);
+    const code = match?.[1];
+
+    return code && code !== DEFAULT_LANG && LANGS.includes(code) ? code : null;
+}
+
+function pathWithoutLang() {
+    return location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
+}
+
 function detectLanguage() {
+    const fromPath = langFromPath();
+    if (fromPath) {
+        return fromPath;
+    }
+
     if (typeof localStorage !== 'undefined') {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored && LANGS.includes(stored)) {
@@ -130,8 +150,10 @@ function setLang(lang) {
     if (!LANGS.includes(lang)) { return; }
 
     localStorage.setItem(STORAGE_KEY, lang);
-    currentLang = lang;
-    location.reload();
+
+    // Navigate rather than reload, so the URL keeps matching the language.
+    const prefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
+    location.href = prefix + pathWithoutLang() + location.search;
 }
 
 function t(key) {
