@@ -12,3 +12,7 @@ local.properties
 
 # Website — generated per-app pages (build artifact)
 website/app/
+
+# Python bytecode from website/tools
+__pycache__/
+*.pyc

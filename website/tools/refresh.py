@@ -100,6 +100,7 @@ def group_by_package(evaluations):
             "rooted":        ev["rooted"],
             "rating":        ev["rating"],
             "updatedAt":     ev.get("updatedAt", ""),
+            "versionName":   ev.get("versionName"),
             "brokenFeatures": ev.get("brokenFeatures") or [],
         }
         existing = buckets[pkg]["by_env"].get(env_key)
@@ -174,6 +175,98 @@ def attr(text):
     return escape_html(text).replace('"', "&quot;")
 
 
+
+# ─── Server-rendered card ──────────────────────────────────────────────────────
+#
+# app.html ships an empty shell that app-page.js fills from the API. That is
+# fine for browsers, but a crawler that does not run JS sees nothing. So the
+# same card is rendered here, with the class names the stylesheet already
+# expects. app-page.js replaces it wholesale once it runs.
+
+RATING_CLASS = {1: "good", 2: "average", 3: "bad"}
+ENV_LABELS = [(3, "standard"), (4, "permissive")]
+
+
+def render_legend():
+    items = "".join(
+        f'<span class="legend-item"><span class="status-dot {cls}"></span>'
+        f"<span>{label}</span></span>"
+        for cls, label in (("good", "Perfect"), ("average", "Partial"), ("bad", "Unusable"))
+    )
+    return f'<div class="rating-legend">{items}</div>'
+
+
+def render_cell(env_label, entry):
+    cls = RATING_CLASS.get(entry["rating"], "unknown")
+    label = RATING_LABEL.get(entry["rating"], "—")
+
+    version = ""
+    if entry.get("versionName"):
+        version = f'<span class="rating-date">v{escape_html(entry["versionName"])}</span>'
+
+    broken = ""
+    if entry["rating"] == 2 and entry["brokenFeatures"]:
+        chips = "".join(
+            f'<span class="broken-chip">{escape_html(lbl)}</span>'
+            for lbl in broken_labels(entry)
+        )
+        if chips:
+            broken = (
+                '<div class="broken-features">'
+                '<span class="broken-features-title">Doesn\'t work</span>'
+                f'<div class="broken-chips">{chips}</div></div>'
+            )
+
+    return (
+        '<div class="eval-cell">'
+        f'<span class="cell-env-badge {env_label}">{env_label}</span>'
+        '<div class="rating-row">'
+        f'<span class="status-dot {cls}"></span>'
+        '<div class="rating-text-col">'
+        f'<span class="rating-label {cls}">{label}</span>{version}'
+        "</div></div>"
+        f"{broken}</div>"
+    )
+
+
+def render_sections(app):
+    blocks = []
+
+    for section in SECTIONS:
+        cells = [
+            render_cell(env_label, entry)
+            for rooted, env_label in ENV_LABELS
+            if (entry := entry_for(app["entries"], section["microg"], rooted))
+        ]
+        if not cells:
+            continue
+
+        row_cls = "cells-row cells-row--single" if len(cells) == 1 else "cells-row"
+        blocks.append(
+            '<div class="eval-section">'
+            f'<span class="section-badge {"microg" if section["microg"] == 1 else "aosp"}">'
+            f'{section["label"]}</span>'
+            f'<div class="{row_cls}">{"".join(cells)}</div></div>'
+        )
+
+    return f'<div class="sections-row">{"".join(blocks)}</div>'
+
+
+def render_card(app):
+    return (
+        f"{render_legend()}"
+        '<article class="app-card app-detail-card">'
+        '<div class="card-header">'
+        '<div class="app-icon app-icon-placeholder">?</div>'
+        '<div class="app-meta">'
+        f'<span class="app-name">{escape_html(app["name"])}</span>'
+        f'<span class="app-package">{escape_html(app["packageName"])}</span>'
+        "</div></div>"
+        f'<p class="app-summary">{escape_html(human_summary(app))}</p>'
+        f"{render_sections(app)}"
+        "</article>"
+    )
+
 def render_page(app, template):
     pkg = app["packageName"]
     name = app["name"]
@@ -223,6 +316,16 @@ def render_page(app, template):
         "</head>",
     )
     page = page.replace("<body>", f'<body data-package="{attr(pkg)}">')
+
+    # Fill the shell so crawlers without JS get the actual evaluation.
+    page = re.sub(
+        r'(<div id="app-detail"[^>]*>).*?(</div>\s*\n\s*<div id="app-error")',
+        lambda m: m.group(1) + render_card(app) + "\n        " + m.group(2),
+        page,
+        flags=re.S,
+    )
+    page = page.replace('<div id="app-detail" class="app-detail" aria-busy="true">',
+                        '<div id="app-detail" class="app-detail">')
     return page
 
 
