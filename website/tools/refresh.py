@@ -256,6 +256,7 @@ def localized_summary(app, t):
 
 RATING_CLASS = {1: "good", 2: "average", 3: "bad"}
 ENV_LABELS = [(3, "standard", "env_standard"), (4, "permissive", "env_permissive")]
+STANDARD_ROOTED = 3
 
 
 def render_legend(t):
@@ -305,10 +306,15 @@ def render_sections(app, t):
     blocks = []
 
     for section in SECTIONS:
+        # Standard only. "Show permissive environments" is a client-side
+        # preference the generator cannot know, and it defaults to off, so
+        # rendering permissive cells here makes them flash on screen until
+        # app-page.js re-renders without them.
         cells = [
             render_cell(env_label, env_key, entry, t)
             for rooted, env_label, env_key in ENV_LABELS
-            if (entry := entry_for(app["entries"], section["microg"], rooted))
+            if rooted == STANDARD_ROOTED
+            and (entry := entry_for(app["entries"], section["microg"], rooted))
         ]
         if not cells:
             continue
