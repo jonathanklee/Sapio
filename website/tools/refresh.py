@@ -266,7 +266,15 @@ def render_legend(t):
         for cls, key in (("good", "legend_works"), ("average", "legend_partial"),
                          ("bad", "legend_broken"))
     )
-    return f'<div class="rating-legend">{items}</div>'
+    # The toggle is part of the legend client-side; omitting it here makes it
+    # pop in once app-page.js runs. Unchecked, matching the default.
+    toggle = (
+        '<label class="permissive-label">'
+        '<input type="checkbox" id="permissive-toggle">'
+        f'<span>{escape_html(t("show_permissive"))}</span>'
+        "</label>"
+    )
+    return f'<div class="rating-legend">{items}{toggle}</div>'
 
 
 def render_cell(env_label, env_key, entry, t):
@@ -292,7 +300,10 @@ def render_cell(env_label, env_key, entry, t):
 
     return (
         '<div class="eval-cell">'
-        f'<span class="cell-env-badge {env_label}">{escape_html(t(env_key))}</span>'
+        # Hidden by default, exactly as envBadge() does client-side: the
+        # environment name only disambiguates once permissive cells are shown.
+        f'<span class="cell-env-badge {env_label} env-badge--hidden">'
+        f'{escape_html(t(env_key))}</span>'
         '<div class="rating-row">'
         f'<span class="status-dot {cls}"></span>'
         '<div class="rating-text-col">'
