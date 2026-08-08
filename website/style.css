@@ -782,7 +782,7 @@ body {
 }
 
 .state-title {
-    font-size: 1rem;
+    font-size: var(--text-base);
     font-weight: 500;
     margin-bottom: var(--space-1);
 }
@@ -792,11 +792,18 @@ body {
     line-height: 1.6;
 }
 
+/* Without this the link falls back to the browser default blue, which is
+   unreadable on the dark surface. */
+.state-hint a {
+    color: var(--color-brand);
+    text-decoration: underline;
+}
+
 .state-hint code {
     background: var(--color-surface);
     border: 1px solid var(--color-divider);
     padding: 1px var(--space-05);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-size: .85em;
     color: var(--color-brand);
 }
