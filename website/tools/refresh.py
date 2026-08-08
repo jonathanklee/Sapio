@@ -210,6 +210,25 @@ def hreflang_block(url_for):
     return "\n".join(links)
 
 
+def localize_internal_links(page, lang):
+    """Keep in-site links inside the language tree.
+
+    Without this, clicking "All evaluations" from /fr/app/x lands on the
+    English home page - the URL is authoritative, so the visitor would
+    silently switch language mid-visit.
+    """
+    if lang == DEFAULT_LANG:
+        return page
+
+    prefix = lang_prefix(lang)
+    for target in ('href="/index.html#about"', 'href="/index.html"',
+                   'href="/#about"', 'href="/"'):
+        path = target[len('href="'):-1]
+        page = page.replace(target, f'href="{prefix}{path}"')
+
+    return page
+
+
 def apply_static_translations(page, t):
     """Server-side equivalent of applyStaticTranslations() in i18n.js."""
     page = re.sub(
@@ -406,6 +425,7 @@ def render_page(app, template, lang, t):
     )
     page = page.replace('<html lang="en">', f'<html lang="{lang}">', 1)
     page = apply_static_translations(page, t)
+    page = localize_internal_links(page, lang)
     page = page.replace(
         "</head>",
         hreflang_block(lambda l: app_url(pkg, l)) + "\n</head>",
@@ -452,6 +472,7 @@ def write_home_pages(translations):
         t = translator(translations, lang)
         page = template.replace('<html lang="en">', f'<html lang="{lang}">', 1)
         page = apply_static_translations(page, t)
+        page = localize_internal_links(page, lang)
         page = re.sub(
             r'(<link rel="canonical" href=")[^"]*(")',
             f"\\g<1>{attr(home_url(lang))}\\g<2>",

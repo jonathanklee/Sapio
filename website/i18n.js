@@ -1,6 +1,5 @@
 const LANGS = ['en', 'fr', 'de', 'it', 'es'];
 const DEFAULT_LANG = 'en';
-const STORAGE_KEY = 'sapio_lang';
 
 const TRANSLATIONS = {
     // ─── Header / nav ─────────────────────────────────────────────────────────
@@ -116,30 +115,19 @@ function pathWithoutLang() {
     return location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
 }
 
+// The language comes from the URL and nowhere else. A stored preference used
+// to win here, which meant an English URL rendered in French: the page
+// contradicted its own canonical, and the text visibly swapped after load.
 function detectLanguage() {
-    const fromPath = langFromPath();
-    if (fromPath) {
-        return fromPath;
-    }
+    return langFromPath() ?? DEFAULT_LANG;
+}
 
-    if (typeof localStorage !== 'undefined') {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored && LANGS.includes(stored)) {
-            return stored;
-        }
-    }
+// Internal links must carry the prefix, otherwise navigating drops back to
+// English mid-visit.
+function localizedPath(path) {
+    const prefix = currentLang === DEFAULT_LANG ? '' : `/${currentLang}`;
 
-    if (typeof navigator !== 'undefined') {
-        const preferred = navigator.languages?.length ? navigator.languages : [navigator.language];
-        for (const tag of preferred) {
-            const code = tag?.slice(0, 2).toLowerCase();
-            if (code && LANGS.includes(code)) {
-                return code;
-            }
-        }
-    }
-
-    return 'en';
+    return prefix + path;
 }
 
 function getLang() {
@@ -149,9 +137,8 @@ function getLang() {
 function setLang(lang) {
     if (!LANGS.includes(lang)) { return; }
 
-    localStorage.setItem(STORAGE_KEY, lang);
-
-    // Navigate rather than reload, so the URL keeps matching the language.
+    // Navigate rather than reload: the URL carries the language now, so there
+    // is nothing left to remember.
     const prefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
     location.href = prefix + pathWithoutLang() + location.search;
 }
@@ -227,6 +214,7 @@ function setupI18n() {
 
 export {
     LANGS,
+    localizedPath,
     LANG_NAMES,
     getLang,
     setLang,

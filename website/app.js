@@ -8,7 +8,7 @@ import {
     renderCardHeader,
     renderSection,
 } from './core.js';
-import { setupI18n, t, format, getLang } from './i18n.js';
+import { setupI18n, t, format, getLang, localizedPath } from './i18n.js';
 
 const DEBOUNCE_MS = 300;
 const INITIAL_LATEST_COUNT = 3;
@@ -65,7 +65,7 @@ function renderAppCard(app) {
 
     const card = document.createElement('a');
     card.className = 'app-card app-card--link';
-    card.href = `/app/${app.packageName}`;
+    card.href = localizedPath(`/app/${app.packageName}`);
     card.appendChild(renderCardHeader(app));
     card.appendChild(sectionsRow);
 
