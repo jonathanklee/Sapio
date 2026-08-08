@@ -769,7 +769,8 @@ body {
 }
 
 .skeleton-card {
-    height: 220px;
+    /* Sized to the real cards (243-292px observed) so the swap does not jump. */
+    height: 258px;
     border-radius: var(--card-radius);
     background: linear-gradient(90deg, var(--skeleton-base) 25%,
                 var(--skeleton-shine) 50%, var(--skeleton-base) 75%);

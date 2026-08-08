@@ -19,6 +19,7 @@ from i18n_extract import LANGS, load_translations, translator
 
 API_BASE = "https://server.checksap.io/api"
 SITE_ORIGIN = "https://checksap.io"
+MEDIA_BASE = "https://server.checksap.io"
 WEBSITE_DIR = Path(__file__).resolve().parent.parent
 WEB_DIR = Path("/var/www/sapio-website")
 DEFAULT_LANG = "en"
@@ -59,7 +60,7 @@ def main():
     for app in pages:
         write_app_page(app, template, translations)
 
-    write_home_pages(translations)
+    write_home_pages(translations, len(all_apps), len(evaluations))
 
     write_sitemap(pages)
     write_robots()
@@ -76,6 +77,7 @@ def fetch_all_evaluations():
         url = (
             f"{API_BASE}/sapio-applications"
             f"?sort=updatedAt%3ADesc"
+            f"&populate%5Bicon%5D=*"
             f"&pagination%5Bpage%5D={page}"
             f"&pagination%5BpageSize%5D={PAGE_SIZE}"
         )
@@ -99,7 +101,14 @@ def group_by_package(evaluations):
     for ev in evaluations:
         pkg = ev["packageName"]
         if pkg not in buckets:
-            buckets[pkg] = {"name": ev["name"], "packageName": pkg, "by_env": {}}
+            buckets[pkg] = {"name": ev["name"], "packageName": pkg,
+                            "iconUrl": None, "by_env": {}}
+
+        if not buckets[pkg]["iconUrl"]:
+            icon = ((ev.get("icon") or {}).get("data") or {})
+            path = (icon.get("attributes") or {}).get("url")
+            if path:
+                buckets[pkg]["iconUrl"] = MEDIA_BASE + path
 
         env_key = f"{ev['microg']}-{ev['rooted']}"
         candidate = {
@@ -118,6 +127,7 @@ def group_by_package(evaluations):
         {
             "name":        b["name"],
             "packageName": b["packageName"],
+            "iconUrl":     b["iconUrl"],
             "entries":     list(b["by_env"].values()),
         }
         for b in buckets.values()
@@ -371,12 +381,27 @@ def render_sections(app, t):
     return f'<div class="sections-row">{"".join(blocks)}</div>'
 
 
+def render_app_icon(app):
+    """Emit the real icon when known.
+
+    The client fetches it from the API and only then sets the src, so the
+    placeholder was visible until that round-trip finished. With the URL in
+    the HTML the browser starts loading it during parse.
+    """
+    url = app.get("iconUrl")
+    if not url:
+        return '<div class="app-icon app-icon-placeholder">?</div>'
+
+    return (f'<img class="app-icon" src="{attr(url)}" '
+            f'alt="{attr(app["name"])}" width="50" height="50">')
+
+
 def render_card(app, t):
     return (
         f"{render_legend(t)}"
         '<article class="app-card app-detail-card">'
         '<div class="card-header">'
-        '<div class="app-icon app-icon-placeholder">?</div>'
+        f'{render_app_icon(app)}'
         '<div class="app-meta">'
         f'<span class="app-name">{escape_html(app["name"])}</span>'
         f'<span class="app-package">{escape_html(app["packageName"])}</span>'
@@ -475,7 +500,32 @@ def write_app_page(app, template, translations):
         )
 
 
-def write_home_pages(translations):
+# Digit grouping per language, matching what a reader expects locally.
+GROUPING = {"en": ",", "fr": "\u202f", "de": ".", "it": ".", "es": "."}
+
+
+def format_count(value, lang):
+    return f"{value:,}".replace(",", GROUPING.get(lang, ","))
+
+
+def inject_stats(page, lang, apps, evaluations):
+    """Bake the counters into the HTML.
+
+    They used to be fetched from stats.json and unhidden on arrival, which
+    made the hero grow by 45px after paint. The generator already knows these
+    numbers, so there is nothing to wait for. Written idempotently: the English
+    index.html is both the template and the output.
+    """
+    page = page.replace('<div class="hero-stats" id="hero-stats" hidden>',
+                        '<div class="hero-stats" id="hero-stats">')
+    page = re.sub(r'(<strong id="stat-apps">)[^<]*(</strong>)',
+                  lambda m: m.group(1) + format_count(apps, lang) + m.group(2), page)
+    page = re.sub(r'(<strong id="stat-evaluations">)[^<]*(</strong>)',
+                  lambda m: m.group(1) + format_count(evaluations, lang) + m.group(2), page)
+    return page
+
+
+def write_home_pages(translations, apps, evaluations):
     """English index.html is deployed as-is; the others are generated beside it."""
     template = (WEB_DIR / "index.html").read_text(encoding="utf-8")
 
@@ -484,6 +534,7 @@ def write_home_pages(translations):
         page = template.replace('<html lang="en">', f'<html lang="{lang}">', 1)
         page = apply_static_translations(page, t)
         page = localize_internal_links(page, lang)
+        page = inject_stats(page, lang, apps, evaluations)
         page = re.sub(
             r'(<link rel="canonical" href=")[^"]*(")',
             f"\\g<1>{attr(home_url(lang))}\\g<2>",

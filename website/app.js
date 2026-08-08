@@ -8,7 +8,7 @@ import {
     renderCardHeader,
     renderSection,
 } from './core.js';
-import { setupI18n, t, format, getLang, localizedPath } from './i18n.js';
+import { setupI18n, t, format, localizedPath } from './i18n.js';
 
 const DEBOUNCE_MS = 300;
 const INITIAL_LATEST_COUNT = 3;
@@ -260,19 +260,6 @@ for (const chip of document.querySelectorAll('.example-chip')) {
 
 // ─── Hero stats ─────────────────────────────────────────────────────────────────
 
-async function loadStats() {
-    try {
-        const res = await fetch('/stats.json');
-        if (!res.ok) { return; }
-
-        const { apps, evaluations } = await res.json();
-        document.getElementById('stat-apps').textContent = apps.toLocaleString(getLang());
-        document.getElementById('stat-evaluations').textContent = evaluations.toLocaleString(getLang());
-        document.getElementById('hero-stats').hidden = false;
-    } catch {
-        // Stats are non-essential; leave them hidden on failure.
-    }
-}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
@@ -282,4 +269,3 @@ loadLatest().then(() => {
         document.querySelector(location.hash)?.scrollIntoView();
     }
 });
-loadStats();
