@@ -41,4 +41,10 @@ scp -q "$WEBSITE_DIR"/fonts/*.woff2 "$PI:$WEB_DIR/fonts/"
 scp -q "$WEBSITE_DIR/tools/refresh.py" "$PI:~/Sapio/website/tools/refresh.py"
 scp -q "$WEBSITE_DIR/tools/i18n_extract.py" "$PI:~/Sapio/website/tools/i18n_extract.py"
 
+# Deploying overwrites index.html and app.html, which are both the templates
+# *and* the generated output. Without regenerating, the English home page loses
+# its baked-in counters and every per-app page keeps the previous template.
+echo "Regenerating pages..."
+ssh "$PI" "sh ~/Sapio/website/regenerate.sh" | tail -2
+
 echo "Deploy OK"
