@@ -22,9 +22,15 @@
     --footer-bg:      #1A1D26;
     --skeleton-base:  #E3E6EA;
     --skeleton-shine: #F1F3F5;
-    --color-good:     #2E9E5B;
-    --color-average:  #EAB308;
-    --color-bad:      #D64545;
+    /* The three status colours match the Android app's dots exactly
+       (ic_status_green/yellow/red). They sit below 3:1 on white, which is
+       fine: every dot is paired with its label, so the colour is redundant
+       rather than load-bearing. */
+    --color-good:     #4CAF50;
+    --color-average:  #FFC107;
+    --color-bad:      #F44336;
+    /* Same family, dark enough for text use (the trust-strip checkmarks). */
+    --color-good-text: #2E7D32;
     --color-unknown:  #B4BAC2;
 
     --microg-badge-bg:  #8FC0EC;
@@ -385,8 +391,8 @@ body {
 
 .trust-strip li::before {
     content: "✓";
-    margin-right: 6px;
-    color: var(--color-good);
+    margin-right: var(--space-05);
+    color: var(--color-good-text);
     font-weight: 700;
 }
 
