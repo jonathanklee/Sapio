@@ -381,29 +381,6 @@ def render_sections(app, t):
     return f'<div class="sections-row">{"".join(blocks)}</div>'
 
 
-def render_share_banner(t):
-    """Pre-render the share block.
-
-    It used to ship empty and hidden, then be filled and revealed by
-    app-page.js - which pushed the footer down by the block's full height
-    once the API answered. The content is static, so there is nothing to wait
-    for. app-page.js still replaces it to bind the click handler, but with
-    identical markup, so nothing moves.
-
-    Every generated page has a standard evaluation (see has_secure_evaluation),
-    which is exactly the condition renderShareButton() checks before rendering.
-    """
-    return (
-        '<div class="share-section">'
-        '<div class="share-cta-row">'
-        '<span class="share-cta-icon">\U0001F4E3</span>'
-        f'<span class="share-cta-title">{escape_html(t("share_title"))}</span>'
-        "</div>"
-        f'<p class="share-cta-text">{escape_html(t("share_cta"))}</p>'
-        f'<button class="btn btn-primary share-btn">{escape_html(t("share"))}</button>'
-        "</div>"
-    )
-
 
 def render_app_icon(app):
     """Emit the real icon when known.
@@ -492,11 +469,6 @@ def render_page(app, template, lang, t):
         1,
     )
     page = page.replace("<body>", f'<body data-package="{attr(pkg)}" data-lang="{lang}">')
-    page = page.replace(
-        '<section id="share-banner" hidden></section>',
-        f'<section id="share-banner">{render_share_banner(t)}</section>',
-        1,
-    )
 
     # Fill the shell so crawlers without JS get the actual evaluation.
     page = re.sub(

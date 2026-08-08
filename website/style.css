@@ -777,13 +777,19 @@ body {
 }
 
 .skeleton-card {
-    /* Sized to the real cards (243-292px observed) so the swap does not jump. */
+    /* Sized to the feed cards (243-292px observed) so the swap does not jump. */
     height: 258px;
     border-radius: var(--card-radius);
     background: linear-gradient(90deg, var(--skeleton-base) 25%,
                 var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
     background-size: 1200px 100%;
     animation: shimmer 1.4s infinite linear;
+}
+
+/* The detail page's card is much taller than a feed card, so its placeholder
+   has to be too - otherwise the swap drags the whole page up. */
+#app-detail .skeleton-card {
+    height: 380px;
 }
 
 /* ─── Empty / error states ────────────────────────────────────────────────── */
