@@ -536,7 +536,9 @@ body {
 .results-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-05);
+    /* Wider than the 12px between blocks inside a card: two different apps
+       must not read as closer together than two parts of the same one. */
+    gap: var(--space-2);
     max-width: 680px;
     margin: 0 auto;
 }
