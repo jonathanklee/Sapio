@@ -17,6 +17,7 @@ SOURCE_FILES="
     core.js
     i18n.js
     style.css
+    fonts.css
     favicon.ico
     favicon-16x16.png
     favicon-32x32.png
@@ -32,6 +33,10 @@ for f in $SOURCE_FILES; do
     fi
 
 done
+
+# Self-hosted webfonts - a directory, so it needs its own copy step.
+ssh "$PI" "mkdir -p $WEB_DIR/fonts"
+scp -q "$WEBSITE_DIR"/fonts/*.woff2 "$PI:$WEB_DIR/fonts/"
 
 scp -q "$WEBSITE_DIR/tools/refresh.py" "$PI:~/Sapio/website/tools/refresh.py"
 
