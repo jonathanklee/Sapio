@@ -304,6 +304,17 @@ def render_cell(env_label, env_key, entry, t):
     if entry.get("versionName"):
         version = f'<span class="rating-date">v{escape_html(entry["versionName"])}</span>'
 
+    # The client renders a relative date it computes at runtime. Emitting the
+    # same number of lines here keeps the row height identical, otherwise the
+    # text column grows on hydration and the centred dot visibly drops.
+    # Absolute rather than relative: a generated "5 hours ago" would go stale.
+    date = ""
+    iso = (entry.get("updatedAt") or "")[:10]
+    parts = iso.split("-")
+    if len(parts) == 3:
+        date = (f'<time class="rating-date" datetime="{iso}">'
+                f'{parts[2]}/{parts[1]}/{parts[0]}</time>')
+
     broken = ""
     if entry["rating"] == 2 and entry["brokenFeatures"]:
         chips = "".join(
@@ -326,7 +337,7 @@ def render_cell(env_label, env_key, entry, t):
         '<div class="rating-row">'
         f'<span class="status-dot {cls}"></span>'
         '<div class="rating-text-col">'
-        f'<span class="rating-label {cls}">{label}</span>{version}'
+        f'<span class="rating-label {cls}">{label}</span>{version}{date}'
         "</div></div>"
         f"{broken}</div>"
     )
