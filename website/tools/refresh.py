@@ -220,6 +220,16 @@ def hreflang_block(url_for):
     return "\n".join(links)
 
 
+def strip_hreflang(page):
+    """Drop any block a previous run left behind.
+
+    The generated home page is also the next run's template, and the block is
+    injected before </head>, which is still there the second time around. So
+    without this the cron stacks another six links every hour.
+    """
+    return re.sub(r'[ \t]*<link rel="alternate"[^>]*>\n', "", page)
+
+
 def localize_internal_links(page, lang):
     """Keep in-site links inside the language tree.
 
@@ -541,6 +551,7 @@ def write_home_pages(translations, apps, evaluations):
             f"\\g<1>{attr(home_url(lang))}\\g<2>",
             page,
         )
+        page = strip_hreflang(page)
         page = page.replace("</head>", hreflang_block(home_url) + "\n</head>", 1)
         page = page.replace("<body>", f'<body data-lang="{lang}">', 1)
 
