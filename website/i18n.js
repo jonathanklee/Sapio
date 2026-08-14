@@ -1,5 +1,6 @@
 const LANGS = ['en', 'fr', 'de', 'it', 'es'];
 const DEFAULT_LANG = 'en';
+const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 const TRANSLATIONS = {
     // ─── Header / nav ─────────────────────────────────────────────────────────
@@ -137,10 +138,16 @@ function getLang() {
 function setLang(lang) {
     if (!LANGS.includes(lang)) { return; }
 
-    // Navigate rather than reload: the URL carries the language now, so there
-    // is nothing left to remember.
+    rememberLang(lang);
+
     const prefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
     location.href = prefix + pathWithoutLang() + location.search;
+}
+
+// Read by nginx to pick the home page language, never by detectLanguage():
+// the URL stays authoritative.
+function rememberLang(lang) {
+    document.cookie = `lang=${lang};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
 }
 
 function t(key) {
