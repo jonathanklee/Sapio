@@ -693,7 +693,34 @@ body {
 
 .cell-env-badge.standard   { background: var(--user-badge-bg); color: var(--user-badge-fg); }
 .cell-env-badge.permissive { background: var(--root-badge-bg); color: var(--root-badge-fg); }
-.cell-env-badge.env-badge--hidden { display: none; }
+
+/* Permissive environments are opt-in. Everything is rendered once, server-side
+   and client-side alike, and the toggle only flips .show-permissive on <html>,
+   so switching it repaints nothing. The environment name is redundant while
+   only the standard cell shows, hence the badge following the same rule. */
+
+.eval-cell--permissive,
+.eval-section--permissive-only,
+.cell-env-badge,
+.app-summary--permissive {
+    display: none;
+}
+
+.cells-row:not(.cells-row--single):has(.eval-cell--permissive) {
+    grid-template-columns: 1fr;
+}
+
+.show-permissive .eval-cell--permissive { display: flex; }
+.show-permissive .eval-section--permissive-only { display: flex; }
+.show-permissive .cell-env-badge { display: inline-flex; }
+
+.show-permissive .app-summary--permissive { display: block; }
+.show-permissive .app-summary--standard,
+.show-permissive .permissive-only-hint { display: none; }
+
+.show-permissive .cells-row:not(.cells-row--single):has(.eval-cell--permissive) {
+    grid-template-columns: 1fr 1fr;
+}
 
 /* Rating row: dot + text */
 

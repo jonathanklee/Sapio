@@ -13,6 +13,7 @@ import json
 import re
 import shutil
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 from i18n_extract import LANGS, load_translations, translator
@@ -56,9 +57,10 @@ def main():
 
     print(f"Generating {len(pages)} app pages in {len(LANGS)} languages…")
     template = (WEB_DIR / "app.html").read_text(encoding="utf-8")
+    now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     reset_app_dir()
     for app in pages:
-        write_app_page(app, template, translations)
+        write_app_page(app, template, translations, now_ms)
 
     write_home_pages(translations, len(all_apps), len(evaluations))
 
@@ -264,21 +266,25 @@ def apply_static_translations(page, t):
     )
 
 
-def localized_summary(app, t):
+def localized_summary(app, t, with_permissive=False):
+    envs = ENV_LABELS if with_permissive else ENV_LABELS[:1]
     parts = []
 
     for section in SECTIONS:
-        entry = entry_for(app["entries"], section["microg"], 3)
-        if not entry:
-            continue
+        for rooted, _, env_key in envs:
+            entry = entry_for(app["entries"], section["microg"], rooted)
+            if not entry:
+                continue
 
-        rating = t(f"rating_{entry['rating']}")
-        broken = [t(f"feat_{k}") for k in entry["brokenFeatures"]
-                  if k in BROKEN_FEATURE_LABELS]
-        suffix = ""
-        if broken:
-            suffix = f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in broken)})"
-        parts.append(f"{section['label']}: {rating}{suffix}")
+            rating = t(f"rating_{entry['rating']}")
+            broken = [t(f"feat_{k}") for k in entry["brokenFeatures"]
+                      if k in BROKEN_FEATURE_LABELS]
+            suffix = ""
+            if broken:
+                suffix = f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in broken)})"
+
+            scenario = f"{section['label']} · {t(env_key)}" if with_permissive else section["label"]
+            parts.append(f"{scenario}: {rating}{suffix}")
 
     if not parts:
         return t("summary_none").replace("%name", app["name"])
@@ -291,11 +297,92 @@ def localized_summary(app, t):
 # app.html ships an empty shell that app-page.js fills from the API. That is
 # fine for browsers, but a crawler that does not run JS sees nothing. So the
 # same card is rendered here, with the class names the stylesheet already
-# expects. app-page.js replaces it wholesale once it runs.
+# expects. app-page.js keeps it as-is unless the data moved on.
 
 RATING_CLASS = {1: "good", 2: "average", 3: "bad"}
 ENV_LABELS = [(3, "standard", "env_standard"), (4, "permissive", "env_permissive")]
-STANDARD_ROOTED = 3
+
+# Python has no Intl.RelativeTimeFormat, so these are the strings ICU produces
+# for { numeric: 'always', style: 'short' }, transcribed per language. Only the
+# singular differs, and only ever at 1, hence the (one, other) pairs. relativeDate()
+# in i18n.js must agree with this table; tools/check_relative_dates.js proves it.
+RELATIVE_UNITS = [
+    ("year", 31536000000),
+    ("month", 2592000000),
+    ("day", 86400000),
+    ("hour", 3600000),
+    ("minute", 60000),
+]
+RELATIVE_PATTERNS = {
+    "en": {
+        "year": ("{0} yr. ago", "{0} yr. ago"),
+        "month": ("{0} mo. ago", "{0} mo. ago"),
+        "day": ("{0} day ago", "{0} days ago"),
+        "hour": ("{0} hr. ago", "{0} hr. ago"),
+        "minute": ("{0} min. ago", "{0} min. ago"),
+    },
+    "fr": {
+        "year": ("il y a {0} a", "il y a {0} a"),
+        "month": ("il y a {0} m.", "il y a {0} m."),
+        "day": ("il y a {0}\u00a0j", "il y a {0}\u00a0j"),
+        "hour": ("il y a {0}\u00a0h", "il y a {0}\u00a0h"),
+        "minute": ("il y a {0}\u00a0min", "il y a {0}\u00a0min"),
+    },
+    "de": {
+        "year": ("vor {0} Jahr", "vor {0} Jahren"),
+        "month": ("vor {0} Monat", "vor {0}\u00a0Monaten"),
+        "day": ("vor {0} Tag", "vor {0} Tagen"),
+        "hour": ("vor {0} Std.", "vor {0} Std."),
+        "minute": ("vor {0} Min.", "vor {0} Min."),
+    },
+    "it": {
+        "year": ("{0} anno fa", "{0} anni fa"),
+        "month": ("{0} mese fa", "{0} mesi fa"),
+        "day": ("{0} g fa", "{0} gg fa"),
+        "hour": ("{0} h fa", "{0} h fa"),
+        "minute": ("{0} min fa", "{0} min fa"),
+    },
+    "es": {
+        "year": ("hace {0} a", "hace {0} a"),
+        "month": ("hace {0} m", "hace {0} m"),
+        "day": ("hace {0} d", "hace {0} d"),
+        "hour": ("hace {0} h", "hace {0} h"),
+        "minute": ("hace {0} min", "hace {0} min"),
+    },
+}
+
+
+def relative_date(updated_at, lang, now_ms):
+    """Port of relativeDate() in i18n.js, down to the truncation."""
+    stamp = parse_iso_ms(updated_at)
+    if stamp is None:
+        return None
+
+    diff_ms = stamp - now_ms
+    patterns = RELATIVE_PATTERNS.get(lang, RELATIVE_PATTERNS[DEFAULT_LANG])
+
+    for unit, unit_ms in RELATIVE_UNITS:
+        if abs(diff_ms / unit_ms) >= 1 or unit == "minute":
+            value = int(diff_ms / unit_ms)
+            one, other = patterns[unit]
+            # French counts 0 as singular; nothing else in this table does, and
+            # every pair where it would matter is identical anyway.
+            singular = abs(value) == 1 or (lang == "fr" and value == 0)
+            return (one if singular else other).replace("{0}", str(abs(value)))
+
+    return None
+
+
+def parse_iso_ms(value):
+    if not value:
+        return None
+
+    try:
+        stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+    return int(stamp.timestamp() * 1000)
 
 
 def render_legend(t):
@@ -316,7 +403,7 @@ def render_legend(t):
     return f'<div class="rating-legend">{items}{toggle}</div>'
 
 
-def render_cell(env_label, env_key, entry, t):
+def render_cell(env_label, env_key, entry, t, lang, now_ms):
     cls = RATING_CLASS.get(entry["rating"], "unknown")
     label = t(f"rating_{entry['rating']}")
 
@@ -324,16 +411,15 @@ def render_cell(env_label, env_key, entry, t):
     if entry.get("versionName"):
         version = f'<span class="rating-date">v{escape_html(entry["versionName"])}</span>'
 
-    # The client renders a relative date it computes at runtime. Emitting the
-    # same number of lines here keeps the row height identical, otherwise the
-    # text column grows on hydration and the centred dot visibly drops.
-    # Absolute rather than relative: a generated "5 hours ago" would go stale.
+    # Same string relativeDate() would build, so app-page.js leaves it alone.
+    # It ages between hourly runs, hence data-updated-at: syncRelativeDates()
+    # recomputes and only rewrites the ones that have actually drifted.
     date = ""
-    iso = (entry.get("updatedAt") or "")[:10]
-    parts = iso.split("-")
-    if len(parts) == 3:
-        date = (f'<time class="rating-date" datetime="{iso}">'
-                f'{parts[2]}/{parts[1]}/{parts[0]}</time>')
+    updated_at = entry.get("updatedAt") or ""
+    text = relative_date(updated_at, lang, now_ms)
+    if text:
+        date = (f'<span class="rating-date" data-updated-at="{attr(updated_at)}">'
+                f"{escape_html(text)}</span>")
 
     broken = ""
     if entry["rating"] == 2 and entry["brokenFeatures"]:
@@ -349,10 +435,8 @@ def render_cell(env_label, env_key, entry, t):
             )
 
     return (
-        '<div class="eval-cell">'
-        # Hidden by default, exactly as envBadge() does client-side: the
-        # environment name only disambiguates once permissive cells are shown.
-        f'<span class="cell-env-badge {env_label} env-badge--hidden">'
+        f'<div class="eval-cell eval-cell--{env_label}">'
+        f'<span class="cell-env-badge {env_label}">'
         f'{escape_html(t(env_key))}</span>'
         '<div class="rating-row">'
         f'<span class="status-dot {cls}"></span>'
@@ -363,31 +447,43 @@ def render_cell(env_label, env_key, entry, t):
     )
 
 
-def render_sections(app, t):
+def render_sections(app, t, lang, now_ms):
+    """Emit every environment, exactly as renderSection() does client-side.
+
+    "Show permissive environments" is a client-side preference the generator
+    cannot know, so it used to render standard cells only and let app-page.js
+    re-render. Both sides now ship all the cells and style.css hides the
+    permissive ones until the toggle sets .show-permissive, which means the
+    markup here matches what the client would build and nothing repaints.
+    """
     blocks = []
 
     for section in SECTIONS:
-        # Standard only. "Show permissive environments" is a client-side
-        # preference the generator cannot know, and it defaults to off, so
-        # rendering permissive cells here makes them flash on screen until
-        # app-page.js re-renders without them.
-        cells = [
-            render_cell(env_label, env_key, entry, t)
+        present = [
+            (env_label, env_key, entry)
             for rooted, env_label, env_key in ENV_LABELS
-            if rooted == STANDARD_ROOTED
-            and (entry := entry_for(app["entries"], section["microg"], rooted))
+            if (entry := entry_for(app["entries"], section["microg"], rooted))
         ]
-        if not cells:
+        if not present:
             continue
 
+        cells = [render_cell(label, key, entry, t, lang, now_ms)
+                 for label, key, entry in present]
         row_cls = "cells-row cells-row--single" if len(cells) == 1 else "cells-row"
+        section_cls = "eval-section"
+        if all(label == "permissive" for label, _, _ in present):
+            section_cls += " eval-section--permissive-only"
+
         blocks.append(
-            '<div class="eval-section">'
+            f'<div class="{section_cls}">'
             f'<span class="section-badge {"microg" if section["microg"] == 1 else "aosp"}">'
             f'{section["label"]}</span>'
             f'<div class="{row_cls}">{"".join(cells)}</div></div>'
         )
 
+    # No permissive-only hint here: a page exists only when some entry is
+    # standard (has_secure_evaluation), so a section always survives the
+    # toggle. app-page.js still emits one, for the /app.html?app= route.
     return f'<div class="sections-row">{"".join(blocks)}</div>'
 
 
@@ -407,7 +503,7 @@ def render_app_icon(app):
             f'alt="{attr(app["name"])}" width="50" height="50">')
 
 
-def render_card(app, t):
+def render_card(app, t, lang, now_ms):
     return (
         f"{render_legend(t)}"
         '<article class="app-card app-detail-card">'
@@ -417,12 +513,38 @@ def render_card(app, t):
         f'<span class="app-name">{escape_html(app["name"])}</span>'
         f'<span class="app-package">{escape_html(app["packageName"])}</span>'
         "</div></div>"
-        f'<p class="app-summary">{escape_html(localized_summary(app, t))}</p>'
-        f"{render_sections(app, t)}"
+        f'<p class="app-summary app-summary--standard">'
+        f'{escape_html(localized_summary(app, t))}</p>'
+        f'<p class="app-summary app-summary--permissive">'
+        f'{escape_html(localized_summary(app, t, with_permissive=True))}</p>'
+        f"{render_sections(app, t, lang, now_ms)}"
         "</article>"
     )
 
-def render_page(app, template, lang, t):
+
+def render_key(app):
+    """Fingerprint of everything the card draws.
+
+    app-page.js recomputes it from the API and skips the repaint when it
+    matches, so the pre-rendered card survives untouched. Keep in sync with
+    renderKey() in core.js.
+    """
+    entries = sorted(app["entries"], key=lambda e: (e["microg"], e["rooted"]))
+    parts = [
+        ":".join([
+            str(e["microg"]),
+            str(e["rooted"]),
+            str(e["rating"]),
+            e.get("updatedAt") or "",
+            e.get("versionName") or "",
+            ",".join(e.get("brokenFeatures") or []),
+        ])
+        for e in entries
+    ]
+
+    return "|".join([app["packageName"], app["name"], *parts])
+
+def render_page(app, template, lang, t, now_ms):
     pkg = app["packageName"]
     name = app["name"]
     url = app_url(pkg, lang)
@@ -483,12 +605,14 @@ def render_page(app, template, lang, t):
     # Fill the shell so crawlers without JS get the actual evaluation.
     page = re.sub(
         r'(<div id="app-detail"[^>]*>).*?(</div>\s*\n\s*<div id="app-error")',
-        lambda m: m.group(1) + render_card(app, t) + "\n        " + m.group(2),
+        lambda m: m.group(1) + render_card(app, t, lang, now_ms) + "\n        " + m.group(2),
         page,
         flags=re.S,
     )
-    page = page.replace('<div id="app-detail" class="app-detail" aria-busy="true">',
-                        '<div id="app-detail" class="app-detail">')
+    page = page.replace(
+        '<div id="app-detail" class="app-detail" aria-busy="true">',
+        f'<div id="app-detail" class="app-detail" data-render-key="{attr(render_key(app))}">',
+    )
     return page
 
 
@@ -500,14 +624,14 @@ def reset_app_dir():
         (base / "app").mkdir(parents=True, exist_ok=True)
 
 
-def write_app_page(app, template, translations):
+def write_app_page(app, template, translations, now_ms):
     for lang in LANGS:
         t = translator(translations, lang)
         prefix = WEB_DIR / lang if lang != DEFAULT_LANG else WEB_DIR
         out_dir = prefix / "app" / app["packageName"]
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "index.html").write_text(
-            render_page(app, template, lang, t), encoding="utf-8"
+            render_page(app, template, lang, t, now_ms), encoding="utf-8"
         )
 
 

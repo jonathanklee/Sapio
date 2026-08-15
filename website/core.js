@@ -171,6 +171,24 @@ function entryFor(entries, microg, rooted) {
     return entries.find(e => e.microg === microg && e.rooted === rooted) ?? null;
 }
 
+// Fingerprint of everything the card draws. The generator stamps it on the
+// pre-rendered markup so the client can tell "same data" from "stale page"
+// and skip the repaint. Keep it in sync with render_key() in refresh.py.
+function renderKey(app) {
+    const entries = [...app.entries]
+        .sort((a, b) => (a.microg - b.microg) || (a.rooted - b.rooted))
+        .map(e => [
+            e.microg,
+            e.rooted,
+            e.rating,
+            e.updatedAt ?? '',
+            e.versionName ?? '',
+            (e.brokenFeatures ?? []).join(','),
+        ].join(':'));
+
+    return [app.packageName, app.name, ...entries].join('|');
+}
+
 
 function escapeHtml(str) {
     return String(str)
@@ -295,33 +313,35 @@ function renderAppIcon(app) {
     return img;
 }
 
-function renderSection(section, cells, showUnsafe) {
-    const visibleCells = visibleCellsFor(cells, showUnsafe);
-    if (visibleCells.length === 0) {
+// Every environment is rendered. Hiding the permissive ones is a CSS concern,
+// so flipping the toggle costs a class change instead of a re-render.
+function renderSection(section, cells) {
+    const presentCells = ENVS
+        .map((env, i) => ({ env, entry: cells[i] }))
+        .filter(({ entry }) => entry !== null);
+
+    if (presentCells.length === 0) {
         return null;
     }
 
     const block = document.createElement('div');
     block.className = 'eval-section';
+    if (presentCells.every(({ env }) => env.cls === 'permissive')) {
+        block.classList.add('eval-section--permissive-only');
+    }
+
     block.appendChild(sectionBadge(section));
 
     const cellsRow = document.createElement('div');
-    cellsRow.className = visibleCells.length === 1 ? 'cells-row cells-row--single' : 'cells-row';
+    cellsRow.className = presentCells.length === 1 ? 'cells-row cells-row--single' : 'cells-row';
 
-    for (const { env, entry } of visibleCells) {
-        cellsRow.appendChild(renderCell(env, entry, showUnsafe));
+    for (const { env, entry } of presentCells) {
+        cellsRow.appendChild(renderCell(env, entry));
     }
 
     block.appendChild(cellsRow);
+
     return block;
-}
-
-function visibleCellsFor(cells, showUnsafe) {
-    const visibleEnvs = showUnsafe ? ENVS : ENVS.filter(e => e.cls === 'standard');
-
-    return visibleEnvs
-        .map((env, i) => ({ env, entry: cells[i] }))
-        .filter(({ entry }) => entry !== null);
 }
 
 function sectionBadge(section) {
@@ -332,10 +352,10 @@ function sectionBadge(section) {
     return badge;
 }
 
-function renderCell(env, entry, showEnvBadge) {
+function renderCell(env, entry) {
     const cell = document.createElement('div');
-    cell.className = 'eval-cell';
-    cell.appendChild(envBadge(env, showEnvBadge));
+    cell.className = `eval-cell eval-cell--${env.cls}`;
+    cell.appendChild(envBadge(env));
     cell.appendChild(ratingRow(entry));
 
     if (entry?.rating === 2 && entry.brokenFeatures?.length > 0) {
@@ -345,11 +365,10 @@ function renderCell(env, entry, showEnvBadge) {
     return cell;
 }
 
-function envBadge(env, visible) {
+function envBadge(env) {
     const badge = document.createElement('span');
     badge.className = `cell-env-badge ${env.cls}`;
     badge.textContent = t(env.labelKey);
-    badge.classList.toggle('env-badge--hidden', !visible);
 
     return badge;
 }
@@ -388,6 +407,7 @@ function ratingRow(entry) {
     if (dateStr) {
         const date = document.createElement('span');
         date.className = 'rating-date';
+        date.dataset.updatedAt = entry.updatedAt;
         date.textContent = dateStr;
         textCol.appendChild(date);
     }
@@ -443,6 +463,7 @@ export {
     fetchAll,
     groupByPackage,
     entryFor,
+    renderKey,
     relativeDate,
 
     escapeHtml,

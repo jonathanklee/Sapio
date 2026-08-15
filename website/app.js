@@ -40,6 +40,11 @@ const showMoreWrap   = document.getElementById('show-more-wrap');
 const showMoreBtn    = document.getElementById('show-more-btn');
 
 permissiveToggle.checked = showPermissive;
+applyPermissiveClass();
+
+function applyPermissiveClass() {
+    document.documentElement.classList.toggle('show-permissive', showPermissive);
+}
 
 function setShowMore(visible) {
     showMoreWrap.style.display = visible ? 'flex' : 'none';
@@ -53,7 +58,7 @@ function renderAppCard(app) {
 
     for (const section of SECTIONS) {
         const cells = ENVS.map(env => entryFor(app.entries, section.microg, env.rooted));
-        const rendered = renderSection(section, cells, showPermissive);
+        const rendered = renderSection(section, cells);
         if (rendered) {
             sectionsRow.appendChild(rendered);
         }
@@ -247,6 +252,10 @@ showMoreBtn.addEventListener('click', async () => {
 permissiveToggle.addEventListener('change', () => {
     showPermissive = permissiveToggle.checked;
     localStorage.setItem(PERMISSIVE_STORAGE_KEY, showPermissive);
+    applyPermissiveClass();
+
+    // The cells themselves are CSS-driven, but the feed also drops apps with no
+    // standard evaluation, and that changes how many cards "show more" owes.
     rerenderCurrentResults();
 });
 

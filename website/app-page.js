@@ -5,6 +5,8 @@ import {
     fetchByPackage,
     groupByPackage,
     entryFor,
+    renderKey,
+    relativeDate,
     humanSummary,
     localizedSummary,
     renderCardHeader,
@@ -45,8 +47,8 @@ async function loadApp() {
         }
 
         currentApp = app;
-        enablePermissiveToggle();
         renderApp();
+        enablePermissiveToggle();
 
         // Pre-rendered pages already carry localised metadata, a canonical
         // pointing at their own language and their JSON-LD. Rewriting it here
@@ -60,13 +62,22 @@ async function loadApp() {
 }
 
 function enablePermissiveToggle() {
+    const checkbox = detail.querySelector('#permissive-toggle');
+    if (checkbox) {
+        checkbox.checked = showPermissive;
+    }
+
     detail.addEventListener('change', (e) => {
         if (e.target.id !== 'permissive-toggle') { return; }
 
         showPermissive = e.target.checked;
         localStorage.setItem(PERMISSIVE_STORAGE_KEY, showPermissive);
-        renderApp();
+        applyPermissiveClass();
     });
+}
+
+function applyPermissiveClass() {
+    document.documentElement.classList.toggle('show-permissive', showPermissive);
 }
 
 function readPackageName() {
@@ -85,18 +96,47 @@ function readPackageName() {
 
 // ─── Rendering ──────────────────────────────────────────────────────────────────
 
+// The pre-rendered markup is already correct whenever the API returns the data
+// it was built from, which is the case for every app that saw no new evaluation
+// since the last generation. Repainting it identically only made the card
+// flicker, so the stamped key decides whether to touch the DOM at all.
 function renderApp() {
     detail.removeAttribute('aria-busy');
+    applyPermissiveClass();
+
+    if (detail.dataset.renderKey === renderKey(currentApp)) {
+        syncRelativeDates();
+        return;
+    }
+
+    repaintApp();
+}
+
+// The generator writes the same relative string this would produce, but it ages
+// between hourly runs. Comparing before assigning keeps the common case (dates
+// counted in days or years, stable for far longer than an hour) untouched, so
+// only a date that is genuinely wrong by now visibly corrects itself.
+function syncRelativeDates() {
+    for (const node of detail.querySelectorAll('[data-updated-at]')) {
+        const text = relativeDate(node.dataset.updatedAt);
+        if (text && text !== node.textContent) {
+            node.textContent = text;
+        }
+    }
+}
+
+function repaintApp() {
     detail.innerHTML = '';
 
     const card = document.createElement('article');
     card.className = 'app-card app-detail-card';
     card.appendChild(renderCardHeader(currentApp));
-    card.appendChild(renderSummary(currentApp, showPermissive));
-    card.appendChild(renderSections(currentApp, showPermissive));
+    card.appendChild(renderSummary(currentApp));
+    card.appendChild(renderSections(currentApp));
 
     detail.appendChild(renderLegend());
     detail.appendChild(card);
+    detail.dataset.renderKey = renderKey(currentApp);
 
     const shareSection = renderShareButton(currentApp);
     shareBanner.innerHTML = '';
@@ -152,39 +192,54 @@ function renderLegend() {
 
 }
 
-function renderSections(app, withUnsafe) {
+function renderSections(app) {
+    const fragment = document.createDocumentFragment();
     const sectionsRow = document.createElement('div');
     sectionsRow.className = 'sections-row';
 
     for (const section of SECTIONS) {
         const cells = ENVS.map(env => entryFor(app.entries, section.microg, env.rooted));
-        const rendered = renderSection(section, cells, withUnsafe);
+        const rendered = renderSection(section, cells);
         if (rendered) {
             sectionsRow.appendChild(rendered);
         }
     }
 
-    if (sectionsRow.children.length === 0) {
-        return permissiveOnlyHint();
+    // Every section hidden while the toggle is off leaves an empty card, so the
+    // hint ships alongside them and CSS picks whichever fits the current state.
+    if (hasOnlyPermissiveSections(sectionsRow)) {
+        fragment.appendChild(permissiveOnlyHint());
     }
 
-    return sectionsRow;
+    fragment.appendChild(sectionsRow);
+
+    return fragment;
+}
+
+function hasOnlyPermissiveSections(sectionsRow) {
+    return sectionsRow.children.length > 0
+        && [...sectionsRow.children].every(el => el.classList.contains('eval-section--permissive-only'));
 }
 
 function permissiveOnlyHint() {
     const hint = document.createElement('p');
-    hint.className = 'app-summary';
+    hint.className = 'app-summary permissive-only-hint';
     hint.textContent = t('permissive_only_hint');
 
     return hint;
 }
 
-function renderSummary(app, withUnsafe) {
-    const summary = document.createElement('p');
-    summary.className = 'app-summary';
-    summary.textContent = localizedSummary(app, withUnsafe);
+function renderSummary(app) {
+    const fragment = document.createDocumentFragment();
 
-    return summary;
+    for (const variant of ['standard', 'permissive']) {
+        const summary = document.createElement('p');
+        summary.className = `app-summary app-summary--${variant}`;
+        summary.textContent = localizedSummary(app, variant === 'permissive');
+        fragment.appendChild(summary);
+    }
+
+    return fragment;
 }
 
 // ─── SEO / social metadata ───────────────────────────────────────────────────────

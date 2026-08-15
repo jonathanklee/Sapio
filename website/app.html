@@ -22,6 +22,16 @@
     <meta name="twitter:image" content="https://checksap.io/icon.png">
     <link rel="stylesheet" href="/fonts.css">
     <link rel="stylesheet" href="/style.css">
+
+    <!-- Blocking on purpose: app-page.js is a module, so it runs too late to
+         set this before the first paint and the permissive cells would pop in. -->
+    <script>
+        try {
+            if (localStorage.getItem('sapio:showPermissive') === 'true') {
+                document.documentElement.classList.add('show-permissive');
+            }
+        } catch (e) { /* storage blocked, the toggle still works */ }
+    </script>
 </head>
 <body>
 
