@@ -9,9 +9,9 @@
     <string name="select_application_error">L\'app non ha dipendenze da Google Play Services</string>
     <string name="note_application_text">Ora puoi valutare l\'applicazione</string>
     <string name="select_evaluation_error">Seleziona una valutazione</string>
-    <string name="works_perfectly">\ Funziona perfettamente. Tutte le funzionalità sono operative.</string>
-    <string name="works_partially">\ Funziona parzialmente. Alcune funzionalità non funzionano.</string>
-    <string name="dont_work">\ Non funziona affatto o va in crash.</string>
+    <string name="works_perfectly">Funziona perfettamente. Tutte le funzionalità sono operative.</string>
+    <string name="works_partially">Funziona parzialmente. Alcune funzionalità non funzionano.</string>
+    <string name="dont_work">Non funziona affatto o va in crash.</string>
     <string name="upload_error">Errore nella valutazione dell\'app</string>
     <string name="broken_features_label">Quali funzionalità non funzionano?</string>
     <string name="broken_features_not_working">Non funziona</string>

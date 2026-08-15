@@ -10,9 +10,9 @@
     <string name="note_application_text">U kunt de applicatie nu beoordelen</string>
     <string name="select_evaluation_error">Selecteer een beoordeling</string>
     <string name="user_label">Gebruiker</string>
-    <string name="works_perfectly">\ Het werkt perfect. Alle functies werken.</string>
-    <string name="works_partially">\ Het werkt gedeeltelijk. Sommige functies werken niet.</string>
-    <string name="dont_work">\ Het werkt helemaal niet of crasht.</string>
+    <string name="works_perfectly">Het werkt perfect. Alle functies werken.</string>
+    <string name="works_partially">Het werkt gedeeltelijk. Sommige functies werken niet.</string>
+    <string name="dont_work">Het werkt helemaal niet of crasht.</string>
     <string name="upload_error">Fout bij het beoordelen van de app</string>
     <string name="broken_features_label">Welke functies werken niet?</string>
     <string name="broken_features_not_working">Werkt niet</string>

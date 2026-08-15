@@ -16,9 +16,9 @@
     <string name="permissive_label" translatable="false">permissive</string>
     <string name="user_label">User</string>
     <string name="root_label" translatable="false">Root</string>
-    <string name="works_perfectly">\ It works perfectly. All features are working.</string>
-    <string name="works_partially">\ It works partially. Some features do not work.</string>
-    <string name="dont_work">\ It does not work at all or crashes.</string>
+    <string name="works_perfectly">It works perfectly. All features are working.</string>
+    <string name="works_partially">It works partially. Some features do not work.</string>
+    <string name="dont_work">It does not work at all or crashes.</string>
     <string name="broken_features_label">Which features don\'t work?</string>
     <string name="broken_features_not_working">Doesn\'t work</string>
     <string name="broken_feature_notifications">Notifications</string>

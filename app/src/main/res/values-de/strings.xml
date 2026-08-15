@@ -9,9 +9,9 @@
     <string name="select_application_error">Die App hat keine Abhängigkeiten zu Google Play Services</string>
     <string name="note_application_text">Sie können die Anwendung jetzt bewerten</string>
     <string name="select_evaluation_error">Bitte wählen Sie eine Bewertung aus</string>
-    <string name="works_perfectly">\ Funktioniert perfekt. Alle Funktionen sind nutzbar.</string>
-    <string name="works_partially">\ Funktioniert teilweise. Einige Funktionen funktionieren nicht.</string>
-    <string name="dont_work">\ Funktioniert überhaupt nicht oder stürzt ab.</string>
+    <string name="works_perfectly">Funktioniert perfekt. Alle Funktionen sind nutzbar.</string>
+    <string name="works_partially">Funktioniert teilweise. Einige Funktionen funktionieren nicht.</string>
+    <string name="dont_work">Funktioniert überhaupt nicht oder stürzt ab.</string>
     <string name="upload_error">Fehler bei der App-Bewertung</string>
     <string name="broken_features_label">Welche Funktionen funktionieren nicht?</string>
     <string name="broken_features_not_working">Funktioniert nicht</string>
