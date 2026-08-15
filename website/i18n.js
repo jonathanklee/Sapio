@@ -170,7 +170,7 @@ function relativeDate(isoString) {
     if (!isoString) { return null; }
 
     const diffMs = new Date(isoString).getTime() - Date.now();
-    const rtf = new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto', style: 'short' });
+    const rtf = new Intl.RelativeTimeFormat(currentLang, { numeric: 'always', style: 'short' });
     const units = [
         ['year', 31536000000],
         ['month', 2592000000],
@@ -181,7 +181,7 @@ function relativeDate(isoString) {
 
     for (const [unit, ms] of units) {
         if (Math.abs(diffMs / ms) >= 1 || unit === 'minute') {
-            return rtf.format(Math.round(diffMs / ms), unit);
+            return rtf.format(Math.trunc(diffMs / ms), unit);
         }
     }
 
