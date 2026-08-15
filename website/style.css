@@ -277,13 +277,6 @@ body {
     gap: var(--space-2);
 }
 
-.hero-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 18px;
-    margin-bottom: var(--space-1);
-}
-
 .hero-eyebrow {
     display: inline-block;
     margin-bottom: var(--space-05);
@@ -694,10 +687,8 @@ body {
 .cell-env-badge.standard   { background: var(--user-badge-bg); color: var(--user-badge-fg); }
 .cell-env-badge.permissive { background: var(--root-badge-bg); color: var(--root-badge-fg); }
 
-/* Permissive environments are opt-in. Everything is rendered once, server-side
-   and client-side alike, and the toggle only flips .show-permissive on <html>,
-   so switching it repaints nothing. The environment name is redundant while
-   only the standard cell shows, hence the badge following the same rule. */
+/* Permissive cells ship in the markup and the toggle only flips
+   .show-permissive on <html>, so switching it repaints nothing. */
 
 .eval-cell--permissive,
 .eval-section--permissive-only,
@@ -917,13 +908,6 @@ body {
     margin-bottom: var(--space-15);
 }
 
-.about-actions {
-    display: flex;
-    gap: var(--space-15);
-    flex-wrap: wrap;
-    margin-top: var(--space-4);
-}
-
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
 
 .footer {
@@ -1011,12 +995,6 @@ body {
     color: var(--color-primary-text);
 }
 
-.app-toolbar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: var(--space-15);
-}
-
 .app-detail-card {
     padding: var(--space-3);
     gap: var(--space-3);
@@ -1025,12 +1003,6 @@ body {
 .app-summary {
     font-size: var(--text-md);
     line-height: 1.6;
-    color: var(--color-secondary-text);
-}
-
-.static-evals {
-    margin: 4px 0 0 18px;
-    font-size: var(--text-md);
     color: var(--color-secondary-text);
 }
 

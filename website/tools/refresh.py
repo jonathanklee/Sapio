@@ -37,6 +37,7 @@ BROKEN_FEATURE_LABELS = {
     "cast":              "Screen casting",
     "augmented_reality": "Augmented reality",
 }
+PARTIAL_RATING = 2
 SECTIONS = [
     {"microg": 1, "label": "microG"},
     {"microg": 2, "label": "bareAOSP"},
@@ -156,15 +157,11 @@ def entry_for(entries, microg, rooted):
     )
 
 
-def broken_labels(entry):
-    if entry["rating"] != 2 or not entry.get("brokenFeatures"):
+def broken_feature_keys(entry):
+    if entry["rating"] != PARTIAL_RATING:
         return []
 
-    return [
-        BROKEN_FEATURE_LABELS[k]
-        for k in entry["brokenFeatures"]
-        if k in BROKEN_FEATURE_LABELS
-    ]
+    return [k for k in (entry.get("brokenFeatures") or []) if k in BROKEN_FEATURE_LABELS]
 
 
 def human_summary(app):
@@ -176,7 +173,7 @@ def human_summary(app):
             continue
 
         rating = RATING_LABEL.get(entry["rating"], "—")
-        broken = broken_labels(entry)
+        broken = [BROKEN_FEATURE_LABELS[k] for k in broken_feature_keys(entry)]
         broken_suffix = f" (no {', '.join(b.lower() for b in broken)})" if broken else ""
         parts.append(f"{section['label']}: {rating}{broken_suffix}")
 
@@ -192,7 +189,6 @@ def escape_html(text):
 
 def attr(text):
     return escape_html(text).replace('"', "&quot;")
-
 
 
 # ─── Localisation ──────────────────────────────────────────────────────────────
@@ -277,8 +273,7 @@ def localized_summary(app, t, with_permissive=False):
                 continue
 
             rating = t(f"rating_{entry['rating']}")
-            broken = [t(f"feat_{k}") for k in entry["brokenFeatures"]
-                      if k in BROKEN_FEATURE_LABELS]
+            broken = [t(f"feat_{k}") for k in broken_feature_keys(entry)]
             suffix = ""
             if broken:
                 suffix = f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in broken)})"
@@ -294,18 +289,15 @@ def localized_summary(app, t, with_permissive=False):
 
 # ─── Server-rendered card ──────────────────────────────────────────────────────
 #
-# app.html ships an empty shell that app-page.js fills from the API. That is
-# fine for browsers, but a crawler that does not run JS sees nothing. So the
-# same card is rendered here, with the class names the stylesheet already
-# expects. app-page.js keeps it as-is unless the data moved on.
+# app.html ships an empty shell that app-page.js fills from the API, which a
+# crawler that does not run JS never sees. The same card is rendered here, and
+# app-page.js keeps it as-is unless the data moved on.
 
 RATING_CLASS = {1: "good", 2: "average", 3: "bad"}
 ENV_LABELS = [(3, "standard", "env_standard"), (4, "permissive", "env_permissive")]
 
-# Python has no Intl.RelativeTimeFormat, so these are the strings ICU produces
-# for { numeric: 'always', style: 'short' }, transcribed per language. Only the
-# singular differs, and only ever at 1, hence the (one, other) pairs. relativeDate()
-# in i18n.js must agree with this table; tools/check_relative_dates.js proves it.
+# What ICU emits for { numeric: 'always', style: 'short' }, as (singular, plural).
+# Generated, not hand-written: tools/check_relative_dates.js proves the match.
 RELATIVE_UNITS = [
     ("year", 31536000000),
     ("month", 2592000000),
@@ -363,14 +355,16 @@ def relative_date(updated_at, lang, now_ms):
 
     for unit, unit_ms in RELATIVE_UNITS:
         if abs(diff_ms / unit_ms) >= 1 or unit == "minute":
-            value = int(diff_ms / unit_ms)
-            one, other = patterns[unit]
-            # French counts 0 as singular; nothing else in this table does, and
-            # every pair where it would matter is identical anyway.
-            singular = abs(value) == 1 or (lang == "fr" and value == 0)
-            return (one if singular else other).replace("{0}", str(abs(value)))
+            value = abs(int(diff_ms / unit_ms))
+            singular, plural = patterns[unit]
+            pattern = singular if is_singular(value, lang) else plural
+            return pattern.replace("{0}", str(value))
 
     return None
+
+
+def is_singular(value, lang):
+    return value == 1 or (lang == "fr" and value == 0)
 
 
 def parse_iso_ms(value):
@@ -392,8 +386,7 @@ def render_legend(t):
         for cls, key in (("good", "legend_works"), ("average", "legend_partial"),
                          ("bad", "legend_broken"))
     )
-    # The toggle is part of the legend client-side; omitting it here makes it
-    # pop in once app-page.js runs. Unchecked, matching the default.
+    # Unchecked, matching the default: app-page.js ticks it from localStorage.
     toggle = (
         '<label class="permissive-label">'
         '<input type="checkbox" id="permissive-toggle">'
@@ -407,44 +400,52 @@ def render_cell(env_label, env_key, entry, t, lang, now_ms):
     cls = RATING_CLASS.get(entry["rating"], "unknown")
     label = t(f"rating_{entry['rating']}")
 
-    version = ""
-    if entry.get("versionName"):
-        version = f'<span class="rating-date">v{escape_html(entry["versionName"])}</span>'
-
-    # Same string relativeDate() would build, so app-page.js leaves it alone.
-    # It ages between hourly runs, hence data-updated-at: syncRelativeDates()
-    # recomputes and only rewrites the ones that have actually drifted.
-    date = ""
-    updated_at = entry.get("updatedAt") or ""
-    text = relative_date(updated_at, lang, now_ms)
-    if text:
-        date = (f'<span class="rating-date" data-updated-at="{attr(updated_at)}">'
-                f"{escape_html(text)}</span>")
-
-    broken = ""
-    if entry["rating"] == 2 and entry["brokenFeatures"]:
-        chips = "".join(
-            f'<span class="broken-chip">{escape_html(t("feat_" + k))}</span>'
-            for k in entry["brokenFeatures"] if k in BROKEN_FEATURE_LABELS
-        )
-        if chips:
-            broken = (
-                '<div class="broken-features">'
-                f'<span class="broken-features-title">{escape_html(t("doesnt_work"))}</span>'
-                f'<div class="broken-chips">{chips}</div></div>'
-            )
-
     return (
         f'<div class="eval-cell eval-cell--{env_label}">'
-        f'<span class="cell-env-badge {env_label}">'
-        f'{escape_html(t(env_key))}</span>'
+        f'<span class="cell-env-badge {env_label}">{escape_html(t(env_key))}</span>'
         '<div class="rating-row">'
         f'<span class="status-dot {cls}"></span>'
         '<div class="rating-text-col">'
-        f'<span class="rating-label {cls}">{label}</span>{version}{date}'
+        f'<span class="rating-label {cls}">{label}</span>'
+        f"{render_version(entry)}{render_date(entry, lang, now_ms)}"
         "</div></div>"
-        f"{broken}</div>"
+        f"{render_broken_features(entry, t)}</div>"
     )
+
+
+def render_version(entry):
+    if not entry.get("versionName"):
+        return ""
+
+    return f'<span class="rating-date">v{escape_html(entry["versionName"])}</span>'
+
+
+def render_date(entry, lang, now_ms):
+    """The string relativeDate() would build, so app-page.js leaves it alone.
+
+    It ages between hourly runs, hence data-updated-at: syncRelativeDates()
+    recomputes and rewrites only the ones that have actually drifted.
+    """
+    updated_at = entry.get("updatedAt") or ""
+    text = relative_date(updated_at, lang, now_ms)
+    if not text:
+        return ""
+
+    return (f'<span class="rating-date" data-updated-at="{attr(updated_at)}">'
+            f"{escape_html(text)}</span>")
+
+
+def render_broken_features(entry, t):
+    chips = "".join(
+        f'<span class="broken-chip">{escape_html(t("feat_" + key))}</span>'
+        for key in broken_feature_keys(entry)
+    )
+    if not chips:
+        return ""
+
+    return ('<div class="broken-features">'
+            f'<span class="broken-features-title">{escape_html(t("doesnt_work"))}</span>'
+            f'<div class="broken-chips">{chips}</div></div>')
 
 
 def render_sections(app, t, lang, now_ms):
@@ -485,7 +486,6 @@ def render_sections(app, t, lang, now_ms):
     # standard (has_secure_evaluation), so a section always survives the
     # toggle. app-page.js still emits one, for the /app.html?app= route.
     return f'<div class="sections-row">{"".join(blocks)}</div>'
-
 
 
 def render_app_icon(app):

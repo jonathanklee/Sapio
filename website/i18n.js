@@ -102,9 +102,6 @@ const LANG_NAMES = { en: 'English', fr: 'Français', de: 'Deutsch', it: 'Italian
 
 let currentLang = detectLanguage();
 
-// Pages are also generated per language under /fr, /de, /it and /es. When the
-// URL says which language it is, it wins: the served HTML is already in that
-// language, and re-rendering it in another one would contradict the canonical.
 function langFromPath() {
     const match = location.pathname.match(/^\/([a-z]{2})(?:\/|$)/);
     const code = match?.[1];
@@ -116,23 +113,16 @@ function pathWithoutLang() {
     return location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
 }
 
-// The language comes from the URL and nowhere else. A stored preference used
-// to win here, which meant an English URL rendered in French: the page
-// contradicted its own canonical, and the text visibly swapped after load.
+// The URL is the only source of truth: pages are pre-rendered per language, so
+// a stored preference winning here would contradict the page's own canonical.
 function detectLanguage() {
     return langFromPath() ?? DEFAULT_LANG;
 }
 
-// Internal links must carry the prefix, otherwise navigating drops back to
-// English mid-visit.
 function localizedPath(path) {
     const prefix = currentLang === DEFAULT_LANG ? '' : `/${currentLang}`;
 
     return prefix + path;
-}
-
-function getLang() {
-    return currentLang;
 }
 
 function setLang(lang) {
@@ -144,8 +134,7 @@ function setLang(lang) {
     location.href = prefix + pathWithoutLang() + location.search;
 }
 
-// Read by nginx to pick the home page language, never by detectLanguage():
-// the URL stays authoritative.
+// Read by nginx to pick the home page language, never by detectLanguage().
 function rememberLang(lang) {
     document.cookie = `lang=${lang};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
 }
@@ -220,14 +209,9 @@ function setupI18n() {
 }
 
 export {
-    LANGS,
     localizedPath,
-    LANG_NAMES,
-    getLang,
-    setLang,
     t,
     format,
     relativeDate,
-    applyStaticTranslations,
     setupI18n,
 };

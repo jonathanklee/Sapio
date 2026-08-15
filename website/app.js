@@ -1,10 +1,9 @@
 import {
     SECTIONS,
-    ENVS,
+    STANDARD_ROOTED,
     fetchLatestPage,
     fetchSearch,
     groupByPackage,
-    entryFor,
     renderCardHeader,
     renderSection,
 } from './core.js';
@@ -57,8 +56,8 @@ function renderAppCard(app) {
     sectionsRow.className = 'sections-row';
 
     for (const section of SECTIONS) {
-        const cells = ENVS.map(env => entryFor(app.entries, section.microg, env.rooted));
-        const rendered = renderSection(section, cells);
+        const rendered = renderSection(section, app.entries);
+
         if (rendered) {
             sectionsRow.appendChild(rendered);
         }
@@ -144,10 +143,8 @@ function filterToLatestSection(app) {
 }
 
 function renderableLatestApps() {
-    const standardRotedValue = ENVS.find(e => e.cls === 'standard').rooted;
-
     return latestApps.filter(app =>
-        showPermissive || app.entries.some(e => e.rooted === standardRotedValue)
+        showPermissive || app.entries.some(entry => entry.rooted === STANDARD_ROOTED)
     );
 }
 
@@ -254,8 +251,8 @@ permissiveToggle.addEventListener('change', () => {
     localStorage.setItem(PERMISSIVE_STORAGE_KEY, showPermissive);
     applyPermissiveClass();
 
-    // The cells themselves are CSS-driven, but the feed also drops apps with no
-    // standard evaluation, and that changes how many cards "show more" owes.
+    // Cells are CSS-driven, but the feed also drops apps with no standard
+    // evaluation, which changes how many cards "show more" still owes.
     rerenderCurrentResults();
 });
 
@@ -266,9 +263,6 @@ for (const chip of document.querySelectorAll('.example-chip')) {
         searchInput.focus();
     });
 }
-
-// ─── Hero stats ─────────────────────────────────────────────────────────────────
-
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 

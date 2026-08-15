@@ -16,6 +16,7 @@ SOURCE_FILES="
     app-page.js
     core.js
     i18n.js
+    share.js
     style.css
     fonts.css
     favicon.ico

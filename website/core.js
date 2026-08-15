@@ -1,15 +1,13 @@
 import { t, format, relativeDate } from './i18n.js';
 
 const API_BASE = 'https://server.checksap.io/api';
+const MEDIA_BASE = 'https://server.checksap.io';
+const MAX_PAGE_SIZE = '100';
+const ICON_FIELD = { 'populate[icon][fields][0]': 'url' };
 
-const RATING = {
-    1: { cls: 'good'    },
-    2: { cls: 'average' },
-    3: { cls: 'bad'     },
-};
-
-// English labels — used by the generator (static pages) and the SEO summary.
+const RATING_CLASS = { 1: 'good', 2: 'average', 3: 'bad' };
 const RATING_LABEL_EN = { 1: 'Perfect', 2: 'Partial', 3: 'Unusable' };
+const PARTIAL_RATING = 2;
 
 const BROKEN_FEATURE_LABELS = {
     notifications:      'Notifications',
@@ -32,81 +30,49 @@ const ENVS = [
     { rooted: 4, label: 'permissive', cls: 'permissive', labelKey: 'env_permissive' },
 ];
 
+const STANDARD_ROOTED = ENVS.find(env => env.cls === 'standard').rooted;
+
 // ─── API ─────────────────────────────────────────────────────────────────────
 
-async function fetchLatest() {
-    const params = new URLSearchParams({
-        'pagination[pageSize]': '80',
-        'sort': 'updatedAt:Desc',
-        'populate[icon][fields][0]': 'url',
-    });
-
-    return fetchApplications(params);
-}
-
 async function fetchSearch(query) {
-    const params = new URLSearchParams({
+    return fetchApplications({
+        ...ICON_FIELD,
         'filters[$or][0][name][$contains]': query,
         'filters[$or][1][packageName][$contains]': query,
         'sort': 'name',
-        'populate[icon][fields][0]': 'url',
-        'pagination[pageSize]': '100',
+        'pagination[pageSize]': MAX_PAGE_SIZE,
     });
-
-    return fetchApplications(params);
 }
 
 async function fetchByPackage(packageName) {
-    const params = new URLSearchParams({
+    return fetchApplications({
+        ...ICON_FIELD,
         'filters[packageName][$eq]': packageName,
         'sort': 'updatedAt:Desc',
-        'populate[icon][fields][0]': 'url',
-        'pagination[pageSize]': '100',
+        'pagination[pageSize]': MAX_PAGE_SIZE,
     });
-
-    return fetchApplications(params);
-}
-
-async function fetchApplications(params) {
-    const res = await fetch(`${API_BASE}/sapio-applications?${params}`);
-    if (!res.ok) { throw new Error(`HTTP ${res.status}`); }
-
-    const json = await res.json();
-    return json.data.map(item => item.attributes);
 }
 
 async function fetchLatestPage(page, pageSize) {
-    const params = new URLSearchParams({
+    return fetchApplications({
+        ...ICON_FIELD,
+        'sort': 'updatedAt:Desc',
         'pagination[page]': String(page),
         'pagination[pageSize]': String(pageSize),
-        'sort': 'updatedAt:Desc',
-        'populate[icon][fields][0]': 'url',
     });
-
-    return fetchApplications(params);
 }
 
-async function fetchAll() {
-    const pageSize = 100;
-    const evaluations = [];
+async function fetchApplications(params) {
+    const query = new URLSearchParams(params);
+    const response = await fetch(`${API_BASE}/sapio-applications?${query}`);
 
-    for (let page = 1; ; page++) {
-        const params = new URLSearchParams({
-            'sort': 'updatedAt:Desc',
-            'populate[icon][fields][0]': 'url',
-            'pagination[page]': String(page),
-            'pagination[pageSize]': String(pageSize),
-        });
-
-        const batch = await fetchApplications(params);
-        evaluations.push(...batch);
-
-        if (batch.length < pageSize) {
-            break;
-        }
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
     }
 
-    return evaluations;
+    const json = await response.json();
+
+    return json.data.map(item => item.attributes);
 }
 
 // ─── Data helpers ─────────────────────────────────────────────────────────────
@@ -114,10 +80,10 @@ async function fetchAll() {
 function groupByPackage(evaluations) {
     const appMap = new Map();
 
-    for (const ev of evaluations) {
-        const app = appBucketFor(appMap, ev);
-        adoptIcon(app, ev);
-        keepMostRecentEntry(app, ev);
+    for (const evaluation of evaluations) {
+        const app = appBucketFor(appMap, evaluation);
+        adoptIcon(app, evaluation);
+        keepMostRecentEntry(app, evaluation);
     }
 
     return [...appMap.values()].map(app => ({
@@ -128,34 +94,36 @@ function groupByPackage(evaluations) {
     }));
 }
 
-function appBucketFor(appMap, ev) {
-    if (!appMap.has(ev.packageName)) {
-        appMap.set(ev.packageName, {
-            name: ev.name,
-            packageName: ev.packageName,
+function appBucketFor(appMap, evaluation) {
+    if (!appMap.has(evaluation.packageName)) {
+        appMap.set(evaluation.packageName, {
+            name: evaluation.name,
+            packageName: evaluation.packageName,
             iconUrl: null,
             entriesByEnv: new Map(),
         });
     }
 
-    return appMap.get(ev.packageName);
+    return appMap.get(evaluation.packageName);
 }
 
-function adoptIcon(app, ev) {
-    if (!app.iconUrl && ev.icon?.data?.attributes?.url) {
-        app.iconUrl = `https://server.checksap.io${ev.icon.data.attributes.url}`;
+function adoptIcon(app, evaluation) {
+    const path = evaluation.icon?.data?.attributes?.url;
+
+    if (!app.iconUrl && path) {
+        app.iconUrl = MEDIA_BASE + path;
     }
 }
 
-function keepMostRecentEntry(app, ev) {
-    const envKey = `${ev.microg}-${ev.rooted}`;
+function keepMostRecentEntry(app, evaluation) {
+    const envKey = `${evaluation.microg}-${evaluation.rooted}`;
     const candidate = {
-        microg: ev.microg,
-        rooted: ev.rooted,
-        rating: ev.rating,
-        updatedAt: ev.updatedAt,
-        versionName: ev.versionName ?? null,
-        brokenFeatures: ev.brokenFeatures ?? null,
+        microg: evaluation.microg,
+        rooted: evaluation.rooted,
+        rating: evaluation.rating,
+        updatedAt: evaluation.updatedAt,
+        versionName: evaluation.versionName ?? null,
+        brokenFeatures: evaluation.brokenFeatures ?? null,
     };
 
     const existing = app.entriesByEnv.get(envKey);
@@ -171,24 +139,20 @@ function entryFor(entries, microg, rooted) {
     return entries.find(e => e.microg === microg && e.rooted === rooted) ?? null;
 }
 
-// Fingerprint of everything the card draws. The generator stamps it on the
-// pre-rendered markup so the client can tell "same data" from "stale page"
-// and skip the repaint. Keep it in sync with render_key() in refresh.py.
 function renderKey(app) {
     const entries = [...app.entries]
         .sort((a, b) => (a.microg - b.microg) || (a.rooted - b.rooted))
-        .map(e => [
-            e.microg,
-            e.rooted,
-            e.rating,
-            e.updatedAt ?? '',
-            e.versionName ?? '',
-            (e.brokenFeatures ?? []).join(','),
+        .map(entry => [
+            entry.microg,
+            entry.rooted,
+            entry.rating,
+            entry.updatedAt ?? '',
+            entry.versionName ?? '',
+            (entry.brokenFeatures ?? []).join(','),
         ].join(':'));
 
     return [app.packageName, app.name, ...entries].join('|');
 }
-
 
 function escapeHtml(str) {
     return String(str)
@@ -197,42 +161,51 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;');
 }
 
-// ─── Summary text (shared by the page body, meta tags and the generator) ────────
+// ─── Summary text ─────────────────────────────────────────────────────────────
 
-function evaluationLines(app, withUnsafe) {
-    const envs = withUnsafe ? ENVS : ENVS.filter(env => env.cls === 'standard');
-    const lines = [];
+function evaluationScenarios(app, withPermissive) {
+    const envs = withPermissive ? ENVS : ENVS.filter(env => env.cls === 'standard');
+    const scenarios = [];
 
     for (const section of SECTIONS) {
         for (const env of envs) {
             const entry = entryFor(app.entries, section.microg, env.rooted);
-            if (!entry) { continue; }
 
-            lines.push({
-                scenario: withUnsafe ? `${section.label} · ${env.label}` : section.label,
-                rating: RATING_LABEL_EN[entry.rating] ?? '—',
-                broken: brokenLabels(entry),
-            });
+            if (entry) {
+                scenarios.push({ section, env, entry });
+            }
         }
     }
 
-    return lines;
+    return scenarios;
 }
 
-function brokenLabels(entry) {
-    if (entry.rating !== 2 || !entry.brokenFeatures?.length) {
+function brokenFeatureKeys(entry) {
+    if (entry.rating !== PARTIAL_RATING) {
         return [];
     }
 
-    return entry.brokenFeatures
-        .map(key => BROKEN_FEATURE_LABELS[key])
-        .filter(Boolean);
+    return (entry.brokenFeatures ?? []).filter(key => BROKEN_FEATURE_LABELS[key]);
 }
 
-function humanSummary(app, withUnsafe) {
-    const parts = evaluationLines(app, withUnsafe).map(line => {
-        const broken = line.broken.length > 0 ? ` (no ${line.broken.join(', ').toLowerCase()})` : '';
-        return `${line.scenario}: ${line.rating}${broken}`;
+function englishBrokenSuffix(entry) {
+    const labels = brokenFeatureKeys(entry).map(key => BROKEN_FEATURE_LABELS[key]);
+
+    return labels.length === 0 ? '' : ` (no ${labels.join(', ').toLowerCase()})`;
+}
+
+function localizedBrokenSuffix(entry) {
+    const labels = brokenFeatureKeys(entry).map(key => t(`feat_${key}`));
+
+    return labels.length === 0 ? '' : ` (${t('summary_no_prefix')} ${labels.join(', ').toLowerCase()})`;
+}
+
+function humanSummary(app, withPermissive) {
+    const parts = evaluationScenarios(app, withPermissive).map(({ section, env, entry }) => {
+        const scenario = withPermissive ? `${section.label} · ${env.label}` : section.label;
+        const rating = RATING_LABEL_EN[entry.rating] ?? '—';
+
+        return `${scenario}: ${rating}${englishBrokenSuffix(entry)}`;
     });
 
     if (parts.length === 0) {
@@ -242,42 +215,18 @@ function humanSummary(app, withUnsafe) {
     return `${app.name} without Google Play Services — ${parts.join(' · ')}.`;
 }
 
-// Localized counterpart of humanSummary — for the visible summary on the page.
-function localizedSummary(app, withUnsafe) {
-    const envs = withUnsafe ? ENVS : ENVS.filter(env => env.cls === 'standard');
-    const parts = [];
+function localizedSummary(app, withPermissive) {
+    const parts = evaluationScenarios(app, withPermissive).map(({ section, env, entry }) => {
+        const scenario = withPermissive ? `${section.label} · ${t(env.labelKey)}` : section.label;
 
-    for (const section of SECTIONS) {
-        for (const env of envs) {
-            const entry = entryFor(app.entries, section.microg, env.rooted);
-            if (!entry) { continue; }
-
-            const scenario = withUnsafe ? `${section.label} · ${t(env.labelKey)}` : section.label;
-            parts.push(`${scenario}: ${t(`rating_${entry.rating}`)}${localizedBroken(entry)}`);
-        }
-    }
+        return `${scenario}: ${t(`rating_${entry.rating}`)}${localizedBrokenSuffix(entry)}`;
+    });
 
     if (parts.length === 0) {
         return format('summary_none', { '%name': app.name });
     }
 
     return format('summary_frame', { '%name': app.name, '%parts': parts.join(' · ') });
-}
-
-function localizedBroken(entry) {
-    if (entry.rating !== 2 || !entry.brokenFeatures?.length) {
-        return '';
-    }
-
-    const labels = entry.brokenFeatures
-        .filter(key => BROKEN_FEATURE_LABELS[key])
-        .map(key => t(`feat_${key}`));
-
-    if (labels.length === 0) {
-        return '';
-    }
-
-    return ` (${t('summary_no_prefix')} ${labels.join(', ').toLowerCase()})`;
 }
 
 // ─── Rendering ───────────────────────────────────────────────────────────────
@@ -313,29 +262,36 @@ function renderAppIcon(app) {
     return img;
 }
 
-// Every environment is rendered. Hiding the permissive ones is a CSS concern,
-// so flipping the toggle costs a class change instead of a re-render.
-function renderSection(section, cells) {
-    const presentCells = ENVS
-        .map((env, i) => ({ env, entry: cells[i] }))
+function iconPlaceholder() {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'app-icon app-icon-placeholder';
+    placeholder.textContent = '?';
+
+    return placeholder;
+}
+
+function renderSection(section, entries) {
+    const cells = ENVS
+        .map(env => ({ env, entry: entryFor(entries, section.microg, env.rooted) }))
         .filter(({ entry }) => entry !== null);
 
-    if (presentCells.length === 0) {
+    if (cells.length === 0) {
         return null;
     }
 
     const block = document.createElement('div');
     block.className = 'eval-section';
-    if (presentCells.every(({ env }) => env.cls === 'permissive')) {
+
+    if (cells.every(({ env }) => env.cls === 'permissive')) {
         block.classList.add('eval-section--permissive-only');
     }
 
     block.appendChild(sectionBadge(section));
 
     const cellsRow = document.createElement('div');
-    cellsRow.className = presentCells.length === 1 ? 'cells-row cells-row--single' : 'cells-row';
+    cellsRow.className = cells.length === 1 ? 'cells-row cells-row--single' : 'cells-row';
 
-    for (const { env, entry } of presentCells) {
+    for (const { env, entry } of cells) {
         cellsRow.appendChild(renderCell(env, entry));
     }
 
@@ -358,8 +314,10 @@ function renderCell(env, entry) {
     cell.appendChild(envBadge(env));
     cell.appendChild(ratingRow(entry));
 
-    if (entry?.rating === 2 && entry.brokenFeatures?.length > 0) {
-        cell.appendChild(renderBrokenFeatures(entry.brokenFeatures));
+    const broken = brokenFeatureKeys(entry);
+
+    if (broken.length > 0) {
+        cell.appendChild(renderBrokenFeatures(broken));
     }
 
     return cell;
@@ -376,39 +334,24 @@ function envBadge(env) {
 function ratingRow(entry) {
     const row = document.createElement('div');
     row.className = 'rating-row';
-
-    if (!entry) {
-        return row;
-    }
-
-    const cls = RATING[entry.rating]?.cls ?? 'unknown';
+    const cls = RATING_CLASS[entry.rating] ?? 'unknown';
 
     const dot = document.createElement('span');
     dot.className = `status-dot ${cls}`;
 
     const textCol = document.createElement('div');
     textCol.className = 'rating-text-col';
-
-    const label = document.createElement('span');
-    label.className = `rating-label ${cls}`;
-    label.textContent = RATING[entry.rating] ? t(`rating_${entry.rating}`) : '—';
-
-    textCol.appendChild(label);
+    textCol.appendChild(ratingLabel(entry, cls));
 
     if (entry.versionName) {
-        const version = document.createElement('span');
-        version.className = 'rating-date';
-        version.textContent = `v${entry.versionName}`;
-        textCol.appendChild(version);
+        textCol.appendChild(ratingDetail(`v${entry.versionName}`));
     }
 
-    const dateStr = relativeDate(entry.updatedAt);
+    const dateText = relativeDate(entry.updatedAt);
 
-    if (dateStr) {
-        const date = document.createElement('span');
-        date.className = 'rating-date';
+    if (dateText) {
+        const date = ratingDetail(dateText);
         date.dataset.updatedAt = entry.updatedAt;
-        date.textContent = dateStr;
         textCol.appendChild(date);
     }
 
@@ -418,7 +361,23 @@ function ratingRow(entry) {
     return row;
 }
 
-function renderBrokenFeatures(features) {
+function ratingLabel(entry, cls) {
+    const label = document.createElement('span');
+    label.className = `rating-label ${cls}`;
+    label.textContent = RATING_CLASS[entry.rating] ? t(`rating_${entry.rating}`) : '—';
+
+    return label;
+}
+
+function ratingDetail(text) {
+    const detail = document.createElement('span');
+    detail.className = 'rating-date';
+    detail.textContent = text;
+
+    return detail;
+}
+
+function renderBrokenFeatures(featureKeys) {
     const container = document.createElement('div');
     container.className = 'broken-features';
 
@@ -430,9 +389,7 @@ function renderBrokenFeatures(features) {
     const chips = document.createElement('div');
     chips.className = 'broken-chips';
 
-    for (const key of features) {
-        if (!BROKEN_FEATURE_LABELS[key]) { continue; }
-
+    for (const key of featureKeys) {
         const chip = document.createElement('span');
         chip.className = 'broken-chip';
         chip.textContent = t(`feat_${key}`);
@@ -440,38 +397,23 @@ function renderBrokenFeatures(features) {
     }
 
     container.appendChild(chips);
+
     return container;
 }
 
-function iconPlaceholder() {
-    const el = document.createElement('div');
-    el.className = 'app-icon app-icon-placeholder';
-    el.textContent = '?';
-
-    return el;
-}
-
 export {
-    RATING,
-    BROKEN_FEATURE_LABELS,
     SECTIONS,
-    ENVS,
-    fetchLatest,
+    STANDARD_ROOTED,
+    BROKEN_FEATURE_LABELS,
     fetchLatestPage,
     fetchSearch,
     fetchByPackage,
-    fetchAll,
     groupByPackage,
     entryFor,
     renderKey,
     relativeDate,
-
-    escapeHtml,
-    evaluationLines,
     humanSummary,
     localizedSummary,
     renderCardHeader,
     renderSection,
-    renderCell,
-    renderBrokenFeatures,
 };
