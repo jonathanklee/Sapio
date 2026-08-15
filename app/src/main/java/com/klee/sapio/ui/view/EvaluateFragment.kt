@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
@@ -62,7 +61,7 @@ class EvaluateFragment : Fragment() {
         mBinding.brokenFeaturesChips.setOnCheckedStateChangeListener { _, _ -> updateButtonState() }
 
         mBinding.validateButton.setOnClickListener {
-            val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId, requireView())
+            val rating = getRatingFromRadioId(mBinding.note.checkedRadioButtonId)
             val brokenFeatures = if (rating == Rating.AVERAGE) getSelectedBrokenFeatures() else null
             val bundle = bundleOf(
                 "package" to packageName,
@@ -114,14 +113,11 @@ class EvaluateFragment : Fragment() {
             .map { it.tag as String }
     }
 
-    private fun getRatingFromRadioId(id: Int, view: View): Int {
-        val radioButton: RadioButton = view.findViewById(id)
-        return when (radioButton.text) {
-            getString(R.string.works_perfectly) -> Rating.GOOD
-            getString(R.string.works_partially) -> Rating.AVERAGE
-            getString(R.string.dont_work) -> Rating.BAD
-            else -> 0
-        }
+    private fun getRatingFromRadioId(id: Int): Int = when (id) {
+        R.id.greenRadioButton -> Rating.GOOD
+        R.id.orangeRadioButton -> Rating.AVERAGE
+        R.id.redRadioButton -> Rating.BAD
+        else -> 0
     }
 
     @StringRes
