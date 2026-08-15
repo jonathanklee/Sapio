@@ -13,6 +13,18 @@ const BARE_AOSP = 2;
 const DOT_COLORS = { 1: '#4CAF50', 2: '#FFC107', 3: '#F44336' };
 const RATING_SYMBOLS = { 1: '✓', 2: '~', 3: '✗' };
 
+// Delegated: the button is pre-rendered in app.html and survives untouched
+// whenever the card skips its repaint, so binding it directly would miss it.
+function enableShareButton(container, currentApp) {
+    container.addEventListener('click', event => {
+        const button = event.target.closest('.share-btn');
+
+        if (button) {
+            openShareModal(currentApp(), button);
+        }
+    });
+}
+
 function renderShareButton(app) {
     if (standardEntries(app).length === 0) {
         return null;
@@ -42,7 +54,6 @@ function renderShareButton(app) {
     const button = document.createElement('button');
     button.className = 'btn btn-primary share-btn';
     button.textContent = t('share');
-    button.addEventListener('click', () => openShareModal(app, button));
 
     section.appendChild(ctaRow);
     section.appendChild(text);
@@ -445,4 +456,4 @@ function truncateText(ctx, text, maxWidth) {
     return `${truncated}…`;
 }
 
-export { renderShareButton };
+export { enableShareButton, renderShareButton };

@@ -9,7 +9,7 @@ import {
     renderCardHeader,
     renderSection,
 } from './core.js';
-import { renderShareButton } from './share.js';
+import { enableShareButton, renderShareButton } from './share.js';
 import { setupI18n, t } from './i18n.js';
 
 const SITE_ORIGIN = 'https://checksap.io';
@@ -53,6 +53,7 @@ async function loadApp() {
         currentApp = app;
         renderApp();
         enablePermissiveToggle();
+        enableShareButton(shareBanner, () => currentApp);
 
         if (!isPreRendered()) {
             applySeo(app);
