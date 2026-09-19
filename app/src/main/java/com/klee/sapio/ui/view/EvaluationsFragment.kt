@@ -248,22 +248,26 @@ const val COMPRESSION_QUALITY = 100
                     renderHistory(
                         mBinding.microgUserHistoryInline,
                         mBinding.microgUserHistory,
-                        state.microgUser
+                        state.microgUser,
+                        /* sharesRow */ showMicrogUser && showMicrogRoot
                     )
                     renderHistory(
                         mBinding.bareAospUserHistoryInline,
                         mBinding.bareAospUserHistory,
-                        state.bareAospUser
+                        state.bareAospUser,
+                        /* sharesRow */ showBareAospUser && showBareAospRoot
                     )
                     renderHistory(
                         mBinding.microgRootHistoryInline,
                         mBinding.microgRootHistory,
-                        state.microgRoot
+                        state.microgRoot,
+                        /* sharesRow */ showMicrogUser && showMicrogRoot
                     )
                     renderHistory(
                         mBinding.bareAospRootHistoryInline,
                         mBinding.bareAospRootHistory,
-                        state.bareAospRoot
+                        state.bareAospRoot,
+                        /* sharesRow */ showBareAospUser && showBareAospRoot
                     )
 
                     mBinding.shareButton.isEnabled = state.microgUser != null || state.bareAospUser != null
@@ -360,12 +364,11 @@ const val COMPRESSION_QUALITY = 100
     private fun renderHistory(
         inlineChart: ComposeView,
         stackedChart: ComposeView,
-        history: EvaluationHistory?
+        history: EvaluationHistory?,
+        sharesRow: Boolean
     ) {
-        val stacked = settings.isUnsafeConfigurationEnabled()
-
-        renderHistoryChart(inlineChart, history.takeUnless { stacked })
-        renderHistoryChart(stackedChart, history.takeIf { stacked })
+        renderHistoryChart(inlineChart, history.takeUnless { sharesRow })
+        renderHistoryChart(stackedChart, history.takeIf { sharesRow })
     }
 
     private fun renderHistoryChart(chartView: ComposeView, history: EvaluationHistory?) {
