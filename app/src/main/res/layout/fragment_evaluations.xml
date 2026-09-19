@@ -170,7 +170,8 @@
                                         android:layout_height="18dp" />
 
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
                                         android:orientation="vertical">
@@ -199,6 +200,13 @@
                                             android:textStyle="italic" />
 
                                     </LinearLayout>
+
+                                    <androidx.compose.ui.platform.ComposeView
+                                        android:id="@+id/microgUserHistoryInline"
+                                        android:layout_width="90dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginStart="12dp"
+                                        android:visibility="gone" />
 
                                 </LinearLayout>
 
@@ -280,7 +288,8 @@
                                         android:layout_height="18dp" />
 
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
                                         android:orientation="vertical">
@@ -309,6 +318,13 @@
                                             android:textStyle="italic" />
 
                                     </LinearLayout>
+
+                                    <androidx.compose.ui.platform.ComposeView
+                                        android:id="@+id/microgRootHistoryInline"
+                                        android:layout_width="90dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginStart="12dp"
+                                        android:visibility="gone" />
 
                                 </LinearLayout>
 
@@ -431,7 +447,8 @@
                                         android:layout_height="18dp" />
 
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
                                         android:orientation="vertical">
@@ -460,6 +477,13 @@
                                             android:textStyle="italic" />
 
                                     </LinearLayout>
+
+                                    <androidx.compose.ui.platform.ComposeView
+                                        android:id="@+id/bareAospUserHistoryInline"
+                                        android:layout_width="90dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginStart="12dp"
+                                        android:visibility="gone" />
 
                                 </LinearLayout>
 
@@ -541,7 +565,8 @@
                                         android:layout_height="18dp" />
 
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
                                         android:orientation="vertical">
@@ -570,6 +595,13 @@
                                             android:textStyle="italic" />
 
                                     </LinearLayout>
+
+                                    <androidx.compose.ui.platform.ComposeView
+                                        android:id="@+id/bareAospRootHistoryInline"
+                                        android:layout_width="90dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginStart="12dp"
+                                        android:visibility="gone" />
 
                                 </LinearLayout>
 

@@ -214,8 +214,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgUserVersion,
                         mBinding.microgUserDate,
                         mBinding.microgUserBrokenFeatures,
-                        mBinding.microgUserHistory,
-                        state.microgUser
+                        state.microgUser?.current
                     )
                     renderChip(
                         mBinding.bareAospUserCell,
@@ -224,8 +223,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospUserVersion,
                         mBinding.bareAospUserDate,
                         mBinding.bareAospUserBrokenFeatures,
-                        mBinding.bareAospUserHistory,
-                        state.bareAospUser
+                        state.bareAospUser?.current
                     )
                     renderChip(
                         mBinding.microgRootCell,
@@ -234,8 +232,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgRootVersion,
                         mBinding.microgRootDate,
                         mBinding.microgRootBrokenFeatures,
-                        mBinding.microgRootHistory,
-                        state.microgRoot
+                        state.microgRoot?.current
                     )
                     renderChip(
                         mBinding.bareAospRootCell,
@@ -244,6 +241,26 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospRootVersion,
                         mBinding.bareAospRootDate,
                         mBinding.bareAospRootBrokenFeatures,
+                        state.bareAospRoot?.current
+                    )
+
+                    renderHistory(
+                        mBinding.microgUserHistoryInline,
+                        mBinding.microgUserHistory,
+                        state.microgUser
+                    )
+                    renderHistory(
+                        mBinding.bareAospUserHistoryInline,
+                        mBinding.bareAospUserHistory,
+                        state.bareAospUser
+                    )
+                    renderHistory(
+                        mBinding.microgRootHistoryInline,
+                        mBinding.microgRootHistory,
+                        state.microgRoot
+                    )
+                    renderHistory(
+                        mBinding.bareAospRootHistoryInline,
                         mBinding.bareAospRootHistory,
                         state.bareAospRoot
                     )
@@ -314,13 +331,8 @@ const val COMPRESSION_QUALITY = 100
         versionTextView: TextView,
         dateTextView: TextView,
         brokenFeaturesChipGroup: ChipGroup,
-        historyChart: ComposeView,
-        history: EvaluationHistory?
+        evaluation: com.klee.sapio.domain.model.Evaluation?
     ) {
-        renderHistoryChart(historyChart, history)
-
-        val evaluation = history?.current
-
         if (evaluation != null) {
             iconView.setImageResource(Rating.create(evaluation.rating).drawable)
             iconView.isVisible = true
@@ -342,6 +354,17 @@ const val COMPRESSION_QUALITY = 100
             dateTextView.text = ""
             (brokenFeaturesChipGroup.parent as? ViewGroup)?.isVisible = false
         }
+    }
+
+    private fun renderHistory(
+        inlineChart: ComposeView,
+        stackedChart: ComposeView,
+        history: EvaluationHistory?
+    ) {
+        val stacked = settings.isUnsafeConfigurationEnabled()
+
+        renderHistoryChart(inlineChart, history.takeUnless { stacked })
+        renderHistoryChart(stackedChart, history.takeIf { stacked })
     }
 
     private fun renderHistoryChart(chartView: ComposeView, history: EvaluationHistory?) {
