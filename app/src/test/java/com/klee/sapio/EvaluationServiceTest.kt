@@ -351,12 +351,14 @@ class EvaluationServiceTest {
             throw NotImplementedError()
     }
 
+    private val baseInstant = System.currentTimeMillis()
+
     private fun createEvaluation(
         name: String,
         packageName: String,
         updatedAtOffset: Long = 0
     ): Evaluation {
-        val date = Date(System.currentTimeMillis() + updatedAtOffset)
+        val date = Date(baseInstant + updatedAtOffset)
         return Evaluation(
             name = name,
             packageName = packageName,

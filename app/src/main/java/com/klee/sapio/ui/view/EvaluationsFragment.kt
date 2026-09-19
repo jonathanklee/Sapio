@@ -134,7 +134,6 @@ const val COMPRESSION_QUALITY = 100
             startTakingScreenshot(appName, packageName)
         }
 
-
         hideCard()
 
         if (shareImmediately) {
