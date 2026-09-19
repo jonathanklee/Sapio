@@ -425,10 +425,10 @@ function ratingLine(entry, withHistory) {
     line.className = 'rating-line';
     line.appendChild(ratingRow(entry));
 
-    const history = withHistory ? renderHistoryBlock(entry) : null;
+    const chart = withHistory ? renderHistoryChart(entry) : null;
 
-    if (history) {
-        line.appendChild(history);
+    if (chart) {
+        line.appendChild(chart);
     }
 
     return line;
@@ -494,34 +494,14 @@ function ratingDetail(text) {
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const HISTORY_MAX_POINTS = 8;
-const HISTORY_WIDTH = 72;
-const HISTORY_HEIGHT = 26;
-const HISTORY_PAD_X = 4;
-const HISTORY_PAD_Y = 5;
-const HISTORY_POINT_RADIUS = 3;
+const HISTORY_WIDTH = 80;
+const HISTORY_HEIGHT = 44;
+const HISTORY_PAD_X = 5;
+const HISTORY_PAD_Y = 6;
+const HISTORY_POINT_RADIUS = 3.5;
 
 function historyPoints(entry) {
     return (entry.history ?? []).slice(-HISTORY_MAX_POINTS);
-}
-
-function renderHistoryBlock(entry) {
-    const chart = renderHistoryChart(entry);
-
-    if (!chart) {
-        return null;
-    }
-
-    const block = document.createElement('div');
-    block.className = 'history-block';
-
-    const title = document.createElement('span');
-    title.className = 'history-title';
-    title.textContent = t('history_title');
-
-    block.appendChild(title);
-    block.appendChild(chart);
-
-    return block;
 }
 
 function renderHistoryChart(entry) {

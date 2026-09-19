@@ -669,9 +669,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--space-05);
-    /* Queried by .rating-line, which drops the history chart to its own line
-       once the cell is too narrow to hold it beside the rating. */
-    container-type: inline-size;
 }
 
 /* User / Root label inside the cell */
@@ -718,18 +715,15 @@ body {
 
 /* Rating line: current evaluation on the left, its history on the right */
 
+/* Wrapping rather than a breakpoint: the chart drops under the rating exactly
+   when the cell stops being wide enough to hold both, whatever the language
+   made the rating read. */
+
 .rating-line {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-1);
-}
-
-@container (max-width: 210px) {
-    .rating-line {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-05);
-    }
 }
 
 .rating-row {
@@ -737,7 +731,6 @@ body {
     align-items: center;
     gap: var(--space-1);
     flex: 1;
-    min-width: 0;
 }
 
 .status-dot {
@@ -778,22 +771,10 @@ body {
 
 /* ─── History chart ───────────────────────────────────────────────────────── */
 
-.history-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1px;
-    flex-shrink: 0;
-}
-
-.history-title {
-    font-size: var(--text-2xs);
-    color: var(--color-secondary-text);
-}
-
 .history-chart {
-    width: 72px;
-    height: 26px;
+    width: 80px;
+    height: 44px;
+    flex-shrink: 0;
 }
 
 .history-line {

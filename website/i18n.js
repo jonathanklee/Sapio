@@ -38,7 +38,6 @@ const TRANSLATIONS = {
     env_standard:     { en: 'standard', fr: 'standard', de: 'standard', it: 'standard', es: 'estándar' },
     env_permissive:   { en: 'permissive', fr: 'permissif', de: 'permissiv', it: 'permissivo', es: 'permisivo' },
     doesnt_work:      { en: "Doesn't work", fr: 'Ne fonctionne pas', de: 'Funktioniert nicht', it: 'Non funziona', es: 'No funciona' },
-    history_title:    { en: 'History', fr: 'Historique', de: 'Verlauf', it: 'Cronologia', es: 'Historial' },
     history_label:    { en: 'Evaluation history', fr: 'Historique des évaluations', de: 'Bewertungsverlauf', it: 'Cronologia delle valutazioni', es: 'Historial de evaluaciones' },
     feat_notifications:   { en: 'Notifications', fr: 'Notifications', de: 'Benachrichtigungen', it: 'Notifiche', es: 'Notificaciones' },
     feat_in_app_purchase: { en: 'In-app purchases', fr: 'Achats intégrés', de: 'In-App-Käufe', it: 'Acquisti in-app', es: 'Compras integradas' },

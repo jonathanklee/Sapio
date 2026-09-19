@@ -418,7 +418,7 @@ def render_cell(env_label, env_key, entry, t, lang, now_ms):
         f'<span class="rating-label {cls}">{label}</span>'
         f"{render_version(entry)}{render_date(entry, lang, now_ms)}"
         "</div></div>"
-        f"{render_history_block(entry, t)}"
+        f"{render_history_chart(entry, t)}"
         "</div>"
         f"{render_broken_features(entry, t)}</div>"
     )
@@ -452,25 +452,15 @@ def render_date(entry, lang, now_ms):
 # coordinates, so a pre-rendered page and a repainted one look the same.
 
 HISTORY_MAX_POINTS = 8
-HISTORY_WIDTH = 72
-HISTORY_HEIGHT = 26
-HISTORY_PAD_X = 4
-HISTORY_PAD_Y = 5
-HISTORY_POINT_RADIUS = 3
+HISTORY_WIDTH = 80
+HISTORY_HEIGHT = 44
+HISTORY_PAD_X = 5
+HISTORY_PAD_Y = 6
+HISTORY_POINT_RADIUS = 3.5
 
 
 def history_points(entry):
     return (entry.get("history") or [])[-HISTORY_MAX_POINTS:]
-
-
-def render_history_block(entry, t):
-    chart = render_history_chart(entry, t)
-    if not chart:
-        return ""
-
-    return ('<div class="history-block">'
-            f'<span class="history-title">{escape_html(t("history_title"))}</span>'
-            f"{chart}</div>")
 
 
 def render_history_chart(entry, t):
