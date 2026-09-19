@@ -225,7 +225,7 @@ function renderSections(app) {
     sectionsRow.className = 'sections-row';
 
     for (const section of SECTIONS) {
-        const rendered = renderSection(section, app.entries);
+        const rendered = renderSection(section, app.entries, /* withHistory */ true);
 
         if (rendered) {
             sectionsRow.appendChild(rendered);

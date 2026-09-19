@@ -669,6 +669,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--space-05);
+    /* Queried by .rating-line, which drops the history chart to its own line
+       once the cell is too narrow to hold it beside the rating. */
+    container-type: inline-size;
 }
 
 /* User / Root label inside the cell */
@@ -713,12 +716,28 @@ body {
     grid-template-columns: 1fr 1fr;
 }
 
-/* Rating row: dot + text */
+/* Rating line: current evaluation on the left, its history on the right */
+
+.rating-line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+@container (max-width: 210px) {
+    .rating-line {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-05);
+    }
+}
 
 .rating-row {
     display: flex;
     align-items: center;
     gap: var(--space-1);
+    flex: 1;
+    min-width: 0;
 }
 
 .status-dot {
@@ -756,6 +775,45 @@ body {
     font-style: italic;
     color: var(--color-secondary-text);
 }
+
+/* ─── History chart ───────────────────────────────────────────────────────── */
+
+.history-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    flex-shrink: 0;
+}
+
+.history-title {
+    font-size: var(--text-2xs);
+    color: var(--color-secondary-text);
+}
+
+.history-chart {
+    width: 72px;
+    height: 26px;
+}
+
+.history-line {
+    fill: none;
+    stroke: var(--color-unknown);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Ringed in the cell background so overlapping points stay countable. */
+.history-point {
+    stroke: var(--color-surface);
+    stroke-width: 1.5;
+}
+
+.history-point.good    { fill: var(--color-good); }
+.history-point.average { fill: var(--color-average); }
+.history-point.bad     { fill: var(--color-bad); }
+.history-point.unknown { fill: var(--color-unknown); }
 
 /* ─── Broken features ─────────────────────────────────────────────────────── */
 

@@ -53,6 +53,29 @@ async function fetchByPackage(packageName) {
     });
 }
 
+// No icon: the callers already have one, and these payloads are the largest
+// the site asks for.
+async function fetchByPackages(packageNames) {
+    const filters = Object.fromEntries(
+        packageNames.map((name, index) => [`filters[packageName][$in][${index}]`, name])
+    );
+    const evaluations = [];
+
+    for (let page = 1; ; page++) {
+        const batch = await fetchApplications({
+            ...filters,
+            'sort': 'updatedAt:Desc',
+            'pagination[page]': String(page),
+            'pagination[pageSize]': MAX_PAGE_SIZE,
+        });
+        evaluations.push(...batch);
+
+        if (batch.length < Number(MAX_PAGE_SIZE)) {
+            return evaluations;
+        }
+    }
+}
+
 async function fetchLatestPage(page, pageSize) {
     return fetchApplications({
         ...ICON_FIELD,
@@ -83,14 +106,14 @@ function groupByPackage(evaluations) {
     for (const evaluation of evaluations) {
         const app = appBucketFor(appMap, evaluation);
         adoptIcon(app, evaluation);
-        keepMostRecentEntry(app, evaluation);
+        collectEntry(app, evaluation);
     }
 
     return [...appMap.values()].map(app => ({
         name: app.name,
         packageName: app.packageName,
         iconUrl: app.iconUrl,
-        entries: [...app.entriesByEnv.values()],
+        entries: [...app.entriesByEnv.values()].map(currentEntry),
     }));
 }
 
@@ -115,24 +138,85 @@ function adoptIcon(app, evaluation) {
     }
 }
 
-function keepMostRecentEntry(app, evaluation) {
+function collectEntry(app, evaluation) {
     const envKey = `${evaluation.microg}-${evaluation.rooted}`;
-    const candidate = {
+    const envEntries = app.entriesByEnv.get(envKey) ?? [];
+
+    envEntries.push({
         microg: evaluation.microg,
         rooted: evaluation.rooted,
         rating: evaluation.rating,
         updatedAt: evaluation.updatedAt,
         versionName: evaluation.versionName ?? null,
         brokenFeatures: evaluation.brokenFeatures ?? null,
-    };
+    });
 
-    const existing = app.entriesByEnv.get(envKey);
-    const isNewer = !existing
-        || new Date(candidate.updatedAt) > new Date(existing.updatedAt);
+    app.entriesByEnv.set(envKey, envEntries);
+}
 
-    if (isNewer) {
-        app.entriesByEnv.set(envKey, candidate);
+function currentEntry(envEntries) {
+    const history = [...envEntries]
+        .sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+
+    return { ...history[history.length - 1], history };
+}
+
+// ─── History backfill ─────────────────────────────────────────────────────────
+//
+// The feed only ever holds the evaluations of the API page it fetched, so the
+// history groupByPackage() derived there is a fragment: the ones a card
+// superseded sit far down the global "latest" list. The whole package is
+// fetched instead, in one request for the batch of cards about to be drawn.
+
+const HISTORY_CHUNK_SIZE = 25;
+const historyByPackage = new Map();
+
+async function loadHistories(apps) {
+    const missing = apps
+        .map(app => app.packageName)
+        .filter(packageName => !historyByPackage.has(packageName));
+
+    if (missing.length > 0) {
+        await cacheHistories(missing);
     }
+
+    return apps.map(applyCachedHistory);
+}
+
+// Kept for the session: the same cards are re-rendered every time the
+// permissive toggle flips, and no evaluation lands in between.
+//
+// Chunked because every package name goes in the query string, and a broad
+// search matches enough of them to push one URL past what a server accepts as
+// a request header. The chunks go out together, so it stays one round trip.
+async function cacheHistories(packageNames) {
+    for (const packageName of packageNames) {
+        historyByPackage.set(packageName, []);
+    }
+
+    const chunks = [];
+
+    for (let start = 0; start < packageNames.length; start += HISTORY_CHUNK_SIZE) {
+        chunks.push(fetchByPackages(packageNames.slice(start, start + HISTORY_CHUNK_SIZE)));
+    }
+
+    for (const evaluations of await Promise.all(chunks)) {
+        for (const app of groupByPackage(evaluations)) {
+            historyByPackage.set(app.packageName, app.entries);
+        }
+    }
+}
+
+function applyCachedHistory(app) {
+    const cached = historyByPackage.get(app.packageName) ?? [];
+
+    return {
+        ...app,
+        entries: app.entries.map(entry => ({
+            ...entry,
+            history: entryFor(cached, entry.microg, entry.rooted)?.history ?? entry.history,
+        })),
+    };
 }
 
 function entryFor(entries, microg, rooted) {
@@ -149,9 +233,20 @@ function renderKey(app) {
             entry.updatedAt ?? '',
             entry.versionName ?? '',
             (entry.brokenFeatures ?? []).join(','),
+            historyFingerprint(entry),
         ].join(':'));
 
     return [app.packageName, app.name, ...entries].join('|');
+}
+
+// An evaluation added to an environment also replaces its current entry,
+// which the fingerprint already
+// covers, so this exists to catch an older one being edited or removed under
+// an unchanged head.
+function historyFingerprint(entry) {
+    return historyPoints(entry)
+        .map(point => [point.rating, ...(point.brokenFeatures ?? [])].join(''))
+        .join(',');
 }
 
 function escapeHtml(str) {
@@ -270,7 +365,9 @@ function iconPlaceholder() {
     return placeholder;
 }
 
-function renderSection(section, entries) {
+// Opt-in: a chart is only honest once the whole package has been fetched, which
+// the app page does outright and the feed does through loadHistories().
+function renderSection(section, entries, withHistory = false) {
     const cells = ENVS
         .map(env => ({ env, entry: entryFor(entries, section.microg, env.rooted) }))
         .filter(({ entry }) => entry !== null);
@@ -292,7 +389,7 @@ function renderSection(section, entries) {
     cellsRow.className = cells.length === 1 ? 'cells-row cells-row--single' : 'cells-row';
 
     for (const { env, entry } of cells) {
-        cellsRow.appendChild(renderCell(env, entry));
+        cellsRow.appendChild(renderCell(env, entry, withHistory));
     }
 
     block.appendChild(cellsRow);
@@ -308,11 +405,11 @@ function sectionBadge(section) {
     return badge;
 }
 
-function renderCell(env, entry) {
+function renderCell(env, entry, withHistory) {
     const cell = document.createElement('div');
     cell.className = `eval-cell eval-cell--${env.cls}`;
     cell.appendChild(envBadge(env));
-    cell.appendChild(ratingRow(entry));
+    cell.appendChild(ratingLine(entry, withHistory));
 
     const broken = brokenFeatureKeys(entry);
 
@@ -321,6 +418,20 @@ function renderCell(env, entry) {
     }
 
     return cell;
+}
+
+function ratingLine(entry, withHistory) {
+    const line = document.createElement('div');
+    line.className = 'rating-line';
+    line.appendChild(ratingRow(entry));
+
+    const history = withHistory ? renderHistoryBlock(entry) : null;
+
+    if (history) {
+        line.appendChild(history);
+    }
+
+    return line;
 }
 
 function envBadge(env) {
@@ -377,6 +488,124 @@ function ratingDetail(text) {
     return detail;
 }
 
+// ─── History chart ───────────────────────────────────────────────────────────
+//
+// Mirrored by tools/refresh.py: the two must draw the same chart.
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const HISTORY_MAX_POINTS = 8;
+const HISTORY_WIDTH = 72;
+const HISTORY_HEIGHT = 26;
+const HISTORY_PAD_X = 4;
+const HISTORY_PAD_Y = 5;
+const HISTORY_POINT_RADIUS = 3;
+
+function historyPoints(entry) {
+    return (entry.history ?? []).slice(-HISTORY_MAX_POINTS);
+}
+
+function renderHistoryBlock(entry) {
+    const chart = renderHistoryChart(entry);
+
+    if (!chart) {
+        return null;
+    }
+
+    const block = document.createElement('div');
+    block.className = 'history-block';
+
+    const title = document.createElement('span');
+    title.className = 'history-title';
+    title.textContent = t('history_title');
+
+    block.appendChild(title);
+    block.appendChild(chart);
+
+    return block;
+}
+
+function renderHistoryChart(entry) {
+    const points = historyPoints(entry);
+
+    if (points.length < 2) {
+        return null;
+    }
+
+    const chart = document.createElementNS(SVG_NS, 'svg');
+    chart.setAttribute('class', 'history-chart');
+    chart.setAttribute('viewBox', `0 0 ${HISTORY_WIDTH} ${HISTORY_HEIGHT}`);
+    chart.setAttribute('role', 'img');
+    chart.setAttribute('aria-label', t('history_label'));
+    chart.appendChild(historyLine(points));
+
+    for (const [index, point] of points.entries()) {
+        chart.appendChild(historyDot(point, index, points.length));
+    }
+
+    return chart;
+}
+
+function historyLine(points) {
+    const line = document.createElementNS(SVG_NS, 'polyline');
+    line.setAttribute('class', 'history-line');
+    line.setAttribute('points', points
+        .map((point, index) => `${historyX(index, points.length)},${historyY(point.rating)}`)
+        .join(' '));
+
+    return line;
+}
+
+function historyDot(point, index, count) {
+    const dot = document.createElementNS(SVG_NS, 'circle');
+    dot.setAttribute('class', `history-point ${RATING_CLASS[point.rating] ?? 'unknown'}`);
+    dot.setAttribute('cx', historyX(index, count));
+    dot.setAttribute('cy', historyY(point.rating));
+    dot.setAttribute('r', HISTORY_POINT_RADIUS);
+
+    const title = document.createElementNS(SVG_NS, 'title');
+    title.textContent = historyTooltip(point);
+    dot.appendChild(title);
+
+    return dot;
+}
+
+// An absolute date, unlike the cell's: a tooltip is not rewritten by
+// syncRelativeDates(), so a relative one would go stale on a pre-rendered page.
+function historyTooltip(point) {
+    const rating = RATING_CLASS[point.rating]
+        ? `${t(`rating_${point.rating}`)}${localizedBrokenSuffix(point)}`
+        : '—';
+    const parts = [rating];
+
+    if (point.versionName) {
+        parts.push(`v${point.versionName}`);
+    }
+
+    if (point.updatedAt) {
+        parts.push(point.updatedAt.slice(0, 10));
+    }
+
+    return parts.join(' · ');
+}
+
+function historyX(index, count) {
+    const step = (HISTORY_WIDTH - HISTORY_PAD_X * 2) / (count - 1);
+
+    return roundCoordinate(HISTORY_PAD_X + index * step);
+}
+
+function historyY(rating) {
+    const level = RATING_CLASS[rating] ? rating - 1 : 1;
+
+    return roundCoordinate(HISTORY_PAD_Y + level * (HISTORY_HEIGHT - HISTORY_PAD_Y * 2) / 2);
+}
+
+function roundCoordinate(value) {
+    return Math.round(value * 100) / 100;
+}
+
+// ─── Broken features ─────────────────────────────────────────────────────────
+
 function renderBrokenFeatures(featureKeys) {
     const container = document.createElement('div');
     container.className = 'broken-features';
@@ -409,6 +638,7 @@ export {
     fetchSearch,
     fetchByPackage,
     groupByPackage,
+    loadHistories,
     entryFor,
     renderKey,
     relativeDate,

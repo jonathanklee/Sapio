@@ -114,27 +114,31 @@ def group_by_package(evaluations):
                 buckets[pkg]["iconUrl"] = MEDIA_BASE + path
 
         env_key = f"{ev['microg']}-{ev['rooted']}"
-        candidate = {
+        buckets[pkg]["by_env"].setdefault(env_key, []).append({
             "microg":        ev["microg"],
             "rooted":        ev["rooted"],
             "rating":        ev["rating"],
             "updatedAt":     ev.get("updatedAt", ""),
             "versionName":   ev.get("versionName"),
             "brokenFeatures": ev.get("brokenFeatures") or [],
-        }
-        existing = buckets[pkg]["by_env"].get(env_key)
-        if not existing or candidate["updatedAt"] > existing["updatedAt"]:
-            buckets[pkg]["by_env"][env_key] = candidate
+        })
 
     return [
         {
             "name":        b["name"],
             "packageName": b["packageName"],
             "iconUrl":     b["iconUrl"],
-            "entries":     list(b["by_env"].values()),
+            "entries":     [current_entry(e) for e in b["by_env"].values()],
         }
         for b in buckets.values()
     ]
+
+
+def current_entry(env_entries):
+    """Port of currentEntry() in core.js: the newest entry, carrying its history."""
+    history = sorted(env_entries, key=lambda e: e["updatedAt"])
+
+    return {**history[-1], "history": history}
 
 
 def has_secure_evaluation(app):
@@ -162,6 +166,14 @@ def broken_feature_keys(entry):
         return []
 
     return [k for k in (entry.get("brokenFeatures") or []) if k in BROKEN_FEATURE_LABELS]
+
+
+def localized_broken_suffix(entry, t):
+    labels = [t(f"feat_{k}") for k in broken_feature_keys(entry)]
+    if not labels:
+        return ""
+
+    return f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in labels)})"
 
 
 def human_summary(app):
@@ -273,11 +285,7 @@ def localized_summary(app, t, with_permissive=False):
                 continue
 
             rating = t(f"rating_{entry['rating']}")
-            broken = [t(f"feat_{k}") for k in broken_feature_keys(entry)]
-            suffix = ""
-            if broken:
-                suffix = f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in broken)})"
-
+            suffix = localized_broken_suffix(entry, t)
             scenario = f"{section['label']} · {t(env_key)}" if with_permissive else section["label"]
             parts.append(f"{scenario}: {rating}{suffix}")
 
@@ -403,12 +411,15 @@ def render_cell(env_label, env_key, entry, t, lang, now_ms):
     return (
         f'<div class="eval-cell eval-cell--{env_label}">'
         f'<span class="cell-env-badge {env_label}">{escape_html(t(env_key))}</span>'
+        '<div class="rating-line">'
         '<div class="rating-row">'
         f'<span class="status-dot {cls}"></span>'
         '<div class="rating-text-col">'
         f'<span class="rating-label {cls}">{label}</span>'
         f"{render_version(entry)}{render_date(entry, lang, now_ms)}"
         "</div></div>"
+        f"{render_history_block(entry, t)}"
+        "</div>"
         f"{render_broken_features(entry, t)}</div>"
     )
 
@@ -433,6 +444,95 @@ def render_date(entry, lang, now_ms):
 
     return (f'<span class="rating-date" data-updated-at="{attr(updated_at)}">'
             f"{escape_html(text)}</span>")
+
+
+# ─── History chart ─────────────────────────────────────────────────────────────
+#
+# Mirror of the sparkline renderHistoryChart() builds in core.js, down to the
+# coordinates, so a pre-rendered page and a repainted one look the same.
+
+HISTORY_MAX_POINTS = 8
+HISTORY_WIDTH = 72
+HISTORY_HEIGHT = 26
+HISTORY_PAD_X = 4
+HISTORY_PAD_Y = 5
+HISTORY_POINT_RADIUS = 3
+
+
+def history_points(entry):
+    return (entry.get("history") or [])[-HISTORY_MAX_POINTS:]
+
+
+def render_history_block(entry, t):
+    chart = render_history_chart(entry, t)
+    if not chart:
+        return ""
+
+    return ('<div class="history-block">'
+            f'<span class="history-title">{escape_html(t("history_title"))}</span>'
+            f"{chart}</div>")
+
+
+def render_history_chart(entry, t):
+    points = history_points(entry)
+    if len(points) < 2:
+        return ""
+
+    line = " ".join(
+        f"{history_x(i, len(points))},{history_y(p['rating'])}"
+        for i, p in enumerate(points)
+    )
+    dots = "".join(render_history_dot(p, i, len(points), t) for i, p in enumerate(points))
+
+    return (
+        f'<svg class="history-chart" viewBox="0 0 {HISTORY_WIDTH} {HISTORY_HEIGHT}" '
+        f'role="img" aria-label="{attr(t("history_label"))}">'
+        f'<polyline class="history-line" points="{line}"></polyline>'
+        f"{dots}</svg>"
+    )
+
+
+def render_history_dot(point, index, count, t):
+    cls = RATING_CLASS.get(point["rating"], "unknown")
+
+    return (
+        f'<circle class="history-point {cls}" '
+        f'cx="{history_x(index, count)}" cy="{history_y(point["rating"])}" '
+        f'r="{HISTORY_POINT_RADIUS}">'
+        f"<title>{escape_html(history_tooltip(point, t))}</title></circle>"
+    )
+
+
+def history_tooltip(point, t):
+    rating = point["rating"]
+    parts = [
+        f"{t(f'rating_{rating}')}{localized_broken_suffix(point, t)}"
+        if rating in RATING_CLASS else "—"
+    ]
+
+    if point.get("versionName"):
+        parts.append(f"v{point['versionName']}")
+
+    if point.get("updatedAt"):
+        parts.append(point["updatedAt"][:10])
+
+    return " · ".join(parts)
+
+
+def history_x(index, count):
+    step = (HISTORY_WIDTH - HISTORY_PAD_X * 2) / (count - 1)
+
+    return svg_number(HISTORY_PAD_X + index * step)
+
+
+def history_y(rating):
+    level = rating - 1 if rating in RATING_CLASS else 1
+
+    return svg_number(HISTORY_PAD_Y + level * (HISTORY_HEIGHT - HISTORY_PAD_Y * 2) / 2)
+
+
+def svg_number(value):
+    return f"{round(value, 2):g}"
 
 
 def render_broken_features(entry, t):
@@ -538,6 +638,10 @@ def render_key(app):
             e.get("updatedAt") or "",
             e.get("versionName") or "",
             ",".join(e.get("brokenFeatures") or []),
+            ",".join(
+                "".join([str(p["rating"]), *(p.get("brokenFeatures") or [])])
+                for p in history_points(e)
+            ),
         ])
         for e in entries
     ]

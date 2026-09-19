@@ -4,6 +4,7 @@ import {
     fetchLatestPage,
     fetchSearch,
     groupByPackage,
+    loadHistories,
     renderCardHeader,
     renderSection,
 } from './core.js';
@@ -24,6 +25,7 @@ let visibleLatestCount = INITIAL_LATEST_COUNT;
 let rawLatestEvaluations = [];
 let latestApiPage = 0;
 let latestApiDone = false;
+let renderToken = 0;
 
 // ─── DOM refs ────────────────────────────────────────────────────────────────
 
@@ -56,7 +58,7 @@ function renderAppCard(app) {
     sectionsRow.className = 'sections-row';
 
     for (const section of SECTIONS) {
-        const rendered = renderSection(section, app.entries);
+        const rendered = renderSection(section, app.entries, /* withHistory */ true);
 
         if (rendered) {
             sectionsRow.appendChild(rendered);
@@ -87,15 +89,23 @@ function showSkeletons() {
     setShowMore(false);
 }
 
-function renderResults(apps) {
+// The grid is only cleared once the cards are built, so the skeletons stay up
+// while the histories are fetched instead of the results blinking out.
+async function renderResults(apps) {
+    const token = ++renderToken;
     currentApps = apps;
-    resultsGrid.innerHTML = '';
     resultsError.hidden = true;
     setShowMore(false);
 
-    const cards = apps
+    const cards = (await loadHistories(apps))
         .map(renderAppCard)
         .filter(card => card !== null);
+
+    if (token !== renderToken) {
+        return;
+    }
+
+    resultsGrid.innerHTML = '';
 
     for (const card of cards) {
         resultsGrid.appendChild(card);
@@ -108,13 +118,13 @@ function renderResults(apps) {
     resultsCount.textContent = '';
 }
 
-function rerenderCurrentResults() {
+async function rerenderCurrentResults() {
     if (isLatestMode) {
         const renderable = renderableLatestApps();
-        renderResults(renderable.slice(0, visibleLatestCount));
+        await renderResults(renderable.slice(0, visibleLatestCount));
         setShowMore(visibleLatestCount < renderable.length || !latestApiDone);
     } else {
-        renderResults(currentApps);
+        await renderResults(currentApps);
     }
 }
 
@@ -178,7 +188,7 @@ async function loadLatest() {
         }
 
         const renderable = renderableLatestApps();
-        renderResults(renderable.slice(0, visibleLatestCount));
+        await renderResults(renderable.slice(0, visibleLatestCount));
         setShowMore(renderable.length > visibleLatestCount || !latestApiDone);
     } catch {
         showError();
@@ -192,7 +202,7 @@ async function runSearch(query) {
     try {
         const raw = await fetchSearch(query);
         const apps = groupByPackage(raw);
-        renderResults(apps);
+        await renderResults(apps);
     } catch {
         showError();
     }
@@ -242,7 +252,7 @@ showMoreBtn.addEventListener('click', async () => {
 
     const renderable = renderableLatestApps();
     visibleLatestCount = Math.min(nextCount, renderable.length);
-    renderResults(renderable.slice(0, visibleLatestCount));
+    await renderResults(renderable.slice(0, visibleLatestCount));
     setShowMore(visibleLatestCount < renderable.length || !latestApiDone);
 });
 
