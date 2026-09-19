@@ -763,10 +763,14 @@ body {
 .rating-label.bad     { color: var(--chip-bad-text); }
 .rating-label.unknown { color: var(--color-secondary-text); }
 
+/* A versionName can be one unbreakable 48-character token, which otherwise
+   sets the cell's minimum width and pushes it out of the card. */
+
 .rating-date {
     font-size: var(--text-2xs);
     font-style: italic;
     color: var(--color-secondary-text);
+    overflow-wrap: anywhere;
 }
 
 /* ─── History chart ───────────────────────────────────────────────────────── */
