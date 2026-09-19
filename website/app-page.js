@@ -59,8 +59,22 @@ async function loadApp() {
             applySeo(app);
         }
     } catch {
-        showError();
+        keepPreRenderedCard();
     }
+}
+
+// A pre-rendered card is an hour old at worst and needs nothing from the API, so
+// a refresh the network or a content blocker killed leaves it standing.
+function keepPreRenderedCard() {
+    if (!isPreRendered()) {
+        showError();
+        return;
+    }
+
+    applyPermissiveClass();
+    syncRelativeDates();
+    enablePermissiveToggle();
+    shareBanner.hidden = true;
 }
 
 function isPreRendered() {
