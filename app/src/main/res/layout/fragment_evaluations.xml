@@ -204,7 +204,7 @@
                                     <androidx.compose.ui.platform.ComposeView
                                         android:id="@+id/microgUserHistoryInline"
                                         android:layout_width="90dp"
-                                        android:layout_height="24dp"
+                                        android:layout_height="match_parent"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
@@ -322,7 +322,7 @@
                                     <androidx.compose.ui.platform.ComposeView
                                         android:id="@+id/microgRootHistoryInline"
                                         android:layout_width="90dp"
-                                        android:layout_height="24dp"
+                                        android:layout_height="match_parent"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
@@ -481,7 +481,7 @@
                                     <androidx.compose.ui.platform.ComposeView
                                         android:id="@+id/bareAospUserHistoryInline"
                                         android:layout_width="90dp"
-                                        android:layout_height="24dp"
+                                        android:layout_height="match_parent"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
@@ -599,7 +599,7 @@
                                     <androidx.compose.ui.platform.ComposeView
                                         android:id="@+id/bareAospRootHistoryInline"
                                         android:layout_width="90dp"
-                                        android:layout_height="24dp"
+                                        android:layout_height="match_parent"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
