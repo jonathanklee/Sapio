@@ -205,6 +205,7 @@
                                         android:id="@+id/microgUserHistoryInline"
                                         android:layout_width="90dp"
                                         android:layout_height="match_parent"
+                                        android:paddingVertical="6dp"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
@@ -323,6 +324,7 @@
                                         android:id="@+id/microgRootHistoryInline"
                                         android:layout_width="90dp"
                                         android:layout_height="match_parent"
+                                        android:paddingVertical="6dp"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
@@ -482,6 +484,7 @@
                                         android:id="@+id/bareAospUserHistoryInline"
                                         android:layout_width="90dp"
                                         android:layout_height="match_parent"
+                                        android:paddingVertical="6dp"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
@@ -600,6 +603,7 @@
                                         android:id="@+id/bareAospRootHistoryInline"
                                         android:layout_width="90dp"
                                         android:layout_height="match_parent"
+                                        android:paddingVertical="6dp"
                                         android:layout_marginStart="12dp"
                                         android:visibility="gone" />
 
