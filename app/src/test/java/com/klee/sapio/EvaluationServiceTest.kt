@@ -255,33 +255,7 @@ class EvaluationServiceTest {
         assertTrue(result.isSuccess)
     }
 
-    @Test
-    fun updateEvaluation_returnsNullOnIOException() = runBlocking {
-        val api = object : EvaluationApi by failingApi() {
-            override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int): UploadAnswer {
-                throw IOException("update failed")
-            }
-        }
-        setApi(api)
 
-        val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null)), 1)
-        assertTrue(result.isFailure)
-    }
-
-    @Test
-    fun updateEvaluation_returnsResponseOnSuccess() = runBlocking {
-        val response = UploadAnswer(
-            StrapiElement(2, createEvaluation("Updated", "pkg.u")),
-            StrapiMeta(null)
-        )
-        val api = object : EvaluationApi by failingApi() {
-            override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int): UploadAnswer = response
-        }
-        setApi(api)
-
-        val result = service.updateEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null)), 2)
-        assertTrue(result.isSuccess)
-    }
 
     @Test
     fun uploadIcon_returnsResponseOnSuccess() = runBlocking {
@@ -348,7 +322,6 @@ class EvaluationServiceTest {
         override suspend fun existingEvaluationsAsync(packageName: String, pageNumber: Int, pageSize: Int) =
             throw NotImplementedError()
         override suspend fun addEvaluation(evaluation: UploadEvaluationHeader) = throw NotImplementedError()
-        override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int) = throw NotImplementedError()
         override suspend fun addIcon(image: okhttp3.MultipartBody.Part) = throw NotImplementedError()
         override suspend fun existingIconAsync(iconName: String) = throw NotImplementedError()
         override suspend fun deleteIcon(id: Int) = throw NotImplementedError()

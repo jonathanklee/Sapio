@@ -1,7 +1,6 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.domain.model.EvaluationRecord
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.UploadEvaluation
 
@@ -13,11 +12,7 @@ interface EvaluationRepository {
 
     suspend fun addEvaluation(evaluation: UploadEvaluation): Result<Unit>
 
-    suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit>
-
     suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<Evaluation?>
-
-    suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>>
 
     suspend fun fetchEvaluationHistory(packageName: String): Result<List<Evaluation>>
 

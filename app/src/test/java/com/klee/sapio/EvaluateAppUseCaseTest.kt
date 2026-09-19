@@ -6,7 +6,6 @@ import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UploadEvaluation
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.domain.model.EvaluationRecord
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -89,12 +88,8 @@ class EvaluateAppUseCaseTest {
             Result.success(emptyList())
         override suspend fun addEvaluation(evaluation: UploadEvaluation): Result<Unit> =
             addEvaluationResult
-        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> =
-            Result.success(Unit)
         override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<Evaluation?> =
             Result.success(null)
-        override suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>> =
-            Result.success(emptyList())
         override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
         override suspend fun uploadIcon(packageName: String): Result<List<Icon>> =
             uploadIconResult

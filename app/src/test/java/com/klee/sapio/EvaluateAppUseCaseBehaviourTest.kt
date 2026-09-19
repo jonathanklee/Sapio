@@ -86,11 +86,8 @@ class EvaluateAppUseCaseBehaviourTest {
             addedEvaluations.add(evaluation)
             return Result.success(Unit)
         }
-        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int): Result<Unit> = Result.success(Unit)
         override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int): Result<com.klee.sapio.domain.model.Evaluation?> =
             Result.success(null)
-        override suspend fun existingEvaluations(packageName: String): Result<List<com.klee.sapio.domain.model.EvaluationRecord>> =
-            Result.success(emptyList())
         override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
         override suspend fun uploadIcon(packageName: String): Result<List<Icon>> =
             Result.success(uploadResponse ?: emptyList())

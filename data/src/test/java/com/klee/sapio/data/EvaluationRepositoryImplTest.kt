@@ -145,7 +145,7 @@ class EvaluationRepositoryImplTest {
 
     // endregion
 
-    // region addEvaluation and updateEvaluation
+    // region addEvaluation
 
     @Test
     fun `addEvaluation returns success when service succeeds`() = runTest {
@@ -165,14 +165,6 @@ class EvaluationRepositoryImplTest {
         assertTrue(result.isFailure)
     }
 
-    @Test
-    fun `updateEvaluation returns success when service succeeds`() = runTest {
-        service.updateEvalResult = Result.success(Unit)
-
-        val result = repository.updateEvaluation(domainUploadEvaluation(), id = 1)
-
-        assertTrue(result.isSuccess)
-    }
 
     // endregion
 
@@ -423,7 +415,6 @@ class EvaluationRepositoryImplTest {
         var listLatestResult: Result<List<DtoEvaluation>> = Result.success(emptyList())
         var searchResult: Result<List<DtoEvaluation>> = Result.success(emptyList())
         var addEvalResult: Result<Unit> = Result.success(Unit)
-        var updateEvalResult: Result<Unit> = Result.success(Unit)
         var fetchEvalResult: Result<DtoEvaluation?> = Result.success(null)
         var uploadIconResult: Result<List<IconAnswer>> = Result.success(emptyList())
         var existingIconResult: Result<List<IconAnswer>> = Result.success(emptyList())
@@ -433,7 +424,6 @@ class EvaluationRepositoryImplTest {
         override suspend fun listLatestEvaluations(pageNumber: Int) = listLatestResult
         override suspend fun searchEvaluation(pattern: String) = searchResult
         override suspend fun addEvaluation(app: UploadEvaluationHeader) = addEvalResult
-        override suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int) = updateEvalResult
         override suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int) = fetchEvalResult
         override suspend fun uploadIcon(packageName: String) = uploadIconResult
         override suspend fun existingIcon(iconName: String) = existingIconResult

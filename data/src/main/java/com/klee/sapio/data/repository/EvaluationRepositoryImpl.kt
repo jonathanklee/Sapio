@@ -20,7 +20,6 @@ import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import com.klee.sapio.data.dto.Evaluation as DtoEvaluation
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
-import com.klee.sapio.domain.model.EvaluationRecord as DomainEvaluationRecord
 import com.klee.sapio.domain.model.Icon as DomainIcon
 import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation
 
@@ -77,22 +76,12 @@ class EvaluationRepositoryImpl @Inject constructor(
         return retrofitService.addEvaluation(header)
     }
 
-    override suspend fun updateEvaluation(evaluation: DomainUploadEvaluation, id: Int): Result<Unit> {
-        val header = UploadEvaluationHeader(evaluation.toData())
-        return retrofitService.updateEvaluation(header, id)
-    }
-
     override suspend fun fetchEvaluation(
         appPackageName: String,
         gmsType: Int,
         userType: Int
     ): Result<DomainEvaluation?> {
         return fetchEvaluationWithFallback(appPackageName, gmsType, userType)
-    }
-
-    override suspend fun existingEvaluations(packageName: String): Result<List<DomainEvaluationRecord>> {
-        return retrofitService.existingEvaluations(packageName)
-            .map { evaluations -> evaluations.map { it.toDomain() } }
     }
 
     override suspend fun fetchEvaluationHistory(packageName: String): Result<List<DomainEvaluation>> {
@@ -249,11 +238,6 @@ private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
     publishedAt = publishedAt,
     versionName = versionName,
     brokenFeatures = brokenFeatures?.split(",")?.filter { it.isNotEmpty() }
-)
-
-private fun StrapiElement.toDomain(): DomainEvaluationRecord = DomainEvaluationRecord(
-    id = id,
-    evaluation = attributes.toDomain()
 )
 
 private fun IconAnswer.toDomain(): DomainIcon = DomainIcon(

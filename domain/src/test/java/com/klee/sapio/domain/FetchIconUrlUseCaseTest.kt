@@ -1,7 +1,6 @@
 package com.klee.sapio.domain
 
 import com.klee.sapio.domain.model.Evaluation
-import com.klee.sapio.domain.model.EvaluationRecord
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.UploadEvaluation
 import kotlinx.coroutines.test.runTest
@@ -70,9 +69,7 @@ class FetchIconUrlUseCaseTest {
         override suspend fun listLatestEvaluations(pageNumber: Int) = Result.success(emptyList<Evaluation>())
         override suspend fun searchEvaluations(pattern: String) = Result.success(emptyList<Evaluation>())
         override suspend fun addEvaluation(evaluation: UploadEvaluation) = Result.success(Unit)
-        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) = Result.success(Unit)
         override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int) = Result.success(null)
-        override suspend fun existingEvaluations(packageName: String) = Result.success(emptyList<EvaluationRecord>())
         override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
         override suspend fun uploadIcon(packageName: String) = Result.success(emptyList<Icon>())
         override suspend fun deleteIcon(id: Int) = Result.success(Unit)
@@ -87,9 +84,7 @@ class FetchIconUrlUseCaseTest {
         override suspend fun listLatestEvaluations(pageNumber: Int) = Result.success(emptyList<Evaluation>())
         override suspend fun searchEvaluations(pattern: String) = Result.success(emptyList<Evaluation>())
         override suspend fun addEvaluation(evaluation: UploadEvaluation) = Result.success(Unit)
-        override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) = Result.success(Unit)
         override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int) = Result.success(null)
-        override suspend fun existingEvaluations(packageName: String) = Result.success(emptyList<EvaluationRecord>())
         override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
         override suspend fun uploadIcon(packageName: String) = Result.success(emptyList<Icon>())
         override suspend fun deleteIcon(id: Int) = Result.success(Unit)

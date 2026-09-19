@@ -33,11 +33,6 @@ data class Icon(
     val url: String
 )
 
-data class EvaluationRecord(
-    val id: Int,
-    val evaluation: Evaluation
-)
-
 data class InstalledApplication(
     val name: String,
     val packageName: String,

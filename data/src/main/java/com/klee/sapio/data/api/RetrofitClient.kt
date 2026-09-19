@@ -31,7 +31,6 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -62,13 +61,6 @@ interface EvaluationApi {
     @Headers("Content-Type: application/json")
     @POST("sapio-applications")
     suspend fun addEvaluation(@Body evaluation: UploadEvaluationHeader): UploadAnswer
-
-    @Headers("Content-Type: application/json")
-    @PUT("sapio-applications/{id}")
-    suspend fun updateEvaluation(
-        @Body evaluation: UploadEvaluationHeader,
-        @Path(value = "id", encoded = false) id: Int
-    ): UploadAnswer
 
     @Multipart
     @POST("upload")
@@ -179,12 +171,6 @@ open class EvaluationService @Inject constructor(
     open suspend fun addEvaluation(app: UploadEvaluationHeader): Result<Unit> =
         runCatching {
             evaluationsApi.addEvaluation(app)
-            Unit
-        }
-
-    open suspend fun updateEvaluation(app: UploadEvaluationHeader, id: Int): Result<Unit> =
-        runCatching {
-            evaluationsApi.updateEvaluation(app, id)
             Unit
         }
 
