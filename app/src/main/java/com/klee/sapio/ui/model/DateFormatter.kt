@@ -2,7 +2,23 @@ package com.klee.sapio.ui.model
 
 import android.content.res.Resources
 import com.klee.sapio.R
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
+private const val ISO_DATE_PATTERN = "yyyy-MM-dd"
+
+fun absoluteDate(date: Date?): String {
+    if (date == null) {
+        return ""
+    }
+
+    val format = SimpleDateFormat(ISO_DATE_PATTERN, Locale.ROOT)
+    format.timeZone = TimeZone.getTimeZone("UTC")
+
+    return format.format(date)
+}
 
 fun relativeDate(date: Date?, resources: Resources): String {
     if (date == null) {

@@ -52,6 +52,7 @@ import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.model.EvaluationHistory
 import com.klee.sapio.ui.model.Rating
+import com.klee.sapio.ui.model.absoluteDate
 import com.klee.sapio.ui.model.relativeDate
 import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
@@ -388,7 +389,7 @@ const val COMPRESSION_QUALITY = 100
                 rating = evaluation.rating,
                 label = getRatingShortLabel(evaluation.rating),
                 version = evaluation.versionName,
-                date = relativeDate(evaluation.updatedAt, resources),
+                date = absoluteDate(evaluation.updatedAt),
                 brokenFeatures = brokenFeatureLabels(evaluation)
             )
         }
