@@ -175,7 +175,11 @@ class EvaluationServiceTest {
         val eval = StrapiElement(10, createEvaluation("B", "pkgB"))
         val answer = StrapiAnswer(arrayListOf(eval), StrapiMeta(null))
         val api = object : EvaluationApi by failingApi() {
-            override suspend fun existingEvaluationsAsync(packageName: String): StrapiAnswer = answer
+            override suspend fun existingEvaluationsAsync(
+                packageName: String,
+                pageNumber: Int,
+                pageSize: Int
+            ): StrapiAnswer = answer
         }
         setApi(api)
 
@@ -341,7 +345,8 @@ class EvaluationServiceTest {
             throw NotImplementedError()
         override suspend fun searchAsync(name: String, packageName: String, rooted: Int) =
             throw NotImplementedError()
-        override suspend fun existingEvaluationsAsync(packageName: String) = throw NotImplementedError()
+        override suspend fun existingEvaluationsAsync(packageName: String, pageNumber: Int, pageSize: Int) =
+            throw NotImplementedError()
         override suspend fun addEvaluation(evaluation: UploadEvaluationHeader) = throw NotImplementedError()
         override suspend fun updateEvaluation(evaluation: UploadEvaluationHeader, id: Int) = throw NotImplementedError()
         override suspend fun addIcon(image: okhttp3.MultipartBody.Part) = throw NotImplementedError()

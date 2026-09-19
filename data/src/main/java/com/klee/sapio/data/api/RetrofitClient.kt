@@ -52,9 +52,11 @@ interface EvaluationApi {
         @Query("filters[\$and][2][rooted][\$lte]") rooted: Int
     ): StrapiAnswer
 
-    @GET("sapio-applications?")
+    @GET("sapio-applications?sort=updatedAt:Desc")
     suspend fun existingEvaluationsAsync(
-        @Query("filters[packageName][\$eq]") packageName: String
+        @Query("filters[packageName][\$eq]") packageName: String,
+        @Query("pagination[page]") pageNumber: Int,
+        @Query("pagination[pageSize]") pageSize: Int
     ): StrapiAnswer
 
     @Headers("Content-Type: application/json")
@@ -98,6 +100,7 @@ open class EvaluationService @Inject constructor(
         const val COMPRESSION_QUALITY = 100
         const val UPLOAD_TIMEOUT_MS: Long = 10000
         const val CACHE_MAX_SIZE = 10 * 1024 * 1024L
+        const val EVALUATION_PAGE_SIZE = 100
     }
 
     @Inject
@@ -156,8 +159,21 @@ open class EvaluationService @Inject constructor(
 
     open suspend fun existingEvaluations(packageName: String): Result<List<StrapiElement>> =
         runCatching {
-            val strapiAnswer = evaluationsApi.existingEvaluationsAsync(packageName)
-            strapiAnswer.data.toList()
+            val elements = mutableListOf<StrapiElement>()
+            var page = 1
+
+            while (true) {
+                val answer = evaluationsApi.existingEvaluationsAsync(packageName, page, EVALUATION_PAGE_SIZE)
+                elements.addAll(answer.data)
+
+                if (answer.data.size < EVALUATION_PAGE_SIZE) {
+                    break
+                }
+
+                page++
+            }
+
+            elements.toList()
         }
 
     open suspend fun addEvaluation(app: UploadEvaluationHeader): Result<Unit> =
