@@ -95,6 +95,24 @@ class EvaluationRepositoryImpl @Inject constructor(
             .map { evaluations -> evaluations.map { it.toDomain() } }
     }
 
+    override suspend fun fetchEvaluationHistory(packageName: String): Result<List<DomainEvaluation>> {
+        val remote = retrofitService.existingEvaluations(packageName)
+        if (remote.isSuccess) {
+            val evaluations = remote.getOrThrow().map { it.attributes }
+            val now = System.currentTimeMillis()
+            evaluationDao.upsertAll(evaluations.map { it.toEntity(now) })
+            return Result.success(evaluations.map { it.toDomain() })
+        }
+
+        val cached = evaluationDao.getEvaluationHistory(packageName)
+            .map { it.toDomain() }
+        return if (cached.isNotEmpty()) {
+            Result.success(cached)
+        } else {
+            Result.failure(remote.exceptionOrNull() ?: IllegalStateException("Failed to load evaluation history"))
+        }
+    }
+
     override suspend fun uploadIcon(packageName: String): Result<List<DomainIcon>> {
         val remote = retrofitService.uploadIcon(packageName)
         if (remote.isSuccess) {
@@ -210,6 +228,7 @@ private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = Evaluatio
     rating = rating,
     microg = microg,
     secure = secure,
+    updatedAtMillis = updatedAt?.time ?: 0L,
     updatedAt = updatedAt,
     createdAt = createdAt,
     publishedAt = publishedAt,

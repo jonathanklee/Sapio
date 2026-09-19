@@ -121,6 +121,7 @@ class LoadingViewModelTest {
             override suspend fun updateEvaluation(evaluation: com.klee.sapio.domain.model.UploadEvaluation, id: Int) = Result.success(Unit)
             override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int) = Result.success(null)
             override suspend fun existingEvaluations(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.EvaluationRecord>())
+            override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
             override suspend fun uploadIcon(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Icon>())
             override suspend fun existingIcon(iconName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Icon>())
             override suspend fun deleteIcon(id: Int) = Result.success(Unit)

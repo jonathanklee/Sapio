@@ -6,9 +6,11 @@ import com.klee.sapio.data.system.Settings
 import com.klee.sapio.domain.model.GmsType
 import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.domain.EvaluationRepository
-import com.klee.sapio.domain.FetchAppEvaluationUseCase
+import com.klee.sapio.domain.FetchEvaluationHistoryUseCase
 import com.klee.sapio.domain.FetchIconUrlUseCase
+import com.klee.sapio.domain.model.Environment
 import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.EvaluationHistory
 import com.klee.sapio.domain.model.EvaluationRecord
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.InstalledApplication
@@ -64,8 +66,8 @@ class AppEvaluationsViewModelTest {
         vm.onIconDisplayed()
 
         val state = vm.uiState.value
-        assertEquals("microg-secure", state.microgUser?.name)
-        assertEquals("bare-secure", state.bareAospUser?.name)
+        assertEquals("microg-secure", state.microgUser?.current?.name)
+        assertEquals("bare-secure", state.bareAospUser?.current?.name)
         assertNull(state.microgRoot)
         assertNull(state.bareAospRoot)
         assertEquals("https://icon", state.iconUrl)
@@ -82,8 +84,8 @@ class AppEvaluationsViewModelTest {
         vm.onIconDisplayed()
 
         val state = vm.uiState.value
-        assertEquals("microg-unsafe", state.microgRoot?.name)
-        assertEquals("bare-unsafe", state.bareAospRoot?.name)
+        assertEquals("microg-unsafe", state.microgRoot?.current?.name)
+        assertEquals("bare-unsafe", state.bareAospRoot?.current?.name)
         assertTrue(state.isFullyLoaded)
         assertEquals(0, state.pendingCount)
     }
@@ -123,6 +125,7 @@ class AppEvaluationsViewModelTest {
                 Result.success(null)
             override suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>> =
                 Result.success(emptyList())
+            override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
             override suspend fun uploadIcon(packageName: String): Result<List<Icon>> =
                 Result.success(emptyList())
             override suspend fun existingIcon(iconName: String): Result<List<Icon>> =
@@ -130,16 +133,20 @@ class AppEvaluationsViewModelTest {
             override suspend fun deleteIcon(id: Int): Result<Unit> = Result.success(Unit)
         }
 
-        val fetchEvaluationUseCase = object : FetchAppEvaluationUseCase(mockRepository) {
-            override suspend fun invoke(packageName: String, gmsType: Int, userType: Int): Result<Evaluation?> {
-                if (returnNullEvals) return Result.success(null)
-                val name = when {
-                    gmsType == GmsType.MICROG && userType == UserType.STANDARD -> "microg-secure"
-                    gmsType == GmsType.MICROG && userType == UserType.PERMISSIVE -> "microg-unsafe"
-                    gmsType == GmsType.BARE_AOSP && userType == UserType.STANDARD -> "bare-secure"
-                    else -> "bare-unsafe"
-                }
-                return Result.success(eval(name, packageName))
+        val fetchHistoryUseCase = object : FetchEvaluationHistoryUseCase(mockRepository) {
+            override suspend fun invoke(packageName: String): Result<Map<Environment, EvaluationHistory>> {
+                if (returnNullEvals) return Result.success(emptyMap())
+
+                val named = mapOf(
+                    Environment(GmsType.MICROG, UserType.STANDARD) to "microg-secure",
+                    Environment(GmsType.MICROG, UserType.PERMISSIVE) to "microg-unsafe",
+                    Environment(GmsType.BARE_AOSP, UserType.STANDARD) to "bare-secure",
+                    Environment(GmsType.BARE_AOSP, UserType.PERMISSIVE) to "bare-unsafe"
+                )
+
+                return Result.success(
+                    named.mapValues { (_, name) -> EvaluationHistory(listOf(eval(name, packageName))) }
+                )
             }
         }
         val iconUrlUseCase = object : FetchIconUrlUseCase(mockRepository) {
@@ -150,7 +157,7 @@ class AppEvaluationsViewModelTest {
         }
 
         return AppEvaluationsViewModel(
-            fetchEvaluationUseCase,
+            fetchHistoryUseCase,
             iconUrlUseCase,
             settingsObj
         ).apply {

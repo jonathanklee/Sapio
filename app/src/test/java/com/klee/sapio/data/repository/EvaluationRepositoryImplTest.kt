@@ -100,6 +100,7 @@ class EvaluationRepositoryImplTest {
                 rating = cached.rating,
                 microg = cached.microg,
                 secure = cached.secure,
+                updatedAtMillis = cached.updatedAt?.time ?: 0L,
                 updatedAt = cached.updatedAt,
                 createdAt = cached.createdAt,
                 publishedAt = cached.publishedAt,

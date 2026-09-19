@@ -15,6 +15,7 @@
     <string name="dont_work">Het werkt helemaal niet of crasht.</string>
     <string name="upload_error">Fout bij het beoordelen van de app</string>
     <string name="broken_features_label">Welke functies werken niet?</string>
+    <string name="history_title">Beoordelingsgeschiedenis</string>
     <string name="broken_features_not_working">Werkt niet</string>
     <string name="broken_feature_notifications">Meldingen</string>
     <string name="broken_feature_in_app_purchase">In-app aankopen</string>

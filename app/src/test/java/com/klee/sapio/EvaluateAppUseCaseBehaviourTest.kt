@@ -91,6 +91,7 @@ class EvaluateAppUseCaseBehaviourTest {
             Result.success(null)
         override suspend fun existingEvaluations(packageName: String): Result<List<com.klee.sapio.domain.model.EvaluationRecord>> =
             Result.success(emptyList())
+        override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
         override suspend fun uploadIcon(packageName: String): Result<List<Icon>> =
             Result.success(uploadResponse ?: emptyList())
         override suspend fun existingIcon(iconName: String): Result<List<Icon>> =

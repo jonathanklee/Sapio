@@ -1,12 +1,12 @@
 package com.klee.sapio.ui.state
 
-import com.klee.sapio.domain.model.Evaluation
+import com.klee.sapio.domain.model.EvaluationHistory
 
 data class AppEvaluationsUiState(
-    val microgUser: Evaluation? = null,
-    val microgRoot: Evaluation? = null,
-    val bareAospUser: Evaluation? = null,
-    val bareAospRoot: Evaluation? = null,
+    val microgUser: EvaluationHistory? = null,
+    val microgRoot: EvaluationHistory? = null,
+    val bareAospUser: EvaluationHistory? = null,
+    val bareAospRoot: EvaluationHistory? = null,
     val iconUrl: String? = null,
     val pendingCount: Int = 0,
     val evaluationsLoaded: Boolean = false,

@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Images.Media
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,11 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
@@ -40,11 +44,13 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import android.content.res.ColorStateList
 import androidx.core.content.ContextCompat
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.ChipGroup
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
+import com.klee.sapio.domain.model.EvaluationHistory
 import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.model.relativeDate
 import com.klee.sapio.ui.model.SharedEvaluation
@@ -208,6 +214,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgUserVersion,
                         mBinding.microgUserDate,
                         mBinding.microgUserBrokenFeatures,
+                        mBinding.microgUserHistory,
                         state.microgUser
                     )
                     renderChip(
@@ -217,6 +224,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospUserVersion,
                         mBinding.bareAospUserDate,
                         mBinding.bareAospUserBrokenFeatures,
+                        mBinding.bareAospUserHistory,
                         state.bareAospUser
                     )
                     renderChip(
@@ -226,6 +234,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.microgRootVersion,
                         mBinding.microgRootDate,
                         mBinding.microgRootBrokenFeatures,
+                        mBinding.microgRootHistory,
                         state.microgRoot
                     )
                     renderChip(
@@ -235,6 +244,7 @@ const val COMPRESSION_QUALITY = 100
                         mBinding.bareAospRootVersion,
                         mBinding.bareAospRootDate,
                         mBinding.bareAospRootBrokenFeatures,
+                        mBinding.bareAospRootHistory,
                         state.bareAospRoot
                     )
 
@@ -304,8 +314,13 @@ const val COMPRESSION_QUALITY = 100
         versionTextView: TextView,
         dateTextView: TextView,
         brokenFeaturesChipGroup: ChipGroup,
-        evaluation: com.klee.sapio.domain.model.Evaluation?
+        historyChart: ComposeView,
+        history: EvaluationHistory?
     ) {
+        renderHistoryChart(historyChart, history)
+
+        val evaluation = history?.current
+
         if (evaluation != null) {
             iconView.setImageResource(Rating.create(evaluation.rating).drawable)
             iconView.isVisible = true
@@ -327,6 +342,64 @@ const val COMPRESSION_QUALITY = 100
             dateTextView.text = ""
             (brokenFeaturesChipGroup.parent as? ViewGroup)?.isVisible = false
         }
+    }
+
+    private fun renderHistoryChart(chartView: ComposeView, history: EvaluationHistory?) {
+        if (history == null || !history.hasTrend) {
+            chartView.isVisible = false
+            chartView.setOnClickListener(null)
+            chartView.disposeComposition()
+            return
+        }
+
+        chartView.isVisible = true
+        chartView.setContent {
+            EvaluationHistoryChart(history.evaluations.map { it.rating }, Modifier.fillMaxSize())
+        }
+        chartView.setOnClickListener { showHistorySheet(history) }
+    }
+
+    private fun showHistorySheet(history: EvaluationHistory) {
+        val rows = history.evaluations.reversed().map { evaluation ->
+            EvaluationHistoryRow(
+                rating = evaluation.rating,
+                label = getRatingShortLabel(evaluation.rating),
+                version = evaluation.versionName,
+                date = relativeDate(evaluation.updatedAt, resources),
+                brokenFeatures = brokenFeatureLabels(evaluation)
+            )
+        }
+
+        val content = ComposeView(requireContext()).apply {
+            setContent {
+                EvaluationHistorySheet(
+                    title = getString(R.string.history_title),
+                    rows = rows,
+                    textColor = themeColor(android.R.attr.textColorPrimary),
+                    secondaryTextColor = themeColor(android.R.attr.textColorSecondary)
+                )
+            }
+        }
+
+        BottomSheetDialog(requireContext()).apply {
+            setContentView(content)
+            show()
+        }
+    }
+
+    private fun themeColor(attribute: Int): ComposeColor {
+        val value = TypedValue()
+        requireContext().theme.resolveAttribute(attribute, value, true)
+
+        return ComposeColor(ContextCompat.getColor(requireContext(), value.resourceId))
+    }
+
+    private fun brokenFeatureLabels(evaluation: com.klee.sapio.domain.model.Evaluation): List<String> {
+        if (evaluation.rating != Rating.AVERAGE) {
+            return emptyList()
+        }
+
+        return evaluation.brokenFeatures.orEmpty().mapNotNull { brokenFeatureLabelForKey(it) }
     }
 
     private fun renderBrokenFeatures(
@@ -393,10 +466,10 @@ const val COMPRESSION_QUALITY = 100
                 appName,
                 packageName,
                 icon,
-                state.microgUser?.rating ?: 0,
-                state.bareAospUser?.rating ?: 0,
-                state.microgUser?.brokenFeatures,
-                state.bareAospUser?.brokenFeatures,
+                state.microgUser?.current?.rating ?: 0,
+                state.bareAospUser?.current?.rating ?: 0,
+                state.microgUser?.current?.brokenFeatures,
+                state.bareAospUser?.current?.brokenFeatures,
             )
             share(takeScreenshot(sharedEvaluation), sharedEvaluation)
         }

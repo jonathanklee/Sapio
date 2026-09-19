@@ -20,6 +20,7 @@
     <string name="works_partially">It works partially. Some features do not work.</string>
     <string name="dont_work">It does not work at all or crashes.</string>
     <string name="broken_features_label">Which features don\'t work?</string>
+    <string name="history_title">Evaluation history</string>
     <string name="broken_features_not_working">Doesn\'t work</string>
     <string name="broken_feature_notifications">Notifications</string>
     <string name="broken_feature_in_app_purchase">In-app purchases</string>

@@ -154,6 +154,7 @@ class EvaluateAppUseCaseTest {
         override suspend fun updateEvaluation(evaluation: UploadEvaluation, id: Int) = Result.success(Unit)
         override suspend fun fetchEvaluation(appPackageName: String, gmsType: Int, userType: Int) = Result.success(null)
         override suspend fun existingEvaluations(packageName: String) = Result.success(emptyList<EvaluationRecord>())
+        override suspend fun fetchEvaluationHistory(packageName: String) = Result.success(emptyList<com.klee.sapio.domain.model.Evaluation>())
     }
 
     private class FakeDeviceInfo(

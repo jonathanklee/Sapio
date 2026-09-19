@@ -11,6 +11,12 @@ interface EvaluationDao {
     @Query(
         """
         SELECT * FROM EvaluationEntity
+        WHERE updatedAtMillis = (
+            SELECT MAX(newest.updatedAtMillis) FROM EvaluationEntity AS newest
+            WHERE newest.packageName = EvaluationEntity.packageName
+                AND newest.microg = EvaluationEntity.microg
+                AND newest.secure = EvaluationEntity.secure
+        )
         ORDER BY updatedAt DESC
         LIMIT :limit OFFSET :offset
         """
@@ -24,6 +30,12 @@ interface EvaluationDao {
         """
         SELECT * FROM EvaluationEntity
         WHERE (name LIKE :pattern OR packageName LIKE :pattern)
+            AND updatedAtMillis = (
+                SELECT MAX(newest.updatedAtMillis) FROM EvaluationEntity AS newest
+                WHERE newest.packageName = EvaluationEntity.packageName
+                    AND newest.microg = EvaluationEntity.microg
+                    AND newest.secure = EvaluationEntity.secure
+            )
         ORDER BY name
         """
     )
@@ -33,6 +45,7 @@ interface EvaluationDao {
         """
         SELECT * FROM EvaluationEntity
         WHERE packageName = :packageName AND microg = :microg AND secure = :secure
+        ORDER BY updatedAtMillis DESC
         LIMIT 1
         """
     )
@@ -41,6 +54,15 @@ interface EvaluationDao {
         microg: Int,
         secure: Int
     ): EvaluationEntity?
+
+    @Query(
+        """
+        SELECT * FROM EvaluationEntity
+        WHERE packageName = :packageName
+        ORDER BY updatedAtMillis ASC
+        """
+    )
+    suspend fun getEvaluationHistory(packageName: String): List<EvaluationEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(items: List<EvaluationEntity>)

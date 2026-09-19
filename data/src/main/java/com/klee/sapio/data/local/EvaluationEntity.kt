@@ -3,7 +3,7 @@ package com.klee.sapio.data.local
 import androidx.room.Entity
 import java.util.Date
 
-@Entity(primaryKeys = ["packageName", "microg", "secure"])
+@Entity(primaryKeys = ["packageName", "microg", "secure", "updatedAtMillis"])
 data class EvaluationEntity(
     val name: String,
     val packageName: String,
@@ -11,6 +11,7 @@ data class EvaluationEntity(
     val rating: Int,
     val microg: Int,
     val secure: Int,
+    val updatedAtMillis: Long,
     val updatedAt: Date?,
     val createdAt: Date?,
     val publishedAt: Date?,

@@ -400,7 +400,7 @@ class EvaluationRepositoryImplTest {
     ) = EvaluationEntity(
         name = name, packageName = packageName, iconUrl = null,
         rating = 1, microg = microg, secure = secure,
-        updatedAt = null, createdAt = null, publishedAt = null,
+        updatedAtMillis = 0L, updatedAt = null, createdAt = null, publishedAt = null,
         versionName = null, cachedAt = 0L, brokenFeatures = null
     )
 
@@ -445,11 +445,13 @@ class EvaluationRepositoryImplTest {
         var listResult: List<EvaluationEntity> = emptyList()
         var searchResult: List<EvaluationEntity> = emptyList()
         var getEvaluationResult: EvaluationEntity? = null
+        var historyResult: List<EvaluationEntity> = emptyList()
         val upsertedItems = mutableListOf<EvaluationEntity>()
 
         override suspend fun listLatestEvaluations(limit: Int, offset: Int) = listResult
         override suspend fun searchEvaluations(pattern: String) = searchResult
         override suspend fun getEvaluation(packageName: String, microg: Int, secure: Int) = getEvaluationResult
+        override suspend fun getEvaluationHistory(packageName: String) = historyResult
         override suspend fun upsertAll(items: List<EvaluationEntity>) { upsertedItems.addAll(items) }
     }
 

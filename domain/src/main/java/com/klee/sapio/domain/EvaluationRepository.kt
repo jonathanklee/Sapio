@@ -19,6 +19,8 @@ interface EvaluationRepository {
 
     suspend fun existingEvaluations(packageName: String): Result<List<EvaluationRecord>>
 
+    suspend fun fetchEvaluationHistory(packageName: String): Result<List<Evaluation>>
+
     suspend fun uploadIcon(packageName: String): Result<List<Icon>>
 
     suspend fun existingIcon(iconName: String): Result<List<Icon>>

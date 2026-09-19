@@ -10,3 +10,5 @@ object UserType {
     const val STANDARD = 3
     const val PERMISSIVE = 4
 }
+
+data class Environment(val gmsType: Int, val userType: Int)
