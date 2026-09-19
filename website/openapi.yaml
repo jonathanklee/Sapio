@@ -1,0 +1,359 @@
+openapi: 3.0.3
+
+info:
+  title: Sapio Public API
+  version: "1.0.0"
+  description: |
+    Compatibility of Android applications running on devices without Google Play
+    Services, that is deGoogled bare AOSP devices, coupled or not with microG.
+
+    Evaluations are contributed by the community through the Sapio Android app.
+    One evaluation is one application measured in one environment, and an
+    application keeps every evaluation it ever received, so the endpoint below
+    returns a history rather than a single verdict per application.
+
+    Reading needs no account, no key and no token. Pagination, filtering and
+    sorting follow the Strapi v4 REST conventions:
+    https://docs.strapi.io/dev-docs/api/rest
+
+    ## Field encodings
+
+    Three attributes are integers. They mean:
+
+    | Field | Values |
+    |-------|--------|
+    | `rating` | `1` Perfect · `2` Partial · `3` Unusable |
+    | `microg` | `1` microG installed · `2` bare AOSP |
+    | `rooted` | `3` standard · `4` permissive (unlocked bootloader or rooted) |
+
+    `brokenFeatures` is only meaningful when `rating` is `2`, and holds any of
+    `notifications`, `in_app_purchase`, `login`, `maps`, `location`,
+    `payments`, `cast`, `augmented_reality`.
+  license:
+    name: GPL-3.0-only
+    url: https://github.com/jonathanklee/Sapio/blob/main/LICENSE
+  contact:
+    name: Sapio on GitHub
+    url: https://github.com/jonathanklee/Sapio
+
+servers:
+  - url: https://server.checksap.io/api
+    description: Production
+
+security: []
+
+tags:
+  - name: Evaluations
+    description: Compatibility evaluations contributed by the community.
+  - name: Icons
+    description: Application icons served as uploaded media.
+
+paths:
+  /sapio-applications:
+    get:
+      tags: [Evaluations]
+      summary: List and search evaluations
+      description: |
+        Returns evaluations newest first when sorted on `updatedAt`. An
+        application appears once per evaluation it received, so filtering on
+        `packageName` yields its whole history across every environment.
+      operationId: listEvaluations
+      parameters:
+        - name: pagination[page]
+          in: query
+          description: 1-based page number.
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: pagination[pageSize]
+          in: query
+          description: Rows per page. The server caps this at 100.
+          schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+        - name: sort
+          in: query
+          description: Field and direction, for instance `updatedAt:Desc` or `name`.
+          schema: { type: string, example: "updatedAt:Desc" }
+        - name: populate[icon]
+          in: query
+          description: |
+            Include the icon relation. Pass `*` for the whole media object, or
+            `populate[icon][fields][0]=url` for the URL alone.
+          schema: { type: string, example: "*" }
+        - name: filters[packageName][$eq]
+          in: query
+          description: Every evaluation of one application.
+          schema: { type: string, example: "com.whatsapp" }
+        - name: filters[packageName][$in]
+          in: query
+          description: |
+            Several applications at once, repeated with an index:
+            `filters[packageName][$in][0]=com.whatsapp&filters[packageName][$in][1]=net.daylio`.
+          schema: { type: array, items: { type: string } }
+          style: deepObject
+        - name: filters[name][$contains]
+          in: query
+          description: Case-insensitive substring match on the application name.
+          schema: { type: string, example: "netflix" }
+        - name: filters[rating][$eq]
+          in: query
+          description: Keep one rating only.
+          schema: { $ref: "#/components/schemas/Rating" }
+        - name: filters[microg][$eq]
+          in: query
+          description: Keep one Google Play Services replacement only.
+          schema: { $ref: "#/components/schemas/Microg" }
+        - name: filters[rooted][$eq]
+          in: query
+          description: Keep one device configuration only.
+          schema: { $ref: "#/components/schemas/Rooted" }
+      responses:
+        "200":
+          description: A page of evaluations.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EvaluationList" }
+              examples:
+                oneApplication:
+                  summary: Every evaluation of one application
+                  value:
+                    data:
+                      - id: 7421
+                        attributes:
+                          name: WhatsApp
+                          packageName: com.whatsapp
+                          versionName: 2.26.30.97
+                          microg: 2
+                          rooted: 3
+                          rating: 2
+                          brokenFeatures: [notifications, location]
+                          createdAt: "2026-08-10T16:59:37.189Z"
+                          updatedAt: "2026-08-10T16:59:37.189Z"
+                    meta:
+                      pagination: { page: 1, pageSize: 25, pageCount: 1, total: 1 }
+        "500":
+          description: |
+            Malformed query: an unknown field, an unknown filter operator, a
+            non-numeric `pageSize` or an unknown sort field all land here. The
+            server answers 500 rather than 400 for these, so treat a 500 as a
+            bad request before assuming the service is down.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /upload/files:
+    get:
+      tags: [Icons]
+      summary: Find an application icon
+      description: |
+        Icons are stored as media named `<packageName>.png`. The `url` returned
+        is relative to the server root (`https://server.checksap.io`), not to
+        this API base path.
+
+        This endpoint answers with a bare array, not with the `data`/`meta`
+        envelope the evaluations endpoint uses.
+      operationId: findIcon
+      parameters:
+        - name: filters[name][$eq]
+          in: query
+          description: Media file name, which is the package name suffixed with `.png`.
+          schema: { type: string, example: "com.openai.chatgpt.png" }
+        - name: sort
+          in: query
+          schema: { type: string, example: "updatedAt" }
+      responses:
+        "200":
+          description: Matching media, empty when the application has no icon.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/UploadFile" }
+        "500":
+          description: |
+            Malformed query: an unknown field, an unknown filter operator, a
+            non-numeric `pageSize` or an unknown sort field all land here. The
+            server answers 500 rather than 400 for these, so treat a 500 as a
+            bad request before assuming the service is down.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+components:
+  schemas:
+    Rating:
+      type: integer
+      description: |
+        How well the application works without Google Play Services.
+          * `1` Perfect, works fully
+          * `2` Partial, at least one feature is broken (see `brokenFeatures`)
+          * `3` Unusable, does not work at all or crashes
+      enum: [1, 2, 3]
+      example: 1
+
+    Microg:
+      type: integer
+      description: |
+        What stands in for Google Play Services on the evaluated device.
+          * `1` microG is installed
+          * `2` bare AOSP, nothing installed
+      enum: [1, 2]
+      example: 1
+
+    Rooted:
+      type: integer
+      description: |
+        How locked down the evaluated device is.
+          * `3` standard
+          * `4` permissive, unlocked bootloader or rooted
+      enum: [3, 4]
+      example: 3
+
+    BrokenFeature:
+      type: string
+      description: A feature that does not work. Only meaningful when `rating` is `2`.
+      enum:
+        - notifications
+        - in_app_purchase
+        - login
+        - maps
+        - location
+        - payments
+        - cast
+        - augmented_reality
+
+    Evaluation:
+      type: object
+      description: One application measured once in one environment.
+      properties:
+        name:
+          type: string
+          description: Application name as it was submitted.
+          example: WhatsApp
+        packageName:
+          type: string
+          description: Android package name, the stable identifier.
+          example: com.whatsapp
+        versionName:
+          type: string
+          nullable: true
+          description: |
+            Version evaluated. Null on most rows, since it was only recorded
+            from a later version of the Sapio app onwards.
+          example: 2.26.30.97
+        microg: { $ref: "#/components/schemas/Microg" }
+        rooted: { $ref: "#/components/schemas/Rooted" }
+        rating: { $ref: "#/components/schemas/Rating" }
+        brokenFeatures:
+          type: array
+          nullable: true
+          description: Null or empty unless `rating` is `2`.
+          items: { $ref: "#/components/schemas/BrokenFeature" }
+        createdAt:
+          type: string
+          format: date-time
+          description: When the evaluation was first submitted.
+        updatedAt:
+          type: string
+          format: date-time
+          description: |
+            When the evaluation last changed. This is the field to sort and to
+            order a history on.
+        icon:
+          $ref: "#/components/schemas/IconRelation"
+      required: [name, packageName, microg, rooted, rating, createdAt, updatedAt]
+
+    EvaluationEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identifier of this evaluation, not of the application.
+          example: 7421
+        attributes: { $ref: "#/components/schemas/Evaluation" }
+      required: [id, attributes]
+
+    EvaluationList:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/EvaluationEntry" }
+        meta:
+          type: object
+          properties:
+            pagination: { $ref: "#/components/schemas/Pagination" }
+      required: [data, meta]
+
+    Pagination:
+      type: object
+      properties:
+        page: { type: integer, example: 1 }
+        pageSize: { type: integer, example: 25 }
+        pageCount: { type: integer, example: 262 }
+        total: { type: integer, example: 6532 }
+
+    IconRelation:
+      type: object
+      description: Present only when the request asked for `populate[icon]`.
+      properties:
+        data:
+          type: object
+          nullable: true
+          description: Null when the application has no icon.
+          properties:
+            id: { type: integer }
+            attributes: { $ref: "#/components/schemas/UploadFile" }
+
+    UploadFile:
+      type: object
+      description: An uploaded media file.
+      properties:
+        id: { type: integer, example: 7108 }
+        name: { type: string, example: com.openai.chatgpt.png }
+        url:
+          type: string
+          description: Path relative to `https://server.checksap.io`.
+          example: /uploads/com_openai_chatgpt_dbc48e307c.png
+        ext: { type: string, example: .png }
+        mime: { type: string, example: image/png }
+        width: { type: integer, nullable: true, example: 202 }
+        height: { type: integer, nullable: true, example: 202 }
+        size:
+          type: number
+          description: Size in kilobytes, as Strapi reports it.
+          example: 10.2
+        hash: { type: string }
+        alternativeText: { type: string, nullable: true }
+        caption: { type: string, nullable: true }
+        previewUrl: { type: string, nullable: true }
+        provider: { type: string, example: local }
+        formats:
+          type: object
+          nullable: true
+          description: Generated renditions keyed by name, typically `thumbnail`.
+          additionalProperties: { $ref: "#/components/schemas/UploadFormat" }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    UploadFormat:
+      type: object
+      properties:
+        name: { type: string }
+        url: { type: string }
+        ext: { type: string }
+        mime: { type: string }
+        width: { type: integer }
+        height: { type: integer }
+        size: { type: number }
+        hash: { type: string }
+
+    Error:
+      type: object
+      description: The error envelope Strapi answers with.
+      properties:
+        data: { type: object, nullable: true }
+        error:
+          type: object
+          properties:
+            status: { type: integer, example: 500 }
+            name: { type: string, example: InternalServerError }
+            message: { type: string, example: Internal Server Error }
+            details: { type: object }

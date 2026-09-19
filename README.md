@@ -41,60 +41,16 @@ Contributing takes no email, no account and no sign-up. Sapio has no way to ever
 
 **Base URL:** `https://server.checksap.io/api`
 
-Pagination, filtering and sorting follow the [Strapi v4 REST API](https://docs.strapi.io/dev-docs/api/rest) conventions.
+Read-only, no account, no key. Pagination, filtering and sorting follow the [Strapi v4 REST API](https://docs.strapi.io/dev-docs/api/rest) conventions.
 
-## Response attributes
+**Full reference:** **[checksap.io/api-docs](https://checksap.io/api-docs)** — every field, value and filter, generated from [openapi.yaml](https://checksap.io/openapi.yaml).
 
-| Field | Type | Values |
-|-------|------|--------|
-| `name` | string | App name |
-| `packageName` | string | Android package name |
-| `versionName` | string | App version evaluated |
-| `updatedAt` | string | ISO 8601 timestamp |
-| `microg` | integer | `1` = microG · `2` = bareAOSP |
-| `rooted` | integer | `3` = standard · `4` = permissive |
-| `rating` | integer | `1` = Perfect · `2` = Partial · `3` = Unusable |
-| `brokenFeatures` | string[] \| null | Non-working features: `notifications`, `in_app_purchase`, `login`, `maps`, `location`, `payments`, `cast`, `augmented_reality` |
-
-## Endpoints
-
-### List evaluations
-
-```
-GET /sapio-applications
-```
-
-**Example** — latest 100 evaluations sorted by most recent:
+**Example** — every evaluation of one app, newest first:
 
 ```sh
-curl "https://server.checksap.io/api/sapio-applications?pagination[pageSize]=100&sort=updatedAt:Desc"
+curl "https://server.checksap.io/api/sapio-applications?filters[packageName][$eq]=com.whatsapp&sort=updatedAt:Desc"
 ```
 
-### Search evaluations
-
-Use [Strapi filters](https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication#filtering) to narrow results by any attribute.
-
-```
-GET /sapio-applications
-```
-
-**Example** — search by app name:
-
-```sh
-curl "https://server.checksap.io/api/sapio-applications?filters[name][$eq]=ChatGPT"
-```
-
-### Get icons
-
-```
-GET /upload/files
-```
-
-**Example** — get the ChatGPT icon:
-
-```sh
-curl "https://server.checksap.io/api/upload/files?filters[name][$eq]=com.openai.chatgpt.png"
-```
 # ⚠️ Disclaimer
 
 Evaluations are community-contributed and may be inaccurate, incomplete, or device-specific. Sapio and its maintainers are not responsible for any issues arising from relying on these evaluations.

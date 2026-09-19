@@ -25,6 +25,7 @@ SOURCE_FILES="
     apple-touch-icon.png
     icon.png
     og-image.png
+    openapi.yaml
 "
 
 for f in $SOURCE_FILES; do
@@ -38,6 +39,12 @@ done
 # Self-hosted webfonts - a directory, so it needs its own copy step.
 ssh "$PI" "mkdir -p $WEB_DIR/fonts"
 scp -q "$WEBSITE_DIR"/fonts/*.woff2 "$PI:$WEB_DIR/fonts/"
+
+# API reference. Redoc is served from here rather than from a CDN, so the page
+# stays as free of third parties as the rest of the site.
+ssh "$PI" "mkdir -p $WEB_DIR/api-docs"
+scp -q "$WEBSITE_DIR"/api-docs/index.html "$WEBSITE_DIR"/api-docs/redoc.standalone.js \
+    "$WEBSITE_DIR"/api-docs/logo-mini.svg "$PI:$WEB_DIR/api-docs/"
 
 scp -q "$WEBSITE_DIR/tools/refresh.py" "$PI:~/Sapio/website/tools/refresh.py"
 scp -q "$WEBSITE_DIR/tools/i18n_extract.py" "$PI:~/Sapio/website/tools/i18n_extract.py"
