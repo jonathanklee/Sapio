@@ -105,6 +105,7 @@ function groupByPackage(evaluations) {
 
     for (const evaluation of evaluations) {
         const app = appBucketFor(appMap, evaluation);
+        adoptName(app, evaluation);
         adoptIcon(app, evaluation);
         collectEntry(app, evaluation);
     }
@@ -120,7 +121,8 @@ function groupByPackage(evaluations) {
 function appBucketFor(appMap, evaluation) {
     if (!appMap.has(evaluation.packageName)) {
         appMap.set(evaluation.packageName, {
-            name: evaluation.name,
+            name: null,
+            nameSource: null,
             packageName: evaluation.packageName,
             iconUrl: null,
             entriesByEnv: new Map(),
@@ -128,6 +130,32 @@ function appBucketFor(appMap, evaluation) {
     }
 
     return appMap.get(evaluation.packageName);
+}
+
+// A fork shipping under the package name of the app it forked (AyuGram under
+// org.telegram.messenger) otherwise gets to rename it, since search sorts by
+// name and the first row seen used to win. Settle it the way the Android app
+// does: an evaluation carrying an icon takes precedence, then the newest one.
+function adoptName(app, evaluation) {
+    if (namesTheApp(evaluation, app.nameSource)) {
+        app.name = evaluation.name;
+        app.nameSource = evaluation;
+    }
+}
+
+function namesTheApp(candidate, current) {
+    if (!current) {
+        return true;
+    }
+
+    const candidateHasIcon = Boolean(candidate.icon?.data);
+    const currentHasIcon = Boolean(current.icon?.data);
+
+    if (candidateHasIcon !== currentHasIcon) {
+        return candidateHasIcon;
+    }
+
+    return new Date(candidate.updatedAt) > new Date(current.updatedAt);
 }
 
 function adoptIcon(app, evaluation) {
