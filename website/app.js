@@ -97,7 +97,7 @@ async function renderResults(apps) {
     resultsError.hidden = true;
     setShowMore(false);
 
-    const cards = (await loadHistories(apps))
+    const cards = (await loadHistories(apps.filter(hasVisibleEvaluation)))
         .map(renderAppCard)
         .filter(card => card !== null);
 
@@ -152,10 +152,15 @@ function filterToLatestSection(app) {
     };
 }
 
+// An app evaluated only in a permissive environment has nothing left to show
+// once those cells are hidden, so it is dropped rather than drawn as an empty
+// card. The feed did this already; search was listing them blank.
+function hasVisibleEvaluation(app) {
+    return showPermissive || app.entries.some(entry => entry.rooted === STANDARD_ROOTED);
+}
+
 function renderableLatestApps() {
-    return latestApps.filter(app =>
-        showPermissive || app.entries.some(entry => entry.rooted === STANDARD_ROOTED)
-    );
+    return latestApps.filter(hasVisibleEvaluation);
 }
 
 async function ensureEnoughApps(needed) {
