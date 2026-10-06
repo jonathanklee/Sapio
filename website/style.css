@@ -232,10 +232,13 @@ body {
 .nav-links a:hover { color: var(--color-primary-text); }
 
 .nav-links a.nav-cta {
-    padding: var(--space-1) var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-05) var(--space-2);
     border: 1px solid var(--color-brand);
     border-radius: var(--radius-pill);
     color: var(--color-brand);
+    line-height: 1.6;
     white-space: nowrap;
 }
 
@@ -1224,11 +1227,20 @@ body {
 
     .nav-about { display: none; }
 
-    .nav-links { gap: var(--space-15); }
+    /* The bar is tight once the logo, the pill and five language buttons share
+       a phone width, and "Obtenir l'app" is wider than "Get the app". */
+    .nav { gap: var(--space-15); }
+
+    .nav-links { gap: var(--space-1); }
 
     .nav-links a.nav-cta {
-        padding: var(--space-05) var(--space-15);
-        font-size: var(--text-sm);
+        padding: var(--space-05) var(--space-1);
+        font-size: var(--text-xs);
+    }
+
+    .lang-btn {
+        padding: var(--space-05) 2px;
+        letter-spacing: 0;
     }
 
 }
