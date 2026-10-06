@@ -1,4 +1,4 @@
-import { t, format, relativeDate } from './i18n.js';
+import { t, format, relativeDate } from './i18n.js?v=20261006';
 
 const API_BASE = 'https://server.checksap.io/api';
 const MEDIA_BASE = 'https://server.checksap.io';

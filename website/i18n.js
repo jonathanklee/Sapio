@@ -145,11 +145,15 @@ function rememberLang(lang) {
     document.cookie = `lang=${lang};path=/;max-age=${LANG_COOKIE_MAX_AGE};samesite=lax`;
 }
 
-function t(key) {
+function translationFor(key) {
     const entry = TRANSLATIONS[key];
-    if (!entry) { return key; }
+    if (!entry) { return null; }
 
     return entry[currentLang] ?? entry.en;
+}
+
+function t(key) {
+    return translationFor(key) ?? key;
 }
 
 function format(key, replacements) {
@@ -186,12 +190,20 @@ function relativeDate(isoString) {
 function applyStaticTranslations(root = document) {
     document.documentElement.lang = currentLang;
 
+    // A stale cached copy of this file would otherwise replace correct
+    // server-rendered text with the raw key, so unknown keys are left alone.
     for (const el of root.querySelectorAll('[data-i18n]')) {
-        el.textContent = t(el.dataset.i18n);
+        const text = translationFor(el.dataset.i18n);
+        if (text !== null) {
+            el.textContent = text;
+        }
     }
 
     for (const el of root.querySelectorAll('[data-i18n-placeholder]')) {
-        el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder));
+        const text = translationFor(el.dataset.i18nPlaceholder);
+        if (text !== null) {
+            el.setAttribute('placeholder', text);
+        }
     }
 }
 

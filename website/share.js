@@ -1,5 +1,5 @@
-import { BROKEN_FEATURE_LABELS, STANDARD_ROOTED, entryFor } from './core.js';
-import { t } from './i18n.js';
+import { BROKEN_FEATURE_LABELS, STANDARD_ROOTED, entryFor } from './core.js?v=20261006';
+import { t } from './i18n.js?v=20261006';
 
 const SITE_ORIGIN = 'https://checksap.io';
 const CARD_SCALE = 3;

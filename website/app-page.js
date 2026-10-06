@@ -8,9 +8,9 @@ import {
     localizedSummary,
     renderCardHeader,
     renderSection,
-} from './core.js';
-import { enableShareButton, renderShareButton } from './share.js';
-import { setupI18n, t } from './i18n.js';
+} from './core.js?v=20261006';
+import { enableShareButton, renderShareButton } from './share.js?v=20261006';
+import { setupI18n, t } from './i18n.js?v=20261006';
 
 const SITE_ORIGIN = 'https://checksap.io';
 const SITE_ICON = `${SITE_ORIGIN}/icon.png`;

@@ -773,10 +773,15 @@ def write_home_pages(translations, apps, evaluations):
         page = page.replace("</head>", hreflang_block(home_url) + "\n</head>", 1)
         page = page.replace("<body>", f'<body data-lang="{lang}">', 1)
 
-        # Assets are referenced relatively, so prefixed pages need absolute paths.
+        # Assets are referenced relatively, so prefixed pages need absolute
+        # paths. The optional query keeps cache-busted URLs matching too.
         if lang != DEFAULT_LANG:
             for asset in ("style.css", "fonts.css", "app.js", "icon.png", "favicon.ico"):
-                page = page.replace(f'"{asset}"', f'"/{asset}"')
+                page = re.sub(
+                    rf'"{re.escape(asset)}(\?[^"]*)?"',
+                    lambda m: f'"/{asset}{m.group(1) or ""}"',
+                    page,
+                )
             out = WEB_DIR / lang / "index.html"
             out.parent.mkdir(parents=True, exist_ok=True)
         else:

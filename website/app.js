@@ -7,8 +7,8 @@ import {
     loadHistories,
     renderCardHeader,
     renderSection,
-} from './core.js';
-import { setupI18n, t, format, localizedPath } from './i18n.js';
+} from './core.js?v=20261006';
+import { setupI18n, t, format, localizedPath } from './i18n.js?v=20261006';
 
 const DEBOUNCE_MS = 300;
 const INITIAL_LATEST_COUNT = 3;
