@@ -5,6 +5,7 @@ const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const TRANSLATIONS = {
     // ─── Header / nav ─────────────────────────────────────────────────────────
     nav_about:        { en: 'About', fr: 'À propos', de: 'Über', it: 'Informazioni', es: 'Acerca de' },
+    nav_get_app:      { en: 'Get the app', fr: 'Obtenir l\'app', de: 'App holen', it: 'Scarica l\'app', es: 'Obtener la app' },
 
     // ─── Hero ─────────────────────────────────────────────────────────────────
     hero_eyebrow:     { en: 'Android apps that respect you!', fr: 'Des applications Android qui vous respectent !', de: 'Android-Apps, die dich respektieren!', it: 'App Android che ti rispettano!', es: '¡Apps de Android que te respetan!' },
@@ -49,10 +50,13 @@ const TRANSLATIONS = {
     feat_augmented_reality:{ en: 'Augmented reality', fr: 'Réalité augmentée', de: 'Augmented Reality', it: 'Realtà aumentata', es: 'Realidad aumentada' },
 
     // ─── Contribute ───────────────────────────────────────────────────────────
-    contribute_title: { en: 'Want to contribute?', fr: 'Envie de contribuer ?', de: 'Möchtest du beitragen?', it: 'Vuoi contribuire?', es: '¿Quieres contribuir?' },
-    contribute_text:  { en: 'Evaluations come from the community, through the app. Install Sapio on your deGoogled device to rate apps and share their compatibility with everyone.', fr: 'Les évaluations viennent de la communauté, via l\'application. Installez Sapio sur votre appareil dégooglisé pour évaluer les applications et partager leur compatibilité avec tous.', de: 'Die Bewertungen stammen von der Community, über die App. Installiere Sapio auf deinem entgoogelten Gerät, um Apps zu bewerten und ihre Kompatibilität mit allen zu teilen.', it: 'Le valutazioni provengono dalla community, tramite l\'app. Installa Sapio sul tuo dispositivo deGooglizzato per valutare le app e condividerne la compatibilità con tutti.', es: 'Las evaluaciones provienen de la comunidad, a través de la app. Instala Sapio en tu dispositivo desgooglizado para evaluar apps y compartir su compatibilidad con todos.' },
     contribute_fdroid:{ en: 'Get it on F-Droid', fr: 'Télécharger sur F-Droid', de: 'Bei F-Droid laden', it: 'Scarica su F-Droid', es: 'Consíguelo en F-Droid' },
     contribute_github:{ en: 'GitHub releases', fr: 'Versions GitHub', de: 'GitHub-Releases', it: 'Release GitHub', es: 'Versiones de GitHub' },
+    contribute_note:  { en: 'Evaluations come from the community, through the app. Rate apps yourself and share their compatibility with everyone.', fr: 'Les évaluations viennent de la communauté, via l\'application. Évaluez les applications vous-même et partagez leur compatibilité avec tous.', de: 'Die Bewertungen stammen von der Community, über die App. Bewerte Apps selbst und teile ihre Kompatibilität mit allen.', it: 'Le valutazioni provengono dalla community, tramite l\'app. Valuta le app e condividine la compatibilità con tutti.', es: 'Las evaluaciones provienen de la comunidad, a través de la app. Evalúa apps tú mismo y comparte su compatibilidad con todos.' },
+
+    // ─── Get the app ──────────────────────────────────────────────────────────
+    get_app_title:    { en: 'Evaluate your own apps', fr: 'Évaluez vos propres applications', de: 'Bewerte deine eigenen Apps', it: 'Valuta le tue app', es: 'Evalúa tus propias apps' },
+    get_app_text:     { en: 'Install Sapio on your deGoogled device to evaluate any app on your phone and see what works without Google Play Services.', fr: 'Installez Sapio sur votre appareil dégooglisé pour évaluer n\'importe quelle application de votre téléphone et voir ce qui fonctionne sans les services Google Play.', de: 'Installiere Sapio auf deinem entgoogelten Gerät, um jede App auf deinem Telefon zu bewerten und zu sehen, was ohne Google Play Services funktioniert.', it: 'Installa Sapio sul tuo dispositivo deGooglizzato per valutare qualsiasi app del tuo telefono e vedere cosa funziona senza Google Play Services.', es: 'Instala Sapio en tu dispositivo desgooglizado para evaluar cualquier app de tu teléfono y ver qué funciona sin los servicios de Google Play.' },
 
     // ─── About ────────────────────────────────────────────────────────────────
     about_title:      { en: 'What is Sapio?', fr: 'Qu\'est-ce que Sapio ?', de: 'Was ist Sapio?', it: 'Cos\'è Sapio?', es: '¿Qué es Sapio?' },
@@ -67,8 +71,9 @@ const TRANSLATIONS = {
     footer_col_explore:  { en: 'EXPLORE', fr: 'EXPLORER', de: 'ENTDECKEN', it: 'ESPLORA', es: 'EXPLORAR' },
     footer_browse:       { en: 'Browse apps', fr: 'Parcourir les apps', de: 'Apps durchsuchen', it: 'Sfoglia le app', es: 'Ver aplicaciones' },
     footer_api:          { en: 'Public API', fr: 'API publique', de: 'Öffentliche API', it: 'API pubblica', es: 'API pública' },
+    footer_col_install:  { en: 'INSTALL', fr: 'INSTALLER', de: 'INSTALLIEREN', it: 'INSTALLA', es: 'INSTALAR' },
     footer_col_contribute: { en: 'CONTRIBUTE', fr: 'CONTRIBUER', de: 'MITMACHEN', it: 'CONTRIBUISCI', es: 'CONTRIBUIR' },
-    footer_android_app:  { en: 'Android app', fr: 'App Android', de: 'Android-App', it: 'App Android', es: 'App Android' },
+    footer_evaluate:     { en: 'Evaluate an app', fr: 'Évaluer une app', de: 'App bewerten', it: 'Valuta un\'app', es: 'Evaluar una app' },
     footer_report:       { en: 'Report an issue', fr: 'Signaler un problème', de: 'Problem melden', it: 'Segnala un problema', es: 'Reportar un problema' },
     footer_col_about:    { en: 'ABOUT', fr: 'À PROPOS', de: 'ÜBER', it: 'INFO', es: 'ACERCA DE' },
     footer_what_is:      { en: 'What is Sapio?', fr: 'Qu\'est-ce que Sapio ?', de: 'Was ist Sapio?', it: 'Cos\'è Sapio?', es: '¿Qué es Sapio?' },
