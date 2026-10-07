@@ -28,7 +28,6 @@ class SuccessFragment : Fragment() {
         val appName = arguments?.getString("name").orEmpty()
 
         mBinding = FragmentSuccessBinding.inflate(inflater, container, false)
-        mBinding.emoji.text = "\uD83C\uDF89 \uD83E\uDD73"
         mBinding.shareEvaluation.setOnClickListener {
             (requireActivity() as MainActivity).navigateToEvaluations(
                 packageName,
