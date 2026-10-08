@@ -145,10 +145,6 @@ dependencies {
     kapt libs.hilt.compiler
     testImplementation libs.hilt.android.testing
 
-    implementation libs.androidx.emoji2
-    implementation libs.androidx.emoji2.views
-    implementation libs.androidx.emoji2.views.helper
-
     implementation libs.rootbeer.lib
 
     testImplementation libs.junit
