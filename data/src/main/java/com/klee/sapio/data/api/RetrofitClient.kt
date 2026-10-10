@@ -51,7 +51,7 @@ interface EvaluationApi {
         @Query("filters[\$and][2][rooted][\$lte]") rooted: Int
     ): StrapiAnswer
 
-    @GET("sapio-applications?sort=updatedAt:Desc")
+    @GET("sapio-applications?sort=updatedAt:Desc&populate[icon]=*")
     suspend fun existingEvaluationsAsync(
         @Query("filters[packageName][\$eq]") packageName: String,
         @Query("pagination[page]") pageNumber: Int,
@@ -66,7 +66,7 @@ interface EvaluationApi {
     @POST("upload")
     suspend fun addIcon(@Part image: MultipartBody.Part): ArrayList<IconAnswer>
 
-    @GET("upload/files?sort=updatedAt")
+    @GET("upload/files?sort=updatedAt:desc")
     suspend fun existingIconAsync(
         @Query("filters[name][\$eq]") iconName: String
     ): List<IconAnswer>

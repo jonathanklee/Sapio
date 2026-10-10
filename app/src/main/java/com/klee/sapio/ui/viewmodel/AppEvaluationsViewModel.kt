@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.FetchEvaluationHistoryUseCase
-import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.domain.model.Environment
 import com.klee.sapio.domain.model.EvaluationHistory
 import com.klee.sapio.domain.model.GmsType
@@ -23,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AppEvaluationsViewModel @Inject constructor(
     private val fetchEvaluationHistoryUseCase: FetchEvaluationHistoryUseCase,
-    private val fetchIconUrlUseCase: FetchIconUrlUseCase,
     private val settings: AppSettings
 ) : ViewModel() {
 
@@ -43,17 +41,9 @@ class AppEvaluationsViewModel @Inject constructor(
         loadingJob?.cancel()
         _uiState.value = AppEvaluationsUiState(pendingCount = PENDING_EVALUATIONS + PENDING_ICON)
 
-        loadingJob = viewModelScope.launch {
-            launch(ioDispatcher) {
-                _uiState.update {
-                    it.copy(iconUrl = fetchIconUrlUseCase(packageName).getOrDefault(""))
-                }
-            }
-
-            launch(ioDispatcher) {
-                val histories = fetchEvaluationHistoryUseCase(packageName)
-                _uiState.update { it.applyHistories(histories.getOrNull(), histories.isFailure) }
-            }
+        loadingJob = viewModelScope.launch(ioDispatcher) {
+            val histories = fetchEvaluationHistoryUseCase(packageName)
+            _uiState.update { it.applyHistories(histories.getOrNull(), histories.isFailure) }
         }
     }
 
@@ -65,10 +55,20 @@ class AppEvaluationsViewModel @Inject constructor(
         microgRoot = permissiveOrNull(histories, GmsType.MICROG),
         bareAospUser = histories?.get(Environment(GmsType.BARE_AOSP, UserType.STANDARD)),
         bareAospRoot = permissiveOrNull(histories, GmsType.BARE_AOSP),
+        iconUrl = latestIconUrl(histories),
         pendingCount = pendingCount - PENDING_EVALUATIONS,
         evaluationsLoaded = true,
         hasError = hasError
     )
+
+    private fun latestIconUrl(histories: Map<Environment, EvaluationHistory>?): String {
+        return histories?.values
+            ?.flatMap { history -> history.evaluations }
+            ?.filterNot { evaluation -> evaluation.iconUrl.isNullOrEmpty() }
+            ?.maxByOrNull { evaluation -> evaluation.updatedAt?.time ?: 0L }
+            ?.iconUrl
+            .orEmpty()
+    }
 
     private fun permissiveOrNull(
         histories: Map<Environment, EvaluationHistory>?,

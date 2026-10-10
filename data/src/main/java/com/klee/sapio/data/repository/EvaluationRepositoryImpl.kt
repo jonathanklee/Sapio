@@ -90,7 +90,7 @@ class EvaluationRepositoryImpl @Inject constructor(
             val evaluations = remote.getOrThrow().map { it.attributes }
             val now = System.currentTimeMillis()
             evaluationDao.upsertAll(evaluations.map { it.toEntity(now) })
-            return Result.success(evaluations.map { it.toDomain() })
+            return Result.success(evaluations.enrichWithIcons())
         }
 
         val cached = evaluationDao.getEvaluationHistory(packageName)

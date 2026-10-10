@@ -7,7 +7,6 @@ import com.klee.sapio.domain.model.GmsType
 import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.FetchEvaluationHistoryUseCase
-import com.klee.sapio.domain.FetchIconUrlUseCase
 import com.klee.sapio.domain.model.Environment
 import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.domain.model.EvaluationHistory
@@ -34,6 +33,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Config.NONE
+import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -107,10 +107,85 @@ class AppEvaluationsViewModelTest {
         assertEquals(0, state.pendingCount)
     }
 
+    @Test
+    fun `listEvaluations keeps the icon of the most recent evaluation`() = runTest(dispatcher) {
+        val vm = buildViewModel(unsafeEnabled = false, history = agedHistory())
+
+        vm.listEvaluations("pkg")
+        advanceUntilIdle()
+        vm.onIconDisplayed()
+
+        assertEquals("https://new-icon", vm.uiState.value.iconUrl)
+    }
+
+    @Test
+    fun `listEvaluations keeps the most recent icon across environments`() = runTest(dispatcher) {
+        val vm = buildViewModel(unsafeEnabled = false, history = historyPerEnvironment())
+
+        vm.listEvaluations("pkg")
+        advanceUntilIdle()
+        vm.onIconDisplayed()
+
+        assertEquals("https://bare-icon", vm.uiState.value.iconUrl)
+    }
+
+    @Test
+    fun `listEvaluations falls back to an older icon when the latest has none`() = runTest(dispatcher) {
+        val vm = buildViewModel(unsafeEnabled = false, history = historyWithIconlessLatest())
+
+        vm.listEvaluations("pkg")
+        advanceUntilIdle()
+        vm.onIconDisplayed()
+
+        assertEquals("https://old-icon", vm.uiState.value.iconUrl)
+    }
+
+    @Test
+    fun `listEvaluations posts an empty icon when no evaluation carries one`() = runTest(dispatcher) {
+        val vm = buildViewModel(unsafeEnabled = false, iconUrl = null)
+
+        vm.listEvaluations("pkg")
+        advanceUntilIdle()
+        vm.onIconDisplayed()
+
+        val state = vm.uiState.value
+        assertEquals("", state.iconUrl)
+        assertTrue(state.isFullyLoaded)
+    }
+
+    private fun agedHistory(): Map<Environment, EvaluationHistory> {
+        val outdated = eval("outdated", "pkg", "https://old-icon", Date(1_000L))
+        val latest = eval("latest", "pkg", "https://new-icon", Date(2_000L))
+
+        return mapOf(
+            Environment(GmsType.MICROG, UserType.STANDARD) to EvaluationHistory(listOf(outdated, latest))
+        )
+    }
+
+    private fun historyPerEnvironment(): Map<Environment, EvaluationHistory> {
+        val microg = eval("microg", "pkg", "https://microg-icon", Date(1_000L))
+        val bareAosp = eval("bare-aosp", "pkg", "https://bare-icon", Date(2_000L))
+
+        return mapOf(
+            Environment(GmsType.MICROG, UserType.STANDARD) to EvaluationHistory(listOf(microg)),
+            Environment(GmsType.BARE_AOSP, UserType.STANDARD) to EvaluationHistory(listOf(bareAosp))
+        )
+    }
+
+    private fun historyWithIconlessLatest(): Map<Environment, EvaluationHistory> {
+        val outdated = eval("outdated", "pkg", "https://old-icon", Date(1_000L))
+        val latest = eval("latest", "pkg", null, Date(2_000L))
+
+        return mapOf(
+            Environment(GmsType.MICROG, UserType.STANDARD) to EvaluationHistory(listOf(outdated, latest))
+        )
+    }
+
     private fun buildViewModel(
         unsafeEnabled: Boolean,
         returnNullEvals: Boolean = false,
-        iconUrl: String = "https://icon"
+        iconUrl: String? = "https://icon",
+        history: Map<Environment, EvaluationHistory>? = null
     ): AppEvaluationsViewModel {
         val mockRepository = object : EvaluationRepository {
             override suspend fun listLatestEvaluations(pageNumber: Int): Result<List<Evaluation>> =
@@ -131,6 +206,7 @@ class AppEvaluationsViewModelTest {
         val fetchHistoryUseCase = object : FetchEvaluationHistoryUseCase(mockRepository) {
             override suspend fun invoke(packageName: String): Result<Map<Environment, EvaluationHistory>> {
                 if (returnNullEvals) return Result.success(emptyMap())
+                if (history != null) return Result.success(history)
 
                 val named = mapOf(
                     Environment(GmsType.MICROG, UserType.STANDARD) to "microg-secure",
@@ -140,12 +216,11 @@ class AppEvaluationsViewModelTest {
                 )
 
                 return Result.success(
-                    named.mapValues { (_, name) -> EvaluationHistory(listOf(eval(name, packageName))) }
+                    named.mapValues { (_, name) ->
+                        EvaluationHistory(listOf(eval(name, packageName, iconUrl, Date(1_000L))))
+                    }
                 )
             }
-        }
-        val iconUrlUseCase = object : FetchIconUrlUseCase(mockRepository) {
-            override suspend fun invoke(packageName: String): Result<String> = Result.success(iconUrl)
         }
         val settingsObj = object : Settings(appContext) {
             override fun isUnsafeConfigurationEnabled(): Boolean = unsafeEnabled
@@ -153,21 +228,25 @@ class AppEvaluationsViewModelTest {
 
         return AppEvaluationsViewModel(
             fetchHistoryUseCase,
-            iconUrlUseCase,
             settingsObj
         ).apply {
             ioDispatcher = dispatcher
         }
     }
 
-    private fun eval(name: String, packageName: String) = Evaluation(
+    private fun eval(
+        name: String,
+        packageName: String,
+        iconUrl: String?,
+        updatedAt: Date?
+    ) = Evaluation(
         name = name,
         packageName = packageName,
-        iconUrl = null,
+        iconUrl = iconUrl,
         rating = 1,
         microg = 1,
         secure = 1,
-        updatedAt = null,
+        updatedAt = updatedAt,
         createdAt = null,
         publishedAt = null,
         versionName = null,
