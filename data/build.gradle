@@ -3,6 +3,45 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.13"
+    reportsDirectory = layout.buildDirectory.dir("jacocoReports")
+}
+
+tasks.withType(Test).configureEach {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes += ['jdk.internal.*']
+}
+
+tasks.register("jacocoTestReport", JacocoReport) {
+    dependsOn tasks.testDebugUnitTest
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            '**/*_Factory*.*',
+            '**/*_MembersInjector*.*',
+            '**/*_Impl*.*',
+            '**/hilt_aggregated_deps/**',
+            '**/dagger/hilt/**'
+    ]
+
+    sourceDirectories.from = files(["${project.projectDir}/src/main/java"])
+    classDirectories.from = files([
+            fileTree(dir: "${project.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
+    ])
+    executionData.from = fileTree(dir: "${project.buildDir}", includes: ["**/*.exec", "**/*.ec"])
 }
 
 android {

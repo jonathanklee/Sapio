@@ -1,5 +1,20 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.13"
+    reportsDirectory = layout.buildDirectory.dir("jacocoReports")
+}
+
+tasks.named("jacocoTestReport") {
+    dependsOn tasks.test
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
 
 java {

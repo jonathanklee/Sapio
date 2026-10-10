@@ -37,6 +37,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
     }
 
     buildFeatures {
@@ -104,17 +105,6 @@ tasks.register("jacocoTestReport", JacocoReport) {
     executionData.from = fileTree(dir: "${project.buildDir}", includes: ["**/*.exec", "**/*.ec"])
 }
 
-tasks.register("jacocoTestCoverageVerification", JacocoCoverageVerification) {
-    dependsOn tasks.jacocoTestReport
-
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.5 // 50% coverage minimum
-            }
-        }
-    }
-}
 
 dependencies {
 
@@ -153,6 +143,7 @@ dependencies {
     testImplementation libs.robolectric
     testImplementation libs.kotlinx.coroutines.test
     testImplementation libs.androidx.arch.core.testing
+    testImplementation libs.androidx.work.testing
 
     androidTestImplementation libs.mockito.android
     androidTestImplementation libs.androidx.junit

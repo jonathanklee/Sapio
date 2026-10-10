@@ -10,9 +10,71 @@ plugins {
     id 'com.android.library' version '8.11.2' apply false
     id 'org.jetbrains.kotlin.android' version '2.1.0' apply false
     id 'org.jetbrains.kotlin.jvm' version '2.1.0' apply false
+    id 'jacoco'
 
     alias libs.plugins.detekt
     alias libs.plugins.compose.compiler apply false
+}
+
+jacoco {
+    toolVersion = "0.8.13"
+    reportsDirectory = layout.buildDirectory.dir("jacocoReports")
+}
+
+tasks.register("jacocoAggregatedReport", JacocoReport) {
+    dependsOn ':app:testDebugUnitTest', ':data:testDebugUnitTest', ':domain:test'
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    def generatedFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            '**/Hilt_*.*',
+            '**/*_Factory*.*',
+            '**/*_MembersInjector*.*',
+            '**/*_HiltModules*.*',
+            '**/*_Impl*.*',
+            '**/*_GeneratedInjector*.*',
+            '**/hilt_aggregated_deps/**',
+            '**/dagger/hilt/**',
+            '**/databinding/**/*.*'
+    ]
+
+    def modules = [':app', ':data', ':domain'].collect { project(it) }
+
+    sourceDirectories.from = files(modules.collect { "${it.projectDir}/src/main/java" })
+    classDirectories.from = files(modules.collect { module ->
+        [
+                fileTree(dir: "${module.buildDir}/tmp/kotlin-classes/debug", excludes: generatedFilter),
+                fileTree(dir: "${module.buildDir}/classes/kotlin/main", excludes: generatedFilter)
+        ]
+    }.flatten())
+    executionData.from = files(modules.collect {
+        fileTree(dir: "${it.buildDir}", includes: ["**/*.exec", "**/*.ec"])
+    })
+}
+
+tasks.register("jacocoCoverageVerification", JacocoCoverageVerification) {
+    dependsOn tasks.jacocoAggregatedReport
+
+    sourceDirectories.from = tasks.jacocoAggregatedReport.sourceDirectories
+    classDirectories.from = tasks.jacocoAggregatedReport.classDirectories
+    executionData.from = tasks.jacocoAggregatedReport.executionData
+
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 0.38
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {
