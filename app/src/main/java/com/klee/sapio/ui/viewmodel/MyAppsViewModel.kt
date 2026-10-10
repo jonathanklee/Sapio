@@ -11,6 +11,7 @@ import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.ui.model.InstalledAppWithRating
 import com.klee.sapio.ui.state.MyAppsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -33,6 +34,8 @@ class MyAppsViewModel @Inject constructor(
     private val deviceAppCacheRepository: DeviceAppCacheRepository
 ) : ViewModel() {
 
+    internal var ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
     private val _uiState = MutableStateFlow(MyAppsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -53,7 +56,7 @@ class MyAppsViewModel @Inject constructor(
                 fetchFromWebAndSave()
             } else {
                 _uiState.update { it.copy(isLoading = true, progress = 0) }
-                val entities = withContext(Dispatchers.IO) { deviceAppCacheRepository.getAll() }
+                val entities = withContext(ioDispatcher) { deviceAppCacheRepository.getAll() }
                 val lastCachedAt = entities.maxOfOrNull { it.cachedAt }
 
                 if (entities.isNotEmpty() && isCacheValid(lastCachedAt)) {
@@ -70,7 +73,7 @@ class MyAppsViewModel @Inject constructor(
     private suspend fun buildListFromEntities(
         entities: List<CachedDeviceApp>
     ): List<InstalledAppWithRating> {
-        val installedMap = withContext(Dispatchers.IO) {
+        val installedMap = withContext(ioDispatcher) {
             installedApplicationsDataSource.listInstalledApplications().associateBy { it.packageName }
         }
         val total = entities.size
@@ -102,7 +105,7 @@ class MyAppsViewModel @Inject constructor(
         val gmsType = deviceInfo.getGmsType()
         val userType = deviceInfo.isPermissive()
 
-        val installedApps = withContext(Dispatchers.IO) {
+        val installedApps = withContext(ioDispatcher) {
             installedApplicationsDataSource.listInstalledApplications()
         }
 
@@ -112,7 +115,7 @@ class MyAppsViewModel @Inject constructor(
 
         val result = coroutineScope {
             installedApps.map { app ->
-                async(Dispatchers.IO) {
+                async(ioDispatcher) {
                     semaphore.withPermit {
                         val evaluation = fetchAppEvaluationUseCase(
                             app.packageName,
@@ -137,7 +140,7 @@ class MyAppsViewModel @Inject constructor(
             )
         }
 
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             deviceAppCacheRepository.replaceAll(entities)
         }
 

@@ -344,6 +344,67 @@ class EvaluationRepositoryImplTest {
 
     // region helpers
 
+    // region fetchEvaluationHistory
+
+    @Test
+    fun `fetchEvaluationHistory returns remote evaluations on success`() = runTest {
+        service.existingEvaluationsResult = Result.success(
+            listOf(
+                StrapiElement(1, dtoEvaluation(name = "Older", iconUrl = "http://old.png")),
+                StrapiElement(2, dtoEvaluation(name = "Newer", iconUrl = "http://new.png"))
+            )
+        )
+
+        val history = repository.fetchEvaluationHistory("com.test.app").getOrThrow()
+
+        assertEquals(listOf("Older", "Newer"), history.map { it.name })
+    }
+
+    @Test
+    fun `fetchEvaluationHistory caches remote evaluations on success`() = runTest {
+        service.existingEvaluationsResult = Result.success(
+            listOf(StrapiElement(1, dtoEvaluation(iconUrl = "http://icon.png")))
+        )
+
+        repository.fetchEvaluationHistory("com.test.app")
+
+        assertEquals(1, evaluationDao.upsertedItems.size)
+    }
+
+    @Test
+    fun `fetchEvaluationHistory falls back to the uploaded icon when the relation is empty`() = runTest {
+        service.existingEvaluationsResult = Result.success(
+            listOf(StrapiElement(1, dtoEvaluation(iconUrl = null)))
+        )
+        service.existingIconResult = Result.success(
+            listOf(iconAnswer(url = "http://fallback.png"))
+        )
+
+        val history = repository.fetchEvaluationHistory("com.test.app").getOrThrow()
+
+        assertTrue(history.single().iconUrl!!.endsWith("http://fallback.png"))
+    }
+
+    @Test
+    fun `fetchEvaluationHistory returns the cache when the remote call fails`() = runTest {
+        service.existingEvaluationsResult = Result.failure(IllegalStateException("offline"))
+        evaluationDao.historyResult = listOf(evaluationEntity(name = "Cached"))
+
+        val history = repository.fetchEvaluationHistory("com.test.app").getOrThrow()
+
+        assertEquals("Cached", history.single().name)
+    }
+
+    @Test
+    fun `fetchEvaluationHistory fails when the remote call fails and nothing is cached`() = runTest {
+        service.existingEvaluationsResult = Result.failure(IllegalStateException("offline"))
+        evaluationDao.historyResult = emptyList()
+
+        assertTrue(repository.fetchEvaluationHistory("com.test.app").isFailure)
+    }
+
+    // endregion
+
     private fun dtoEvaluation(
         name: String = "Test App",
         packageName: String = "com.test.app",

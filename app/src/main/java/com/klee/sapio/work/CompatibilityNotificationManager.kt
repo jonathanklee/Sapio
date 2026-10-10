@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -78,7 +79,8 @@ class CompatibilityNotificationManager(
 
     private fun getAppIcon(packageName: String): Bitmap? {
         return try {
-            context.packageManager.getApplicationIcon(packageName).toBitmap()
+            val icon: Drawable? = context.packageManager.getApplicationIcon(packageName)
+            icon?.toBitmap()
         } catch (e: PackageManager.NameNotFoundException) {
             null
         }

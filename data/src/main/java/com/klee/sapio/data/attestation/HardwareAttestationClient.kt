@@ -2,6 +2,7 @@ package com.klee.sapio.data.attestation
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import androidx.annotation.VisibleForTesting
 import com.klee.sapio.domain.model.VerifiedBootState
 import org.bouncycastle.asn1.ASN1Enumerated
 import org.bouncycastle.asn1.ASN1InputStream
@@ -63,7 +64,8 @@ class HardwareAttestationClient @Inject constructor() {
         return certificate ?: throw GeneralSecurityException("Missing attestation certificate")
     }
 
-    private fun parseVerifiedBootState(certificate: X509Certificate): VerifiedBootState? {
+    @VisibleForTesting
+    internal fun parseVerifiedBootState(certificate: X509Certificate): VerifiedBootState? {
         val extensionValue = certificate.getExtensionValue(ATTESTATION_OID) ?: return null
         val attestationBytes = extractOctets(extensionValue)
         val root = ASN1Primitive.fromByteArray(attestationBytes)
