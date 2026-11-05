@@ -470,6 +470,7 @@ const val COMPRESSION_QUALITY = 100
         "payments" -> getString(R.string.broken_feature_payments)
         "cast" -> getString(R.string.broken_feature_cast)
         "augmented_reality" -> getString(R.string.broken_feature_augmented_reality)
+        "google_account_required" -> getString(R.string.broken_feature_google_account_required)
         else -> null
     }
 
@@ -647,12 +648,11 @@ const val COMPRESSION_QUALITY = 100
         if (rating != Rating.AVERAGE || brokenFeatures.isNullOrEmpty()) {
             return null
         }
-        val negation = getString(R.string.feature_negation)
-        val labels = brokenFeatures.mapNotNull { brokenFeatureLabelForKey(it)?.lowercase() }
+        val labels = brokenFeatures.mapNotNull { brokenFeatureLabelForKey(it) }
         if (labels.isEmpty()) {
             return null
         }
-        return labels.joinToString(", ") { "$negation $it" }.let { "($it)" }
+        return "(${getString(R.string.feature_negation)} ${labels.joinToString(", ")})"
     }
 
     private fun ratingToSymbol(rating: Int): String {

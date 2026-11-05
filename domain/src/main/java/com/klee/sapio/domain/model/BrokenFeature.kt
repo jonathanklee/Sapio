@@ -8,5 +8,6 @@ enum class BrokenFeature(val key: String) {
     LOCATION("location"),
     PAYMENTS("payments"),
     CAST("cast"),
-    AUGMENTED_REALITY("augmented_reality")
+    AUGMENTED_REALITY("augmented_reality"),
+    GOOGLE_ACCOUNT_REQUIRED("google_account_required")
 }

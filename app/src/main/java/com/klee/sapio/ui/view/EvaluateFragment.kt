@@ -130,6 +130,7 @@ class EvaluateFragment : Fragment() {
         BrokenFeature.PAYMENTS -> R.string.broken_feature_payments
         BrokenFeature.CAST -> R.string.broken_feature_cast
         BrokenFeature.AUGMENTED_REALITY -> R.string.broken_feature_augmented_reality
+        BrokenFeature.GOOGLE_ACCOUNT_REQUIRED -> R.string.broken_feature_google_account_required
     }
 
 }
