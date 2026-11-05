@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.klee.sapio.R
 import com.klee.sapio.databinding.FeedAppCardBinding
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.model.Evaluation

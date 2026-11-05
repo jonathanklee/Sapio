@@ -252,9 +252,9 @@ private fun RatingPill(
         )
         Spacer(modifier = Modifier.width(4.dp))
         val circleColor = when (rating) {
-            Rating.GOOD -> Color(0xFF4CAF50)
-            Rating.AVERAGE -> Color(0xFFFFC107)
-            Rating.BAD -> Color(0xFFF44336)
+            Rating.GOOD -> GOOD_RATING_COLOR
+            Rating.AVERAGE -> AVERAGE_RATING_COLOR
+            Rating.BAD -> BAD_RATING_COLOR
             else -> Color.Transparent
         }
         Box(
@@ -268,6 +268,10 @@ private fun RatingPill(
 private fun hasRating(rating: Int): Boolean {
     return rating == Rating.GOOD || rating == Rating.AVERAGE || rating == Rating.BAD
 }
+
+private val GOOD_RATING_COLOR = Color(0xFF4CAF50)
+private val AVERAGE_RATING_COLOR = Color(0xFFFFC107)
+private val BAD_RATING_COLOR = Color(0xFFF44336)
 
 const val WIDTH = 5
 const val HEIGHT = 5

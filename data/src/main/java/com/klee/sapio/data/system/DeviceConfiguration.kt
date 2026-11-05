@@ -1,6 +1,7 @@
 package com.klee.sapio.data.system
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import com.klee.sapio.data.attestation.HardwareAttestationClient
 import com.klee.sapio.domain.DeviceInfo
@@ -32,21 +33,29 @@ open class DeviceConfiguration @Inject constructor(
     }
 
     private fun computeGmsType(): Int {
+        val gmsApp = findGmsApplication() ?: return GmsType.BARE_AOSP
+
+        return gmsTypeOf(gmsApp)
+    }
+
+    private fun findGmsApplication(): ApplicationInfo? {
         val apps = try {
             packageManager.getInstalledApplications(0)
-        } catch (e: RuntimeException) {
-            return GmsType.BARE_AOSP
+        } catch (ignored: RuntimeException) {
+            emptyList()
         }
-        val gmsApp = apps.firstOrNull { it.packageName == GMS_SERVICES_PACKAGE_NAME }
-            ?: return GmsType.BARE_AOSP
 
+        return apps.firstOrNull { it.packageName == GMS_SERVICES_PACKAGE_NAME }
+    }
+
+    private fun gmsTypeOf(gmsApp: ApplicationInfo): Int {
         return try {
             if (packageManager.getApplicationLabel(gmsApp).toString().contains("Google", true)) {
                 GmsType.GOOGLE_PLAY_SERVICES
             } else {
                 GmsType.MICROG
             }
-        } catch (e: RuntimeException) {
+        } catch (ignored: RuntimeException) {
             GmsType.BARE_AOSP
         }
     }

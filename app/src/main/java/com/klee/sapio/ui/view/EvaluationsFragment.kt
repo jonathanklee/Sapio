@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
@@ -17,7 +18,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,10 +26,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -42,8 +42,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import android.content.res.ColorStateList
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.ChipGroup
@@ -52,9 +50,10 @@ import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.model.EvaluationHistory
 import com.klee.sapio.ui.model.Rating
+import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.model.absoluteDate
 import com.klee.sapio.ui.model.relativeDate
-import com.klee.sapio.ui.model.SharedEvaluation
+import com.klee.sapio.ui.state.AppEvaluationsUiState
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filter
@@ -63,10 +62,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
-
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import androidx.compose.ui.graphics.Color as ComposeColor
 
 @AndroidEntryPoint
 class EvaluationsFragment : Fragment() {
@@ -85,13 +84,14 @@ class EvaluationsFragment : Fragment() {
 
     companion object {
         const val TAG = "EvaluationsFragment"
-const val COMPRESSION_QUALITY = 100
+        const val COMPRESSION_QUALITY = 100
         const val SCREENSHOT_WIDTH_DP = 200
         const val SCREENSHOT_HEIGHT_DP = 115
         private const val ARG_PACKAGE_NAME = "packageName"
         private const val ARG_APP_NAME = "appName"
         private const val ARG_SHARE_IMMEDIATELY = "shareImmediately"
         private const val ARG_NOTIFICATION_ID = "notificationId"
+        private const val BROKEN_FEATURE_TEXT_SIZE_SP = 10f
 
         fun newInstance(
             packageName: String,
@@ -184,129 +184,158 @@ const val COMPRESSION_QUALITY = 100
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.uiState.collect { state ->
                 if (state.isFullyLoaded) {
-                    val unsafeEnabled = settings.isUnsafeConfigurationEnabled()
-
-                    mBinding.microgSecureBadge.isVisible = unsafeEnabled
-                    mBinding.bareAospSecureBadge.isVisible = unsafeEnabled
-
-                    val showMicrog = state.microgUser != null || (unsafeEnabled && state.microgRoot != null)
-                    val showBareAosp = state.bareAospUser != null || (unsafeEnabled && state.bareAospRoot != null)
-
-                    mBinding.microgCard.isVisible = showMicrog
-                    mBinding.bareAospCard.isVisible = showBareAosp
-
-                    val showMicrogUser = state.microgUser != null
-                    val showMicrogRoot = unsafeEnabled && state.microgRoot != null
-                    val showBareAospUser = state.bareAospUser != null
-                    val showBareAospRoot = unsafeEnabled && state.bareAospRoot != null
-
-                    mBinding.microgUserCell.isVisible = showMicrogUser
-                    mBinding.bareAospUserCell.isVisible = showBareAospUser
-                    mBinding.microgRootCell.isVisible = showMicrogRoot
-                    mBinding.bareAospRootCell.isVisible = showBareAospRoot
-
-                    adjustChipMargins(mBinding.microgUserCell, mBinding.microgRootCell, showMicrogUser, showMicrogRoot)
-                    adjustChipMargins(mBinding.bareAospUserCell, mBinding.bareAospRootCell, showBareAospUser, showBareAospRoot)
-
-                    renderChip(
-                        mBinding.microgUserCell,
-                        mBinding.microgUser,
-                        mBinding.microgUserRating,
-                        mBinding.microgUserVersion,
-                        mBinding.microgUserDate,
-                        mBinding.microgUserBrokenFeatures,
-                        state.microgUser?.current
-                    )
-                    renderChip(
-                        mBinding.bareAospUserCell,
-                        mBinding.bareAospUser,
-                        mBinding.bareAospUserRating,
-                        mBinding.bareAospUserVersion,
-                        mBinding.bareAospUserDate,
-                        mBinding.bareAospUserBrokenFeatures,
-                        state.bareAospUser?.current
-                    )
-                    renderChip(
-                        mBinding.microgRootCell,
-                        mBinding.microgRoot,
-                        mBinding.microgRootRating,
-                        mBinding.microgRootVersion,
-                        mBinding.microgRootDate,
-                        mBinding.microgRootBrokenFeatures,
-                        state.microgRoot?.current
-                    )
-                    renderChip(
-                        mBinding.bareAospRootCell,
-                        mBinding.bareAospRoot,
-                        mBinding.bareAospRootRating,
-                        mBinding.bareAospRootVersion,
-                        mBinding.bareAospRootDate,
-                        mBinding.bareAospRootBrokenFeatures,
-                        state.bareAospRoot?.current
-                    )
-
-                    renderHistory(
-                        mBinding.microgUserHistoryInline,
-                        mBinding.microgUserHistory,
-                        state.microgUser,
-                        /* sharesRow */ showMicrogUser && showMicrogRoot
-                    )
-                    renderHistory(
-                        mBinding.bareAospUserHistoryInline,
-                        mBinding.bareAospUserHistory,
-                        state.bareAospUser,
-                        /* sharesRow */ showBareAospUser && showBareAospRoot
-                    )
-                    renderHistory(
-                        mBinding.microgRootHistoryInline,
-                        mBinding.microgRootHistory,
-                        state.microgRoot,
-                        /* sharesRow */ showMicrogUser && showMicrogRoot
-                    )
-                    renderHistory(
-                        mBinding.bareAospRootHistoryInline,
-                        mBinding.bareAospRootHistory,
-                        state.bareAospRoot,
-                        /* sharesRow */ showBareAospUser && showBareAospRoot
-                    )
-
-                    mBinding.shareButton.isEnabled = state.microgUser != null || state.bareAospUser != null
+                    renderEvaluations(state)
                 }
 
                 if (state.iconUrl != null && !iconReady) {
                     iconReady = true
-                    val needsCount = !state.isFullyLoaded
-                    if (state.iconUrl.isNotEmpty()) {
-                        Glide.with(requireContext().applicationContext)
-                            .load(state.iconUrl)
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onResourceReady(
-                                    resource: Drawable,
-                                    model: Any,
-                                    target: Target<Drawable>?,
-                                    dataSource: DataSource,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    if (needsCount) mViewModel.onIconDisplayed()
-                                    return false
-                                }
-
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: Target<Drawable>,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    if (needsCount) mViewModel.onIconDisplayed()
-                                    return false
-                                }
-                            })
-                            .into(mBinding.image)
-                    } else {
-                        if (needsCount) mViewModel.onIconDisplayed()
-                    }
+                    renderIcon(state.iconUrl, needsCount = !state.isFullyLoaded)
                 }
             }
+        }
+    }
+
+    private fun renderEvaluations(state: AppEvaluationsUiState) {
+        val unsafeEnabled = settings.isUnsafeConfigurationEnabled()
+        val showMicrogUser = state.microgUser != null
+        val showMicrogRoot = unsafeEnabled && state.microgRoot != null
+        val showBareAospUser = state.bareAospUser != null
+        val showBareAospRoot = unsafeEnabled && state.bareAospRoot != null
+
+        mBinding.microgSecureBadge.isVisible = unsafeEnabled
+        mBinding.bareAospSecureBadge.isVisible = unsafeEnabled
+        mBinding.microgCard.isVisible = showMicrogUser || showMicrogRoot
+        mBinding.bareAospCard.isVisible = showBareAospUser || showBareAospRoot
+
+        renderCellPair(mBinding.microgUserCell, mBinding.microgRootCell, showMicrogUser, showMicrogRoot)
+        renderCellPair(mBinding.bareAospUserCell, mBinding.bareAospRootCell, showBareAospUser, showBareAospRoot)
+        renderChips(state)
+        renderHistories(
+            state,
+            microgSharesRow = showMicrogUser && showMicrogRoot,
+            bareAospSharesRow = showBareAospUser && showBareAospRoot
+        )
+
+        mBinding.shareButton.isEnabled = showMicrogUser || showBareAospUser
+    }
+
+    private fun renderCellPair(
+        userCell: MaterialCardView,
+        rootCell: MaterialCardView,
+        showUser: Boolean,
+        showRoot: Boolean
+    ) {
+        userCell.isVisible = showUser
+        rootCell.isVisible = showRoot
+        adjustChipMargins(userCell, rootCell, showUser, showRoot)
+    }
+
+    private fun renderChips(state: AppEvaluationsUiState) {
+        renderChip(
+            EvaluationCellViews(
+                mBinding.microgUser,
+                mBinding.microgUserRating,
+                mBinding.microgUserVersion,
+                mBinding.microgUserDate,
+                mBinding.microgUserBrokenFeatures
+            ),
+            state.microgUser?.current
+        )
+        renderChip(
+            EvaluationCellViews(
+                mBinding.bareAospUser,
+                mBinding.bareAospUserRating,
+                mBinding.bareAospUserVersion,
+                mBinding.bareAospUserDate,
+                mBinding.bareAospUserBrokenFeatures
+            ),
+            state.bareAospUser?.current
+        )
+        renderChip(
+            EvaluationCellViews(
+                mBinding.microgRoot,
+                mBinding.microgRootRating,
+                mBinding.microgRootVersion,
+                mBinding.microgRootDate,
+                mBinding.microgRootBrokenFeatures
+            ),
+            state.microgRoot?.current
+        )
+        renderChip(
+            EvaluationCellViews(
+                mBinding.bareAospRoot,
+                mBinding.bareAospRootRating,
+                mBinding.bareAospRootVersion,
+                mBinding.bareAospRootDate,
+                mBinding.bareAospRootBrokenFeatures
+            ),
+            state.bareAospRoot?.current
+        )
+    }
+
+    private fun renderHistories(state: AppEvaluationsUiState, microgSharesRow: Boolean, bareAospSharesRow: Boolean) {
+        renderHistory(
+            mBinding.microgUserHistoryInline,
+            mBinding.microgUserHistory,
+            state.microgUser,
+            sharesRow = microgSharesRow
+        )
+        renderHistory(
+            mBinding.bareAospUserHistoryInline,
+            mBinding.bareAospUserHistory,
+            state.bareAospUser,
+            sharesRow = bareAospSharesRow
+        )
+        renderHistory(
+            mBinding.microgRootHistoryInline,
+            mBinding.microgRootHistory,
+            state.microgRoot,
+            sharesRow = microgSharesRow
+        )
+        renderHistory(
+            mBinding.bareAospRootHistoryInline,
+            mBinding.bareAospRootHistory,
+            state.bareAospRoot,
+            sharesRow = bareAospSharesRow
+        )
+    }
+
+    private fun renderIcon(iconUrl: String, needsCount: Boolean) {
+        if (iconUrl.isEmpty()) {
+            notifyIconDisplayed(needsCount)
+            return
+        }
+
+        Glide.with(requireContext().applicationContext)
+            .load(iconUrl)
+            .listener(object : RequestListener<Drawable> {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    model: Any,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    notifyIconDisplayed(needsCount)
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    notifyIconDisplayed(needsCount)
+                    return false
+                }
+            })
+            .into(mBinding.image)
+    }
+
+    private fun notifyIconDisplayed(needsCount: Boolean) {
+        if (needsCount) {
+            mViewModel.onIconDisplayed()
         }
     }
 
@@ -329,35 +358,27 @@ const val COMPRESSION_QUALITY = 100
         }
     }
 
-    private fun renderChip(
-        chipView: MaterialCardView,
-        iconView: ImageView,
-        ratingTextView: TextView,
-        versionTextView: TextView,
-        dateTextView: TextView,
-        brokenFeaturesChipGroup: ChipGroup,
-        evaluation: com.klee.sapio.domain.model.Evaluation?
-    ) {
+    private fun renderChip(views: EvaluationCellViews, evaluation: com.klee.sapio.domain.model.Evaluation?) {
         if (evaluation != null) {
-            iconView.setImageResource(Rating.create(evaluation.rating).drawable)
-            iconView.isVisible = true
-            ratingTextView.text = getRatingShortLabel(evaluation.rating)
+            views.icon.setImageResource(Rating.create(evaluation.rating).drawable)
+            views.icon.isVisible = true
+            views.rating.text = getRatingShortLabel(evaluation.rating)
 
             if (evaluation.versionName != null) {
-                versionTextView.visibility = View.VISIBLE
-                versionTextView.text = "v${evaluation.versionName}"
+                views.version.visibility = View.VISIBLE
+                views.version.text = "v${evaluation.versionName}"
             } else {
-                versionTextView.visibility = View.GONE
+                views.version.visibility = View.GONE
             }
 
-            dateTextView.text = relativeDate(evaluation.updatedAt, resources)
-            renderBrokenFeatures(brokenFeaturesChipGroup, evaluation)
+            views.date.text = relativeDate(evaluation.updatedAt, resources)
+            renderBrokenFeatures(views.brokenFeatures, evaluation)
         } else {
-            iconView.isVisible = false
-            ratingTextView.text = "–"
-            versionTextView.visibility = View.GONE
-            dateTextView.text = ""
-            (brokenFeaturesChipGroup.parent as? ViewGroup)?.isVisible = false
+            views.icon.isVisible = false
+            views.rating.text = "–"
+            views.version.visibility = View.GONE
+            views.date.text = ""
+            (views.brokenFeatures.parent as? ViewGroup)?.isVisible = false
         }
     }
 
@@ -446,7 +467,7 @@ const val COMPRESSION_QUALITY = 100
             val label = brokenFeatureLabelForKey(key) ?: return@forEach
             val pill = TextView(requireContext()).apply {
                 text = label
-                textSize = 10f
+                textSize = BROKEN_FEATURE_TEXT_SIZE_SP
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 background = ContextCompat.getDrawable(requireContext(), R.drawable.bg_label_rounded)
                 backgroundTintList = ColorStateList.valueOf(
@@ -635,7 +656,9 @@ const val COMPRESSION_QUALITY = 100
             }
         }
         val ratingSuffix = if (ratingParts.isNotEmpty()) ": ${ratingParts.joinToString(", ")}" else ""
-        return "$header$ratingSuffix\n\n${getString(R.string.website_url)}/app/${sharedEvaluation.packageName} #degoogle #privacy #android #sapio"
+        return "$header$ratingSuffix\n\n${getString(
+            R.string.website_url
+        )}/app/${sharedEvaluation.packageName} #degoogle #privacy #android #sapio"
     }
 
     private fun formatRatingPart(labelRes: Int, rating: Int, brokenFeatures: List<String>?): String {

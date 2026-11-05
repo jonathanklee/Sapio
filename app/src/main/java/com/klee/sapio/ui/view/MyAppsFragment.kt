@@ -29,7 +29,6 @@ class MyAppsFragment : Fragment() {
         mBinding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         mAdapter = MyAppsAdapter(
-            requireContext(),
             onAppSelected = { packageName, appName ->
                 (requireActivity() as MainActivity).navigateToEvaluations(packageName, appName)
             },

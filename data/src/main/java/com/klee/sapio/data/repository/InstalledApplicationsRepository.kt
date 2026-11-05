@@ -18,35 +18,47 @@ open class InstalledApplicationsRepository @Inject constructor(
 ) : InstalledApplicationsDataSource {
 
     override fun listInstalledApplications(): List<InstalledApplication> {
-        val pm = context.packageManager
+        return queryLauncherApplications()
+            .filter { appInfo -> isListable(appInfo) }
+            .mapNotNull { appInfo -> toInstalledApplication(appInfo) }
+            .sortedBy { app -> app.name.lowercase() }
+    }
+
+    private fun queryLauncherApplications(): List<ApplicationInfo> {
         val intent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
         val resolveInfoList = try {
-            pm.queryIntentActivities(intent, 0)
-        } catch (e: RuntimeException) {
-            return emptyList()
+            context.packageManager.queryIntentActivities(intent, 0)
+        } catch (ignored: RuntimeException) {
+            emptyList()
         }
 
-        val results: MutableList<InstalledApplication> = arrayListOf()
-        for (resolveInfo in resolveInfoList) {
-            val appInfo = resolveInfo.activityInfo.applicationInfo
-            if (isSystemApp(appInfo) || isGmsRelated(appInfo)) continue
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !hasAdaptiveIcon(context, appInfo)) continue
-            val label = try {
-                pm.getApplicationLabel(appInfo).toString()
-            } catch (e: RuntimeException) {
-                continue
-            }
-            val versionName = try {
-                pm.getPackageInfo(appInfo.packageName, 0).versionName
-            } catch (e: Exception) {
-                null
-            }
-            results.add(InstalledApplication(label, appInfo.packageName, versionName))
+        return resolveInfoList.map { resolveInfo -> resolveInfo.activityInfo.applicationInfo }
+    }
+
+    private fun isListable(appInfo: ApplicationInfo): Boolean {
+        val hasExpectedIcon = Build.VERSION.SDK_INT < Build.VERSION_CODES.O || hasAdaptiveIcon(context, appInfo)
+
+        return !isSystemApp(appInfo) && !isGmsRelated(appInfo) && hasExpectedIcon
+    }
+
+    private fun toInstalledApplication(appInfo: ApplicationInfo): InstalledApplication? {
+        val label = try {
+            context.packageManager.getApplicationLabel(appInfo).toString()
+        } catch (ignored: RuntimeException) {
+            return null
         }
 
-        return results.sortedBy { app -> app.name.lowercase() }
+        return InstalledApplication(label, appInfo.packageName, readVersionName(appInfo))
+    }
+
+    private fun readVersionName(appInfo: ApplicationInfo): String? {
+        return try {
+            context.packageManager.getPackageInfo(appInfo.packageName, 0).versionName
+        } catch (ignored: Exception) {
+            null
+        }
     }
 
     override fun getInstalledApplication(packageName: String): InstalledApplication? {
@@ -76,7 +88,7 @@ open class InstalledApplicationsRepository @Inject constructor(
         return try {
             val icon = info.loadUnbadgedIcon(context.packageManager) ?: return false
             icon is AdaptiveIconDrawable
-        } catch (e: RuntimeException) {
+        } catch (ignored: RuntimeException) {
             false
         }
     }

@@ -6,8 +6,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 
 private const val ISO_DATE_PATTERN = "yyyy-MM-dd"
+private const val DAYS_PER_MONTH = 30
+private const val DAYS_PER_YEAR = 365
 
 fun absoluteDate(date: Date?): String {
     if (date == null) {
@@ -26,11 +29,11 @@ fun relativeDate(date: Date?, resources: Resources): String {
     }
 
     val diffMs = System.currentTimeMillis() - date.time
-    val diffMinutes = (diffMs / (1000 * 60)).toInt()
-    val diffHours = (diffMs / (1000 * 60 * 60)).toInt()
-    val diffDays = (diffMs / (1000 * 60 * 60 * 24)).toInt()
-    val diffMonths = diffDays / 30
-    val diffYears = diffDays / 365
+    val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diffMs).toInt()
+    val diffHours = TimeUnit.MILLISECONDS.toHours(diffMs).toInt()
+    val diffDays = TimeUnit.MILLISECONDS.toDays(diffMs).toInt()
+    val diffMonths = diffDays / DAYS_PER_MONTH
+    val diffYears = diffDays / DAYS_PER_YEAR
 
     return when {
         diffYears >= 1 -> resources.getQuantityString(R.plurals.date_years_ago, diffYears, diffYears)

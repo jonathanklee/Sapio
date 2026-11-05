@@ -34,13 +34,13 @@ class HardwareAttestationClient @Inject constructor() {
             keyStore = ks
             val attestationCert = generateKeyAndReturnLeaf(alias, ks)
             parseVerifiedBootState(attestationCert) ?: VerifiedBootState.UNKNOWN
-        } catch (e: GeneralSecurityException) {
+        } catch (ignored: GeneralSecurityException) {
             VerifiedBootState.UNKNOWN
-        } catch (e: IOException) {
+        } catch (ignored: IOException) {
             VerifiedBootState.UNKNOWN
-        } catch (e: IllegalArgumentException) {
+        } catch (ignored: IllegalArgumentException) {
             VerifiedBootState.UNKNOWN
-        } catch (e: ProviderException) {
+        } catch (ignored: ProviderException) {
             // Devices without provisioned attestation keys fail to generate the key pair.
             VerifiedBootState.UNKNOWN
         } finally {
@@ -66,27 +66,34 @@ class HardwareAttestationClient @Inject constructor() {
 
     @VisibleForTesting
     internal fun parseVerifiedBootState(certificate: X509Certificate): VerifiedBootState? {
+        val keyDescription = readKeyDescription(certificate) ?: return null
+        val rootOfTrust = findRootOfTrust(keyDescription) ?: return null
+
+        return readVerifiedBootState(ASN1Sequence.getInstance(rootOfTrust, true))
+    }
+
+    private fun readKeyDescription(certificate: X509Certificate): ASN1Sequence? {
         val extensionValue = certificate.getExtensionValue(ATTESTATION_OID) ?: return null
-        val attestationBytes = extractOctets(extensionValue)
-        val root = ASN1Primitive.fromByteArray(attestationBytes)
-        val record = ASN1Sequence.getInstance(root)
-        if (record.size() < MIN_KEY_DESCRIPTION_FIELDS) {
-            return null
-        }
+        val record = ASN1Sequence.getInstance(ASN1Primitive.fromByteArray(extractOctets(extensionValue)))
 
-        val teeEnforced = record.getSafeSequence(record.size() - 1) ?: return null
-        val softwareEnforced = record.getSafeSequence(record.size() - 2)
-        val rootOfTrust = findTaggedObject(teeEnforced, ROOT_OF_TRUST_TAG)
+        return record.takeIf { it.size() >= MIN_KEY_DESCRIPTION_FIELDS }
+    }
+
+    private fun findRootOfTrust(keyDescription: ASN1Sequence): ASN1TaggedObject? {
+        val teeEnforced = keyDescription.getSafeSequence(keyDescription.size() - 1) ?: return null
+        val softwareEnforced = keyDescription.getSafeSequence(keyDescription.size() - 2)
+
+        return findTaggedObject(teeEnforced, ROOT_OF_TRUST_TAG)
             ?: findTaggedObject(softwareEnforced, ROOT_OF_TRUST_TAG)
-            ?: return null
+    }
 
-        val rootSequence = ASN1Sequence.getInstance(rootOfTrust, true)
-        if (rootSequence.size() <= ROOT_OF_TRUST_VERIFIED_BOOT_STATE_INDEX) {
+    private fun readVerifiedBootState(rootOfTrust: ASN1Sequence): VerifiedBootState? {
+        if (rootOfTrust.size() <= ROOT_OF_TRUST_VERIFIED_BOOT_STATE_INDEX) {
             return null
         }
 
         val enumerated = ASN1Enumerated.getInstance(
-            rootSequence.getObjectAt(ROOT_OF_TRUST_VERIFIED_BOOT_STATE_INDEX)
+            rootOfTrust.getObjectAt(ROOT_OF_TRUST_VERIFIED_BOOT_STATE_INDEX)
         )
 
         return VerifiedBootState.fromAttestationValue(enumerated.value.toInt())

@@ -28,8 +28,7 @@ class ChooseAppAdapter(
                     appInfo.loadIcon(pm)
                 }
                 binding.appIcon.setImageDrawable(icon)
-            } catch (e: PackageManager.NameNotFoundException) {
-                // leave default icon
+            } catch (ignored: PackageManager.NameNotFoundException) {
             }
             binding.root.setOnClickListener { onAppClicked(app) }
             binding.appIcon.setOnClickListener { onAppClicked(app) }

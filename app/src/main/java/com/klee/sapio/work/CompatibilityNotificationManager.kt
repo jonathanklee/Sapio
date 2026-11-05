@@ -81,7 +81,7 @@ class CompatibilityNotificationManager(
         return try {
             val icon: Drawable? = context.packageManager.getApplicationIcon(packageName)
             icon?.toBitmap()
-        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (ignored: PackageManager.NameNotFoundException) {
             null
         }
     }

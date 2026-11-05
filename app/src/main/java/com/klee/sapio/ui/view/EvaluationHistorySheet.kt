@@ -23,14 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-data class EvaluationHistoryRow(
-    val rating: Int,
-    val label: String,
-    val version: String?,
-    val date: String,
-    val brokenFeatures: List<String>
-)
-
 private val BROKEN_CHIP_COLOR = Color(0xFFE53935)
 
 @Composable

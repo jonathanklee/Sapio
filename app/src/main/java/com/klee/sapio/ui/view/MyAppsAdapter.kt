@@ -1,6 +1,5 @@
 package com.klee.sapio.ui.view
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import com.klee.sapio.ui.model.InstalledAppWithRating
 import com.klee.sapio.ui.model.Rating
 
 class MyAppsAdapter(
-    private val mContext: Context,
     private val onAppSelected: (packageName: String, appName: String) -> Unit,
     private val onContribute: () -> Unit
 ) : ListAdapter<InstalledAppWithRating, MyAppsAdapter.ViewHolder>(DiffCallback) {
@@ -63,8 +61,7 @@ class MyAppsAdapter(
                 appInfo.loadIcon(pm)
             }
             element.image.setImageDrawable(icon)
-        } catch (e: PackageManager.NameNotFoundException) {
-            // leave default
+        } catch (ignored: PackageManager.NameNotFoundException) {
         }
 
         val rating = item.evaluation?.rating

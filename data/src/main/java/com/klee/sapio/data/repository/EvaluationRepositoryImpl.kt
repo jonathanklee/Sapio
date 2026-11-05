@@ -2,8 +2,6 @@ package com.klee.sapio.data.repository
 
 import com.klee.sapio.data.api.EvaluationService
 import com.klee.sapio.data.dto.IconAnswer
-import com.klee.sapio.data.dto.StrapiElement
-import com.klee.sapio.data.dto.UploadEvaluation as DtoUploadEvaluation
 import com.klee.sapio.data.dto.UploadEvaluationHeader
 import com.klee.sapio.data.local.EvaluationDao
 import com.klee.sapio.data.local.EvaluationEntity
@@ -19,6 +17,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import com.klee.sapio.data.dto.Evaluation as DtoEvaluation
+import com.klee.sapio.data.dto.UploadEvaluation as DtoUploadEvaluation
 import com.klee.sapio.domain.model.Evaluation as DomainEvaluation
 import com.klee.sapio.domain.model.Icon as DomainIcon
 import com.klee.sapio.domain.model.UploadEvaluation as DomainUploadEvaluation

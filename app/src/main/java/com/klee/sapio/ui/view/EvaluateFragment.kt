@@ -132,5 +132,4 @@ class EvaluateFragment : Fragment() {
         BrokenFeature.AUGMENTED_REALITY -> R.string.broken_feature_augmented_reality
         BrokenFeature.GOOGLE_ACCOUNT_REQUIRED -> R.string.broken_feature_google_account_required
     }
-
 }

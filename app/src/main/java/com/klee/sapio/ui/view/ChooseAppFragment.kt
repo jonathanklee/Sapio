@@ -1,5 +1,6 @@
 package com.klee.sapio.ui.view
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -65,7 +66,7 @@ class ChooseAppFragment : Fragment() {
         try {
             val icon = requireContext().packageManager.getApplicationIcon(app.packageName)
             mBinding.selectedAppIcon.setImageDrawable(icon)
-        } catch (e: Exception) {
+        } catch (ignored: PackageManager.NameNotFoundException) {
             mBinding.selectedAppIcon.setImageResource(android.R.drawable.sym_def_app_icon)
         }
     }

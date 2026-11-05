@@ -3,11 +3,11 @@ package com.klee.sapio.work
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.DeviceInfo
+import com.klee.sapio.domain.EvaluationRepository
 import com.klee.sapio.domain.InstalledApplicationsDataSource
-import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.GmsType
+import com.klee.sapio.domain.model.InstalledApplication
 import com.klee.sapio.domain.model.UserType
 import com.klee.sapio.ui.model.Rating
 import dagger.hilt.EntryPoint
