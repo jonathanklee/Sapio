@@ -12,7 +12,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.1.0' apply false
     id 'jacoco'
 
-    alias libs.plugins.detekt
+    alias libs.plugins.detekt apply false
     alias libs.plugins.compose.compiler apply false
 }
 
@@ -82,14 +82,14 @@ task clean(type: Delete) {
 }
 
 subprojects {
+    apply plugin: 'io.gitlab.arturbosch.detekt'
+
     detekt {
         source = files(
                 "src/main/java"
         )
 
-        toolVersion = "1.23.1"
-        config.setFrom("detekt.yml")
-        baseline = file("detekt-baseline.xml")
+        config.setFrom(rootProject.file("detekt.yml"))
         parallel = false
         buildUponDefaultConfig = true
         allRules = false
@@ -98,10 +98,10 @@ subprojects {
         ignoreFailures = false
         basePath = projectDir
     }
-}
 
-dependencies {
-    detektPlugins libs.detekt.formatting
+    dependencies {
+        detektPlugins libs.detekt.formatting
+    }
 }
 
 
