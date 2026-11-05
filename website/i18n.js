@@ -38,7 +38,7 @@ const TRANSLATIONS = {
     rating_3:         { en: 'Unusable', fr: 'Inutilisable', de: 'Unbrauchbar', it: 'Inutilizzabile', es: 'Inutilizable' },
     env_standard:     { en: 'standard', fr: 'standard', de: 'standard', it: 'standard', es: 'estándar' },
     env_permissive:   { en: 'permissive', fr: 'permissif', de: 'permissiv', it: 'permissivo', es: 'permisivo' },
-    doesnt_work:      { en: "Doesn't work", fr: 'Ne fonctionne pas', de: 'Funktioniert nicht', it: 'Non funziona', es: 'No funciona' },
+    doesnt_work:      { en: 'Issues', fr: 'Dysfonctionnements', de: 'Probleme', it: 'Malfunzionamenti', es: 'Fallos' },
     history_label:    { en: 'Evaluation history', fr: 'Historique des évaluations', de: 'Bewertungsverlauf', it: 'Cronologia delle valutazioni', es: 'Historial de evaluaciones' },
     feat_notifications:   { en: 'Notifications', fr: 'Notifications', de: 'Benachrichtigungen', it: 'Notifiche', es: 'Notificaciones' },
     feat_in_app_purchase: { en: 'In-app purchases', fr: 'Achats intégrés', de: 'In-App-Käufe', it: 'Acquisti in-app', es: 'Compras integradas' },
@@ -48,6 +48,7 @@ const TRANSLATIONS = {
     feat_payments:        { en: 'Contactless payment', fr: 'Paiement sans contact', de: 'Kontaktloses Zahlen', it: 'Pagamento contactless', es: 'Pago sin contacto' },
     feat_cast:            { en: 'Screen casting', fr: 'Diffusion d\'écran', de: 'Bildschirmübertragung', it: 'Trasmissione schermo', es: 'Proyección de pantalla' },
     feat_augmented_reality:{ en: 'Augmented reality', fr: 'Réalité augmentée', de: 'Augmented Reality', it: 'Realtà aumentata', es: 'Realidad aumentada' },
+    feat_google_account_required:{ en: 'Google account required', fr: 'Compte Google obligatoire', de: 'Google-Konto erforderlich', it: 'Account Google obbligatorio', es: 'Cuenta de Google obligatoria' },
 
     // ─── Contribute ───────────────────────────────────────────────────────────
     contribute_fdroid:{ en: 'Get it on F-Droid', fr: 'Télécharger sur F-Droid', de: 'Bei F-Droid laden', it: 'Scarica su F-Droid', es: 'Consíguelo en F-Droid' },
@@ -101,7 +102,7 @@ const TRANSLATIONS = {
     language_label:   { en: 'Language', fr: 'Langue', de: 'Sprache', it: 'Lingua', es: 'Idioma' },
     summary_frame:    { en: '%name without Google Play Services — %parts.', fr: '%name sans Google Play Services — %parts.', de: '%name ohne Google Play Services — %parts.', it: '%name senza Google Play Services — %parts.', es: '%name sin Google Play Services — %parts.' },
     summary_none:     { en: 'No evaluation yet for %name without Google Play Services.', fr: 'Pas encore d\'évaluation pour %name sans Google Play Services.', de: 'Noch keine Bewertung für %name ohne Google Play Services.', it: 'Ancora nessuna valutazione per %name senza Google Play Services.', es: 'Aún no hay evaluación para %name sin Google Play Services.' },
-    summary_no_prefix:{ en: 'no', fr: 'sans', de: 'ohne', it: 'senza', es: 'sin' },
+    summary_no_prefix:{ en: 'issues:', fr: 'dysfonctionnements :', de: 'Probleme:', it: 'malfunzionamenti:', es: 'fallos:' },
 };
 
 const LANG_NAMES = { en: 'English', fr: 'Français', de: 'Deutsch', it: 'Italiano', es: 'Español' };

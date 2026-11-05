@@ -28,7 +28,7 @@ info:
 
     `brokenFeatures` is only meaningful when `rating` is `2`, and holds any of
     `notifications`, `in_app_purchase`, `login`, `maps`, `location`,
-    `payments`, `cast`, `augmented_reality`.
+    `payments`, `cast`, `augmented_reality`, `google_account_required`.
   license:
     name: GPL-3.0-only
     url: https://github.com/jonathanklee/Sapio/blob/main/LICENSE
@@ -208,7 +208,7 @@ components:
 
     BrokenFeature:
       type: string
-      description: A feature that does not work. Only meaningful when `rating` is `2`.
+      description: An issue met without Google Play Services, either a feature that does not work or a Google account requirement. Only meaningful when `rating` is `2`.
       enum:
         - notifications
         - in_app_purchase
@@ -218,6 +218,7 @@ components:
         - payments
         - cast
         - augmented_reality
+        - google_account_required
 
     Evaluation:
       type: object

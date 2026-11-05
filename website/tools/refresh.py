@@ -36,6 +36,7 @@ BROKEN_FEATURE_LABELS = {
     "payments":          "Contactless payment",
     "cast":              "Screen casting",
     "augmented_reality": "Augmented reality",
+    "google_account_required": "Google account required",
 }
 PARTIAL_RATING = 2
 SECTIONS = [
@@ -173,7 +174,7 @@ def localized_broken_suffix(entry, t):
     if not labels:
         return ""
 
-    return f" ({t('summary_no_prefix')} {', '.join(b.lower() for b in labels)})"
+    return f" ({t('summary_no_prefix')} {', '.join(labels)})"
 
 
 def human_summary(app):
@@ -186,7 +187,7 @@ def human_summary(app):
 
         rating = RATING_LABEL.get(entry["rating"], "—")
         broken = [BROKEN_FEATURE_LABELS[k] for k in broken_feature_keys(entry)]
-        broken_suffix = f" (no {', '.join(b.lower() for b in broken)})" if broken else ""
+        broken_suffix = f" (issues: {', '.join(broken)})" if broken else ""
         parts.append(f"{section['label']}: {rating}{broken_suffix}")
 
     if not parts:

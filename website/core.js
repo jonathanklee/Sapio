@@ -18,6 +18,7 @@ const BROKEN_FEATURE_LABELS = {
     payments:           'Contactless payment',
     cast:               'Screen casting',
     augmented_reality:  'Augmented reality',
+    google_account_required: 'Google account required',
 };
 
 const SECTIONS = [
@@ -314,13 +315,13 @@ function brokenFeatureKeys(entry) {
 function englishBrokenSuffix(entry) {
     const labels = brokenFeatureKeys(entry).map(key => BROKEN_FEATURE_LABELS[key]);
 
-    return labels.length === 0 ? '' : ` (no ${labels.join(', ').toLowerCase()})`;
+    return labels.length === 0 ? '' : ` (issues: ${labels.join(', ')})`;
 }
 
 function localizedBrokenSuffix(entry) {
     const labels = brokenFeatureKeys(entry).map(key => t(`feat_${key}`));
 
-    return labels.length === 0 ? '' : ` (${t('summary_no_prefix')} ${labels.join(', ').toLowerCase()})`;
+    return labels.length === 0 ? '' : ` (${t('summary_no_prefix')} ${labels.join(', ')})`;
 }
 
 function humanSummary(app, withPermissive) {
