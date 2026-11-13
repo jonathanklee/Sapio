@@ -13,6 +13,10 @@ local.properties
 # Website — generated per-app pages (build artifact)
 website/app/
 
+# Website — runtime files written by the Pi-side cron
+website/indexnow_state.json
+website/regenerate.log
+
 # Python bytecode from website/tools
 __pycache__/
 *.pyc

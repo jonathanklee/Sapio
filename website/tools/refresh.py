@@ -26,6 +26,11 @@ WEB_DIR = Path("/var/www/sapio-website")
 DEFAULT_LANG = "en"
 PAGE_SIZE = 100
 
+INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
+INDEXNOW_KEY = "74be093fa8222f07d706bf6da3375373"
+INDEXNOW_MAX_URLS = 10000
+INDEXNOW_STATE = WEBSITE_DIR / "indexnow_state.json"
+
 RATING_LABEL = {1: "Perfect", 2: "Partial", 3: "Unusable"}
 BROKEN_FEATURE_LABELS = {
     "notifications":     "Notifications",
@@ -69,6 +74,8 @@ def main():
     write_sitemap(pages)
     write_robots()
     write_stats(len(all_apps), len(evaluations))
+    write_indexnow_key()
+    notify_search_engines(pages)
 
     print(f"Done — {len(pages)} app pages, {len(all_apps)} apps, {len(evaluations)} evaluations.")
 
@@ -792,15 +799,10 @@ def write_home_pages(translations, apps, evaluations):
 
 
 def write_sitemap(pages):
-    entries = [f"  <url><loc>{home_url(lang)}</loc></url>" for lang in LANGS]
-
-    for app in pages:
-        lastmod = last_modified(app)
-        lastmod_tag = f"<lastmod>{lastmod}</lastmod>" if lastmod else ""
-        for lang in LANGS:
-            entries.append(
-                f"  <url><loc>{app_url(app['packageName'], lang)}</loc>{lastmod_tag}</url>"
-            )
+    entries = [
+        f"  <url><loc>{loc}</loc>{lastmod_tag(lastmod)}</url>"
+        for loc, lastmod in sitemap_urls(pages).items()
+    ]
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -809,6 +811,21 @@ def write_sitemap(pages):
         + "\n</urlset>\n"
     )
     (WEB_DIR / "sitemap.xml").write_text(xml, encoding="utf-8")
+
+
+def sitemap_urls(pages):
+    urls = {home_url(lang): None for lang in LANGS}
+
+    for app in pages:
+        lastmod = last_modified(app)
+        for lang in LANGS:
+            urls[app_url(app["packageName"], lang)] = lastmod
+
+    return urls
+
+
+def lastmod_tag(lastmod):
+    return f"<lastmod>{lastmod}</lastmod>" if lastmod else ""
 
 
 def write_robots():
@@ -823,6 +840,66 @@ def write_stats(apps, evaluations):
         json.dumps({"apps": apps, "evaluations": evaluations}),
         encoding="utf-8",
     )
+
+
+def write_indexnow_key():
+    (WEB_DIR / f"{INDEXNOW_KEY}.txt").write_text(INDEXNOW_KEY, encoding="utf-8")
+
+
+def notify_search_engines(pages):
+    """Push new or updated pages to IndexNow, retrying on the next run when it fails."""
+    current = sitemap_urls(pages)
+    changed = changed_urls(current, load_indexnow_state())
+
+    if not changed:
+        return
+
+    try:
+        submit_to_indexnow(changed)
+    except OSError as error:
+        print(f"IndexNow submission failed: {error}")
+        return
+
+    save_indexnow_state(current)
+    print(f"IndexNow: submitted {len(changed)} URLs.")
+
+
+def changed_urls(current, submitted):
+    return [
+        url for url, lastmod in current.items()
+        if url not in submitted or submitted[url] != lastmod
+    ]
+
+
+def load_indexnow_state():
+    if not INDEXNOW_STATE.exists():
+        return {}
+
+    return json.loads(INDEXNOW_STATE.read_text(encoding="utf-8"))
+
+
+def save_indexnow_state(urls):
+    INDEXNOW_STATE.write_text(json.dumps(urls), encoding="utf-8")
+
+
+def submit_to_indexnow(urls):
+    for start in range(0, len(urls), INDEXNOW_MAX_URLS):
+        post_indexnow_batch(urls[start:start + INDEXNOW_MAX_URLS])
+
+
+def post_indexnow_batch(urls):
+    body = json.dumps({
+        "host": SITE_ORIGIN.removeprefix("https://"),
+        "key": INDEXNOW_KEY,
+        "keyLocation": f"{SITE_ORIGIN}/{INDEXNOW_KEY}.txt",
+        "urlList": urls,
+    }).encode("utf-8")
+    request = urllib.request.Request(
+        INDEXNOW_ENDPOINT,
+        data=body,
+        headers={"Content-Type": "application/json; charset=utf-8"},
+    )
+    urllib.request.urlopen(request, timeout=30).close()
 
 
 if __name__ == "__main__":
