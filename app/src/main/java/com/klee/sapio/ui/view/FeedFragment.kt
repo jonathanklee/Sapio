@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.klee.sapio.databinding.FragmentMainBinding
@@ -14,7 +13,6 @@ import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.ui.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -79,17 +77,15 @@ class FeedFragment : Fragment() {
 
     private fun collectFeed() {
         fetchJob?.cancel()
-        fetchJob = viewLifecycleOwner.lifecycleScope.launch {
-            mViewModel.uiState.collect { state ->
-                mFeedAppAdapter.submitList(state.items) {
-                    if (!state.isLoading && !state.isLoadingMore) {
-                        loadMoreIfNeeded()
-                    }
+        fetchJob = mViewModel.uiState.collectWhenStarted(viewLifecycleOwner) { state ->
+            mFeedAppAdapter.submitList(state.items) {
+                if (!state.isLoading && !state.isLoadingMore) {
+                    loadMoreIfNeeded()
                 }
-                val isInitialLoad = state.isLoading && state.items.isEmpty()
-                mBinding.progressBar.visibility = if (isInitialLoad) View.VISIBLE else View.GONE
-                mBinding.refreshView.isRefreshing = false
             }
+            val isInitialLoad = state.isLoading && state.items.isEmpty()
+            mBinding.progressBar.visibility = if (isInitialLoad) View.VISIBLE else View.GONE
+            mBinding.refreshView.isRefreshing = false
         }
     }
 

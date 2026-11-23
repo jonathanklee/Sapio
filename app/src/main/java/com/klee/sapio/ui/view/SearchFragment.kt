@@ -13,14 +13,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.R
 import com.klee.sapio.databinding.FragmentSearchBinding
 import com.klee.sapio.ui.state.SearchUiState
 import com.klee.sapio.ui.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -60,10 +58,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun collectSearch() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            mViewModel.uiState.collect { state ->
-                renderState(state)
-            }
+        mViewModel.uiState.collectWhenStarted(viewLifecycleOwner) { state ->
+            renderState(state)
         }
     }
 

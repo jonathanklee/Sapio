@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withStarted
 import androidx.navigation.fragment.findNavController
 import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentLoadingBinding
@@ -42,24 +43,37 @@ class LoadingFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             mViewModel.events.collect { event ->
-                when (event) {
-                    is EvaluateEvent.NavigateToSuccess -> {
-                        mEvaluationsViewModel.listEvaluations(packageName)
-                        mEvaluationsViewModel.uiState.first { it.evaluationsLoaded }
-                        val bundle = Bundle().apply {
-                            putString("package", event.packageName)
-                            putString("name", event.appName)
-                        }
-                        findNavController().navigate(R.id.action_loadingFragment_to_successFragment, bundle)
-                    }
-                    is EvaluateEvent.ShowError -> {
-                        Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
-                        findNavController().popBackStack()
-                    }
-                }
+                handleEvent(event)
             }
         }
 
         return mBinding.root
+    }
+
+    private suspend fun handleEvent(event: EvaluateEvent) {
+        when (event) {
+            is EvaluateEvent.NavigateToSuccess -> navigateToSuccess(event)
+            is EvaluateEvent.ShowError -> showError()
+        }
+    }
+
+    private suspend fun navigateToSuccess(event: EvaluateEvent.NavigateToSuccess) {
+        mEvaluationsViewModel.listEvaluations(event.packageName)
+        mEvaluationsViewModel.uiState.first { it.evaluationsLoaded }
+        val bundle = Bundle().apply {
+            putString("package", event.packageName)
+            putString("name", event.appName)
+        }
+
+        viewLifecycleOwner.withStarted {
+            findNavController().navigate(R.id.action_loadingFragment_to_successFragment, bundle)
+        }
+    }
+
+    private suspend fun showError() {
+        viewLifecycleOwner.withStarted {
+            Toast.makeText(context, getString(R.string.upload_error), Toast.LENGTH_LONG).show()
+            findNavController().popBackStack()
+        }
     }
 }

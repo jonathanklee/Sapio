@@ -35,6 +35,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.withStarted
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -56,9 +57,7 @@ import com.klee.sapio.ui.model.relativeDate
 import com.klee.sapio.ui.state.AppEvaluationsUiState
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.IOException
@@ -174,23 +173,21 @@ class EvaluationsFragment : Fragment() {
     }
 
     private fun onElementsLoaded(callback: () -> Unit) {
-        mViewModel.uiState
-            .filter { it.isFullyLoaded }
-            .onEach { callback.invoke() }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        viewLifecycleOwner.lifecycleScope.launch {
+            mViewModel.uiState.first { it.isFullyLoaded }
+            viewLifecycleOwner.withStarted { callback() }
+        }
     }
 
     private fun observeEvaluations() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            mViewModel.uiState.collect { state ->
-                if (state.isFullyLoaded) {
-                    renderEvaluations(state)
-                }
+        mViewModel.uiState.collectWhenStarted(viewLifecycleOwner) { state ->
+            if (state.isFullyLoaded) {
+                renderEvaluations(state)
+            }
 
-                if (state.iconUrl != null && !iconReady) {
-                    iconReady = true
-                    renderIcon(state.iconUrl, needsCount = !state.isFullyLoaded)
-                }
+            if (state.iconUrl != null && !iconReady) {
+                iconReady = true
+                renderIcon(state.iconUrl, needsCount = !state.isFullyLoaded)
             }
         }
     }

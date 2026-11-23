@@ -10,6 +10,7 @@ import com.klee.sapio.ui.state.EvaluateEvent
 import com.klee.sapio.ui.viewmodel.LoadingViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -39,6 +40,7 @@ class LoadingViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
     private val appContext = RuntimeEnvironment.getApplication()
+    private var evaluationCount = 0
 
     private val fakeApp = InstalledApplication(
         name = "Test App",
@@ -110,6 +112,27 @@ class LoadingViewModelTest {
         job.cancel()
     }
 
+    @Test
+    fun `submit keeps the event until a collector subscribes`() = runTest(dispatcher) {
+        val vm = buildViewModel(app = fakeApp, useCaseResult = Result.success(Unit))
+
+        vm.submit("com.test.app", "Test App", rating = 1, brokenFeatures = null)
+        advanceUntilIdle()
+
+        assertTrue(vm.events.first() is EvaluateEvent.NavigateToSuccess)
+    }
+
+    @Test
+    fun `submit evaluates the app only once when called again`() = runTest(dispatcher) {
+        val vm = buildViewModel(app = fakeApp, useCaseResult = Result.success(Unit))
+
+        vm.submit("com.test.app", "Test App", rating = 1, brokenFeatures = null)
+        vm.submit("com.test.app", "Test App", rating = 1, brokenFeatures = null)
+        advanceUntilIdle()
+
+        assertEquals(1, evaluationCount)
+    }
+
     private fun buildViewModel(
         app: InstalledApplication? = fakeApp,
         useCaseResult: Result<Unit> = Result.success(Unit)
@@ -141,7 +164,10 @@ class LoadingViewModelTest {
         }
 
         val fakeUseCase = object : EvaluateAppUseCase(fakeRepo, fakeDeviceConfig) {
-            override suspend fun invoke(a: InstalledApplication, rating: Int, brokenFeatures: List<String>?) = useCaseResult
+            override suspend fun invoke(a: InstalledApplication, rating: Int, brokenFeatures: List<String>?): Result<Unit> {
+                evaluationCount++
+                return useCaseResult
+            }
         }
 
         return LoadingViewModel(fakeInstalledAppsRepo, fakeUseCase)

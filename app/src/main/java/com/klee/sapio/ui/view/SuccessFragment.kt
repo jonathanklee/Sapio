@@ -6,12 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.klee.sapio.databinding.FragmentSuccessBinding
 import com.klee.sapio.ui.viewmodel.AppEvaluationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class SuccessFragment : Fragment() {
@@ -36,11 +33,14 @@ class SuccessFragment : Fragment() {
             )
         }
 
-        mViewModel.uiState.onEach { state ->
-            if (!state.evaluationsLoaded) return@onEach
+        mViewModel.uiState.collectWhenStarted(viewLifecycleOwner) { state ->
+            if (!state.evaluationsLoaded) {
+                return@collectWhenStarted
+            }
+
             mBinding.shareEvaluation.isEnabled = state.microgUser != null || state.bareAospUser != null
             mBinding.shareEvaluation.visibility = View.VISIBLE
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        }
 
         return mBinding.root
     }

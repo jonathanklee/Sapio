@@ -6,12 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klee.sapio.databinding.FragmentMyAppsBinding
 import com.klee.sapio.ui.viewmodel.MyAppsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyAppsFragment : Fragment() {
@@ -49,19 +47,17 @@ class MyAppsFragment : Fragment() {
     }
 
     private fun collectState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            mViewModel.uiState.collect { state ->
-                if (state.isLoading) {
-                    mAdapter.submitList(emptyList())
-                    mBinding.progressBar.visibility = View.VISIBLE
-                } else {
-                    mAdapter.submitList(state.items)
-                    mBinding.progressBar.visibility = View.GONE
-                }
-                mBinding.recyclerView.visibility =
-                    if (state.isLoading) View.GONE else View.VISIBLE
-                mBinding.swipeRefreshLayout.isRefreshing = false
+        mViewModel.uiState.collectWhenStarted(viewLifecycleOwner) { state ->
+            if (state.isLoading) {
+                mAdapter.submitList(emptyList())
+                mBinding.progressBar.visibility = View.VISIBLE
+            } else {
+                mAdapter.submitList(state.items)
+                mBinding.progressBar.visibility = View.GONE
             }
+            mBinding.recyclerView.visibility =
+                if (state.isLoading) View.GONE else View.VISIBLE
+            mBinding.swipeRefreshLayout.isRefreshing = false
         }
     }
 }
