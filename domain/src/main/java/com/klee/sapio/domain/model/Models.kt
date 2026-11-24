@@ -13,7 +13,8 @@ data class Evaluation(
     val createdAt: Date?,
     val publishedAt: Date?,
     val versionName: String?,
-    val brokenFeatures: List<String>?
+    val brokenFeatures: List<String>?,
+    val operatingSystem: OperatingSystem? = null
 )
 
 data class UploadEvaluation(
@@ -24,7 +25,8 @@ data class UploadEvaluation(
     val microg: Int,
     val rooted: Int,
     val brokenFeatures: List<String>?,
-    val versionName: String?
+    val versionName: String?,
+    val operatingSystem: OperatingSystem
 )
 
 data class Icon(

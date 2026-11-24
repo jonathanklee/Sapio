@@ -16,5 +16,8 @@ data class Evaluation(
     @JsonProperty("createdAt") val createdAt: Date?,
     @JsonProperty("publishedAt") val publishedAt: Date?,
     @JsonProperty("versionName") val versionName: String?,
-    @JsonProperty("brokenFeatures") val brokenFeatures: List<String>?
+    @JsonProperty("brokenFeatures") val brokenFeatures: List<String>?,
+    @JsonProperty("os") val os: String? = null,
+    @JsonProperty("osVersion") val osVersion: String? = null,
+    @JsonProperty("androidVersion") val androidVersion: Int? = null
 )

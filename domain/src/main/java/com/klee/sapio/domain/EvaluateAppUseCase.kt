@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 open class EvaluateAppUseCase @Inject constructor(
     private val evaluationRepository: EvaluationRepository,
-    private val deviceInfo: DeviceInfo
+    private val deviceInfo: DeviceInfo,
+    private val operatingSystemInfo: OperatingSystemInfo
 ) {
 
     open suspend operator fun invoke(
@@ -54,7 +55,8 @@ open class EvaluateAppUseCase @Inject constructor(
             deviceInfo.getGmsType(),
             deviceInfo.isPermissive(),
             brokenFeatures,
-            app.versionName
+            app.versionName,
+            operatingSystemInfo.getOperatingSystem()
         )
 
         return evaluationRepository.addEvaluation(newEvaluation).isSuccess

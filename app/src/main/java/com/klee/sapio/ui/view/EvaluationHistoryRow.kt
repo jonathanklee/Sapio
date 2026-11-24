@@ -5,5 +5,6 @@ data class EvaluationHistoryRow(
     val label: String,
     val version: String?,
     val date: String,
+    val operatingSystem: String?,
     val brokenFeatures: List<String>
 )

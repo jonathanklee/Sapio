@@ -3,11 +3,13 @@ package com.klee.sapio.data.di
 import com.klee.sapio.data.repository.DeviceAppCacheRepositoryImpl
 import com.klee.sapio.data.repository.InstalledApplicationsRepository
 import com.klee.sapio.data.system.DeviceConfiguration
+import com.klee.sapio.data.system.OperatingSystemDetector
 import com.klee.sapio.data.system.Settings
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.DeviceAppCacheRepository
 import com.klee.sapio.domain.DeviceInfo
 import com.klee.sapio.domain.InstalledApplicationsDataSource
+import com.klee.sapio.domain.OperatingSystemInfo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,6 +25,12 @@ abstract class DataModule {
     abstract fun bindDeviceInfo(
         impl: DeviceConfiguration
     ): DeviceInfo
+
+    @Binds
+    @Singleton
+    abstract fun bindOperatingSystemInfo(
+        impl: OperatingSystemDetector
+    ): OperatingSystemInfo
 
     @Binds
     @Singleton

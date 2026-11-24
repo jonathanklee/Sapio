@@ -8,6 +8,7 @@ import com.klee.sapio.data.local.EvaluationEntity
 import com.klee.sapio.data.local.IconDao
 import com.klee.sapio.data.local.IconEntity
 import com.klee.sapio.domain.EvaluationRepository
+import com.klee.sapio.domain.model.OperatingSystem
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -206,7 +207,8 @@ private fun DtoEvaluation.toDomain(): DomainEvaluation = DomainEvaluation(
     createdAt = createdAt,
     publishedAt = publishedAt,
     versionName = versionName,
-    brokenFeatures = brokenFeatures
+    brokenFeatures = brokenFeatures,
+    operatingSystem = operatingSystemOf(os, osVersion, androidVersion)
 )
 
 private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = EvaluationEntity(
@@ -222,7 +224,10 @@ private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = Evaluatio
     publishedAt = publishedAt,
     versionName = versionName,
     cachedAt = cachedAt,
-    brokenFeatures = brokenFeatures?.joinToString(",")
+    brokenFeatures = brokenFeatures?.joinToString(","),
+    os = os,
+    osVersion = osVersion,
+    androidVersion = androidVersion
 )
 
 private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
@@ -236,8 +241,17 @@ private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
     createdAt = createdAt,
     publishedAt = publishedAt,
     versionName = versionName,
-    brokenFeatures = brokenFeatures?.split(",")?.filter { it.isNotEmpty() }
+    brokenFeatures = brokenFeatures?.split(",")?.filter { it.isNotEmpty() },
+    operatingSystem = operatingSystemOf(os, osVersion, androidVersion)
 )
+
+private fun operatingSystemOf(name: String?, version: String?, androidVersion: Int?): OperatingSystem? {
+    if (name == null || androidVersion == null) {
+        return null
+    }
+
+    return OperatingSystem(name, version.orEmpty(), androidVersion)
+}
 
 private fun IconAnswer.toDomain(): DomainIcon = DomainIcon(
     id = id,
@@ -266,7 +280,10 @@ private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEval
     microg = microg,
     rooted = rooted,
     brokenFeatures = brokenFeatures,
-    versionName = versionName
+    versionName = versionName,
+    os = operatingSystem.name,
+    osVersion = operatingSystem.version,
+    androidVersion = operatingSystem.androidVersion
 )
 
 private fun String?.toAbsoluteUrl(): String? {

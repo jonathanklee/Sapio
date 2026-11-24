@@ -1,5 +1,7 @@
 package com.klee.sapio
 
+import com.klee.sapio.data.system.OperatingSystemDetector
+import com.klee.sapio.data.system.SystemPropertyReader
 import android.os.Build
 import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.data.system.DeviceConfiguration
@@ -38,7 +40,7 @@ class EvaluateAppUseCaseBehaviourTest {
         repository = FakeRepository()
         val roboContext = org.robolectric.RuntimeEnvironment.getApplication()
         deviceConfiguration = DeviceConfiguration(roboContext)
-        useCase = EvaluateAppUseCase(repository, deviceConfiguration)
+        useCase = EvaluateAppUseCase(repository, deviceConfiguration, OperatingSystemDetector(roboContext, SystemPropertyReader()))
     }
 
     @Test

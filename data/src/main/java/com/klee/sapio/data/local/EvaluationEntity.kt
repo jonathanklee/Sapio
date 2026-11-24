@@ -17,7 +17,10 @@ data class EvaluationEntity(
     val publishedAt: Date?,
     val versionName: String?,
     val cachedAt: Long,
-    val brokenFeatures: String?
+    val brokenFeatures: String?,
+    val os: String? = null,
+    val osVersion: String? = null,
+    val androidVersion: Int? = null
 )
 
 @Entity(primaryKeys = ["id"])

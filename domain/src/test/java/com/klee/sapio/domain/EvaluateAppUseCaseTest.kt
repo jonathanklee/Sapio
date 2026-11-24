@@ -3,8 +3,11 @@ package com.klee.sapio.domain
 import com.klee.sapio.domain.model.Evaluation
 import com.klee.sapio.domain.model.Icon
 import com.klee.sapio.domain.model.InstalledApplication
+import com.klee.sapio.domain.model.OperatingSystem
+import com.klee.sapio.domain.model.OperatingSystemName
 import com.klee.sapio.domain.model.UploadEvaluation
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -14,11 +17,12 @@ class EvaluateAppUseCaseTest {
     private val app = InstalledApplication(name = "Test App", packageName = "com.test.app", versionName = null)
     private val icon = Icon(id = 42, name = "com.test.app.png", url = "http://icon/test.png")
     private val existingIcon = Icon(id = 7, name = "com.test.app.png", url = "http://icon/old.png")
+    private val operatingSystem = OperatingSystem(OperatingSystemName.CALYX_OS, "8.0.4", 36)
 
     @Test
     fun `returns failure when icon upload returns empty list`() = runTest {
         val repo = fakeRepo(uploadIconResult = Result.success(emptyList()))
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         val result = useCase(app, rating = 1, brokenFeatures = null)
 
@@ -28,7 +32,7 @@ class EvaluateAppUseCaseTest {
     @Test
     fun `returns failure when icon upload fails`() = runTest {
         val repo = fakeRepo(uploadIconResult = Result.failure(RuntimeException("network error")))
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         val result = useCase(app, rating = 1, brokenFeatures = null)
 
@@ -41,7 +45,7 @@ class EvaluateAppUseCaseTest {
             uploadIconResult = Result.success(listOf(icon)),
             addEvaluationResult = Result.failure(RuntimeException("server error"))
         )
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         val result = useCase(app, rating = 1, brokenFeatures = null)
 
@@ -54,7 +58,7 @@ class EvaluateAppUseCaseTest {
             uploadIconResult = Result.success(listOf(icon)),
             addEvaluationResult = Result.success(Unit)
         )
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         val result = useCase(app, rating = 1, brokenFeatures = null)
 
@@ -68,7 +72,7 @@ class EvaluateAppUseCaseTest {
             addEvaluationResult = Result.success(Unit),
             existingIconResult = Result.success(listOf(existingIcon))
         )
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         useCase(app, rating = 1, brokenFeatures = null)
 
@@ -82,7 +86,7 @@ class EvaluateAppUseCaseTest {
             addEvaluationResult = Result.success(Unit),
             existingIconResult = Result.success(emptyList())
         )
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         val result = useCase(app, rating = 1, brokenFeatures = null)
 
@@ -97,7 +101,7 @@ class EvaluateAppUseCaseTest {
             addEvaluationResult = Result.failure(RuntimeException()),
             existingIconResult = Result.success(listOf(existingIcon))
         )
-        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo())
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
 
         useCase(app, rating = 1, brokenFeatures = null)
 
@@ -111,13 +115,26 @@ class EvaluateAppUseCaseTest {
             uploadIconResult = Result.success(listOf(icon)),
             addEvaluationResult = Result.success(Unit)
         )
-        val useCase = EvaluateAppUseCase(repo, deviceInfo)
+        val useCase = EvaluateAppUseCase(repo, deviceInfo, FakeOperatingSystemInfo())
 
         useCase(app, rating = 1, brokenFeatures = null)
 
         val submitted = repo.lastSubmittedEvaluation
         assertTrue(submitted?.microg == 2)
         assertTrue(submitted?.rooted == 4)
+    }
+
+    @Test
+    fun `uses detected operating system when building evaluation`() = runTest {
+        val repo = fakeRepo(
+            uploadIconResult = Result.success(listOf(icon)),
+            addEvaluationResult = Result.success(Unit)
+        )
+        val useCase = EvaluateAppUseCase(repo, FakeDeviceInfo(), FakeOperatingSystemInfo())
+
+        useCase(app, rating = 1, brokenFeatures = null)
+
+        assertEquals(operatingSystem, repo.lastSubmittedEvaluation?.operatingSystem)
     }
 
     private fun fakeRepo(
@@ -160,5 +177,9 @@ class EvaluateAppUseCaseTest {
     ) : DeviceInfo {
         override fun getGmsType() = gmsType
         override fun isPermissive() = userType
+    }
+
+    private inner class FakeOperatingSystemInfo : OperatingSystemInfo {
+        override fun getOperatingSystem() = operatingSystem
     }
 }

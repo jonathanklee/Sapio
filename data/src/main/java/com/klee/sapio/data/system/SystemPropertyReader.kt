@@ -2,9 +2,10 @@ package com.klee.sapio.data.system
 
 import android.annotation.SuppressLint
 import android.util.Log
+import javax.inject.Inject
 
 @SuppressLint("PrivateApi")
-class SystemPropertyReader {
+class SystemPropertyReader @Inject constructor() {
 
     private val getMethod by lazy {
         val clazz = Class.forName("android.os.SystemProperties")

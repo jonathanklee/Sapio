@@ -88,6 +88,14 @@ private fun HistoryRow(row: EvaluationHistoryRow, textColor: Color, secondaryTex
                 fontStyle = FontStyle.Italic
             )
 
+            row.operatingSystem?.let { operatingSystem ->
+                Text(
+                    text = operatingSystem,
+                    color = secondaryTextColor,
+                    fontSize = 12.sp
+                )
+            }
+
             if (row.brokenFeatures.isNotEmpty()) {
                 BrokenFeatureChips(row.brokenFeatures)
             }

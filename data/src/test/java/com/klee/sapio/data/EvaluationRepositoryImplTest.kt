@@ -14,6 +14,8 @@ import com.klee.sapio.data.local.IconDao
 import com.klee.sapio.data.local.IconEntity
 import com.klee.sapio.data.repository.EvaluationRepositoryImpl
 import kotlinx.coroutines.test.runTest
+import com.klee.sapio.domain.model.OperatingSystem
+import com.klee.sapio.domain.model.OperatingSystemName
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -163,6 +165,16 @@ class EvaluationRepositoryImplTest {
         val result = repository.addEvaluation(domainUploadEvaluation())
 
         assertTrue(result.isFailure)
+    }
+
+    @Test
+    fun `addEvaluation sends the operating system`() = runTest {
+        repository.addEvaluation(domainUploadEvaluation())
+
+        val uploaded = service.lastUploadedEvaluation?.data
+        assertEquals(OperatingSystemName.E_OS, uploaded?.os)
+        assertEquals("4.5.1", uploaded?.osVersion)
+        assertEquals(35, uploaded?.androidVersion)
     }
 
 
@@ -372,6 +384,25 @@ class EvaluationRepositoryImplTest {
     }
 
     @Test
+    fun `fetchEvaluationHistory maps the operating system`() = runTest {
+        val evaluation = dtoEvaluation().copy(os = OperatingSystemName.E_OS, osVersion = "4.5.1", androidVersion = 35)
+        service.existingEvaluationsResult = Result.success(listOf(StrapiElement(1, evaluation)))
+
+        val history = repository.fetchEvaluationHistory("com.test.app").getOrThrow()
+
+        assertEquals(OperatingSystem(OperatingSystemName.E_OS, "4.5.1", 35), history.first().operatingSystem)
+    }
+
+    @Test
+    fun `fetchEvaluationHistory leaves the operating system empty for older evaluations`() = runTest {
+        service.existingEvaluationsResult = Result.success(listOf(StrapiElement(1, dtoEvaluation())))
+
+        val history = repository.fetchEvaluationHistory("com.test.app").getOrThrow()
+
+        assertNull(history.first().operatingSystem)
+    }
+
+    @Test
     fun `fetchEvaluationHistory falls back to the uploaded icon when the relation is empty`() = runTest {
         service.existingEvaluationsResult = Result.success(
             listOf(StrapiElement(1, dtoEvaluation(iconUrl = null)))
@@ -465,7 +496,8 @@ class EvaluationRepositoryImplTest {
 
     private fun domainUploadEvaluation() = com.klee.sapio.domain.model.UploadEvaluation(
         name = "Test App", packageName = "com.test.app", icon = 1,
-        rating = 1, microg = 1, rooted = 3, brokenFeatures = null, versionName = null
+        rating = 1, microg = 1, rooted = 3, brokenFeatures = null, versionName = null,
+        operatingSystem = OperatingSystem(OperatingSystemName.E_OS, "4.5.1", 35)
     )
 
     // endregion
@@ -484,7 +516,13 @@ class EvaluationRepositoryImplTest {
 
         override suspend fun listLatestEvaluations(pageNumber: Int) = listLatestResult
         override suspend fun searchEvaluation(pattern: String) = searchResult
-        override suspend fun addEvaluation(app: UploadEvaluationHeader) = addEvalResult
+        var lastUploadedEvaluation: UploadEvaluationHeader? = null
+
+        override suspend fun addEvaluation(app: UploadEvaluationHeader): Result<Unit> {
+            lastUploadedEvaluation = app
+            return addEvalResult
+        }
+
         override suspend fun fetchEvaluation(appPackageName: String, microG: Int, rooted: Int) = fetchEvalResult
         override suspend fun uploadIcon(packageName: String) = uploadIconResult
         override suspend fun existingIcon(iconName: String) = existingIconResult

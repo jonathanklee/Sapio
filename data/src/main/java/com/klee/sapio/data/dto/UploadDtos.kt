@@ -10,7 +10,10 @@ data class UploadEvaluation(
     @JsonProperty("microg") val microg: Int,
     @JsonProperty("rooted") val rooted: Int,
     @JsonProperty("brokenFeatures") val brokenFeatures: List<String>?,
-    @JsonProperty("versionName") val versionName: String?
+    @JsonProperty("versionName") val versionName: String?,
+    @JsonProperty("os") val os: String,
+    @JsonProperty("osVersion") val osVersion: String,
+    @JsonProperty("androidVersion") val androidVersion: Int
 )
 
 data class UploadAnswer(

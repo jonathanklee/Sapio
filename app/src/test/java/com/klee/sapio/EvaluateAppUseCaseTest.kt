@@ -1,5 +1,7 @@
 package com.klee.sapio
 
+import com.klee.sapio.data.system.OperatingSystemDetector
+import com.klee.sapio.data.system.SystemPropertyReader
 import android.os.Build
 import com.klee.sapio.domain.EvaluateAppUseCase
 import com.klee.sapio.domain.model.Icon
@@ -40,7 +42,7 @@ class EvaluateAppUseCaseTest {
         val deviceConfiguration = com.klee.sapio.data.system.DeviceConfiguration(roboContext)
 
         fakeRepository = FakeRepository()
-        evaluateAppUseCase = EvaluateAppUseCase(fakeRepository, deviceConfiguration)
+        evaluateAppUseCase = EvaluateAppUseCase(fakeRepository, deviceConfiguration, OperatingSystemDetector(roboContext, SystemPropertyReader()))
 
         realInstalledApplication = InstalledApplication(
             name = "Test App",

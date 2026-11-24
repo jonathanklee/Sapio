@@ -50,6 +50,7 @@ import com.klee.sapio.R
 import com.klee.sapio.databinding.FragmentEvaluationsBinding
 import com.klee.sapio.domain.AppSettings
 import com.klee.sapio.domain.model.EvaluationHistory
+import com.klee.sapio.ui.model.OperatingSystemLabel
 import com.klee.sapio.ui.model.Rating
 import com.klee.sapio.ui.model.SharedEvaluation
 import com.klee.sapio.ui.model.absoluteDate
@@ -411,6 +412,7 @@ class EvaluationsFragment : Fragment() {
                 label = getRatingShortLabel(evaluation.rating),
                 version = evaluation.versionName,
                 date = absoluteDate(evaluation.updatedAt),
+                operatingSystem = evaluation.operatingSystem?.let { OperatingSystemLabel.format(it) },
                 brokenFeatures = brokenFeatureLabels(evaluation)
             )
         }

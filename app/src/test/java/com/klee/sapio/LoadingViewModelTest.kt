@@ -1,5 +1,7 @@
 package com.klee.sapio
 
+import com.klee.sapio.data.system.OperatingSystemDetector
+import com.klee.sapio.data.system.SystemPropertyReader
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.klee.sapio.data.system.DeviceConfiguration
@@ -163,7 +165,7 @@ class LoadingViewModelTest {
             }
         }
 
-        val fakeUseCase = object : EvaluateAppUseCase(fakeRepo, fakeDeviceConfig) {
+        val fakeUseCase = object : EvaluateAppUseCase(fakeRepo, fakeDeviceConfig, OperatingSystemDetector(appContext, SystemPropertyReader())) {
             override suspend fun invoke(a: InstalledApplication, rating: Int, brokenFeatures: List<String>?): Result<Unit> {
                 evaluationCount++
                 return useCaseResult
