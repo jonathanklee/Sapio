@@ -173,7 +173,6 @@ class EvaluationRepositoryImplTest {
 
         val uploaded = service.lastUploadedEvaluation?.data
         assertEquals(OperatingSystemName.E_OS, uploaded?.os)
-        assertEquals("4.5.1", uploaded?.osVersion)
         assertEquals(35, uploaded?.androidVersion)
     }
 
@@ -385,12 +384,12 @@ class EvaluationRepositoryImplTest {
 
     @Test
     fun `fetchEvaluationHistory maps the operating system`() = runTest {
-        val evaluation = dtoEvaluation().copy(os = OperatingSystemName.E_OS, osVersion = "4.5.1", androidVersion = 35)
+        val evaluation = dtoEvaluation().copy(os = OperatingSystemName.E_OS, androidVersion = 35)
         service.existingEvaluationsResult = Result.success(listOf(StrapiElement(1, evaluation)))
 
         val history = repository.fetchEvaluationHistory("com.test.app").getOrThrow()
 
-        assertEquals(OperatingSystem(OperatingSystemName.E_OS, "4.5.1", 35), history.first().operatingSystem)
+        assertEquals(OperatingSystem(OperatingSystemName.E_OS, 35), history.first().operatingSystem)
     }
 
     @Test
@@ -497,7 +496,7 @@ class EvaluationRepositoryImplTest {
     private fun domainUploadEvaluation() = com.klee.sapio.domain.model.UploadEvaluation(
         name = "Test App", packageName = "com.test.app", icon = 1,
         rating = 1, microg = 1, rooted = 3, brokenFeatures = null, versionName = null,
-        operatingSystem = OperatingSystem(OperatingSystemName.E_OS, "4.5.1", 35)
+        operatingSystem = OperatingSystem(OperatingSystemName.E_OS, 35)
     )
 
     // endregion

@@ -12,16 +12,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.klee.sapio.R
 
 private val BROKEN_CHIP_COLOR = Color(0xFFE53935)
 
@@ -89,17 +92,32 @@ private fun HistoryRow(row: EvaluationHistoryRow, textColor: Color, secondaryTex
             )
 
             row.operatingSystem?.let { operatingSystem ->
-                Text(
-                    text = operatingSystem,
-                    color = secondaryTextColor,
-                    fontSize = 12.sp
-                )
+                OperatingSystemLine(operatingSystem, secondaryTextColor)
             }
 
             if (row.brokenFeatures.isNotEmpty()) {
                 BrokenFeatureChips(row.brokenFeatures)
             }
         }
+    }
+}
+
+@Composable
+private fun OperatingSystemLine(operatingSystem: String, color: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(R.drawable.ic_phone),
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(13.dp)
+        )
+
+        Text(
+            text = operatingSystem,
+            color = color,
+            fontSize = 12.sp,
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }
 

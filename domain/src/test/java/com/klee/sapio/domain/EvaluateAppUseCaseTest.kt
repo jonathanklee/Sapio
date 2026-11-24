@@ -17,7 +17,7 @@ class EvaluateAppUseCaseTest {
     private val app = InstalledApplication(name = "Test App", packageName = "com.test.app", versionName = null)
     private val icon = Icon(id = 42, name = "com.test.app.png", url = "http://icon/test.png")
     private val existingIcon = Icon(id = 7, name = "com.test.app.png", url = "http://icon/old.png")
-    private val operatingSystem = OperatingSystem(OperatingSystemName.CALYX_OS, "8.0.4", 36)
+    private val operatingSystem = OperatingSystem(OperatingSystemName.CALYX_OS, 36)
 
     @Test
     fun `returns failure when icon upload returns empty list`() = runTest {

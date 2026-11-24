@@ -208,7 +208,7 @@ private fun DtoEvaluation.toDomain(): DomainEvaluation = DomainEvaluation(
     publishedAt = publishedAt,
     versionName = versionName,
     brokenFeatures = brokenFeatures,
-    operatingSystem = operatingSystemOf(os, osVersion, androidVersion)
+    operatingSystem = operatingSystemOf(os, androidVersion)
 )
 
 private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = EvaluationEntity(
@@ -226,7 +226,6 @@ private fun DtoEvaluation.toEntity(cachedAt: Long): EvaluationEntity = Evaluatio
     cachedAt = cachedAt,
     brokenFeatures = brokenFeatures?.joinToString(","),
     os = os,
-    osVersion = osVersion,
     androidVersion = androidVersion
 )
 
@@ -242,15 +241,15 @@ private fun EvaluationEntity.toDomain(): DomainEvaluation = DomainEvaluation(
     publishedAt = publishedAt,
     versionName = versionName,
     brokenFeatures = brokenFeatures?.split(",")?.filter { it.isNotEmpty() },
-    operatingSystem = operatingSystemOf(os, osVersion, androidVersion)
+    operatingSystem = operatingSystemOf(os, androidVersion)
 )
 
-private fun operatingSystemOf(name: String?, version: String?, androidVersion: Int?): OperatingSystem? {
+private fun operatingSystemOf(name: String?, androidVersion: Int?): OperatingSystem? {
     if (name == null || androidVersion == null) {
         return null
     }
 
-    return OperatingSystem(name, version.orEmpty(), androidVersion)
+    return OperatingSystem(name, androidVersion)
 }
 
 private fun IconAnswer.toDomain(): DomainIcon = DomainIcon(
@@ -282,7 +281,6 @@ private fun DomainUploadEvaluation.toData(): DtoUploadEvaluation = DtoUploadEval
     brokenFeatures = brokenFeatures,
     versionName = versionName,
     os = operatingSystem.name,
-    osVersion = operatingSystem.version,
     androidVersion = operatingSystem.androidVersion
 )
 

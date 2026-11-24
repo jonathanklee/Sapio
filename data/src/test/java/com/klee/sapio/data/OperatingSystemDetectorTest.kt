@@ -37,13 +37,11 @@ class OperatingSystemDetectorTest {
     @Test
     fun `detects eos from its legal url property`() {
         givenProperty("ro.elegal.url", "https://e.foundation/legal")
-        givenProperty("ro.lineage.version", "4.5.1-a15-20261118716089-test-kiev")
-        givenProperty("ro.lineage.build.version", "4.5.1")
+        givenProperty("ro.lineage.device", "kiev")
 
         val operatingSystem = detector().getOperatingSystem()
 
         assertEquals(OperatingSystemName.E_OS, operatingSystem.name)
-        assertEquals("4.5.1", operatingSystem.version)
     }
 
     @Test
@@ -55,13 +53,12 @@ class OperatingSystemDetectorTest {
 
     @Test
     fun `detects iodeos before lineageos`() {
-        givenProperty("ro.lineage.version", "22.2")
+        givenProperty("ro.lineage.device", "FP6")
         givenProperty("ro.iode.build.version", "7.1")
 
         val operatingSystem = detector().getOperatingSystem()
 
         assertEquals(OperatingSystemName.IODE_OS, operatingSystem.name)
-        assertEquals("7.1", operatingSystem.version)
     }
 
     @Test
@@ -71,7 +68,6 @@ class OperatingSystemDetectorTest {
         val operatingSystem = detector().getOperatingSystem()
 
         assertEquals(OperatingSystemName.CALYX_OS, operatingSystem.name)
-        assertEquals("8.0.4", operatingSystem.version)
     }
 
     @Test
@@ -90,21 +86,36 @@ class OperatingSystemDetectorTest {
 
     @Test
     fun `detects lineageos`() {
-        givenProperty("ro.lineage.version", "22.2-20261120-NIGHTLY-kiev")
-        givenProperty("ro.lineage.build.version", "22.2")
+        givenProperty("ro.lineage.device", "kiev")
 
         val operatingSystem = detector().getOperatingSystem()
 
         assertEquals(OperatingSystemName.LINEAGE_OS, operatingSystem.name)
-        assertEquals("22.2", operatingSystem.version)
     }
 
     @Test
-    fun `falls back to other with the build display as version`() {
+    fun `falls back to other`() {
         val operatingSystem = detector().getOperatingSystem()
 
         assertEquals(OperatingSystemName.OTHER, operatingSystem.name)
-        assertEquals("BP1A.250505.005", operatingSystem.version)
+    }
+
+    @Test
+    fun `falls back to other when a property cannot be read`() {
+        Mockito.`when`(propertyReader.read(anyString())).thenThrow(SecurityException("denied"))
+
+        val operatingSystem = detector().getOperatingSystem()
+
+        assertEquals(OperatingSystemName.OTHER, operatingSystem.name)
+        assertEquals(Build.VERSION_CODES.P, operatingSystem.androidVersion)
+    }
+
+    @Test
+    fun `falls back to other when the package manager fails`() {
+        Mockito.doThrow(IllegalStateException("package manager died"))
+            .`when`(packageManager).getApplicationInfo(GRAPHENE_OS_APP_STORE, 0)
+
+        assertEquals(OperatingSystemName.OTHER, detector().getOperatingSystem().name)
     }
 
     @Test

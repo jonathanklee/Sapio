@@ -22,9 +22,15 @@ class OperatingSystemDetector @Inject constructor(
     private val cachedOperatingSystem: OperatingSystem by lazy { detectOperatingSystem() }
 
     private fun detectOperatingSystem(): OperatingSystem {
-        val name = detectName()
+        return OperatingSystem(detectNameOrFallback(), Build.VERSION.SDK_INT)
+    }
 
-        return OperatingSystem(name, versionOf(name), Build.VERSION.SDK_INT)
+    private fun detectNameOrFallback(): String {
+        return try {
+            detectName()
+        } catch (ignored: RuntimeException) {
+            OperatingSystemName.OTHER
+        }
     }
 
     private fun detectName(): String = when {
@@ -32,16 +38,8 @@ class OperatingSystemDetector @Inject constructor(
         hasProperty(IODE_VERSION_PROPERTY) -> OperatingSystemName.IODE_OS
         hasProperty(CALYX_VERSION_PROPERTY) -> OperatingSystemName.CALYX_OS
         isGrapheneOs() -> OperatingSystemName.GRAPHENE_OS
-        hasProperty(LINEAGE_VERSION_PROPERTY) -> OperatingSystemName.LINEAGE_OS
+        hasProperty(LINEAGE_DEVICE_PROPERTY) -> OperatingSystemName.LINEAGE_OS
         else -> OperatingSystemName.OTHER
-    }
-
-    private fun versionOf(name: String): String = when (name) {
-        OperatingSystemName.E_OS, OperatingSystemName.LINEAGE_OS -> propertyReader.read(LINEAGE_BUILD_VERSION_PROPERTY)
-        OperatingSystemName.IODE_OS -> propertyReader.read(IODE_VERSION_PROPERTY)
-        OperatingSystemName.CALYX_OS -> propertyReader.read(CALYX_VERSION_PROPERTY)
-        OperatingSystemName.GRAPHENE_OS -> Build.VERSION.INCREMENTAL
-        else -> Build.DISPLAY
     }
 
     private fun isEOs(): Boolean {
@@ -64,8 +62,7 @@ class OperatingSystemDetector @Inject constructor(
         const val E_BUILD_DISPLAY_PREFIX = "e_"
         const val IODE_VERSION_PROPERTY = "ro.iode.build.version"
         const val CALYX_VERSION_PROPERTY = "ro.calyxos.version"
-        const val LINEAGE_VERSION_PROPERTY = "ro.lineage.version"
-        const val LINEAGE_BUILD_VERSION_PROPERTY = "ro.lineage.build.version"
+        const val LINEAGE_DEVICE_PROPERTY = "ro.lineage.device"
         const val GRAPHENE_OS_APP_STORE_PACKAGE = "app.grapheneos.apps"
     }
 }

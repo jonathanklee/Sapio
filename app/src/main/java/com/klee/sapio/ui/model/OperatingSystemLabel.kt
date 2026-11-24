@@ -32,15 +32,9 @@ object OperatingSystemLabel {
 
     fun format(operatingSystem: OperatingSystem): String {
         val android = androidLabel(operatingSystem.androidVersion)
-        val system = systemLabel(operatingSystem) ?: return android
+        val displayName = displayNames[operatingSystem.name] ?: return android
 
-        return system + SEPARATOR + android
-    }
-
-    private fun systemLabel(operatingSystem: OperatingSystem): String? {
-        val displayName = displayNames[operatingSystem.name] ?: return null
-
-        return "$displayName ${operatingSystem.version}".trim()
+        return displayName + SEPARATOR + android
     }
 
     private fun androidLabel(sdkVersion: Int): String {

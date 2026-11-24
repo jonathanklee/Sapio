@@ -11,6 +11,5 @@ object OperatingSystemName {
 
 data class OperatingSystem(
     val name: String,
-    val version: String,
     val androidVersion: Int
 )

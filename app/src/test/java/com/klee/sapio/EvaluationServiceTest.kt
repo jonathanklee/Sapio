@@ -236,7 +236,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null, "other", "", 35)))
+        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null, "other", 35)))
         assertTrue(result.isFailure)
     }
 
@@ -251,7 +251,7 @@ class EvaluationServiceTest {
         }
         setApi(api)
 
-        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null, "other", "", 35)))
+        val result = service.addEvaluation(UploadEvaluationHeader(UploadEvaluation("a", "p", 1, 1, 0, 0, null, null, "other", 35)))
         assertTrue(result.isSuccess)
     }
 

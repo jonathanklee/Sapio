@@ -12,7 +12,6 @@ data class UploadEvaluation(
     @JsonProperty("brokenFeatures") val brokenFeatures: List<String>?,
     @JsonProperty("versionName") val versionName: String?,
     @JsonProperty("os") val os: String,
-    @JsonProperty("osVersion") val osVersion: String,
     @JsonProperty("androidVersion") val androidVersion: Int
 )
 
