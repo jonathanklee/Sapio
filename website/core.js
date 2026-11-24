@@ -473,8 +473,7 @@ function ratingLine(entry, historyDisplay) {
 }
 
 function historyElement(entry, historyDisplay) {
-    const withTooltips = historyDisplay === HISTORY_DISPLAY.OPENABLE;
-    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry, withTooltips);
+    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry);
 
     if (chart && historyDisplay === HISTORY_DISPLAY.OPENABLE) {
         return historyButton(entry, chart);
@@ -565,7 +564,7 @@ function historyPoints(entry) {
     return (entry.history ?? []).slice(-HISTORY_MAX_POINTS);
 }
 
-function renderHistoryChart(entry, withTooltips) {
+function renderHistoryChart(entry) {
     const points = historyPoints(entry);
 
     if (points.length < 2) {
@@ -580,7 +579,7 @@ function renderHistoryChart(entry, withTooltips) {
     chart.appendChild(historyLine(points));
 
     for (const [index, point] of points.entries()) {
-        chart.appendChild(historyDot(point, index, points.length, withTooltips));
+        chart.appendChild(historyDot(point, index, points.length));
     }
 
     return chart;
@@ -596,44 +595,14 @@ function historyLine(points) {
     return line;
 }
 
-function historyDot(point, index, count, withTooltip) {
+function historyDot(point, index, count) {
     const dot = document.createElementNS(SVG_NS, 'circle');
     dot.setAttribute('class', `history-point ${RATING_CLASS[point.rating] ?? 'unknown'}`);
     dot.setAttribute('cx', historyX(index, count));
     dot.setAttribute('cy', historyY(point.rating));
     dot.setAttribute('r', HISTORY_POINT_RADIUS);
 
-    if (withTooltip) {
-        dot.appendChild(historyTitle(point));
-    }
-
     return dot;
-}
-
-function historyTitle(point) {
-    const title = document.createElementNS(SVG_NS, 'title');
-    title.textContent = historyTooltip(point);
-
-    return title;
-}
-
-// An absolute date, unlike the cell's: a tooltip is not rewritten by
-// syncRelativeDates(), so a relative one would go stale on a pre-rendered page.
-function historyTooltip(point) {
-    const rating = RATING_CLASS[point.rating]
-        ? `${t(`rating_${point.rating}`)}${localizedBrokenSuffix(point)}`
-        : '—';
-    const parts = [rating];
-
-    if (point.versionName) {
-        parts.push(`v${point.versionName}`);
-    }
-
-    if (point.updatedAt) {
-        parts.push(point.updatedAt.slice(0, 10));
-    }
-
-    return parts.join(' · ');
 }
 
 function historyX(index, count) {

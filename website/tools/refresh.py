@@ -494,7 +494,7 @@ def render_history_chart(entry, t):
         f"{history_x(i, len(points))},{history_y(p['rating'])}"
         for i, p in enumerate(points)
     )
-    dots = "".join(render_history_dot(p, i, len(points), t) for i, p in enumerate(points))
+    dots = "".join(render_history_dot(p, i, len(points)) for i, p in enumerate(points))
 
     return (
         f'<svg class="history-chart" viewBox="0 0 {HISTORY_WIDTH} {HISTORY_HEIGHT}" '
@@ -504,31 +504,14 @@ def render_history_chart(entry, t):
     )
 
 
-def render_history_dot(point, index, count, t):
+def render_history_dot(point, index, count):
     cls = RATING_CLASS.get(point["rating"], "unknown")
 
     return (
         f'<circle class="history-point {cls}" '
         f'cx="{history_x(index, count)}" cy="{history_y(point["rating"])}" '
-        f'r="{HISTORY_POINT_RADIUS}">'
-        f"<title>{escape_html(history_tooltip(point, t))}</title></circle>"
+        f'r="{HISTORY_POINT_RADIUS}"></circle>'
     )
-
-
-def history_tooltip(point, t):
-    rating = point["rating"]
-    parts = [
-        f"{t(f'rating_{rating}')}{localized_broken_suffix(point, t)}"
-        if rating in RATING_CLASS else "—"
-    ]
-
-    if point.get("versionName"):
-        parts.append(f"v{point['versionName']}")
-
-    if point.get("updatedAt"):
-        parts.append(point["updatedAt"][:10])
-
-    return " · ".join(parts)
 
 
 def history_x(index, count):
