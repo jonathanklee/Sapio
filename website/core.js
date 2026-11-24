@@ -473,7 +473,8 @@ function ratingLine(entry, historyDisplay) {
 }
 
 function historyElement(entry, historyDisplay) {
-    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry);
+    const withTooltips = historyDisplay === HISTORY_DISPLAY.OPENABLE;
+    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry, withTooltips);
 
     if (chart && historyDisplay === HISTORY_DISPLAY.OPENABLE) {
         return historyButton(entry, chart);
@@ -564,7 +565,7 @@ function historyPoints(entry) {
     return (entry.history ?? []).slice(-HISTORY_MAX_POINTS);
 }
 
-function renderHistoryChart(entry) {
+function renderHistoryChart(entry, withTooltips) {
     const points = historyPoints(entry);
 
     if (points.length < 2) {
@@ -579,7 +580,7 @@ function renderHistoryChart(entry) {
     chart.appendChild(historyLine(points));
 
     for (const [index, point] of points.entries()) {
-        chart.appendChild(historyDot(point, index, points.length));
+        chart.appendChild(historyDot(point, index, points.length, withTooltips));
     }
 
     return chart;
@@ -595,18 +596,25 @@ function historyLine(points) {
     return line;
 }
 
-function historyDot(point, index, count) {
+function historyDot(point, index, count, withTooltip) {
     const dot = document.createElementNS(SVG_NS, 'circle');
     dot.setAttribute('class', `history-point ${RATING_CLASS[point.rating] ?? 'unknown'}`);
     dot.setAttribute('cx', historyX(index, count));
     dot.setAttribute('cy', historyY(point.rating));
     dot.setAttribute('r', HISTORY_POINT_RADIUS);
 
-    const title = document.createElementNS(SVG_NS, 'title');
-    title.textContent = historyTooltip(point);
-    dot.appendChild(title);
+    if (withTooltip) {
+        dot.appendChild(historyTitle(point));
+    }
 
     return dot;
+}
+
+function historyTitle(point) {
+    const title = document.createElementNS(SVG_NS, 'title');
+    title.textContent = historyTooltip(point);
+
+    return title;
 }
 
 // An absolute date, unlike the cell's: a tooltip is not rewritten by
