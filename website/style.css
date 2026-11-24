@@ -816,6 +816,127 @@ body {
 .history-point.bad     { fill: var(--color-bad); }
 .history-point.unknown { fill: var(--color-unknown); }
 
+/* ─── History panel ───────────────────────────────────────────────────────── */
+
+.history-button {
+    display: flex;
+    flex-shrink: 0;
+    padding: var(--space-05);
+    border: none;
+    border-radius: var(--cell-radius);
+    background: none;
+    color: var(--color-brand);
+    font: inherit;
+    cursor: pointer;
+}
+
+.history-button:hover {
+    background: var(--color-bg);
+}
+
+.history-button:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+}
+
+.history-dialog {
+    width: min(420px, calc(100vw - 2 * var(--space-2)));
+    max-height: 80vh;
+    margin: auto;
+    padding: var(--space-3);
+    border: none;
+    border-radius: var(--card-radius);
+    background: var(--color-surface);
+    color: var(--color-primary-text);
+    font-family: var(--font);
+    box-shadow: var(--card-shadow);
+}
+
+.history-dialog::backdrop {
+    background: rgba(16, 24, 40, .45);
+}
+
+.history-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+}
+
+.history-dialog-title {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 700;
+}
+
+.history-dialog-close {
+    padding: 0 var(--space-1);
+    border: none;
+    background: none;
+    color: var(--color-secondary-text);
+    font-size: var(--text-xl);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.history-dialog-subtitle {
+    margin: var(--space-05) 0 var(--space-15);
+    font-size: var(--text-sm);
+    color: var(--color-secondary-text);
+}
+
+.history-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.history-item {
+    display: flex;
+    gap: var(--space-15);
+    padding: var(--space-15) 0;
+    border-top: 1px solid var(--color-divider);
+}
+
+.history-item .status-dot {
+    margin-top: 3px;
+}
+
+.history-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.history-item .broken-chips {
+    margin-top: var(--space-05);
+}
+
+.history-os {
+    display: flex;
+    align-items: center;
+    gap: var(--space-05);
+    font-size: var(--text-2xs);
+    color: var(--color-secondary-text);
+}
+
+.history-os-icon {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+}
+
+/* On a phone it slides up from the bottom, like the Android app's sheet. */
+@media (max-width: 600px) {
+    .history-dialog {
+        width: 100vw;
+        max-width: 100vw;
+        margin: auto 0 0;
+        border-radius: var(--card-radius) var(--card-radius) 0 0;
+    }
+}
+
 /* ─── Broken features ─────────────────────────────────────────────────────── */
 
 .broken-features {

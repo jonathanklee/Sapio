@@ -178,6 +178,8 @@ function collectEntry(app, evaluation) {
         updatedAt: evaluation.updatedAt,
         versionName: evaluation.versionName ?? null,
         brokenFeatures: evaluation.brokenFeatures ?? null,
+        os: evaluation.os ?? null,
+        androidVersion: evaluation.androidVersion ?? null,
     });
 
     app.entriesByEnv.set(envKey, envEntries);
@@ -457,10 +459,22 @@ function ratingLine(entry, withHistory) {
     const chart = withHistory ? renderHistoryChart(entry) : null;
 
     if (chart) {
-        line.appendChild(chart);
+        line.appendChild(historyButton(entry, chart));
     }
 
     return line;
+}
+
+function historyButton(entry, chart) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'history-button';
+    button.dataset.historyMicrog = entry.microg;
+    button.dataset.historyRooted = entry.rooted;
+    button.setAttribute('aria-label', t('history_label'));
+    button.appendChild(chart);
+
+    return button;
 }
 
 function envBadge(env) {
@@ -641,6 +655,9 @@ function renderBrokenFeatures(featureKeys) {
 
 export {
     SECTIONS,
+    ENVS,
+    RATING_CLASS,
+    brokenFeatureKeys,
     STANDARD_ROOTED,
     BROKEN_FEATURE_LABELS,
     fetchLatestPage,

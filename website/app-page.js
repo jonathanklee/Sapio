@@ -10,6 +10,7 @@ import {
     renderSection,
 } from './core.js?v=20261006';
 import { enableShareButton, renderShareButton } from './share.js?v=20261006';
+import { openHistoryPanel } from './history-panel.js?v=20261006';
 import { setupI18n, t } from './i18n.js?v=20261006';
 
 const SITE_ORIGIN = 'https://checksap.io';
@@ -53,6 +54,7 @@ async function loadApp() {
         currentApp = app;
         renderApp();
         enablePermissiveToggle();
+        enableHistoryPanel();
         enableShareButton(shareBanner, () => currentApp);
 
         if (!isPreRendered()) {
@@ -95,6 +97,25 @@ function readPackageName() {
     const match = location.pathname.match(/\/app\/([^/]+)\/?$/);
 
     return match ? decodeURIComponent(match[1]) : null;
+}
+
+// ─── History panel ───────────────────────────────────────────────────────────
+
+// Delegated, so the pre-rendered chart opens the panel as well as a repainted one.
+function enableHistoryPanel() {
+    detail.addEventListener('click', event => {
+        const trigger = event.target.closest('[data-history-microg]');
+
+        if (!trigger || !currentApp) {
+            return;
+        }
+
+        openHistoryPanel(
+            currentApp,
+            Number(trigger.dataset.historyMicrog),
+            Number(trigger.dataset.historyRooted)
+        );
+    });
 }
 
 // ─── Permissive toggle ───────────────────────────────────────────────────────

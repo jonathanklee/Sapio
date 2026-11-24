@@ -14,6 +14,7 @@ SOURCE_FILES="
     app.html
     app.js
     app-page.js
+    history-panel.js
     core.js
     i18n.js
     share.js
