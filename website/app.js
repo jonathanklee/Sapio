@@ -7,6 +7,7 @@ import {
     loadHistories,
     renderCardHeader,
     renderSection,
+    HISTORY_DISPLAY,
 } from './core.js?v=20261006';
 import { setupI18n, t, format, localizedPath } from './i18n.js?v=20261006';
 
@@ -58,7 +59,7 @@ function renderAppCard(app) {
     sectionsRow.className = 'sections-row';
 
     for (const section of SECTIONS) {
-        const rendered = renderSection(section, app.entries, /* withHistory */ true);
+        const rendered = renderSection(section, app.entries, HISTORY_DISPLAY.CHART);
 
         if (rendered) {
             sectionsRow.appendChild(rendered);

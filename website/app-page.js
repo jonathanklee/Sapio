@@ -8,6 +8,7 @@ import {
     localizedSummary,
     renderCardHeader,
     renderSection,
+    HISTORY_DISPLAY,
 } from './core.js?v=20261006';
 import { enableShareButton, renderShareButton } from './share.js?v=20261006';
 import { openHistoryPanel } from './history-panel.js?v=20261006';
@@ -260,7 +261,7 @@ function renderSections(app) {
     sectionsRow.className = 'sections-row';
 
     for (const section of SECTIONS) {
-        const rendered = renderSection(section, app.entries, /* withHistory */ true);
+        const rendered = renderSection(section, app.entries, HISTORY_DISPLAY.OPENABLE);
 
         if (rendered) {
             sectionsRow.appendChild(rendered);

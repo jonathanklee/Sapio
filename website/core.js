@@ -33,6 +33,12 @@ const ENVS = [
 
 const STANDARD_ROOTED = ENVS.find(env => env.cls === 'standard').rooted;
 
+const HISTORY_DISPLAY = {
+    HIDDEN: 'hidden',
+    CHART: 'chart',
+    OPENABLE: 'openable',
+};
+
 // ─── API ─────────────────────────────────────────────────────────────────────
 
 async function fetchSearch(query) {
@@ -397,8 +403,9 @@ function iconPlaceholder() {
 }
 
 // Opt-in: a chart is only honest once the whole package has been fetched, which
-// the app page does outright and the feed does through loadHistories().
-function renderSection(section, entries, withHistory = false) {
+// the app page does outright and the feed does through loadHistories(). Only the
+// app page makes it openable: a feed card is already a link to that page.
+function renderSection(section, entries, historyDisplay = HISTORY_DISPLAY.HIDDEN) {
     const cells = ENVS
         .map(env => ({ env, entry: entryFor(entries, section.microg, env.rooted) }))
         .filter(({ entry }) => entry !== null);
@@ -420,7 +427,7 @@ function renderSection(section, entries, withHistory = false) {
     cellsRow.className = cells.length === 1 ? 'cells-row cells-row--single' : 'cells-row';
 
     for (const { env, entry } of cells) {
-        cellsRow.appendChild(renderCell(env, entry, withHistory));
+        cellsRow.appendChild(renderCell(env, entry, historyDisplay));
     }
 
     block.appendChild(cellsRow);
@@ -436,11 +443,11 @@ function sectionBadge(section) {
     return badge;
 }
 
-function renderCell(env, entry, withHistory) {
+function renderCell(env, entry, historyDisplay) {
     const cell = document.createElement('div');
     cell.className = `eval-cell eval-cell--${env.cls}`;
     cell.appendChild(envBadge(env));
-    cell.appendChild(ratingLine(entry, withHistory));
+    cell.appendChild(ratingLine(entry, historyDisplay));
 
     const broken = brokenFeatureKeys(entry);
 
@@ -451,18 +458,28 @@ function renderCell(env, entry, withHistory) {
     return cell;
 }
 
-function ratingLine(entry, withHistory) {
+function ratingLine(entry, historyDisplay) {
     const line = document.createElement('div');
     line.className = 'rating-line';
     line.appendChild(ratingRow(entry));
 
-    const chart = withHistory ? renderHistoryChart(entry) : null;
+    const history = historyElement(entry, historyDisplay);
 
-    if (chart) {
-        line.appendChild(historyButton(entry, chart));
+    if (history) {
+        line.appendChild(history);
     }
 
     return line;
+}
+
+function historyElement(entry, historyDisplay) {
+    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry);
+
+    if (chart && historyDisplay === HISTORY_DISPLAY.OPENABLE) {
+        return historyButton(entry, chart);
+    }
+
+    return chart;
 }
 
 function historyButton(entry, chart) {
@@ -655,6 +672,7 @@ function renderBrokenFeatures(featureKeys) {
 
 export {
     SECTIONS,
+    HISTORY_DISPLAY,
     ENVS,
     RATING_CLASS,
     brokenFeatureKeys,
