@@ -102,21 +102,36 @@ function readPackageName() {
 
 // ─── History panel ───────────────────────────────────────────────────────────
 
-// Delegated, so the pre-rendered chart opens the panel as well as a repainted one.
+const HISTORY_KEYS = ['Enter', ' '];
+
+// Delegated, so a pre-rendered cell opens the panel as well as a repainted one.
 function enableHistoryPanel() {
-    detail.addEventListener('click', event => {
-        const trigger = event.target.closest('[data-history-microg]');
+    detail.addEventListener('click', event => openHistoryFrom(historyTrigger(event)));
 
-        if (!trigger || !currentApp) {
-            return;
+    detail.addEventListener('keydown', event => {
+        const trigger = historyTrigger(event);
+
+        if (trigger && HISTORY_KEYS.includes(event.key)) {
+            event.preventDefault();
+            openHistoryFrom(trigger);
         }
-
-        openHistoryPanel(
-            currentApp,
-            Number(trigger.dataset.historyMicrog),
-            Number(trigger.dataset.historyRooted)
-        );
     });
+}
+
+function historyTrigger(event) {
+    return event.target.closest('[data-history-microg]');
+}
+
+function openHistoryFrom(trigger) {
+    if (!trigger || !currentApp) {
+        return;
+    }
+
+    openHistoryPanel(
+        currentApp,
+        Number(trigger.dataset.historyMicrog),
+        Number(trigger.dataset.historyRooted)
+    );
 }
 
 // ─── Permissive toggle ───────────────────────────────────────────────────────

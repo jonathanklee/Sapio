@@ -417,7 +417,8 @@ def render_cell(env_label, env_key, entry, t, lang, now_ms):
     label = t(f"rating_{entry['rating']}")
 
     return (
-        f'<div class="eval-cell eval-cell--{env_label}">'
+        f'<div class="eval-cell eval-cell--{env_label} eval-cell--openable" '
+        f"{history_trigger_attributes(entry, t)}>"
         f'<span class="cell-env-badge {env_label}">{escape_html(t(env_key))}</span>'
         '<div class="rating-line">'
         '<div class="rating-row">'
@@ -426,7 +427,7 @@ def render_cell(env_label, env_key, entry, t, lang, now_ms):
         f'<span class="rating-label {cls}">{label}</span>'
         f"{render_version(entry)}{render_date(entry, lang, now_ms)}"
         "</div></div>"
-        f"{render_history_button(entry, t)}"
+        f"{render_history_chart(entry, t)}"
         "</div>"
         f"{render_broken_features(entry, t)}</div>"
     )
@@ -471,17 +472,11 @@ def history_points(entry):
     return (entry.get("history") or [])[-HISTORY_MAX_POINTS:]
 
 
-def render_history_button(entry, t):
-    """Mirror of historyButton() in core.js: app-page.js opens the panel from it."""
-    chart = render_history_chart(entry, t)
-    if not chart:
-        return ""
-
+def history_trigger_attributes(entry, t):
+    """Mirror of makeHistoryOpenable() in core.js: app-page.js opens the panel from the cell."""
     return (
-        '<button type="button" class="history-button" '
         f'data-history-microg="{entry["microg"]}" data-history-rooted="{entry["rooted"]}" '
-        f'aria-label="{attr(t("history_label"))}">'
-        f"{chart}</button>"
+        f'role="button" tabindex="0" aria-label="{attr(t("history_label"))}"'
     )
 
 

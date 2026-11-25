@@ -455,7 +455,21 @@ function renderCell(env, entry, historyDisplay) {
         cell.appendChild(renderBrokenFeatures(broken));
     }
 
+    if (historyDisplay === HISTORY_DISPLAY.OPENABLE) {
+        makeHistoryOpenable(cell, entry);
+    }
+
     return cell;
+}
+
+// The whole cell opens the history, so a single evaluation shows its details too.
+function makeHistoryOpenable(cell, entry) {
+    cell.classList.add('eval-cell--openable');
+    cell.dataset.historyMicrog = entry.microg;
+    cell.dataset.historyRooted = entry.rooted;
+    cell.setAttribute('role', 'button');
+    cell.setAttribute('tabindex', '0');
+    cell.setAttribute('aria-label', t('history_label'));
 }
 
 function ratingLine(entry, historyDisplay) {
@@ -463,35 +477,13 @@ function ratingLine(entry, historyDisplay) {
     line.className = 'rating-line';
     line.appendChild(ratingRow(entry));
 
-    const history = historyElement(entry, historyDisplay);
+    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry);
 
-    if (history) {
-        line.appendChild(history);
+    if (chart) {
+        line.appendChild(chart);
     }
 
     return line;
-}
-
-function historyElement(entry, historyDisplay) {
-    const chart = historyDisplay === HISTORY_DISPLAY.HIDDEN ? null : renderHistoryChart(entry);
-
-    if (chart && historyDisplay === HISTORY_DISPLAY.OPENABLE) {
-        return historyButton(entry, chart);
-    }
-
-    return chart;
-}
-
-function historyButton(entry, chart) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'history-button';
-    button.dataset.historyMicrog = entry.microg;
-    button.dataset.historyRooted = entry.rooted;
-    button.setAttribute('aria-label', t('history_label'));
-    button.appendChild(chart);
-
-    return button;
 }
 
 function envBadge(env) {
