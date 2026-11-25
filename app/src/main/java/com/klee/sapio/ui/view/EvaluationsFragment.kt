@@ -273,24 +273,28 @@ class EvaluationsFragment : Fragment() {
 
     private fun renderHistories(state: AppEvaluationsUiState, microgSharesRow: Boolean, bareAospSharesRow: Boolean) {
         renderHistory(
+            mBinding.microgUserCell,
             mBinding.microgUserHistoryInline,
             mBinding.microgUserHistory,
             state.microgUser,
             sharesRow = microgSharesRow
         )
         renderHistory(
+            mBinding.bareAospUserCell,
             mBinding.bareAospUserHistoryInline,
             mBinding.bareAospUserHistory,
             state.bareAospUser,
             sharesRow = bareAospSharesRow
         )
         renderHistory(
+            mBinding.microgRootCell,
             mBinding.microgRootHistoryInline,
             mBinding.microgRootHistory,
             state.microgRoot,
             sharesRow = microgSharesRow
         )
         renderHistory(
+            mBinding.bareAospRootCell,
             mBinding.bareAospRootHistoryInline,
             mBinding.bareAospRootHistory,
             state.bareAospRoot,
@@ -381,6 +385,7 @@ class EvaluationsFragment : Fragment() {
     }
 
     private fun renderHistory(
+        cell: MaterialCardView,
         inlineChart: ComposeView,
         stackedChart: ComposeView,
         history: EvaluationHistory?,
@@ -388,12 +393,22 @@ class EvaluationsFragment : Fragment() {
     ) {
         renderHistoryChart(inlineChart, history.takeUnless { sharesRow })
         renderHistoryChart(stackedChart, history.takeIf { sharesRow })
+        openHistoryOnTap(cell, history)
+    }
+
+    private fun openHistoryOnTap(cell: MaterialCardView, history: EvaluationHistory?) {
+        if (history == null) {
+            cell.setOnClickListener(null)
+            cell.isClickable = false
+            return
+        }
+
+        cell.setOnClickListener { showHistorySheet(history) }
     }
 
     private fun renderHistoryChart(chartView: ComposeView, history: EvaluationHistory?) {
         if (history == null || !history.hasTrend) {
             chartView.isVisible = false
-            chartView.setOnClickListener(null)
             chartView.disposeComposition()
             return
         }
@@ -402,7 +417,6 @@ class EvaluationsFragment : Fragment() {
         chartView.setContent {
             EvaluationHistoryChart(history.evaluations.map { it.rating }, Modifier.fillMaxSize())
         }
-        chartView.setOnClickListener { showHistorySheet(history) }
     }
 
     private fun showHistorySheet(history: EvaluationHistory) {
